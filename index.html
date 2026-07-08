@@ -1,0 +1,1738 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>跑車薪資計算</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --panel-2: #eef5f7;
+      --text: #14202b;
+      --muted: #677482;
+      --line: #dce5ec;
+      --brand: #12a77b;
+      --brand-2: #1677d2;
+      --accent: #f2a51f;
+      --coral: #f06f5d;
+      --danger: #c84640;
+      --shadow: 0 16px 36px rgba(20, 32, 43, .09);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(18, 167, 123, .18), transparent 28rem),
+        radial-gradient(circle at bottom right, rgba(22, 119, 210, .12), transparent 28rem),
+        var(--bg);
+      color: var(--text);
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 248px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      background:
+        linear-gradient(170deg, rgba(20, 32, 43, .98), rgba(15, 45, 54, .98)),
+        #14202b;
+      color: white;
+      padding: 24px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      border-right: 1px solid rgba(255,255,255,.08);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 44px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), var(--brand), var(--brand-2));
+      color: white;
+      font-weight: 800;
+      box-shadow: 0 10px 22px rgba(18, 167, 123, .28);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .brand small {
+      color: #b8c7bf;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav button {
+      min-height: 42px;
+      border-radius: 8px;
+      color: #dce7e0;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
+      text-align: left;
+    }
+
+    .nav button.active,
+    .nav button:hover {
+      background: linear-gradient(90deg, rgba(18, 167, 123, .25), rgba(22, 119, 210, .18));
+      color: white;
+    }
+
+    .side-summary {
+      margin-top: auto;
+      padding: 14px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.1);
+      display: grid;
+      gap: 6px;
+    }
+
+    .side-summary span {
+      color: #b8c7bf;
+      font-size: 13px;
+    }
+
+    .side-summary strong {
+      font-size: 24px;
+    }
+
+    main {
+      padding: 28px;
+      display: grid;
+      gap: 22px;
+      align-content: start;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 236px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #14202b;
+      color: white;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.45);
+      display: grid;
+      align-items: end;
+    }
+
+    .hero img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(10, 22, 30, .86), rgba(10, 22, 30, .38) 48%, rgba(10, 22, 30, .12)),
+        linear-gradient(0deg, rgba(10, 22, 30, .6), transparent 55%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      width: min(620px, 100%);
+      padding: 28px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero-kicker {
+      width: fit-content;
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 10px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.16);
+      color: #daf7eb;
+      border: 1px solid rgba(255,255,255,.18);
+      font-size: 13px;
+    }
+
+    .hero h2 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.16;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      margin: 0;
+      color: rgba(255,255,255,.82);
+      line-height: 1.7;
+    }
+
+    .hero-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .hero-metric {
+      min-height: 42px;
+      border-radius: 8px;
+      padding: 8px 12px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.16);
+      display: grid;
+      gap: 2px;
+      min-width: 110px;
+    }
+
+    .hero-metric span {
+      font-size: 12px;
+      color: rgba(255,255,255,.68);
+    }
+
+    .hero-metric strong {
+      font-size: 16px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: 30px;
+      letter-spacing: 0;
+    }
+
+    .topbar p {
+      margin: 7px 0 0;
+      color: var(--muted);
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .button {
+      min-height: 40px;
+      border-radius: 8px;
+      padding: 0 14px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+      box-shadow: 0 10px 20px rgba(22, 119, 210, .16);
+    }
+
+    .button.secondary {
+      background: var(--panel);
+      color: var(--text);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .button.danger {
+      background: var(--danger);
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .stats {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .stat {
+      background: linear-gradient(180deg, #ffffff, #f9fcfd);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      min-height: 108px;
+      display: grid;
+      align-content: space-between;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 5px;
+      background: var(--brand);
+    }
+
+    .stat:nth-child(2)::before { background: var(--brand-2); }
+    .stat:nth-child(3)::before { background: var(--accent); }
+    .stat:nth-child(4)::before { background: var(--coral); }
+
+    .stat:nth-child(2) em { color: var(--brand-2); }
+    .stat:nth-child(3) em { color: #a66a00; }
+    .stat:nth-child(4) em { color: var(--coral); }
+
+    .stat > * {
+      position: relative;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .stat strong {
+      font-size: 26px;
+      line-height: 1.1;
+    }
+
+    .stat em {
+      font-style: normal;
+      color: var(--brand);
+      font-size: 13px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(320px, 460px) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(180deg, #ffffff, #f8fbfc);
+    }
+
+    .panel-head h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .panel-body {
+      padding: 18px;
+    }
+
+    form {
+      display: grid;
+      gap: 16px;
+    }
+
+    .fields {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .quick-fields {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .quick-preview {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      padding: 12px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(18, 167, 123, .12), rgba(242, 165, 31, .13));
+      border: 1px solid rgba(18, 167, 123, .18);
+    }
+
+    .quick-preview div {
+      display: grid;
+      gap: 3px;
+    }
+
+    .quick-preview span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .quick-preview strong {
+      font-size: 20px;
+      line-height: 1.15;
+    }
+
+    .quick-preview .wide {
+      grid-column: span 3;
+      padding-top: 8px;
+      border-top: 1px solid rgba(20, 32, 43, .08);
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 11px;
+      background: white;
+      color: var(--text);
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 76px;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(31, 122, 85, .13);
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .section-title strong {
+      font-size: 15px;
+    }
+
+    .income-grid,
+    .expense-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .income-grid label {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(180deg, #ffffff, #f8fbfc);
+    }
+
+    .income-grid input {
+      min-height: 52px;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--brand-2);
+    }
+
+    .collapsible {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .collapsible summary {
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      cursor: pointer;
+      color: var(--text);
+      font-weight: 700;
+      list-style: none;
+    }
+
+    .collapsible summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .collapsible summary::after {
+      content: "+";
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      font-weight: 800;
+    }
+
+    .collapsible[open] summary::after {
+      content: "−";
+    }
+
+    .collapsible-body {
+      padding: 0 14px 14px;
+    }
+
+    .save-button {
+      min-height: 52px;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      min-height: 34px;
+      border-radius: 8px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(18, 167, 123, .1), rgba(22, 119, 210, .09));
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chip button {
+      width: 22px;
+      height: 22px;
+      border-radius: 8px;
+      background: rgba(23, 33, 27, .1);
+      color: var(--text);
+    }
+
+    .table-wrap {
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      white-space: nowrap;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      background: #f9fbfa;
+      position: sticky;
+      top: 0;
+    }
+
+    tfoot th {
+      background: #eef5f7;
+      color: var(--text);
+      font-weight: 800;
+      border-top: 2px solid var(--line);
+    }
+
+    td .muted {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-button {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--panel-2);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .empty {
+      padding: 34px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .bars {
+      display: grid;
+      gap: 12px;
+    }
+
+    .bar-row {
+      display: grid;
+      gap: 7px;
+    }
+
+    .bar-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    .bar-track {
+      height: 12px;
+      border-radius: 8px;
+      background: var(--panel-2);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 8px;
+      background: linear-gradient(90deg, var(--brand), var(--brand-2), var(--accent));
+      min-width: 2px;
+    }
+
+    .week-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .week-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 1.5fr repeat(4, 1fr);
+      gap: 12px;
+      align-items: center;
+      background: #fff;
+    }
+
+    .week-item span {
+      color: var(--muted);
+      font-size: 12px;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .settings-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: end;
+      margin-bottom: 14px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        padding: 14px;
+      }
+
+      .brand {
+        min-height: 38px;
+      }
+
+      .brand-mark {
+        width: 36px;
+        height: 36px;
+      }
+
+      .brand h1 {
+        font-size: 17px;
+      }
+
+      .nav {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .nav button {
+        justify-content: center;
+        padding: 0 6px;
+        font-size: 13px;
+      }
+
+      .nav .nav-icon {
+        display: none;
+      }
+
+      .side-summary {
+        display: none;
+      }
+
+      main {
+        padding: 18px;
+      }
+
+      .hero {
+        min-height: 220px;
+      }
+
+      .hero h2 {
+        font-size: 28px;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .topbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .toolbar {
+        justify-content: stretch;
+      }
+
+      .toolbar .button {
+        flex: 1;
+      }
+
+      .topbar h2 {
+        font-size: 24px;
+      }
+
+      .hero {
+        display: none;
+      }
+
+      .hero::after {
+        background:
+          linear-gradient(90deg, rgba(10, 22, 30, .88), rgba(10, 22, 30, .55)),
+          linear-gradient(0deg, rgba(10, 22, 30, .68), transparent 58%);
+      }
+
+      .hero-content {
+        padding: 20px;
+      }
+
+      .hero h2 {
+        font-size: 24px;
+      }
+
+      .stats,
+      .fields,
+      .expense-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        gap: 10px;
+      }
+
+      .stat {
+        min-height: 92px;
+        padding: 14px;
+      }
+
+      .stat strong {
+        font-size: 24px;
+      }
+
+      .quick-fields,
+      .quick-preview,
+      .income-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .quick-preview .wide {
+        grid-column: span 2;
+      }
+
+      .panel-body {
+        padding: 14px;
+      }
+
+      .save-button {
+        position: sticky;
+        bottom: 10px;
+        z-index: 3;
+        width: 100%;
+      }
+
+      .week-item {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .nav {
+        overflow-x: auto;
+        grid-template-columns: repeat(5, 92px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">薪</div>
+        <div>
+          <h1>跑車薪資計算</h1>
+          <small>多元計程車收入管理</small>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="主選單">
+        <button class="active" data-view="today"><span class="nav-icon">＋</span>今日輸入</button>
+        <button data-view="week"><span class="nav-icon">週</span>週報表</button>
+        <button data-view="month"><span class="nav-icon">月</span>月報表</button>
+        <button data-view="platform"><span class="nav-icon">台</span>平台分析</button>
+        <button data-view="settings"><span class="nav-icon">設</span>設定</button>
+      </nav>
+
+      <div class="side-summary">
+        <span>本月淨收入</span>
+        <strong id="sideNet">$0</strong>
+        <span id="sideGoal">尚未設定目標</span>
+      </div>
+    </aside>
+
+    <main>
+      <section class="hero" aria-label="跑車收入視覺總覽">
+        <img src="assets/driver-hero.png" alt="計程車與手機收入儀表板插圖">
+        <div class="hero-content">
+          <span class="hero-kicker">多平台跑車薪資儀表板</span>
+          <h2>每天記錄一分鐘，月底看清楚真正賺多少。</h2>
+          <p>收入、支出、工時、罰單、小費與平台表現集中管理，手機打開也能快速輸入。</p>
+          <div class="hero-metrics">
+            <div class="hero-metric">
+              <span>本月淨收入</span>
+              <strong id="heroNet">$0</strong>
+            </div>
+            <div class="hero-metric">
+              <span>平均時薪</span>
+              <strong id="heroHourly">$0</strong>
+            </div>
+            <div class="hero-metric">
+              <span>本月工時</span>
+              <strong id="heroHours">0 小時</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="topbar">
+        <div>
+          <h2 id="viewTitle">今日輸入</h2>
+          <p id="viewSubtitle">每天花一分鐘記錄收入、工時與支出。</p>
+        </div>
+        <div class="toolbar">
+          <button class="button secondary" id="exportCsv">匯出 CSV</button>
+          <button class="button" id="newEntry">新增今日</button>
+        </div>
+      </section>
+
+      <section class="grid stats" id="summaryStats"></section>
+
+      <section id="view-today" class="view layout">
+        <div class="panel">
+          <div class="panel-head">
+            <h3 id="formTitle">新增紀錄</h3>
+            <button class="button secondary hidden" id="cancelEdit">取消編輯</button>
+          </div>
+          <div class="panel-body">
+            <form id="entryForm">
+              <input type="hidden" id="entryId">
+              <div class="fields quick-fields">
+                <label>日期
+                  <input type="date" id="date" required>
+                </label>
+                <label>小費
+                  <input type="number" inputmode="numeric" id="tips" min="0" step="1" value="0">
+                </label>
+              </div>
+
+              <div class="quick-preview" id="quickPreview"></div>
+
+              <div>
+                <div class="section-title">
+                  <strong>平台收入</strong>
+                </div>
+                <div class="income-grid" id="incomeInputs"></div>
+              </div>
+
+              <details class="collapsible">
+                <summary>工時設定</summary>
+                <div class="collapsible-body fields">
+                  <label>開始時間
+                    <input type="time" id="startTime">
+                  </label>
+                  <label>結束時間
+                    <input type="time" id="endTime">
+                  </label>
+                  <label>休息分鐘
+                    <input type="number" inputmode="numeric" id="breakMinutes" min="0" step="5" value="0">
+                  </label>
+                  <label>手動工時
+                    <input type="number" inputmode="decimal" id="manualHours" min="0" step="0.25" placeholder="可留空自動算">
+                  </label>
+                </div>
+              </details>
+
+              <details class="collapsible">
+                <summary>支出與罰單</summary>
+                <div class="collapsible-body expense-grid" id="expenseInputs"></div>
+              </details>
+
+              <details class="collapsible">
+                <summary>詳細資料</summary>
+                <div class="collapsible-body fields">
+                  <label>班別
+                    <select id="shift">
+                      <option>早班</option>
+                      <option>午班</option>
+                      <option>晚班</option>
+                      <option>大夜班</option>
+                      <option>全天</option>
+                    </select>
+                  </label>
+                  <label>訂單數
+                    <input type="number" inputmode="numeric" id="orders" min="0" step="1" value="0">
+                  </label>
+                  <label>公里數
+                    <input type="number" inputmode="decimal" id="km" min="0" step="0.1" value="0">
+                  </label>
+                  <label>天氣
+                    <select id="weather">
+                      <option>晴天</option>
+                      <option>陰天</option>
+                      <option>雨天</option>
+                      <option>連假</option>
+                      <option>特殊活動</option>
+                    </select>
+                  </label>
+                  <label style="grid-column: 1 / -1;">備註
+                    <textarea id="note" placeholder="例如：雨天單多、機場單、車況、塞車路段"></textarea>
+                  </label>
+                </div>
+              </details>
+
+              <button class="button save-button" type="submit">儲存今天</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>月份明細</h3>
+            <select id="monthFilter" aria-label="月份篩選"></select>
+          </div>
+          <div class="table-wrap" id="entriesTable"></div>
+        </div>
+      </section>
+
+      <section id="view-week" class="view hidden">
+        <div class="panel">
+          <div class="panel-head">
+            <h3>每週總額</h3>
+            <select id="weekMonthFilter" aria-label="週報月份篩選"></select>
+          </div>
+          <div class="panel-body">
+            <div class="week-list" id="weekList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-month" class="view hidden">
+        <div class="layout">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>月份選擇</h3>
+            </div>
+            <div class="panel-body">
+              <label>查看月份
+                <select id="monthReportFilter"></select>
+              </label>
+              <div style="height: 16px"></div>
+              <div class="bars" id="goalProgress"></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <h3>每日收入走勢</h3>
+            </div>
+            <div class="panel-body">
+              <div class="bars" id="dailyBars"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-platform" class="view hidden">
+        <div class="layout">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>平台收入占比</h3>
+              <select id="platformMonthFilter"></select>
+            </div>
+            <div class="panel-body">
+              <div class="bars" id="platformBars"></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <h3>平台效率</h3>
+            </div>
+            <div class="table-wrap" id="platformTable"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-settings" class="view hidden">
+        <div class="layout">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>收入平台</h3>
+            </div>
+            <div class="panel-body">
+              <div class="settings-row">
+                <label>新增平台
+                  <input id="newPlatformName" placeholder="例如：機場排班">
+                </label>
+                <button class="button" id="addPlatform">新增</button>
+              </div>
+              <div class="chips" id="platformChips"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3>支出類別與目標</h3>
+            </div>
+            <div class="panel-body">
+              <div class="settings-row">
+                <label>新增支出類別
+                  <input id="newExpenseName" placeholder="例如：輪胎">
+                </label>
+                <button class="button" id="addExpense">新增</button>
+              </div>
+              <div class="chips" id="expenseChips"></div>
+              <div style="height: 18px"></div>
+              <label>每月淨收入目標
+                <input type="number" id="monthlyGoal" min="0" step="100" placeholder="例如：80000">
+              </label>
+              <div style="height: 12px"></div>
+              <button class="button" id="saveGoal">儲存目標</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const storageKey = "driverPayApp.v2";
+    const defaultPlatforms = ["Uber", "LINE GO", "Yoxi", "55688", "大都會", "台灣大車隊", "路邊客", "自訂"];
+    const defaultExpenses = ["油錢/電費", "洗車", "停車費", "保養", "車租/車貸", "保險", "平台抽成", "罰單", "其他"];
+
+    const state = loadState();
+    let activeView = "today";
+
+    const titles = {
+      today: ["今日輸入", "每天花一分鐘記錄收入、工時與支出。"],
+      week: ["週報表", "比較每一週總額、工時、時薪與淨收入。"],
+      month: ["月報表", "追蹤整個月份收入、成本與目標進度。"],
+      platform: ["平台分析", "看出 Uber、LINE GO、Yoxi、55688 與其他來源的表現。"],
+      settings: ["設定", "調整平台、支出類別與每月目標。"]
+    };
+
+    const els = {
+      navButtons: document.querySelectorAll(".nav button"),
+      viewTitle: document.getElementById("viewTitle"),
+      viewSubtitle: document.getElementById("viewSubtitle"),
+      summaryStats: document.getElementById("summaryStats"),
+      quickPreview: document.getElementById("quickPreview"),
+      incomeInputs: document.getElementById("incomeInputs"),
+      expenseInputs: document.getElementById("expenseInputs"),
+      entryForm: document.getElementById("entryForm"),
+      entryId: document.getElementById("entryId"),
+      formTitle: document.getElementById("formTitle"),
+      cancelEdit: document.getElementById("cancelEdit"),
+      entriesTable: document.getElementById("entriesTable"),
+      monthFilter: document.getElementById("monthFilter"),
+      weekMonthFilter: document.getElementById("weekMonthFilter"),
+      monthReportFilter: document.getElementById("monthReportFilter"),
+      platformMonthFilter: document.getElementById("platformMonthFilter"),
+      weekList: document.getElementById("weekList"),
+      dailyBars: document.getElementById("dailyBars"),
+      goalProgress: document.getElementById("goalProgress"),
+      platformBars: document.getElementById("platformBars"),
+      platformTable: document.getElementById("platformTable"),
+      platformChips: document.getElementById("platformChips"),
+      expenseChips: document.getElementById("expenseChips"),
+      sideNet: document.getElementById("sideNet"),
+      sideGoal: document.getElementById("sideGoal"),
+      heroNet: document.getElementById("heroNet"),
+      heroHourly: document.getElementById("heroHourly"),
+      heroHours: document.getElementById("heroHours")
+    };
+
+    function loadState() {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return {
+          platforms: parsed.platforms?.length ? parsed.platforms : defaultPlatforms,
+          expenses: parsed.expenses?.length ? parsed.expenses : defaultExpenses,
+          entries: parsed.entries || [],
+          settings: parsed.settings || { monthlyGoal: 0 }
+        };
+      }
+      return {
+        platforms: defaultPlatforms,
+        expenses: defaultExpenses,
+        entries: [],
+        settings: { monthlyGoal: 0 }
+      };
+    }
+
+    function saveState() {
+      localStorage.setItem(storageKey, JSON.stringify(state));
+    }
+
+    function money(value) {
+      return Number(value || 0).toLocaleString("zh-TW", { style: "currency", currency: "TWD", maximumFractionDigits: 0 });
+    }
+
+    function number(value, digits = 1) {
+      return Number(value || 0).toLocaleString("zh-TW", { maximumFractionDigits: digits });
+    }
+
+    function todayString() {
+      const now = new Date();
+      return now.toISOString().slice(0, 10);
+    }
+
+    function currentMonth() {
+      return todayString().slice(0, 7);
+    }
+
+    function entryIncome(entry) {
+      return Object.values(entry.incomes || {}).reduce((sum, val) => sum + Number(val || 0), 0);
+    }
+
+    function entryExpenses(entry) {
+      return Object.values(entry.expenses || {}).reduce((sum, val) => sum + Number(val || 0), 0);
+    }
+
+    function entryTotal(entry) {
+      return entryIncome(entry) + Number(entry.tips || 0);
+    }
+
+    function entryNet(entry) {
+      return entryTotal(entry) - entryExpenses(entry);
+    }
+
+    function calcHours(entry) {
+      if (Number(entry.manualHours) > 0) return Number(entry.manualHours);
+      if (!entry.startTime || !entry.endTime) return 0;
+      const start = minutes(entry.startTime);
+      let end = minutes(entry.endTime);
+      if (end < start) end += 24 * 60;
+      return Math.max(0, (end - start - Number(entry.breakMinutes || 0)) / 60);
+    }
+
+    function minutes(time) {
+      const [h, m] = time.split(":").map(Number);
+      return h * 60 + m;
+    }
+
+    function selectedMonth(select) {
+      return select.value || currentMonth();
+    }
+
+    function months() {
+      const set = new Set(state.entries.map(entry => entry.date.slice(0, 7)));
+      set.add(currentMonth());
+      return [...set].sort().reverse();
+    }
+
+    function entriesForMonth(month) {
+      return state.entries
+        .filter(entry => entry.date.startsWith(month))
+        .sort((a, b) => b.date.localeCompare(a.date));
+    }
+
+    function entriesForCurrentWeek() {
+      const start = weekStart(todayString());
+      return state.entries.filter(entry => weekStart(entry.date) === start);
+    }
+
+    function summarize(entries) {
+      const total = entries.reduce((sum, entry) => sum + entryTotal(entry), 0);
+      const tips = entries.reduce((sum, entry) => sum + Number(entry.tips || 0), 0);
+      const expenses = entries.reduce((sum, entry) => sum + entryExpenses(entry), 0);
+      const hours = entries.reduce((sum, entry) => sum + calcHours(entry), 0);
+      const orders = entries.reduce((sum, entry) => sum + Number(entry.orders || 0), 0);
+      const net = total - expenses;
+      return { total, tips, expenses, hours, orders, net, hourly: hours ? net / hours : 0 };
+    }
+
+    function renderInputs() {
+      els.incomeInputs.innerHTML = state.platforms.map(name => `
+        <label>${name}
+          <input type="number" inputmode="numeric" min="0" step="1" value="0" data-income="${escapeAttr(name)}">
+        </label>
+      `).join("");
+
+      els.expenseInputs.innerHTML = state.expenses.map(name => `
+        <label>${name}
+          <input type="number" inputmode="numeric" min="0" step="1" value="0" data-expense="${escapeAttr(name)}">
+        </label>
+      `).join("");
+    }
+
+    function escapeAttr(value) {
+      return String(value).replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;");
+    }
+
+    function fillSelects() {
+      const options = months().map(month => `<option value="${month}">${month}</option>`).join("");
+      [els.monthFilter, els.weekMonthFilter, els.monthReportFilter, els.platformMonthFilter].forEach(select => {
+        const previous = select.value || currentMonth();
+        select.innerHTML = options;
+        select.value = months().includes(previous) ? previous : currentMonth();
+      });
+    }
+
+    function renderStats() {
+      const month = currentMonth();
+      const monthSummary = summarize(entriesForMonth(month));
+      const todayEntry = state.entries.filter(entry => entry.date === todayString());
+      const todaySummary = summarize(todayEntry);
+      const weekSummary = summarize(entriesForCurrentWeek());
+
+      els.summaryStats.innerHTML = [
+        ["今日業績", money(todaySummary.total), `小費 ${money(todaySummary.tips)}`],
+        ["本週業績", money(weekSummary.total), `${number(weekSummary.hours)} 小時`],
+        ["本月業績", money(monthSummary.total), `淨收入 ${money(monthSummary.net)}`],
+        ["今日時薪", money(todaySummary.hourly), `${number(todaySummary.hours)} 小時`]
+      ].map(([label, value, hint]) => `
+        <article class="stat">
+          <span>${label}</span>
+          <strong>${value}</strong>
+          <em>${hint}</em>
+        </article>
+      `).join("");
+
+      els.sideNet.textContent = money(monthSummary.net);
+      els.heroNet.textContent = money(monthSummary.net);
+      els.heroHourly.textContent = money(monthSummary.hourly);
+      els.heroHours.textContent = `${number(monthSummary.hours)} 小時`;
+      if (state.settings.monthlyGoal > 0) {
+        const diff = state.settings.monthlyGoal - monthSummary.net;
+        els.sideGoal.textContent = diff > 0 ? `離目標還差 ${money(diff)}` : `已超過目標 ${money(Math.abs(diff))}`;
+      } else {
+        els.sideGoal.textContent = "尚未設定目標";
+      }
+    }
+
+    function updateQuickPreview() {
+      if (!els.quickPreview) return;
+      const entry = formData();
+      const income = entryIncome(entry);
+      const expenses = entryExpenses(entry);
+      const total = entryTotal(entry);
+      const net = entryNet(entry);
+      const hours = calcHours(entry);
+      els.quickPreview.innerHTML = `
+        <div>
+          <span>平台收入</span>
+          <strong>${money(income)}</strong>
+        </div>
+        <div>
+          <span>小費</span>
+          <strong>${money(entry.tips)}</strong>
+        </div>
+        <div>
+          <span>今日業績</span>
+          <strong>${money(total)}</strong>
+        </div>
+        <div class="wide">
+          <span>扣支出後</span>
+          <strong>${money(net)}${hours ? ` · ${money(net / hours)}/時` : ""}</strong>
+        </div>
+      `;
+    }
+
+    function renderEntries() {
+      const entries = entriesForMonth(selectedMonth(els.monthFilter));
+      if (!entries.length) {
+        els.entriesTable.innerHTML = `<div class="empty">這個月份還沒有紀錄。</div>`;
+        return;
+      }
+
+      els.entriesTable.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>日期</th>
+              ${state.platforms.map(name => `<th>${name}</th>`).join("")}
+              <th>Tips</th>
+              <th>合計</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${entries.map(entry => {
+              return `
+                <tr>
+                  <td>${entry.date}<div class="muted">${entry.shift || ""} ${entry.weather || ""}</div></td>
+                  ${state.platforms.map(name => `<td>${Number(entry.incomes?.[name] || 0) ? money(entry.incomes[name]) : ""}</td>`).join("")}
+                  <td>${money(entry.tips)}</td>
+                  <td>${money(entryTotal(entry))}<div class="muted">淨 ${money(entryNet(entry))}</div></td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="icon-button" title="編輯" data-edit="${entry.id}">編</button>
+                      <button class="icon-button" title="刪除" data-delete="${entry.id}">刪</button>
+                    </div>
+                  </td>
+                </tr>
+              `;
+            }).join("")}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>TOTAL</th>
+              ${state.platforms.map(name => {
+                const sum = entries.reduce((total, entry) => total + Number(entry.incomes?.[name] || 0), 0);
+                return `<th>${sum ? money(sum) : ""}</th>`;
+              }).join("")}
+              <th>${money(entries.reduce((total, entry) => total + Number(entry.tips || 0), 0))}</th>
+              <th>${money(entries.reduce((total, entry) => total + entryTotal(entry), 0))}</th>
+              <th></th>
+            </tr>
+          </tfoot>
+        </table>
+      `;
+    }
+
+    function weekStart(dateString) {
+      const date = new Date(`${dateString}T00:00:00`);
+      const day = date.getDay() || 7;
+      date.setDate(date.getDate() - day + 1);
+      return date.toISOString().slice(0, 10);
+    }
+
+    function renderWeeks() {
+      const month = selectedMonth(els.weekMonthFilter);
+      const groups = new Map();
+      entriesForMonth(month).forEach(entry => {
+        const key = weekStart(entry.date);
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(entry);
+      });
+
+      if (!groups.size) {
+        els.weekList.innerHTML = `<div class="empty">這個月份還沒有週資料。</div>`;
+        return;
+      }
+
+      els.weekList.innerHTML = [...groups.entries()].sort((a, b) => b[0].localeCompare(a[0])).map(([start, entries]) => {
+        const summary = summarize(entries);
+        const endDate = new Date(`${start}T00:00:00`);
+        endDate.setDate(endDate.getDate() + 6);
+        return `
+          <div class="week-item">
+            <div><span>週期</span><strong>${start} - ${endDate.toISOString().slice(0, 10)}</strong></div>
+            <div><span>總額</span><strong>${money(summary.total)}</strong></div>
+            <div><span>淨收入</span><strong>${money(summary.net)}</strong></div>
+            <div><span>工時</span><strong>${number(summary.hours)} 小時</strong></div>
+            <div><span>平均時薪</span><strong>${money(summary.hourly)}</strong></div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderMonthReport() {
+      const entries = entriesForMonth(selectedMonth(els.monthReportFilter)).sort((a, b) => a.date.localeCompare(b.date));
+      const summary = summarize(entries);
+      const goal = Number(state.settings.monthlyGoal || 0);
+      const percent = goal ? Math.min(100, Math.round(summary.net / goal * 100)) : 0;
+
+      els.goalProgress.innerHTML = goal ? `
+        <div class="bar-row">
+          <div class="bar-top"><strong>目標進度</strong><span>${percent}%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:${percent}%"></div></div>
+          <div class="bar-top"><span>目前 ${money(summary.net)}</span><span>目標 ${money(goal)}</span></div>
+        </div>
+      ` : `<div class="empty">到設定頁輸入每月目標，就能看到進度。</div>`;
+
+      if (!entries.length) {
+        els.dailyBars.innerHTML = `<div class="empty">這個月份還沒有紀錄。</div>`;
+        return;
+      }
+
+      const max = Math.max(...entries.map(entry => entryTotal(entry)), 1);
+      els.dailyBars.innerHTML = entries.map(entry => {
+        const width = Math.round(entryTotal(entry) / max * 100);
+        return `
+          <div class="bar-row">
+            <div class="bar-top"><strong>${entry.date}</strong><span>${money(entryTotal(entry))}</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:${width}%"></div></div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderPlatformReport() {
+      const entries = entriesForMonth(selectedMonth(els.platformMonthFilter));
+      const totals = Object.fromEntries(state.platforms.map(name => [name, 0]));
+      entries.forEach(entry => {
+        Object.entries(entry.incomes || {}).forEach(([name, value]) => {
+          totals[name] = (totals[name] || 0) + Number(value || 0);
+        });
+      });
+
+      const rows = Object.entries(totals).filter(([, value]) => value > 0).sort((a, b) => b[1] - a[1]);
+      const total = rows.reduce((sum, [, value]) => sum + value, 0);
+
+      if (!rows.length) {
+        els.platformBars.innerHTML = `<div class="empty">這個月份還沒有平台收入。</div>`;
+        els.platformTable.innerHTML = `<div class="empty">尚無資料可分析。</div>`;
+        return;
+      }
+
+      els.platformBars.innerHTML = rows.map(([name, value]) => {
+        const percent = total ? Math.round(value / total * 100) : 0;
+        return `
+          <div class="bar-row">
+            <div class="bar-top"><strong>${name}</strong><span>${money(value)} · ${percent}%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:${percent}%"></div></div>
+          </div>
+        `;
+      }).join("");
+
+      els.platformTable.innerHTML = `
+        <table>
+          <thead><tr><th>平台</th><th>收入</th><th>占比</th><th>日均</th></tr></thead>
+          <tbody>
+            ${rows.map(([name, value]) => `
+              <tr>
+                <td>${name}</td>
+                <td>${money(value)}</td>
+                <td>${Math.round(value / total * 100)}%</td>
+                <td>${money(value / Math.max(entries.length, 1))}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderSettings() {
+      els.platformChips.innerHTML = state.platforms.map(name => chip(name, "platform")).join("");
+      els.expenseChips.innerHTML = state.expenses.map(name => chip(name, "expense")).join("");
+      document.getElementById("monthlyGoal").value = state.settings.monthlyGoal || "";
+    }
+
+    function chip(name, type) {
+      return `<span class="chip">${name}<button title="移除" data-remove-${type}="${escapeAttr(name)}">×</button></span>`;
+    }
+
+    function renderAll() {
+      renderInputs();
+      fillSelects();
+      renderStats();
+      renderEntries();
+      renderWeeks();
+      renderMonthReport();
+      renderPlatformReport();
+      renderSettings();
+      updateQuickPreview();
+    }
+
+    function setView(view) {
+      activeView = view;
+      document.querySelectorAll(".view").forEach(section => section.classList.add("hidden"));
+      document.getElementById(`view-${view}`).classList.remove("hidden");
+      els.navButtons.forEach(button => button.classList.toggle("active", button.dataset.view === view));
+      els.viewTitle.textContent = titles[view][0];
+      els.viewSubtitle.textContent = titles[view][1];
+      document.getElementById("newEntry").classList.toggle("hidden", view === "today");
+    }
+
+    function resetForm() {
+      els.entryForm.reset();
+      els.entryId.value = "";
+      document.getElementById("date").value = todayString();
+      document.getElementById("breakMinutes").value = 0;
+      document.getElementById("tips").value = 0;
+      document.getElementById("orders").value = 0;
+      document.getElementById("km").value = 0;
+      document.querySelectorAll("[data-income], [data-expense]").forEach(input => input.value = 0);
+      const todayEntry = state.entries.find(entry => entry.date === todayString());
+      if (todayEntry) {
+        fillEntryFields(todayEntry);
+        els.formTitle.textContent = "更新今日紀錄";
+      } else {
+        els.formTitle.textContent = "新增紀錄";
+      }
+      els.cancelEdit.classList.add("hidden");
+      document.querySelectorAll("#entryForm details").forEach(details => details.open = false);
+      updateQuickPreview();
+    }
+
+    function fillEntryFields(entry) {
+      els.entryId.value = entry.id;
+      document.getElementById("date").value = entry.date;
+      document.getElementById("shift").value = entry.shift || "早班";
+      document.getElementById("startTime").value = entry.startTime || "";
+      document.getElementById("endTime").value = entry.endTime || "";
+      document.getElementById("breakMinutes").value = entry.breakMinutes || 0;
+      document.getElementById("manualHours").value = entry.manualHours || "";
+      document.getElementById("tips").value = entry.tips || 0;
+      document.getElementById("orders").value = entry.orders || 0;
+      document.getElementById("km").value = entry.km || 0;
+      document.getElementById("weather").value = entry.weather || "晴天";
+      document.getElementById("note").value = entry.note || "";
+      document.querySelectorAll("[data-income]").forEach(input => input.value = entry.incomes?.[input.dataset.income] || 0);
+      document.querySelectorAll("[data-expense]").forEach(input => input.value = entry.expenses?.[input.dataset.expense] || 0);
+    }
+
+    function editEntry(id) {
+      const entry = state.entries.find(item => item.id === id);
+      if (!entry) return;
+      setView("today");
+      fillEntryFields(entry);
+      const detailSections = document.querySelectorAll("#entryForm details");
+      detailSections.forEach(details => details.open = false);
+      detailSections[0].open = Boolean(entry.startTime || entry.endTime || entry.manualHours || entry.breakMinutes);
+      detailSections[1].open = entryExpenses(entry) > 0;
+      detailSections[2].open = Boolean(entry.orders || entry.km || entry.note || entry.weather || entry.shift);
+      els.formTitle.textContent = "編輯紀錄";
+      els.cancelEdit.classList.remove("hidden");
+      updateQuickPreview();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function deleteEntry(id) {
+      if (!confirm("確定要刪除這筆紀錄嗎？")) return;
+      state.entries = state.entries.filter(entry => entry.id !== id);
+      saveState();
+      renderAll();
+    }
+
+    function formData() {
+      const incomes = {};
+      document.querySelectorAll("[data-income]").forEach(input => incomes[input.dataset.income] = Number(input.value || 0));
+      const expenses = {};
+      document.querySelectorAll("[data-expense]").forEach(input => expenses[input.dataset.expense] = Number(input.value || 0));
+      return {
+        id: els.entryId.value || crypto.randomUUID(),
+        date: document.getElementById("date").value,
+        shift: document.getElementById("shift").value,
+        startTime: document.getElementById("startTime").value,
+        endTime: document.getElementById("endTime").value,
+        breakMinutes: Number(document.getElementById("breakMinutes").value || 0),
+        manualHours: Number(document.getElementById("manualHours").value || 0),
+        tips: Number(document.getElementById("tips").value || 0),
+        orders: Number(document.getElementById("orders").value || 0),
+        km: Number(document.getElementById("km").value || 0),
+        weather: document.getElementById("weather").value,
+        note: document.getElementById("note").value.trim(),
+        incomes,
+        expenses
+      };
+    }
+
+    function exportCsv() {
+      const headers = ["日期", "班別", "總額", "小費", "支出", "淨收入", "工時", "時薪", "訂單數", "公里數", "天氣", ...state.platforms, ...state.expenses, "備註"];
+      const rows = state.entries
+        .slice()
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .map(entry => {
+          const hours = calcHours(entry);
+          return [
+            entry.date,
+            entry.shift,
+            entryTotal(entry),
+            entry.tips,
+            entryExpenses(entry),
+            entryNet(entry),
+            hours,
+            hours ? entryNet(entry) / hours : 0,
+            entry.orders,
+            entry.km,
+            entry.weather,
+            ...state.platforms.map(name => entry.incomes?.[name] || 0),
+            ...state.expenses.map(name => entry.expenses?.[name] || 0),
+            entry.note || ""
+          ];
+        });
+      const csv = [headers, ...rows]
+        .map(row => row.map(cell => `"${String(cell ?? "").replaceAll('"', '""')}"`).join(","))
+        .join("\n");
+      const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `跑車薪資-${todayString()}.csv`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    els.navButtons.forEach(button => button.addEventListener("click", () => setView(button.dataset.view)));
+    document.getElementById("newEntry").addEventListener("click", () => { resetForm(); setView("today"); });
+    els.cancelEdit.addEventListener("click", resetForm);
+    document.getElementById("exportCsv").addEventListener("click", exportCsv);
+
+    [els.monthFilter, els.weekMonthFilter, els.monthReportFilter, els.platformMonthFilter].forEach(select => {
+      select.addEventListener("change", () => {
+        renderEntries();
+        renderWeeks();
+        renderMonthReport();
+        renderPlatformReport();
+      });
+    });
+
+    els.entryForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const entry = formData();
+      const index = state.entries.findIndex(item => item.id === entry.id);
+      if (index >= 0) state.entries[index] = entry;
+      else {
+        const sameDateIndex = state.entries.findIndex(item => item.date === entry.date);
+        if (sameDateIndex >= 0) {
+          entry.id = state.entries[sameDateIndex].id;
+          state.entries[sameDateIndex] = entry;
+        } else {
+          state.entries.push(entry);
+        }
+      }
+      saveState();
+      renderAll();
+      resetForm();
+    });
+
+    els.entryForm.addEventListener("input", updateQuickPreview);
+    els.entryForm.addEventListener("change", updateQuickPreview);
+
+    els.entriesTable.addEventListener("click", event => {
+      const editButton = event.target.closest("[data-edit]");
+      const deleteButton = event.target.closest("[data-delete]");
+      if (editButton) editEntry(editButton.dataset.edit);
+      if (deleteButton) deleteEntry(deleteButton.dataset.delete);
+    });
+
+    document.getElementById("addPlatform").addEventListener("click", () => {
+      const input = document.getElementById("newPlatformName");
+      const name = input.value.trim();
+      if (!name || state.platforms.includes(name)) return;
+      state.platforms.push(name);
+      input.value = "";
+      saveState();
+      renderAll();
+    });
+
+    document.getElementById("addExpense").addEventListener("click", () => {
+      const input = document.getElementById("newExpenseName");
+      const name = input.value.trim();
+      if (!name || state.expenses.includes(name)) return;
+      state.expenses.push(name);
+      input.value = "";
+      saveState();
+      renderAll();
+    });
+
+    document.getElementById("saveGoal").addEventListener("click", () => {
+      state.settings.monthlyGoal = Number(document.getElementById("monthlyGoal").value || 0);
+      saveState();
+      renderAll();
+    });
+
+    document.getElementById("view-settings").addEventListener("click", event => {
+      const platformButton = event.target.closest("[data-remove-platform]");
+      const expenseButton = event.target.closest("[data-remove-expense]");
+      if (platformButton) {
+        state.platforms = state.platforms.filter(name => name !== platformButton.dataset.removePlatform);
+      }
+      if (expenseButton) {
+        state.expenses = state.expenses.filter(name => name !== expenseButton.dataset.removeExpense);
+      }
+      if (platformButton || expenseButton) {
+        saveState();
+        renderAll();
+      }
+    });
+
+    renderAll();
+    resetForm();
+    setView("today");
+  </script>
+</body>
+</html>
