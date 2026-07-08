@@ -257,6 +257,11 @@
       justify-content: flex-end;
     }
 
+    .overview-toggle-wrap {
+      display: flex;
+      justify-content: flex-start;
+    }
+
     .button {
       min-height: 40px;
       border-radius: 8px;
@@ -752,6 +757,7 @@
       .topbar {
         align-items: stretch;
         flex-direction: column;
+        gap: 10px;
       }
 
       .toolbar {
@@ -763,7 +769,15 @@
       }
 
       .topbar h2 {
-        font-size: 24px;
+        font-size: 22px;
+      }
+
+      .topbar p {
+        display: none;
+      }
+
+      .overview-toggle-wrap .button {
+        width: 100%;
       }
 
       .hero {
@@ -896,7 +910,11 @@
         </div>
       </section>
 
-      <section class="grid stats" id="summaryStats"></section>
+      <section class="overview-toggle-wrap" id="overviewToggleWrap">
+        <button class="button secondary" id="toggleOverview" type="button" aria-expanded="false">顯示業績總覽</button>
+      </section>
+
+      <section class="grid stats hidden" id="summaryStats"></section>
 
       <section id="view-today" class="view layout">
         <div class="panel">
@@ -907,6 +925,13 @@
           <div class="panel-body">
             <form id="entryForm">
               <input type="hidden" id="entryId">
+              <div>
+                <div class="section-title">
+                  <strong>平台收入</strong>
+                </div>
+                <div class="income-grid" id="incomeInputs"></div>
+              </div>
+
               <div class="fields quick-fields">
                 <label>日期
                   <input type="date" id="date" required>
@@ -917,13 +942,6 @@
               </div>
 
               <div class="quick-preview" id="quickPreview"></div>
-
-              <div>
-                <div class="section-title">
-                  <strong>平台收入</strong>
-                </div>
-                <div class="income-grid" id="incomeInputs"></div>
-              </div>
 
               <details class="collapsible">
                 <summary>工時設定</summary>
@@ -1101,6 +1119,7 @@
 
     const state = loadState();
     let activeView = "today";
+    let overviewVisible = false;
 
     const titles = {
       today: ["今日輸入", "每天花一分鐘記錄收入、工時與支出。"],
@@ -1114,6 +1133,8 @@
       navButtons: document.querySelectorAll(".nav button"),
       viewTitle: document.getElementById("viewTitle"),
       viewSubtitle: document.getElementById("viewSubtitle"),
+      overviewToggleWrap: document.getElementById("overviewToggleWrap"),
+      toggleOverview: document.getElementById("toggleOverview"),
       summaryStats: document.getElementById("summaryStats"),
       quickPreview: document.getElementById("quickPreview"),
       incomeInputs: document.getElementById("incomeInputs"),
@@ -1299,6 +1320,14 @@
       } else {
         els.sideGoal.textContent = "尚未設定目標";
       }
+    }
+
+    function updateOverviewVisibility() {
+      const showToggle = activeView === "today";
+      els.overviewToggleWrap.classList.toggle("hidden", !showToggle);
+      els.summaryStats.classList.toggle("hidden", !(showToggle && overviewVisible));
+      els.toggleOverview.textContent = overviewVisible ? "隱藏業績總覽" : "顯示業績總覽";
+      els.toggleOverview.setAttribute("aria-expanded", String(overviewVisible));
     }
 
     function updateQuickPreview() {
@@ -1524,6 +1553,7 @@
       els.viewTitle.textContent = titles[view][0];
       els.viewSubtitle.textContent = titles[view][1];
       document.getElementById("newEntry").classList.toggle("hidden", view === "today");
+      updateOverviewVisibility();
     }
 
     function resetForm() {
@@ -1650,6 +1680,10 @@
     document.getElementById("newEntry").addEventListener("click", () => { resetForm(); setView("today"); });
     els.cancelEdit.addEventListener("click", resetForm);
     document.getElementById("exportCsv").addEventListener("click", exportCsv);
+    els.toggleOverview.addEventListener("click", () => {
+      overviewVisible = !overviewVisible;
+      updateOverviewVisibility();
+    });
 
     [els.monthFilter, els.weekMonthFilter, els.monthReportFilter, els.platformMonthFilter].forEach(select => {
       select.addEventListener("change", () => {
@@ -1733,6 +1767,7 @@
     renderAll();
     resetForm();
     setView("today");
+    updateOverviewVisibility();
   </script>
 </body>
 </html>
