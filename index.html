@@ -2,12 +2,17 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#12a77b">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="跑車薪資">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <title>跑車薪資計算</title>
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/driver-pay-pro-icon-512.png" type="image/png">
+  <link rel="apple-touch-icon" sizes="192x192" href="assets/driver-pay-pro-icon-192.png">
+  <title>Driver Pay Pro</title>
   <style>
     :root {
       color-scheme: light;
@@ -986,26 +991,733 @@
         height: 14px;
       }
     }
+
+    /* v0.4 Home — mobile-first driver console */
+    :root {
+      --bg: #f3f5f4;
+      --panel: #ffffff;
+      --panel-2: #f0f4f2;
+      --text: #17211d;
+      --muted: #68736e;
+      --line: #dde4e0;
+      --brand: #15966f;
+      --brand-strong: #087653;
+      --brand-soft: #e3f5ed;
+      --danger: #c8423b;
+      --shadow: 0 4px 18px rgba(26, 48, 38, .06);
+    }
+
+    html {
+      min-width: 320px;
+      background: var(--bg);
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      min-width: 320px;
+      overflow-x: hidden;
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font-size: 16px;
+    }
+
+    button {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .app {
+      min-height: 100svh;
+      display: block;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      width: 100%;
+      min-height: calc(48px + env(safe-area-inset-top));
+      padding: calc(3px + env(safe-area-inset-top)) 16px 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fbfcfb;
+      color: var(--text);
+      border: 0;
+      border-bottom: 1px solid rgba(221, 228, 224, .9);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    .brand {
+      width: auto;
+      min-height: 40px;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .brand-copy {
+      min-width: 0;
+    }
+
+    .brand h1 {
+      font-size: 17px;
+      font-weight: 750;
+      letter-spacing: -.02em;
+    }
+
+    .brand small {
+      display: none;
+    }
+
+    .brand-mark {
+      order: 0;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--brand-strong);
+      box-shadow: none;
+      border: 0;
+    }
+
+    .brand-mark img {
+      display: block;
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    .nav {
+      position: fixed;
+      z-index: 30;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      min-height: calc(62px + env(safe-area-inset-bottom));
+      padding: 6px max(8px, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(8px, env(safe-area-inset-left));
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 2px;
+      overflow: visible;
+      background: rgba(255, 255, 255, .96);
+      border-top: 1px solid var(--line);
+      box-shadow: 0 -6px 22px rgba(26, 48, 38, .06);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+    }
+
+    .nav button,
+    .nav button:hover {
+      min-width: 0;
+      min-height: 52px;
+      padding: 4px 2px;
+      display: grid;
+      place-items: center;
+      align-content: center;
+      gap: 3px;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.1;
+    }
+
+    .nav button.active {
+      background: transparent;
+      color: var(--brand-strong);
+      font-weight: 700;
+    }
+
+    .nav .nav-icon {
+      display: block;
+      width: 25px;
+      height: 25px;
+      font-size: 18px;
+      line-height: 25px;
+      text-align: center;
+    }
+
+    .side-summary,
+    .hero,
+    .overview-toggle-wrap,
+    #newEntry {
+      display: none !important;
+    }
+
+    main {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      padding: 8px 12px calc(82px + env(safe-area-inset-bottom));
+      display: grid;
+      gap: 8px;
+    }
+
+    .topbar {
+      align-items: center;
+      gap: 8px;
+      padding: 2px 4px;
+    }
+
+    .topbar h2 {
+      font-size: 24px;
+      letter-spacing: -.02em;
+    }
+
+    .topbar p {
+      display: none;
+    }
+
+    body[data-active-view="today"] .topbar {
+      display: none;
+    }
+
+    .stats {
+      display: block;
+    }
+
+    .today-summary {
+      padding: 14px 17px 13px;
+      border-radius: 20px;
+      color: #fff;
+      background: var(--brand-strong);
+      box-shadow: none;
+    }
+
+    .today-summary-label {
+      display: block;
+      margin-bottom: 4px;
+      color: rgba(255, 255, 255, .72);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .today-income {
+      display: block;
+      overflow-wrap: anywhere;
+      font-size: clamp(42px, 13vw, 62px);
+      line-height: 1;
+      letter-spacing: -.055em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .today-secondary {
+      margin-top: 12px;
+      padding-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      border-top: 1px solid rgba(255, 255, 255, .18);
+    }
+
+    .today-secondary div {
+      min-width: 0;
+    }
+
+    .today-secondary span {
+      display: block;
+      margin-bottom: 3px;
+      color: rgba(255, 255, 255, .7);
+      font-size: 12px;
+    }
+
+    .today-secondary strong {
+      display: block;
+      font-size: 28px;
+      line-height: 1.12;
+      letter-spacing: -.02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .layout,
+    #view-today.layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-head {
+      min-height: 46px;
+      padding: 12px 16px 8px;
+      background: #fff;
+      border-bottom: 0;
+    }
+
+    .panel-head h3 {
+      font-size: 17px;
+    }
+
+    .panel-body {
+      padding: 6px 14px 12px;
+    }
+
+    .home-work-card {
+      padding: 12px;
+      display: grid;
+      gap: 9px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .work-status-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .work-status-row span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .work-status-row strong {
+      display: block;
+      margin-top: 3px;
+      font-size: 18px;
+    }
+
+    .work-elapsed {
+      flex: 0 0 auto;
+      color: var(--brand-strong);
+      font-size: 17px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .work-metrics {
+      padding: 7px 10px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      border-radius: 13px;
+      background: var(--panel-2);
+    }
+
+    .work-metrics div {
+      min-width: 0;
+    }
+
+    .work-metrics span,
+    .work-metrics strong {
+      display: block;
+      text-align: center;
+    }
+
+    .work-metrics span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .work-metrics strong {
+      margin-top: 2px;
+      overflow: hidden;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .work-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .work-actions .button {
+      min-height: 60px;
+      border-radius: 15px;
+      font-size: 17px;
+      font-weight: 800;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.18);
+    }
+
+    .work-actions .button.primary {
+      grid-column: 1 / -1;
+      background: var(--brand);
+    }
+
+    .work-actions .button:active {
+      transform: scale(.985);
+      opacity: .9;
+    }
+
+    .button {
+      min-height: 44px;
+      border-radius: 12px;
+      background: var(--brand);
+      box-shadow: none;
+    }
+
+    .button.secondary {
+      background: #fff;
+    }
+
+    .income-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .platform-row {
+      min-width: 0;
+      padding: 11px 0;
+      display: grid;
+      grid-template-columns: minmax(76px, 1fr) minmax(104px, 1.1fr) 84px;
+      gap: 8px;
+      align-items: center;
+      border-bottom: 1px solid #edf1ef;
+    }
+
+    .platform-row:last-child {
+      border-bottom: 0;
+    }
+
+    .platform-copy {
+      min-width: 0;
+    }
+
+    .platform-name {
+      display: block;
+      overflow: hidden;
+      color: var(--text);
+      font-size: 17px;
+      font-weight: 750;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .platform-total {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .quick-income-input,
+    .record-amount {
+      width: 100%;
+      min-width: 0;
+      min-height: 50px;
+      padding: 8px 10px;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      color: var(--text);
+      background: #f9fbfa;
+      font-size: 20px;
+      font-weight: 750;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .quick-income-input:focus,
+    .record-amount:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(21, 150, 111, .13);
+      background: #fff;
+    }
+
+    .quick-income-input.input-error {
+      border-color: var(--danger);
+      animation: input-shake .18s linear 2;
+    }
+
+    @keyframes input-shake {
+      50% { transform: translateX(2px); }
+    }
+
+    .quick-add-button {
+      width: 84px;
+      height: 50px;
+      padding: 0;
+      border-radius: 13px;
+      color: #fff;
+      background: var(--brand);
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -.01em;
+    }
+
+    .quick-add-button:active {
+      transform: scale(.96);
+    }
+
+    .goal-card {
+      padding: 14px 15px;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    .goal-top,
+    .goal-bottom {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .goal-top span,
+    .goal-bottom span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .goal-top strong {
+      font-size: 15px;
+    }
+
+    .goal-track {
+      height: 7px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--panel-2);
+    }
+
+    .goal-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: var(--brand);
+    }
+
+    .recent-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .recent-record {
+      min-width: 0;
+      padding: 9px 0;
+      display: grid;
+      grid-template-columns: minmax(78px, 1fr) minmax(86px, 112px) 40px 40px;
+      gap: 7px;
+      align-items: center;
+      border-bottom: 1px solid #edf1ef;
+    }
+
+    .recent-record:last-child {
+      border-bottom: 0;
+    }
+
+    .recent-record strong,
+    .recent-record small {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .recent-record small {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .record-amount {
+      min-height: 42px;
+      font-size: 16px;
+    }
+
+    .record-action {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      color: var(--brand-strong);
+      background: var(--brand-soft);
+      font-weight: 800;
+    }
+
+    .record-action.delete {
+      color: var(--danger);
+      background: #fff0ef;
+    }
+
+    .details-panel .collapsible {
+      margin-bottom: 10px;
+      border-radius: 14px;
+    }
+
+    .details-panel .collapsible summary {
+      min-height: 50px;
+    }
+
+    .details-panel .save-button {
+      position: static;
+      min-height: 50px;
+      width: 100%;
+    }
+
+    .quick-preview {
+      display: none;
+    }
+
+    .fields,
+    .quick-fields,
+    .expense-grid,
+    .rate-grid {
+      grid-template-columns: 1fr;
+    }
+
+    input,
+    select,
+    textarea {
+      min-height: 46px;
+      border-radius: 12px;
+    }
+
+    .report-switcher {
+      margin-bottom: 12px;
+      padding: 4px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 4px;
+      border-radius: 14px;
+      background: #e8edeb;
+    }
+
+    .report-switcher button {
+      min-height: 40px;
+      border-radius: 10px;
+      color: var(--muted);
+      background: transparent;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .report-switcher button.active {
+      color: var(--text);
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(26, 48, 38, .08);
+    }
+
+    .table-wrap {
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .view > .panel,
+    .view > .layout {
+      min-width: 0;
+    }
+
+    .history-panel {
+      display: none;
+    }
+
+    body[data-active-view="week"] .history-panel {
+      display: block;
+    }
+
+    .ai-panel {
+      min-height: 320px;
+      padding: 24px;
+    }
+
+    .driver-space-note {
+      margin-bottom: 12px;
+      padding: 14px 15px;
+      border-radius: 16px;
+      color: var(--muted);
+      background: var(--brand-soft);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .empty.compact {
+      padding: 13px 4px;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    @media (min-width: 700px) {
+      main {
+        padding-top: 22px;
+      }
+
+      .platform-row {
+        grid-template-columns: minmax(180px, 1fr) 180px 92px;
+      }
+
+      .fields,
+      .expense-grid,
+      .rate-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .layout:not(#view-today) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (display-mode: standalone) {
+      .sidebar {
+        min-height: calc(48px + env(safe-area-inset-top));
+      }
+    }
+
+    @media (max-width: 350px) {
+      .platform-row {
+        grid-template-columns: minmax(0, 1fr) 88px;
+      }
+
+      .platform-copy {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .quick-add-button {
+        width: 88px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="app">
-    <aside class="sidebar">
+    <header class="sidebar">
       <div class="brand">
-        <div class="brand-mark">薪</div>
-        <div>
-          <h1>跑車薪資計算</h1>
+        <button class="brand-mark" id="driverSpaceLogo" type="button" aria-label="進入 Driver Space">
+          <img src="assets/driver-pay-pro-master-icon.png" alt="Driver Pay Pro Official App Icon v1.0">
+        </button>
+        <div class="brand-copy">
+          <h1>Driver Pay Pro</h1>
           <small>多元計程車收入管理</small>
         </div>
       </div>
 
       <nav class="nav" aria-label="主選單">
-        <button class="active" data-view="today"><span class="nav-icon">＋</span>今日輸入</button>
-        <button data-view="week"><span class="nav-icon">週</span>週報表</button>
-        <button data-view="month"><span class="nav-icon">月</span>月報表</button>
-        <button data-view="platform"><span class="nav-icon">台</span>平台分析</button>
-        <button data-view="ai"><span class="nav-icon">AI</span>AI 分析</button>
-        <button data-view="settings"><span class="nav-icon">設</span>設定</button>
+        <button class="active" data-view="today"><span class="nav-icon">●</span>今天</button>
+        <button data-view="week"><span class="nav-icon">▦</span>月曆</button>
+        <button data-view="platform"><span class="nav-icon">▥</span>分析</button>
+        <button data-view="ai"><span class="nav-icon">✦</span>AI</button>
+        <button data-view="settings"><span class="nav-icon">♙</span>Driver</button>
       </nav>
 
       <div class="side-summary">
@@ -1013,7 +1725,7 @@
         <strong id="sideNet">$0</strong>
         <span id="sideGoal">尚未設定目標</span>
       </div>
-    </aside>
+    </header>
 
     <main>
       <section class="hero" aria-label="跑車收入視覺總覽">
@@ -1053,39 +1765,66 @@
         <button class="button secondary" id="toggleOverview" type="button" aria-expanded="false">顯示業績總覽</button>
       </section>
 
-      <section class="grid stats hidden" id="summaryStats"></section>
+      <section class="grid stats" id="summaryStats"></section>
 
       <section id="view-today" class="view layout">
+        <section class="home-work-card" aria-labelledby="workStatusTitle">
+          <div class="work-status-row">
+            <div>
+              <span id="workStatusTitle">今日工作狀態</span>
+              <strong id="workStatusText">尚未開始</strong>
+            </div>
+            <div class="work-elapsed" id="workElapsed">00:00:00</div>
+          </div>
+          <div class="work-metrics" aria-label="今日工時計算">
+            <div><span>總經過</span><strong id="workTotal">0 分</strong></div>
+            <div><span>休息</span><strong id="workBreak">0 分</strong></div>
+            <div><span>實際</span><strong id="workActual">0 分</strong></div>
+          </div>
+          <div class="work-actions">
+            <button class="button primary" id="startRun" type="button">開始跑車</button>
+            <button class="button secondary hidden" id="pauseRun" type="button">暫停休息</button>
+            <button class="button primary hidden" id="resumeRun" type="button">繼續跑車</button>
+            <button class="button secondary hidden" id="endRun" type="button">收工</button>
+          </div>
+        </section>
+
         <div class="panel">
           <div class="panel-head">
-            <h3 id="formTitle">新增紀錄</h3>
-            <button class="button secondary hidden" id="cancelEdit">取消編輯</button>
+            <h3>平台快速收入</h3>
           </div>
           <div class="panel-body">
             <form id="entryForm">
               <input type="hidden" id="entryId">
               <div>
-                <div class="section-title">
-                  <strong>平台收入</strong>
-                </div>
                 <div class="income-grid" id="incomeInputs"></div>
               </div>
+            </form>
+          </div>
+        </div>
 
+        <div class="goal-card" id="dailyGoalCard"></div>
+
+        <div class="panel" id="recentIncomePanel">
+          <div class="panel-head">
+            <h3>最近輸入</h3>
+          </div>
+          <div class="panel-body recent-list" id="recentIncomeList"></div>
+        </div>
+
+        <div class="panel details-panel">
+          <div class="panel-head">
+            <h3 id="formTitle">今日詳細紀錄</h3>
+            <button class="button secondary hidden" id="cancelEdit" type="button">取消編輯</button>
+          </div>
+          <div class="panel-body">
+            <form id="detailForm">
               <div class="fields quick-fields">
                 <label>日期
                   <input type="date" id="date" required>
                 </label>
               </div>
-
               <div class="quick-preview" id="quickPreview"></div>
-
-              <div class="goal-card" id="dailyGoalCard"></div>
-
-              <div class="work-actions">
-                <button class="button secondary" id="startRun" type="button">🚀 開始跑車</button>
-                <button class="button secondary" id="endRun" type="button">🛑 收工</button>
-              </div>
-
               <details class="collapsible">
                 <summary>工時設定</summary>
                 <div class="collapsible-body fields">
@@ -1096,29 +1835,26 @@
                     <input type="time" id="endTime">
                   </label>
                   <label>休息分鐘
-                    <input type="number" inputmode="numeric" id="breakMinutes" min="0" step="5" value="0">
+                    <input type="number" inputmode="numeric" id="breakMinutes" min="0" step="1" value="0">
                   </label>
                   <label>手動工時
                     <input type="number" inputmode="decimal" id="manualHours" min="0" step="0.25" placeholder="可留空自動算">
                   </label>
                 </div>
               </details>
-
               <details class="collapsible">
                 <summary>支出與罰單</summary>
                 <div class="collapsible-body expense-grid" id="expenseInputs"></div>
               </details>
-
               <details class="collapsible">
-                <summary>詳細資料</summary>
+                <summary>其他資料</summary>
                 <div class="collapsible-body fields">
+                  <label>小費
+                    <input type="number" inputmode="numeric" id="tips" min="0" step="1" value="0">
+                  </label>
                   <label>班別
                     <select id="shift">
-                      <option>早班</option>
-                      <option>午班</option>
-                      <option>晚班</option>
-                      <option>大夜班</option>
-                      <option>全天</option>
+                      <option>早班</option><option>午班</option><option>晚班</option><option>大夜班</option><option>全天</option>
                     </select>
                   </label>
                   <label>訂單數
@@ -1129,11 +1865,7 @@
                   </label>
                   <label>天氣
                     <select id="weather">
-                      <option>晴天</option>
-                      <option>陰天</option>
-                      <option>雨天</option>
-                      <option>連假</option>
-                      <option>特殊活動</option>
+                      <option>晴天</option><option>陰天</option><option>雨天</option><option>連假</option><option>特殊活動</option>
                     </select>
                   </label>
                   <label style="grid-column: 1 / -1;">備註
@@ -1141,22 +1873,18 @@
                   </label>
                 </div>
               </details>
-
-              <button class="button save-button" type="submit">儲存今天</button>
+              <button class="button save-button" type="submit">儲存詳細紀錄</button>
             </form>
           </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-head">
-            <h3>月份明細</h3>
-            <select id="monthFilter" aria-label="月份篩選"></select>
-          </div>
-          <div class="table-wrap" id="entriesTable"></div>
         </div>
       </section>
 
       <section id="view-week" class="view hidden">
+        <div class="report-switcher" aria-label="報表切換">
+          <button class="active" data-report-view="week">週報</button>
+          <button data-report-view="month">月報</button>
+          <button data-report-view="platform">平台</button>
+        </div>
         <div class="panel">
           <div class="panel-head">
             <h3>每週總額</h3>
@@ -1169,6 +1897,11 @@
       </section>
 
       <section id="view-month" class="view hidden">
+        <div class="report-switcher" aria-label="報表切換">
+          <button data-report-view="week">週報</button>
+          <button class="active" data-report-view="month">月報</button>
+          <button data-report-view="platform">平台</button>
+        </div>
         <div class="layout">
           <div class="panel">
             <div class="panel-head">
@@ -1194,6 +1927,11 @@
       </section>
 
       <section id="view-platform" class="view hidden">
+        <div class="report-switcher" aria-label="報表切換">
+          <button data-report-view="week">週報</button>
+          <button data-report-view="month">月報</button>
+          <button class="active" data-report-view="platform">平台</button>
+        </div>
         <div class="layout">
           <div class="panel">
             <div class="panel-head">
@@ -1222,6 +1960,7 @@
       </section>
 
       <section id="view-settings" class="view hidden">
+        <div class="driver-space-note">Driver Space 詳細內容將於後續版本開發；目前保留原有平台、費用、目標與匯出設定。</div>
         <div class="layout">
           <div class="panel">
             <div class="panel-head">
@@ -1272,6 +2011,11 @@
           </div>
         </div>
       </section>
+
+      <section class="panel history-panel">
+        <div class="panel-head"><h3>月份明細</h3><select id="monthFilter" aria-label="月份篩選"></select></div>
+        <div class="table-wrap" id="entriesTable"></div>
+      </section>
     </main>
   </div>
 
@@ -1300,7 +2044,7 @@
       month: ["月報表", "追蹤整個月份收入、成本與目標進度。"],
       platform: ["平台分析", "看出 Uber、LINE GO、Yoxi、55688 與其他來源的表現。"],
       ai: ["AI 分析", "預留未來最佳跑車建議與收入效率分析。"],
-      settings: ["設定", "調整平台、支出類別與每月目標。"]
+      settings: ["Driver Space", "調整平台、支出類別與收入目標。"]
     };
 
     const els = {
@@ -1315,6 +2059,7 @@
       incomeInputs: document.getElementById("incomeInputs"),
       expenseInputs: document.getElementById("expenseInputs"),
       entryForm: document.getElementById("entryForm"),
+      detailForm: document.getElementById("detailForm"),
       entryId: document.getElementById("entryId"),
       formTitle: document.getElementById("formTitle"),
       cancelEdit: document.getElementById("cancelEdit"),
@@ -1332,7 +2077,16 @@
       platformRateInputs: document.getElementById("platformRateInputs"),
       expenseChips: document.getElementById("expenseChips"),
       startRun: document.getElementById("startRun"),
+      pauseRun: document.getElementById("pauseRun"),
+      resumeRun: document.getElementById("resumeRun"),
       endRun: document.getElementById("endRun"),
+      workStatusText: document.getElementById("workStatusText"),
+      workElapsed: document.getElementById("workElapsed"),
+      workTotal: document.getElementById("workTotal"),
+      workBreak: document.getElementById("workBreak"),
+      workActual: document.getElementById("workActual"),
+      recentIncomeList: document.getElementById("recentIncomeList"),
+      recentIncomePanel: document.getElementById("recentIncomePanel"),
       sideNet: document.getElementById("sideNet"),
       sideGoal: document.getElementById("sideGoal"),
       heroNet: document.getElementById("heroNet"),
@@ -1343,14 +2097,19 @@
     function loadState() {
       const saved = localStorage.getItem(storageKey);
       if (saved) {
-        const parsed = JSON.parse(saved);
-        const platforms = parsed.platforms?.length ? parsed.platforms : defaultPlatforms;
-        return {
-          platforms,
-          expenses: parsed.expenses?.length ? parsed.expenses : defaultExpenses,
-          entries: parsed.entries || [],
-          settings: normalizeSettings(parsed.settings, platforms)
-        };
+        try {
+          const parsed = JSON.parse(saved);
+          const platforms = parsed.platforms?.length ? parsed.platforms : defaultPlatforms;
+          return {
+            ...parsed,
+            platforms,
+            expenses: parsed.expenses?.length ? parsed.expenses : defaultExpenses,
+            entries: Array.isArray(parsed.entries) ? parsed.entries : [],
+            settings: normalizeSettings(parsed.settings, platforms)
+          };
+        } catch (error) {
+          console.error("無法讀取既有資料，將保留原始 localStorage 內容。", error);
+        }
       }
       return {
         platforms: defaultPlatforms,
@@ -1366,6 +2125,7 @@
         if (!Number(platformRates[name])) platformRates[name] = 100;
       });
       return {
+        ...settings,
         monthlyGoal: Number(settings.monthlyGoal || 0),
         dailyGoal: Number(settings.dailyGoal || 0),
         platformRates
@@ -1386,7 +2146,10 @@
 
     function todayString() {
       const now = new Date();
-      return now.toISOString().slice(0, 10);
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
     }
 
     function currentTimeString() {
@@ -1428,6 +2191,14 @@
 
     function calcHours(entry) {
       if (Number(entry.manualHours) > 0) return Number(entry.manualHours);
+      if (entry.workSession) {
+        const session = entry.workSession;
+        let activeMs = Number(session.accumulatedActiveMs || 0);
+        if (session.status === "running" && session.segmentStartedAt) {
+          activeMs += Math.max(0, Date.now() - new Date(session.segmentStartedAt).getTime());
+        }
+        return Math.max(0, activeMs / 3600000);
+      }
       if (!entry.startTime || !entry.endTime) return 0;
       const start = minutes(entry.startTime);
       let end = minutes(entry.endTime);
@@ -1438,6 +2209,54 @@
     function minutes(time) {
       const [h, m] = time.split(":").map(Number);
       return h * 60 + m;
+    }
+
+    function makeId() {
+      return window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    function blankEntry(date = todayString()) {
+      return {
+        id: makeId(),
+        date,
+        shift: "早班",
+        startTime: "",
+        endTime: "",
+        breakMinutes: 0,
+        manualHours: 0,
+        tips: 0,
+        orders: 0,
+        km: 0,
+        weather: "晴天",
+        note: "",
+        incomes: {},
+        expenses: {}
+      };
+    }
+
+    function entryForDate(date = todayString()) {
+      return state.entries.find(entry => entry.date === date);
+    }
+
+    function ensureEntryForDate(date = todayString()) {
+      let entry = entryForDate(date);
+      if (!entry) {
+        entry = blankEntry(date);
+        state.entries.push(entry);
+      }
+      entry.incomes ||= {};
+      entry.expenses ||= {};
+      return entry;
+    }
+
+    function orderedHomePlatforms(entry = entryForDate()) {
+      const defaultOrder = new Map(defaultPlatforms.map((name, index) => [name, index]));
+      return state.platforms.slice().sort((a, b) => {
+        const aHasIncome = Number(entry?.incomes?.[a] || 0) > 0 ? 0 : 1;
+        const bHasIncome = Number(entry?.incomes?.[b] || 0) > 0 ? 0 : 1;
+        if (aHasIncome !== bHasIncome) return aHasIncome - bHasIncome;
+        return (defaultOrder.get(a) ?? 999) - (defaultOrder.get(b) ?? 999);
+      });
     }
 
     function selectedMonth(select) {
@@ -1472,17 +2291,18 @@
     }
 
     function renderInputs() {
-      els.incomeInputs.innerHTML = state.platforms.map(name => `
-        <label>${name}
-          <input type="number" inputmode="numeric" min="0" step="1" value="0" data-income="${escapeAttr(name)}">
-          <span class="rate-hint" data-rate-hint="${escapeAttr(name)}"></span>
-        </label>
-      `).join("") + `
-        <label>小費
-          <input type="number" inputmode="numeric" id="tips" min="0" step="1" value="0">
-          <span class="rate-hint">小費不扣平台比例</span>
-        </label>
-      `;
+      const todayEntry = entryForDate();
+      els.incomeInputs.innerHTML = orderedHomePlatforms(todayEntry).map(name => `
+        <div class="platform-row">
+          <div class="platform-copy">
+            <span class="platform-name">${escapeHtml(name)}</span>
+            <span class="platform-total">今日收入 ${money(todayEntry?.incomes?.[name] || 0)}</span>
+          </div>
+          <input type="hidden" value="${Number(todayEntry?.incomes?.[name] || 0)}" data-income="${escapeAttr(name)}">
+          <input class="quick-income-input" type="number" inputmode="numeric" min="1" step="1" placeholder="輸入收入" aria-label="${escapeAttr(name)} 收入" data-quick-income="${escapeAttr(name)}">
+          <button class="quick-add-button" type="button" aria-label="確認加入 ${escapeAttr(name)} 收入" data-add-income="${escapeAttr(name)}">✓ 完成</button>
+        </div>
+      `).join("");
 
       els.expenseInputs.innerHTML = state.expenses.map(name => `
         <label>${name}
@@ -1490,6 +2310,15 @@
         </label>
       `).join("");
       updateRateHints();
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
     }
 
     function escapeAttr(value) {
@@ -1510,20 +2339,17 @@
       const monthSummary = summarize(entriesForMonth(month));
       const todayEntry = state.entries.filter(entry => entry.date === todayString());
       const todaySummary = summarize(todayEntry);
-      const weekSummary = summarize(entriesForCurrentWeek());
 
-      els.summaryStats.innerHTML = [
-        ["今日業績", money(todaySummary.total), `小費 ${money(todaySummary.tips)}`],
-        ["本週業績", money(weekSummary.total), `${number(weekSummary.hours)} 小時`],
-        ["本月業績", money(monthSummary.total), `淨收入 ${money(monthSummary.net)}`],
-        ["今日時薪", money(todaySummary.hourly), `${number(todaySummary.hours)} 小時`]
-      ].map(([label, value, hint]) => `
-        <article class="stat">
-          <span>${label}</span>
-          <strong>${value}</strong>
-          <em>${hint}</em>
+      els.summaryStats.innerHTML = `
+        <article class="today-summary">
+          <span class="today-summary-label">今日收入</span>
+          <strong class="today-income">${money(todaySummary.total)}</strong>
+          <div class="today-secondary">
+            <div><span>今日實際工時</span><strong>${formatHours(todaySummary.hours)}</strong></div>
+            <div><span>目前時薪</span><strong>${money(todaySummary.hourly)}</strong></div>
+          </div>
         </article>
-      `).join("");
+      `;
 
       els.sideNet.textContent = money(monthSummary.net);
       els.heroNet.textContent = money(monthSummary.net);
@@ -1538,11 +2364,16 @@
     }
 
     function updateOverviewVisibility() {
-      const showToggle = activeView === "today";
-      els.overviewToggleWrap.classList.toggle("hidden", !showToggle);
-      els.summaryStats.classList.toggle("hidden", !(showToggle && overviewVisible));
-      els.toggleOverview.textContent = overviewVisible ? "隱藏業績總覽" : "顯示業績總覽";
-      els.toggleOverview.setAttribute("aria-expanded", String(overviewVisible));
+      const isToday = activeView === "today";
+      els.overviewToggleWrap.classList.add("hidden");
+      els.summaryStats.classList.toggle("hidden", !isToday);
+    }
+
+    function formatHours(hours) {
+      const totalMinutes = Math.max(0, Math.floor(Number(hours || 0) * 60));
+      const h = Math.floor(totalMinutes / 60);
+      const m = totalMinutes % 60;
+      return `${h} 小時 ${String(m).padStart(2, "0")} 分`;
     }
 
     function updateQuickPreview() {
@@ -1555,7 +2386,7 @@
       const net = entryNet(entry);
       const hours = calcHours(entry);
       updateRateHints();
-      updateDailyGoal(entry);
+      updateDailyGoal();
       els.quickPreview.innerHTML = `
         <div>
           <span>平台原始</span>
@@ -1580,29 +2411,23 @@
       `;
     }
 
-    function updateDailyGoal(entry = formData()) {
+    function updateDailyGoal(entry = entryForDate() || blankEntry()) {
       if (!els.dailyGoalCard) return;
       const goal = Number(state.settings.dailyGoal || 0);
       const current = entryTotal(entry);
       if (!goal) {
         els.dailyGoalCard.innerHTML = `
-          <h4>今日目標</h4>
-          <div class="goal-metrics">
-            <div><span>目標</span><strong>未設定</strong></div>
-            <div><span>目前收入</span><strong>${money(current)}</strong></div>
-            <div><span>狀態</span><strong>到設定頁新增</strong></div>
-          </div>
+          <div class="goal-top"><strong>今日目標</strong><span>尚未設定</span></div>
+          <div class="goal-bottom"><span>目前收入</span><strong>${money(current)}</strong></div>
         `;
         return;
       }
       const diff = goal - current;
+      const percent = Math.max(0, Math.round(current / goal * 100));
       els.dailyGoalCard.innerHTML = `
-        <h4>今日目標</h4>
-        <div class="goal-metrics">
-          <div><span>目標</span><strong>${money(goal)}</strong></div>
-          <div><span>目前收入</span><strong>${money(current)}</strong></div>
-          <div><span>${diff > 0 ? "還差" : "狀態"}</span><strong>${diff > 0 ? money(diff) : "已達標"}</strong></div>
-        </div>
+        <div class="goal-top"><strong>今日目標 ${money(goal)}</strong><span>${percent}%</span></div>
+        <div class="goal-track"><div class="goal-fill" style="width:${Math.min(100, percent)}%"></div></div>
+        <div class="goal-bottom"><span>目前 ${money(current)}</span><strong>${diff > 0 ? `尚差 ${money(diff)}` : "已達標"}</strong></div>
       `;
     }
 
@@ -1804,6 +2629,109 @@
       return `<span class="chip">${name}<button title="移除" data-remove-${type}="${escapeAttr(name)}">×</button></span>`;
     }
 
+    function renderRecentIncome() {
+      const entry = entryForDate();
+      const records = Array.isArray(entry?.incomeRecords) ? entry.incomeRecords.slice().reverse().slice(0, 6) : [];
+      els.recentIncomePanel.classList.toggle("hidden", !records.length);
+      if (!records.length) {
+        els.recentIncomeList.innerHTML = `<div class="empty compact">快速輸入後，最近紀錄會顯示在這裡。</div>`;
+        return;
+      }
+      els.recentIncomeList.innerHTML = records.map(record => `
+        <div class="recent-record">
+          <div>
+            <strong>${escapeHtml(record.platform)}</strong>
+            <small>${formatRecordTime(record.createdAt)}</small>
+          </div>
+          <input class="record-amount" type="number" inputmode="numeric" min="1" step="1" value="${Number(record.amount || 0)}" aria-label="修改 ${escapeAttr(record.platform)} 收入" data-record-amount="${escapeAttr(record.id)}">
+          <button class="record-action" type="button" aria-label="儲存修改" data-update-income-record="${escapeAttr(record.id)}">✓</button>
+          <button class="record-action delete" type="button" aria-label="刪除紀錄" data-delete-income-record="${escapeAttr(record.id)}">×</button>
+        </div>
+      `).join("");
+    }
+
+    function formatRecordTime(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "今天";
+      return date.toLocaleTimeString("zh-TW", { hour: "2-digit", minute: "2-digit", hour12: false });
+    }
+
+    function workStatus(entry = entryForDate()) {
+      if (entry?.workSession?.status) return entry.workSession.status;
+      if (entry?.startTime && !entry?.endTime) return "running";
+      if (entry?.startTime && entry?.endTime) return "stopped";
+      return "idle";
+    }
+
+    function sessionDetails(entry = entryForDate()) {
+      const hours = calcHours(entry || {});
+      const session = entry?.workSession;
+      let breakMs = Number(session?.accumulatedBreakMs || 0);
+      if (session?.status === "paused" && session.pausedAt) {
+        breakMs += Math.max(0, Date.now() - new Date(session.pausedAt).getTime());
+      }
+      if (!session) breakMs = Number(entry?.breakMinutes || 0) * 60000;
+      let elapsedMs = 0;
+      if (session?.startedAt) {
+        const end = session.endedAt ? new Date(session.endedAt).getTime() : Date.now();
+        elapsedMs = Math.max(0, end - new Date(session.startedAt).getTime());
+      } else if (entry?.startTime) {
+        const start = new Date(`${entry.date || todayString()}T${entry.startTime}:00`).getTime();
+        const end = entry.endTime ? new Date(`${entry.date || todayString()}T${entry.endTime}:00`).getTime() : Date.now();
+        elapsedMs = Math.max(0, end < start ? end + 86400000 - start : end - start);
+      }
+      return { hours, breakMs, elapsedMs };
+    }
+
+    function clockDuration(ms) {
+      const seconds = Math.max(0, Math.floor(Number(ms || 0) / 1000));
+      const h = String(Math.floor(seconds / 3600)).padStart(2, "0");
+      const m = String(Math.floor(seconds % 3600 / 60)).padStart(2, "0");
+      const s = String(seconds % 60).padStart(2, "0");
+      return `${h}:${m}:${s}`;
+    }
+
+    function updateWorkControls() {
+      const entry = entryForDate();
+      const status = workStatus(entry);
+      const details = sessionDetails(entry);
+      const labels = {
+        idle: "尚未開始",
+        running: "跑車中",
+        paused: "休息中",
+        stopped: "今日已收工"
+      };
+      els.workStatusText.textContent = labels[status];
+      els.workElapsed.textContent = clockDuration(details.elapsedMs);
+      els.workTotal.textContent = clockDuration(details.elapsedMs);
+      els.workBreak.textContent = clockDuration(details.breakMs);
+      els.workActual.textContent = clockDuration(details.hours * 3600000);
+      els.startRun.classList.toggle("hidden", !["idle", "stopped"].includes(status));
+      els.startRun.textContent = status === "stopped" ? "再次開始" : "開始跑車";
+      els.pauseRun.classList.toggle("hidden", status !== "running");
+      els.resumeRun.classList.toggle("hidden", status !== "paused");
+      els.endRun.classList.toggle("hidden", !["running", "paused"].includes(status));
+    }
+
+    function compactDuration(ms) {
+      const totalMinutes = Math.max(0, Math.floor(Number(ms || 0) / 60000));
+      const hours = Math.floor(totalMinutes / 60);
+      const mins = totalMinutes % 60;
+      return hours ? `${hours}時 ${mins}分` : `${mins} 分`;
+    }
+
+    function refreshToday() {
+      renderInputs();
+      renderStats();
+      updateDailyGoal();
+      renderRecentIncome();
+      updateWorkControls();
+      renderEntries();
+      renderWeeks();
+      renderMonthReport();
+      renderPlatformReport();
+    }
+
     function renderAll() {
       renderInputs();
       fillSelects();
@@ -1813,6 +2741,8 @@
       renderMonthReport();
       renderPlatformReport();
       renderSettings();
+      renderRecentIncome();
+      updateWorkControls();
       updateQuickPreview();
     }
 
@@ -1820,15 +2750,18 @@
       activeView = view;
       document.querySelectorAll(".view").forEach(section => section.classList.add("hidden"));
       document.getElementById(`view-${view}`).classList.remove("hidden");
-      els.navButtons.forEach(button => button.classList.toggle("active", button.dataset.view === view));
+      const navView = view === "month" ? "platform" : view;
+      els.navButtons.forEach(button => button.classList.toggle("active", button.dataset.view === navView));
       els.viewTitle.textContent = titles[view][0];
       els.viewSubtitle.textContent = titles[view][1];
+      document.body.dataset.activeView = view;
       document.getElementById("newEntry").classList.toggle("hidden", view === "today");
       updateOverviewVisibility();
     }
 
     function resetForm() {
       els.entryForm.reset();
+      els.detailForm.reset();
       els.entryId.value = "";
       document.getElementById("date").value = todayString();
       document.getElementById("breakMinutes").value = 0;
@@ -1844,7 +2777,7 @@
         els.formTitle.textContent = "新增紀錄";
       }
       els.cancelEdit.classList.add("hidden");
-      document.querySelectorAll("#entryForm details").forEach(details => details.open = false);
+      document.querySelectorAll("#detailForm details").forEach(details => details.open = false);
       updateQuickPreview();
     }
 
@@ -1870,7 +2803,7 @@
       if (!entry) return;
       setView("today");
       fillEntryFields(entry);
-      const detailSections = document.querySelectorAll("#entryForm details");
+      const detailSections = document.querySelectorAll("#detailForm details");
       detailSections.forEach(details => details.open = false);
       detailSections[0].open = Boolean(entry.startTime || entry.endTime || entry.manualHours || entry.breakMinutes);
       detailSections[1].open = entryExpenses(entry) > 0;
@@ -1894,7 +2827,7 @@
       const expenses = {};
       document.querySelectorAll("[data-expense]").forEach(input => expenses[input.dataset.expense] = Number(input.value || 0));
       return {
-        id: els.entryId.value || crypto.randomUUID(),
+        id: els.entryId.value || makeId(),
         date: document.getElementById("date").value,
         shift: document.getElementById("shift").value,
         startTime: document.getElementById("startTime").value,
@@ -1954,75 +2887,158 @@
     }
 
     function startRunNow() {
-      const startInput = document.getElementById("startTime");
-      if (startInput.value && !confirm("已經有開始時間，要覆蓋成目前時間嗎？")) return;
-      startInput.value = currentTimeString();
-      document.querySelectorAll("#entryForm details")[0].open = true;
-      updateQuickPreview();
+      const entry = ensureEntryForDate();
+      const now = new Date();
+      const priorHours = entry.workSession?.status === "stopped" ? calcHours(entry) : 0;
+      const stoppedGapMs = entry.workSession?.status === "stopped" && entry.workSession.endedAt
+        ? Math.max(0, now.getTime() - new Date(entry.workSession.endedAt).getTime())
+        : 0;
+      const priorBreakMs = entry.workSession?.status === "stopped"
+        ? Number(entry.workSession.accumulatedBreakMs || 0) + stoppedGapMs
+        : 0;
+      entry.startTime ||= currentTimeString();
+      entry.endTime = "";
+      entry.manualHours = 0;
+      entry.workSession = {
+        status: "running",
+        startedAt: entry.workSession?.startedAt || now.toISOString(),
+        segmentStartedAt: now.toISOString(),
+        accumulatedActiveMs: priorHours * 3600000,
+        accumulatedBreakMs: priorBreakMs,
+        pausedAt: null,
+        endedAt: null
+      };
+      saveState();
+      resetForm();
+      refreshToday();
+    }
+
+    function pauseRunNow() {
+      const entry = entryForDate();
+      if (!entry || workStatus(entry) !== "running") return;
+      const now = new Date();
+      if (!entry.workSession) {
+        const startedAt = new Date(`${entry.date}T${entry.startTime || currentTimeString()}:00`);
+        entry.workSession = {
+          status: "running",
+          startedAt: startedAt.toISOString(),
+          segmentStartedAt: startedAt.toISOString(),
+          accumulatedActiveMs: 0,
+          accumulatedBreakMs: Number(entry.breakMinutes || 0) * 60000
+        };
+      }
+      entry.workSession.accumulatedActiveMs = Number(entry.workSession.accumulatedActiveMs || 0)
+        + Math.max(0, now.getTime() - new Date(entry.workSession.segmentStartedAt).getTime());
+      entry.workSession.status = "paused";
+      entry.workSession.pausedAt = now.toISOString();
+      entry.workSession.segmentStartedAt = null;
+      saveState();
+      resetForm();
+      refreshToday();
+    }
+
+    function resumeRunNow() {
+      const entry = entryForDate();
+      if (!entry?.workSession || entry.workSession.status !== "paused") return;
+      const now = new Date();
+      entry.workSession.accumulatedBreakMs = Number(entry.workSession.accumulatedBreakMs || 0)
+        + Math.max(0, now.getTime() - new Date(entry.workSession.pausedAt).getTime());
+      entry.workSession.status = "running";
+      entry.workSession.segmentStartedAt = now.toISOString();
+      entry.workSession.pausedAt = null;
+      entry.breakMinutes = Math.floor(entry.workSession.accumulatedBreakMs / 60000);
+      saveState();
+      resetForm();
+      refreshToday();
     }
 
     function endRunNow() {
-      const startInput = document.getElementById("startTime");
-      const endInput = document.getElementById("endTime");
-      if (!startInput.value) {
-        alert("請先按開始跑車。");
+      const entry = entryForDate();
+      if (!entry || !["running", "paused"].includes(workStatus(entry))) return;
+      const now = new Date();
+      if (!entry.workSession) {
+        const startedAt = new Date(`${entry.date}T${entry.startTime || currentTimeString()}:00`);
+        entry.workSession = {
+          status: "running",
+          startedAt: startedAt.toISOString(),
+          segmentStartedAt: startedAt.toISOString(),
+          accumulatedActiveMs: 0,
+          accumulatedBreakMs: Number(entry.breakMinutes || 0) * 60000
+        };
+      }
+      if (entry.workSession.status === "running" && entry.workSession.segmentStartedAt) {
+        entry.workSession.accumulatedActiveMs = Number(entry.workSession.accumulatedActiveMs || 0)
+          + Math.max(0, now.getTime() - new Date(entry.workSession.segmentStartedAt).getTime());
+      }
+      if (entry.workSession.status === "paused" && entry.workSession.pausedAt) {
+        entry.workSession.accumulatedBreakMs = Number(entry.workSession.accumulatedBreakMs || 0)
+          + Math.max(0, now.getTime() - new Date(entry.workSession.pausedAt).getTime());
+      }
+      entry.workSession.status = "stopped";
+      entry.workSession.endedAt = now.toISOString();
+      entry.workSession.segmentStartedAt = null;
+      entry.workSession.pausedAt = null;
+      entry.endTime = currentTimeString();
+      entry.breakMinutes = Math.floor(Number(entry.workSession.accumulatedBreakMs || 0) / 60000);
+      saveState();
+      resetForm();
+      refreshToday();
+    }
+
+    function addQuickIncome(platform, input) {
+      const amount = Number(input?.value || 0);
+      if (!Number.isFinite(amount) || amount <= 0) {
+        input?.classList.add("input-error");
+        input?.focus();
+        window.setTimeout(() => input?.classList.remove("input-error"), 500);
         return;
       }
-      if (endInput.value && !confirm("已經有收工時間，要覆蓋成目前時間嗎？")) return;
-      endInput.value = currentTimeString();
-      document.querySelectorAll("#entryForm details")[0].open = true;
-      updateQuickPreview();
+      const entry = ensureEntryForDate();
+      entry.incomes[platform] = Number(entry.incomes[platform] || 0) + amount;
+      entry.incomeRecords ||= [];
+      entry.incomeRecords.push({
+        id: makeId(),
+        platform,
+        amount,
+        createdAt: new Date().toISOString()
+      });
+      saveState();
+      refreshToday();
+      resetForm();
+    }
+
+    function updateIncomeRecord(recordId) {
+      const entry = entryForDate();
+      const record = entry?.incomeRecords?.find(item => item.id === recordId);
+      const input = els.recentIncomeList.querySelector(`[data-record-amount="${cssEscape(recordId)}"]`);
+      const amount = Number(input?.value || 0);
+      if (!record || !Number.isFinite(amount) || amount <= 0) {
+        input?.focus();
+        return;
+      }
+      const difference = amount - Number(record.amount || 0);
+      entry.incomes[record.platform] = Math.max(0, Number(entry.incomes?.[record.platform] || 0) + difference);
+      record.amount = amount;
+      record.updatedAt = new Date().toISOString();
+      saveState();
+      refreshToday();
+      resetForm();
+    }
+
+    function deleteIncomeRecord(recordId) {
+      const entry = entryForDate();
+      const record = entry?.incomeRecords?.find(item => item.id === recordId);
+      if (!entry || !record) return;
+      entry.incomes[record.platform] = Math.max(0, Number(entry.incomes?.[record.platform] || 0) - Number(record.amount || 0));
+      entry.incomeRecords = entry.incomeRecords.filter(item => item.id !== recordId);
+      saveState();
+      refreshToday();
+      resetForm();
     }
 
     function setupPwa() {
-      const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#12a77b"/><path d="M132 310h248l-24-84c-8-28-34-48-64-48h-72c-30 0-56 20-64 48l-24 84Z" fill="#fff"/><path d="M176 310h160v44H176z" fill="#1677d2"/><circle cx="184" cy="364" r="30" fill="#14202b"/><circle cx="328" cy="364" r="30" fill="#14202b"/><path d="M206 214h100c15 0 28 10 32 24l10 36H164l10-36c4-14 17-24 32-24Z" fill="#f2a51f"/></svg>`;
-      const iconUrl = `data:image/svg+xml,${encodeURIComponent(iconSvg)}`;
-      const appleIcon = document.createElement("link");
-      appleIcon.rel = "apple-touch-icon";
-      appleIcon.href = iconUrl;
-      document.head.appendChild(appleIcon);
-
-      const manifest = {
-        name: "跑車薪資",
-        short_name: "Driver Pay",
-        theme_color: "#12a77b",
-        background_color: "#f6f8fb",
-        display: "standalone",
-        start_url: ".",
-        icons: [
-          { src: iconUrl, sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
-        ]
-      };
-      const manifestUrl = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" }));
-      const manifestLink = document.createElement("link");
-      manifestLink.rel = "manifest";
-      manifestLink.href = manifestUrl;
-      document.head.appendChild(manifestLink);
-
       if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-        const swCode = `
-          const CACHE_NAME = "driver-pay-v2-cache";
-          const ASSETS = ["./", "./index.html", "./assets/driver-hero.png"];
-          self.addEventListener("install", event => {
-            event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)).catch(() => undefined));
-            self.skipWaiting();
-          });
-          self.addEventListener("activate", event => {
-            event.waitUntil(self.clients.claim());
-          });
-          self.addEventListener("fetch", event => {
-            if (event.request.method !== "GET") return;
-            event.respondWith(
-              caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
-                const copy = response.clone();
-                caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy)).catch(() => undefined);
-                return response;
-              }).catch(() => caches.match("./index.html")))
-            );
-          });
-        `;
-        const swUrl = URL.createObjectURL(new Blob([swCode], { type: "text/javascript" }));
-        navigator.serviceWorker.register(swUrl).catch(() => undefined);
+        navigator.serviceWorker.register("./sw.js").catch(error => console.warn("PWA 離線快取未啟用", error));
       }
     }
 
@@ -2031,6 +3047,8 @@
     els.cancelEdit.addEventListener("click", resetForm);
     document.getElementById("exportCsv").addEventListener("click", exportCsv);
     els.startRun.addEventListener("click", startRunNow);
+    els.pauseRun.addEventListener("click", pauseRunNow);
+    els.resumeRun.addEventListener("click", resumeRunNow);
     els.endRun.addEventListener("click", endRunNow);
     els.toggleOverview.addEventListener("click", () => {
       overviewVisible = !overviewVisible;
@@ -2046,16 +3064,17 @@
       });
     });
 
-    els.entryForm.addEventListener("submit", event => {
+    els.entryForm.addEventListener("submit", event => event.preventDefault());
+    els.detailForm.addEventListener("submit", event => {
       event.preventDefault();
       const entry = formData();
       const index = state.entries.findIndex(item => item.id === entry.id);
-      if (index >= 0) state.entries[index] = entry;
+      if (index >= 0) state.entries[index] = { ...state.entries[index], ...entry };
       else {
         const sameDateIndex = state.entries.findIndex(item => item.date === entry.date);
         if (sameDateIndex >= 0) {
           entry.id = state.entries[sameDateIndex].id;
-          state.entries[sameDateIndex] = entry;
+          state.entries[sameDateIndex] = { ...state.entries[sameDateIndex], ...entry };
         } else {
           state.entries.push(entry);
         }
@@ -2065,8 +3084,36 @@
       resetForm();
     });
 
-    els.entryForm.addEventListener("input", updateQuickPreview);
-    els.entryForm.addEventListener("change", updateQuickPreview);
+    els.detailForm.addEventListener("input", updateQuickPreview);
+    els.detailForm.addEventListener("change", updateQuickPreview);
+
+    els.incomeInputs.addEventListener("click", event => {
+      const button = event.target.closest("[data-add-income]");
+      if (!button) return;
+      const platform = button.dataset.addIncome;
+      const input = els.incomeInputs.querySelector(`[data-quick-income="${cssEscape(platform)}"]`);
+      addQuickIncome(platform, input);
+    });
+
+    els.incomeInputs.addEventListener("keydown", event => {
+      const input = event.target.closest("[data-quick-income]");
+      if (!input || event.key !== "Enter") return;
+      event.preventDefault();
+      addQuickIncome(input.dataset.quickIncome, input);
+    });
+
+    els.recentIncomeList.addEventListener("click", event => {
+      const updateButton = event.target.closest("[data-update-income-record]");
+      const deleteButton = event.target.closest("[data-delete-income-record]");
+      if (updateButton) updateIncomeRecord(updateButton.dataset.updateIncomeRecord);
+      if (deleteButton) deleteIncomeRecord(deleteButton.dataset.deleteIncomeRecord);
+    });
+
+    document.querySelectorAll("[data-report-view]").forEach(button => {
+      button.addEventListener("click", () => setView(button.dataset.reportView));
+    });
+
+    document.getElementById("driverSpaceLogo").addEventListener("click", () => setView("settings"));
 
     els.entriesTable.addEventListener("click", event => {
       const editButton = event.target.closest("[data-edit]");
@@ -2135,6 +3182,11 @@
     setView("today");
     updateOverviewVisibility();
     setupPwa();
+    window.setInterval(() => {
+      if (activeView !== "today") return;
+      renderStats();
+      updateWorkControls();
+    }, 1000);
   </script>
 </body>
 </html>
