@@ -1265,9 +1265,9 @@
     }
 
     .income-unit {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 600;
+      color: #7e8982;
+      font-size: 14px;
+      font-weight: 500;
       white-space: nowrap;
     }
 
@@ -1403,10 +1403,10 @@
 
     .platform-income-row {
       min-width: 0;
-      min-height: 64px;
+      min-height: 66px;
       padding: 5px 2px;
       display: grid;
-      grid-template-columns: minmax(120px, 1fr) minmax(126px, 160px) 42px;
+      grid-template-columns: minmax(120px, 1fr) minmax(126px, 160px) 44px;
       align-items: center;
       gap: 6px;
       border-bottom: 1px solid #edf1ef;
@@ -1432,30 +1432,49 @@
       display: block;
     }
 
-    .income-grid .inline-income-input,
-    .record-amount {
+    .income-grid .inline-income-input {
       width: 100%;
       min-width: 0;
-      min-height: 54px;
+      min-height: 56px;
       padding: 7px 10px;
-      border: 1px solid #d5ddd8;
-      border-radius: 12px;
-      color: #1f2923;
-      background: #fff;
+      border: 1px solid #dce4df;
+      border-radius: 15px;
+      color: #203128;
+      background: #fafcfb;
       font-size: 28px;
       font-weight: 700;
       text-align: right;
       font-variant-numeric: tabular-nums;
+      box-shadow: none;
     }
 
     .income-grid .inline-income-input::placeholder {
-      color: #9aa39d;
+      color: #98a29c;
       font-size: 22px;
       font-weight: 600;
       opacity: 1;
     }
 
-    .income-grid .inline-income-input:focus,
+    .income-grid .inline-income-input:focus {
+      border-color: #0b8a63;
+      box-shadow: none;
+      color: #087f5b;
+      background: #f1faf6;
+    }
+
+    .record-amount {
+      width: 100%;
+      min-width: 0;
+      padding: 7px 10px;
+      border: 1px solid #d5ddd8;
+      border-radius: 12px;
+      color: #1f2923;
+      background: #fff;
+      font-weight: 700;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
     .record-amount:focus {
       border-color: var(--brand);
       box-shadow: 0 0 0 3px rgba(21, 150, 111, .13);
@@ -1473,13 +1492,13 @@
     }
 
     .yoxi-add-button {
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
       padding: 0;
-      border-radius: 10px;
-      color: var(--brand-strong);
-      background: var(--brand-soft);
-      font-size: 24px;
+      border-radius: 12px;
+      color: #087f5b;
+      background: #e3f5ed;
+      font-size: 23px;
       font-weight: 800;
     }
 
@@ -1762,26 +1781,26 @@
 
     @media (max-width: 350px) {
       .platform-income-row {
-        grid-template-columns: minmax(100px, 1fr) minmax(104px, 116px) 40px;
-        gap: 4px;
+        grid-template-columns: 126px minmax(96px, 1fr) 42px;
+        gap: 3px;
       }
 
       .platform-name {
-        font-size: 20px;
-      }
-
-      .income-grid .inline-income-input {
-        padding-inline: 7px;
         font-size: 24px;
       }
 
+      .income-grid .inline-income-input {
+        padding-inline: 4px;
+        font-size: 26px;
+      }
+
       .income-grid .inline-income-input::placeholder {
-        font-size: 18px;
+        font-size: 22px;
       }
 
       .yoxi-add-button {
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
       }
     }
 
