@@ -1042,8 +1042,8 @@
       top: 0;
       z-index: 20;
       width: 100%;
-      min-height: calc(48px + env(safe-area-inset-top));
-      padding: calc(3px + env(safe-area-inset-top)) 16px 3px;
+      min-height: calc(42px + env(safe-area-inset-top));
+      padding: env(safe-area-inset-top) 16px 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1078,8 +1078,8 @@
 
     .brand-mark {
       order: 0;
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       padding: 0;
       border-radius: 0;
       background: transparent;
@@ -1090,8 +1090,8 @@
 
     .brand-mark img {
       display: block;
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       object-fit: contain;
     }
 
@@ -1155,7 +1155,7 @@
     main {
       width: min(100%, 760px);
       margin: 0 auto;
-      padding: 8px 12px calc(82px + env(safe-area-inset-bottom));
+      padding: 6px 10px calc(78px + env(safe-area-inset-bottom));
       display: grid;
       gap: 8px;
     }
@@ -1184,7 +1184,7 @@
     }
 
     .today-summary {
-      padding: 14px 17px 13px;
+      padding: 11px 15px 10px;
       border-radius: 20px;
       color: #fff;
       background: var(--brand-strong);
@@ -1202,15 +1202,15 @@
     .today-income {
       display: block;
       overflow-wrap: anywhere;
-      font-size: clamp(42px, 13vw, 62px);
+      font-size: clamp(38px, 12vw, 56px);
       line-height: 1;
       letter-spacing: -.055em;
       font-variant-numeric: tabular-nums;
     }
 
     .today-secondary {
-      margin-top: 12px;
-      padding-top: 10px;
+      margin-top: 9px;
+      padding-top: 8px;
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
@@ -1230,7 +1230,7 @@
 
     .today-secondary strong {
       display: block;
-      font-size: 28px;
+      font-size: 24px;
       line-height: 1.12;
       letter-spacing: -.02em;
       font-variant-numeric: tabular-nums;
@@ -1250,8 +1250,8 @@
     }
 
     .panel-head {
-      min-height: 46px;
-      padding: 12px 16px 8px;
+      min-height: 40px;
+      padding: 9px 14px 5px;
       background: #fff;
       border-bottom: 0;
     }
@@ -1261,13 +1261,13 @@
     }
 
     .panel-body {
-      padding: 6px 14px 12px;
+      padding: 4px 12px 9px;
     }
 
     .home-work-card {
-      padding: 12px;
+      padding: 10px 11px;
       display: grid;
-      gap: 9px;
+      gap: 8px;
       border: 1px solid var(--line);
       border-radius: 18px;
       background: #fff;
@@ -1289,19 +1289,47 @@
     .work-status-row strong {
       display: block;
       margin-top: 3px;
-      font-size: 18px;
+      font-size: 19px;
     }
 
-    .work-elapsed {
-      flex: 0 0 auto;
+    .work-live-summary {
+      display: grid;
+      grid-template-columns: repeat(2, auto);
+      gap: 14px;
+      text-align: right;
+    }
+
+    .work-live-summary span,
+    .work-live-summary strong {
+      display: block;
+    }
+
+    .work-live-summary span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .work-live-summary strong {
+      margin-top: 2px;
       color: var(--brand-strong);
       font-size: 17px;
       font-weight: 800;
       font-variant-numeric: tabular-nums;
     }
 
+    .time-details-toggle {
+      min-height: 38px;
+      width: 100%;
+      padding: 0 10px;
+      border-radius: 10px;
+      color: var(--brand-strong);
+      background: var(--brand-soft);
+      font-size: 14px;
+      font-weight: 750;
+    }
+
     .work-metrics {
-      padding: 7px 10px;
+      padding: 7px 9px;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
@@ -1340,7 +1368,7 @@
     }
 
     .work-actions .button {
-      min-height: 60px;
+      min-height: 54px;
       border-radius: 15px;
       font-size: 17px;
       font-weight: 800;
@@ -1370,57 +1398,83 @@
 
     .income-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 0;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 7px;
     }
 
-    .platform-row {
+    .platform-card {
       min-width: 0;
-      padding: 11px 0;
+      min-height: 68px;
+      padding: 9px 10px;
       display: grid;
-      grid-template-columns: minmax(76px, 1fr) minmax(104px, 1.1fr) 84px;
-      gap: 8px;
-      align-items: center;
-      border-bottom: 1px solid #edf1ef;
+      align-content: center;
+      gap: 4px;
+      border: 1.5px solid var(--line);
+      border-radius: 13px;
+      color: var(--text);
+      background: #fff;
+      text-align: left;
     }
 
-    .platform-row:last-child {
-      border-bottom: 0;
-    }
-
-    .platform-copy {
-      min-width: 0;
+    .platform-card.active {
+      border-color: var(--brand);
+      background: var(--brand-soft);
+      box-shadow: 0 0 0 2px rgba(21, 150, 111, .08);
     }
 
     .platform-name {
       display: block;
       overflow: hidden;
-      color: var(--text);
-      font-size: 17px;
-      font-weight: 750;
+      font-size: 18px;
+      font-weight: 800;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
     .platform-total {
       display: block;
-      margin-top: 3px;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 16px;
+      font-weight: 750;
+      font-variant-numeric: tabular-nums;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .platform-card.active .platform-total {
+      color: var(--brand-strong);
+    }
+
+    .platform-editor {
+      grid-column: 1 / -1;
+      margin: 2px 0 4px;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 104px;
+      gap: 8px;
+      border-radius: 13px;
+      background: var(--panel-2);
+    }
+
+    .platform-editor-copy {
+      grid-column: 1 / -1;
       color: var(--muted);
       font-size: 12px;
-      font-variant-numeric: tabular-nums;
+      line-height: 1.4;
     }
 
     .quick-income-input,
     .record-amount {
       width: 100%;
       min-width: 0;
-      min-height: 50px;
+      min-height: 54px;
       padding: 8px 10px;
       border: 1.5px solid var(--line);
       border-radius: 12px;
       color: var(--text);
       background: #f9fbfa;
-      font-size: 20px;
+      font-size: 23px;
       font-weight: 750;
       text-align: right;
       font-variant-numeric: tabular-nums;
@@ -1443,8 +1497,8 @@
     }
 
     .quick-add-button {
-      width: 84px;
-      height: 50px;
+      width: 104px;
+      height: 54px;
       padding: 0;
       border-radius: 13px;
       color: #fff;
@@ -1458,9 +1512,72 @@
       transform: scale(.96);
     }
 
-    .goal-card {
-      padding: 14px 15px;
+    .weather-control {
+      padding: 9px;
+      display: grid;
+      gap: 8px;
+      border-radius: 13px;
+      background: #f7faf8;
+      border: 1px solid var(--line);
+    }
+
+    .weather-control.needs-weather {
+      padding: 11px;
+      border-color: rgba(21, 150, 111, .45);
+      background: var(--brand-soft);
+    }
+
+    .weather-control-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
       gap: 10px;
+    }
+
+    .weather-control-head strong {
+      font-size: 14px;
+    }
+
+    .weather-summary {
+      color: var(--brand-strong);
+      font-size: 13px;
+      font-weight: 750;
+      text-align: right;
+    }
+
+    .weather-options {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(58px, 1fr));
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .weather-options::-webkit-scrollbar {
+      display: none;
+    }
+
+    .weather-choice {
+      min-height: 42px;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--text);
+      background: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .weather-choice.active {
+      color: #fff;
+      border-color: var(--brand);
+      background: var(--brand);
+    }
+
+    .goal-card {
+      padding: 11px 13px;
+      gap: 8px;
       border: 1px solid var(--line);
       border-radius: 16px;
       background: #fff;
@@ -1652,10 +1769,6 @@
         padding-top: 22px;
       }
 
-      .platform-row {
-        grid-template-columns: minmax(180px, 1fr) 180px 92px;
-      }
-
       .fields,
       .expense-grid,
       .rate-grid {
@@ -1669,25 +1782,21 @@
 
     @media (display-mode: standalone) {
       .sidebar {
-        min-height: calc(48px + env(safe-area-inset-top));
+        min-height: calc(42px + env(safe-area-inset-top));
       }
     }
 
     @media (max-width: 350px) {
-      .platform-row {
-        grid-template-columns: minmax(0, 1fr) 88px;
-      }
-
-      .platform-copy {
-        grid-column: 1 / -1;
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 8px;
+      .platform-editor {
+        grid-template-columns: minmax(0, 1fr) 94px;
       }
 
       .quick-add-button {
-        width: 88px;
+        width: 94px;
+      }
+
+      .weather-options {
+        grid-template-columns: repeat(5, 64px);
       }
     }
 
@@ -1774,15 +1883,32 @@
               <span id="workStatusTitle">今日工作狀態</span>
               <strong id="workStatusText">尚未開始</strong>
             </div>
-            <div class="work-elapsed" id="workElapsed">00:00:00</div>
+            <div class="work-live-summary" aria-label="目前收入與時薪">
+              <div><span>目前收入</span><strong id="workIncome">NT$ 0</strong></div>
+              <div><span>目前時薪</span><strong id="workHourly">NT$ 0</strong></div>
+            </div>
           </div>
-          <div class="work-metrics" aria-label="今日工時計算">
+          <button class="time-details-toggle" id="toggleTimeDetails" type="button" aria-expanded="false">查看時間明細⌄</button>
+          <div class="work-metrics hidden" id="workMetrics" aria-label="今日工時計算">
             <div><span>總經過</span><strong id="workTotal">0 分</strong></div>
             <div><span>休息</span><strong id="workBreak">0 分</strong></div>
             <div><span>實際</span><strong id="workActual">0 分</strong></div>
           </div>
+          <div class="weather-control needs-weather" id="workWeatherControl">
+            <div class="weather-control-head">
+              <strong id="weatherPrompt">開始前先選擇今日天氣</strong>
+              <span class="weather-summary" id="weatherSummary">尚未選擇</span>
+            </div>
+            <div class="weather-options" aria-label="選擇目前天氣">
+              <button class="weather-choice" type="button" data-weather-choice="晴天">晴天</button>
+              <button class="weather-choice" type="button" data-weather-choice="陰天">陰天</button>
+              <button class="weather-choice" type="button" data-weather-choice="雨天">雨天</button>
+              <button class="weather-choice" type="button" data-weather-choice="大雨">大雨</button>
+              <button class="weather-choice" type="button" data-weather-choice="其他">其他</button>
+            </div>
+          </div>
           <div class="work-actions">
-            <button class="button primary" id="startRun" type="button">開始跑車</button>
+            <button class="button primary" id="startRun" type="button">開始工作</button>
             <button class="button secondary hidden" id="pauseRun" type="button">暫停休息</button>
             <button class="button primary hidden" id="resumeRun" type="button">繼續跑車</button>
             <button class="button secondary hidden" id="endRun" type="button">收工</button>
@@ -1791,7 +1917,7 @@
 
         <div class="panel">
           <div class="panel-head">
-            <h3>平台快速收入</h3>
+            <h3>平台收入</h3>
           </div>
           <div class="panel-body">
             <form id="entryForm">
@@ -1807,7 +1933,7 @@
 
         <div class="panel" id="recentIncomePanel">
           <div class="panel-head">
-            <h3>最近輸入</h3>
+            <h3>Yoxi 今日明細</h3>
           </div>
           <div class="panel-body recent-list" id="recentIncomeList"></div>
         </div>
@@ -1865,7 +1991,7 @@
                   </label>
                   <label>天氣
                     <select id="weather">
-                      <option>晴天</option><option>陰天</option><option>雨天</option><option>連假</option><option>特殊活動</option>
+                      <option value="" disabled>請選擇</option><option>晴天</option><option>陰天</option><option>雨天</option><option>大雨</option><option>其他</option>
                     </select>
                   </label>
                   <label style="grid-column: 1 / -1;">備註
@@ -2037,6 +2163,7 @@
     const state = loadState();
     let activeView = "today";
     let overviewVisible = false;
+    let activeIncomePlatform = null;
 
     const titles = {
       today: ["今日輸入", "每天花一分鐘記錄收入、工時與支出。"],
@@ -2081,10 +2208,16 @@
       resumeRun: document.getElementById("resumeRun"),
       endRun: document.getElementById("endRun"),
       workStatusText: document.getElementById("workStatusText"),
-      workElapsed: document.getElementById("workElapsed"),
+      workIncome: document.getElementById("workIncome"),
+      workHourly: document.getElementById("workHourly"),
+      toggleTimeDetails: document.getElementById("toggleTimeDetails"),
+      workMetrics: document.getElementById("workMetrics"),
       workTotal: document.getElementById("workTotal"),
       workBreak: document.getElementById("workBreak"),
       workActual: document.getElementById("workActual"),
+      workWeatherControl: document.getElementById("workWeatherControl"),
+      weatherPrompt: document.getElementById("weatherPrompt"),
+      weatherSummary: document.getElementById("weatherSummary"),
       recentIncomeList: document.getElementById("recentIncomeList"),
       recentIncomePanel: document.getElementById("recentIncomePanel"),
       sideNet: document.getElementById("sideNet"),
@@ -2128,6 +2261,7 @@
         ...settings,
         monthlyGoal: Number(settings.monthlyGoal || 0),
         dailyGoal: Number(settings.dailyGoal || 0),
+        timeDetailsOpen: Boolean(settings.timeDetailsOpen),
         platformRates
       };
     }
@@ -2227,7 +2361,8 @@
         tips: 0,
         orders: 0,
         km: 0,
-        weather: "晴天",
+        weather: "",
+        weatherHistory: [],
         note: "",
         incomes: {},
         expenses: {}
@@ -2292,17 +2427,27 @@
 
     function renderInputs() {
       const todayEntry = entryForDate();
-      els.incomeInputs.innerHTML = orderedHomePlatforms(todayEntry).map(name => `
-        <div class="platform-row">
-          <div class="platform-copy">
+      const orderedPlatforms = orderedHomePlatforms(todayEntry);
+      if (activeIncomePlatform && !orderedPlatforms.includes(activeIncomePlatform)) activeIncomePlatform = null;
+      els.incomeInputs.innerHTML = orderedPlatforms.map(name => {
+        const amount = Number(todayEntry?.incomes?.[name] || 0);
+        const isActive = activeIncomePlatform === name;
+        const isYoxi = name.toLowerCase() === "yoxi";
+        return `
+          <button class="platform-card${isActive ? " active" : ""}" type="button" aria-expanded="${isActive}" data-select-platform="${escapeAttr(name)}">
             <span class="platform-name">${escapeHtml(name)}</span>
-            <span class="platform-total">今日收入 ${money(todayEntry?.incomes?.[name] || 0)}</span>
-          </div>
-          <input type="hidden" value="${Number(todayEntry?.incomes?.[name] || 0)}" data-income="${escapeAttr(name)}">
-          <input class="quick-income-input" type="number" inputmode="numeric" min="1" step="1" placeholder="輸入收入" aria-label="${escapeAttr(name)} 收入" data-quick-income="${escapeAttr(name)}">
-          <button class="quick-add-button" type="button" aria-label="確認加入 ${escapeAttr(name)} 收入" data-add-income="${escapeAttr(name)}">✓ 完成</button>
-        </div>
-      `).join("");
+            <span class="platform-total">${amount > 0 ? money(amount) : "尚未輸入"}</span>
+          </button>
+          ${isActive ? `
+            <div class="platform-editor">
+              <span class="platform-editor-copy">${isYoxi ? `本日累計 ${money(amount)}，輸入本次車資後會自動累加。` : `目前總額 ${money(amount)}，儲存後會直接更新，不會累加。`}</span>
+              <input type="hidden" value="${amount}" data-income="${escapeAttr(name)}">
+              <input class="quick-income-input" type="number" inputmode="numeric" min="${isYoxi ? 1 : 0}" step="1" value="${isYoxi ? "" : amount || ""}" placeholder="${isYoxi ? "新增一筆" : "輸入總額"}" aria-label="${escapeAttr(name)} 收入" data-quick-income="${escapeAttr(name)}" autocomplete="off">
+              <button class="quick-add-button" type="button" aria-label="儲存 ${escapeAttr(name)} 收入" data-save-income="${escapeAttr(name)}">${isYoxi ? "＋ 新增" : "✓ 更新"}</button>
+            </div>
+          ` : `<input type="hidden" value="${amount}" data-income="${escapeAttr(name)}">`}
+        `;
+      }).join("");
 
       els.expenseInputs.innerHTML = state.expenses.map(name => `
         <label>${name}
@@ -2631,10 +2776,12 @@
 
     function renderRecentIncome() {
       const entry = entryForDate();
-      const records = Array.isArray(entry?.incomeRecords) ? entry.incomeRecords.slice().reverse().slice(0, 6) : [];
+      const records = Array.isArray(entry?.incomeRecords)
+        ? entry.incomeRecords.filter(record => String(record.platform).toLowerCase() === "yoxi").slice().reverse()
+        : [];
       els.recentIncomePanel.classList.toggle("hidden", !records.length);
       if (!records.length) {
-        els.recentIncomeList.innerHTML = `<div class="empty compact">快速輸入後，最近紀錄會顯示在這裡。</div>`;
+        els.recentIncomeList.innerHTML = `<div class="empty compact">新增 Yoxi 收入後，每一筆紀錄會顯示在這裡。</div>`;
         return;
       }
       els.recentIncomeList.innerHTML = records.map(record => `
@@ -2695,6 +2842,9 @@
       const entry = entryForDate();
       const status = workStatus(entry);
       const details = sessionDetails(entry);
+      const currentIncome = entry ? entryTotal(entry) : 0;
+      const currentHourly = details.hours ? entryNet(entry) / details.hours : 0;
+      const hasWeather = Boolean(entry?.weather);
       const labels = {
         idle: "尚未開始",
         running: "跑車中",
@@ -2702,15 +2852,60 @@
         stopped: "今日已收工"
       };
       els.workStatusText.textContent = labels[status];
-      els.workElapsed.textContent = clockDuration(details.elapsedMs);
+      els.workIncome.textContent = money(currentIncome);
+      els.workHourly.textContent = money(currentHourly);
       els.workTotal.textContent = clockDuration(details.elapsedMs);
       els.workBreak.textContent = clockDuration(details.breakMs);
       els.workActual.textContent = clockDuration(details.hours * 3600000);
-      els.startRun.classList.toggle("hidden", !["idle", "stopped"].includes(status));
-      els.startRun.textContent = status === "stopped" ? "再次開始" : "開始跑車";
+      els.workMetrics.classList.toggle("hidden", !state.settings.timeDetailsOpen);
+      els.toggleTimeDetails.setAttribute("aria-expanded", String(state.settings.timeDetailsOpen));
+      els.toggleTimeDetails.textContent = state.settings.timeDetailsOpen ? "收起時間明細⌃" : "查看時間明細⌄";
+      els.workWeatherControl.classList.toggle("needs-weather", !hasWeather);
+      els.weatherPrompt.textContent = hasWeather
+        ? (["running", "paused"].includes(status) ? "目前天氣，可隨時修改" : "今日開始天氣")
+        : "開始前先選擇今日天氣";
+      els.weatherSummary.textContent = hasWeather ? weatherSequence(entry) : "尚未選擇";
+      document.querySelectorAll("[data-weather-choice]").forEach(button => {
+        button.classList.toggle("active", button.dataset.weatherChoice === entry?.weather);
+      });
+      els.startRun.classList.toggle("hidden", !["idle", "stopped"].includes(status) || !hasWeather);
+      els.startRun.textContent = status === "stopped" ? "再次開始工作" : "開始工作";
       els.pauseRun.classList.toggle("hidden", status !== "running");
       els.resumeRun.classList.toggle("hidden", status !== "paused");
       els.endRun.classList.toggle("hidden", !["running", "paused"].includes(status));
+    }
+
+    function weatherSequence(entry = entryForDate()) {
+      const history = Array.isArray(entry?.weatherHistory) ? entry.weatherHistory : [];
+      const sequence = history.reduce((items, item) => {
+        const value = item?.weather;
+        if (value && items.at(-1) !== value) items.push(value);
+        return items;
+      }, []);
+      if (entry?.weather && sequence.at(-1) !== entry.weather) sequence.push(entry.weather);
+      return sequence.length ? sequence.join(" → ") : "尚未選擇";
+    }
+
+    function updateCurrentWeather(weather) {
+      if (!weather) return;
+      const entry = ensureEntryForDate();
+      const previous = entry.weather || "";
+      entry.weatherHistory = Array.isArray(entry.weatherHistory) ? entry.weatherHistory : [];
+      if (!entry.weatherHistory.length && previous && previous !== weather) {
+        entry.weatherHistory.push({
+          weather: previous,
+          createdAt: entry.workSession?.startedAt || `${entry.date}T${entry.startTime || "00:00"}:00`
+        });
+      }
+      if (previous !== weather) {
+        entry.weather = weather;
+        entry.weatherHistory.push({ weather, createdAt: new Date().toISOString() });
+      }
+      const weatherSelect = document.getElementById("weather");
+      if (weatherSelect) weatherSelect.value = weather;
+      saveState();
+      updateWorkControls();
+      renderEntries();
     }
 
     function compactDuration(ms) {
@@ -2792,7 +2987,12 @@
       document.getElementById("tips").value = entry.tips || 0;
       document.getElementById("orders").value = entry.orders || 0;
       document.getElementById("km").value = entry.km || 0;
-      document.getElementById("weather").value = entry.weather || "晴天";
+      const weatherSelect = document.getElementById("weather");
+      const weatherValue = entry.weather || "";
+      if (weatherValue && !Array.from(weatherSelect.options).some(option => option.value === weatherValue)) {
+        weatherSelect.add(new Option(weatherValue, weatherValue));
+      }
+      weatherSelect.value = weatherValue;
       document.getElementById("note").value = entry.note || "";
       document.querySelectorAll("[data-income]").forEach(input => input.value = entry.incomes?.[input.dataset.income] || 0);
       document.querySelectorAll("[data-expense]").forEach(input => input.value = entry.expenses?.[input.dataset.expense] || 0);
@@ -2888,6 +3088,10 @@
 
     function startRunNow() {
       const entry = ensureEntryForDate();
+      if (!entry.weather) {
+        alert("請先選擇今日天氣，再開始工作。");
+        return;
+      }
       const now = new Date();
       const priorHours = entry.workSession?.status === "stopped" ? calcHours(entry) : 0;
       const stoppedGapMs = entry.workSession?.status === "stopped" && entry.workSession.endedAt
@@ -2985,26 +3189,33 @@
       refreshToday();
     }
 
-    function addQuickIncome(platform, input) {
+    function saveQuickIncome(platform, input) {
       const amount = Number(input?.value || 0);
-      if (!Number.isFinite(amount) || amount <= 0) {
+      const isYoxi = String(platform).toLowerCase() === "yoxi";
+      if (!Number.isFinite(amount) || (isYoxi ? amount <= 0 : amount < 0)) {
         input?.classList.add("input-error");
         input?.focus();
         window.setTimeout(() => input?.classList.remove("input-error"), 500);
         return;
       }
       const entry = ensureEntryForDate();
-      entry.incomes[platform] = Number(entry.incomes[platform] || 0) + amount;
-      entry.incomeRecords ||= [];
-      entry.incomeRecords.push({
-        id: makeId(),
-        platform,
-        amount,
-        createdAt: new Date().toISOString()
-      });
+      if (isYoxi) {
+        entry.incomes[platform] = Number(entry.incomes[platform] || 0) + amount;
+        entry.incomeRecords ||= [];
+        entry.incomeRecords.push({
+          id: makeId(),
+          platform,
+          amount,
+          createdAt: new Date().toISOString()
+        });
+      } else {
+        entry.incomes[platform] = amount;
+      }
       saveState();
       refreshToday();
       resetForm();
+      const nextInput = els.incomeInputs.querySelector(`[data-quick-income="${cssEscape(platform)}"]`);
+      if (isYoxi) nextInput?.focus();
     }
 
     function updateIncomeRecord(recordId) {
@@ -3050,6 +3261,15 @@
     els.pauseRun.addEventListener("click", pauseRunNow);
     els.resumeRun.addEventListener("click", resumeRunNow);
     els.endRun.addEventListener("click", endRunNow);
+    els.toggleTimeDetails.addEventListener("click", () => {
+      state.settings.timeDetailsOpen = !state.settings.timeDetailsOpen;
+      saveState();
+      updateWorkControls();
+    });
+    els.workWeatherControl.addEventListener("click", event => {
+      const button = event.target.closest("[data-weather-choice]");
+      if (button) updateCurrentWeather(button.dataset.weatherChoice);
+    });
     els.toggleOverview.addEventListener("click", () => {
       overviewVisible = !overviewVisible;
       updateOverviewVisibility();
@@ -3086,20 +3306,31 @@
 
     els.detailForm.addEventListener("input", updateQuickPreview);
     els.detailForm.addEventListener("change", updateQuickPreview);
+    document.getElementById("weather").addEventListener("change", event => {
+      if (event.target.value) updateCurrentWeather(event.target.value);
+    });
 
     els.incomeInputs.addEventListener("click", event => {
-      const button = event.target.closest("[data-add-income]");
+      const platformButton = event.target.closest("[data-select-platform]");
+      if (platformButton) {
+        const platform = platformButton.dataset.selectPlatform;
+        activeIncomePlatform = activeIncomePlatform === platform ? null : platform;
+        renderInputs();
+        els.incomeInputs.querySelector("[data-quick-income]")?.focus();
+        return;
+      }
+      const button = event.target.closest("[data-save-income]");
       if (!button) return;
-      const platform = button.dataset.addIncome;
+      const platform = button.dataset.saveIncome;
       const input = els.incomeInputs.querySelector(`[data-quick-income="${cssEscape(platform)}"]`);
-      addQuickIncome(platform, input);
+      saveQuickIncome(platform, input);
     });
 
     els.incomeInputs.addEventListener("keydown", event => {
       const input = event.target.closest("[data-quick-income]");
       if (!input || event.key !== "Enter") return;
       event.preventDefault();
-      addQuickIncome(input.dataset.quickIncome, input);
+      saveQuickIncome(input.dataset.quickIncome, input);
     });
 
     els.recentIncomeList.addEventListener("click", event => {
