@@ -1265,9 +1265,9 @@
     }
 
     .home-work-card {
-      padding: 10px 11px;
+      padding: 8px 10px 9px;
       display: grid;
-      gap: 8px;
+      gap: 7px;
       border: 1px solid var(--line);
       border-radius: 18px;
       background: #fff;
@@ -1276,52 +1276,51 @@
 
     .work-status-row {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
       gap: 12px;
+      min-height: 30px;
     }
 
     .work-status-row span {
-      color: var(--muted);
-      font-size: 13px;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 800;
     }
 
     .work-status-row strong {
-      display: block;
-      margin-top: 3px;
-      font-size: 19px;
-    }
-
-    .work-live-summary {
-      display: grid;
-      grid-template-columns: repeat(2, auto);
-      gap: 14px;
-      text-align: right;
-    }
-
-    .work-live-summary span,
-    .work-live-summary strong {
-      display: block;
-    }
-
-    .work-live-summary span {
+      margin: 0;
+      min-height: 26px;
+      padding: 4px 9px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
       color: var(--muted);
-      font-size: 11px;
+      background: var(--panel-2);
+      font-size: 13px;
+      line-height: 1;
     }
 
-    .work-live-summary strong {
-      margin-top: 2px;
+    #workStatusText[data-status="running"] {
       color: var(--brand-strong);
-      font-size: 17px;
-      font-weight: 800;
-      font-variant-numeric: tabular-nums;
+      background: var(--brand-soft);
+    }
+
+    #workStatusText[data-status="paused"] {
+      color: #8a5b00;
+      background: #fff3d6;
+    }
+
+    #workStatusText[data-status="stopped"] {
+      color: #4d6170;
+      background: #edf2f5;
     }
 
     .work-metrics {
-      padding: 7px 9px;
+      padding: 6px 7px;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
+      gap: 4px;
       border-radius: 13px;
       background: var(--panel-2);
     }
@@ -1485,14 +1484,16 @@
     }
 
     .weather-control {
-      padding: 6px 7px;
+      min-height: 52px;
+      padding: 6px 9px;
       display: grid;
       grid-template-columns: auto minmax(0, 1fr);
       align-items: center;
       gap: 8px;
-      border-radius: 12px;
-      background: #f7faf8;
+      border-radius: 8px;
+      background: #fff;
       border: 1px solid var(--line);
+      box-shadow: var(--shadow);
     }
 
     .weather-label {
@@ -1822,34 +1823,18 @@
         <button class="button secondary" id="toggleOverview" type="button" aria-expanded="false">顯示業績總覽</button>
       </section>
 
-      <section class="grid stats" id="summaryStats"></section>
-
       <section id="view-today" class="view layout">
+        <section class="grid stats" id="summaryStats"></section>
+
         <section class="home-work-card" id="homeWorkCard" aria-labelledby="workStatusTitle">
           <div class="work-status-row">
-            <div>
-              <span id="workStatusTitle">今日工作狀態</span>
-              <strong id="workStatusText">尚未開始</strong>
-            </div>
-            <div class="work-live-summary" aria-label="目前收入與時薪">
-              <div><span>目前收入</span><strong id="workIncome">NT$ 0</strong></div>
-              <div><span>目前時薪</span><strong id="workHourly">NT$ 0</strong></div>
-            </div>
+            <span id="workStatusTitle">今日工作狀態</span>
+            <strong id="workStatusText" data-status="idle">尚未開始</strong>
           </div>
           <div class="work-metrics" id="workMetrics" aria-label="今日工時計算">
             <div><span>總經過時間</span><strong id="workTotal">0 分</strong></div>
             <div><span>休息時間</span><strong id="workBreak">0 分</strong></div>
             <div><span>實際工作時間</span><strong id="workActual">0 分</strong></div>
-          </div>
-          <div class="weather-control" id="workWeatherControl">
-            <span class="weather-label">天氣</span>
-            <div class="weather-options" aria-label="選擇目前天氣">
-              <button class="weather-choice" type="button" data-weather-choice="晴天">晴天</button>
-              <button class="weather-choice" type="button" data-weather-choice="陰天">陰天</button>
-              <button class="weather-choice" type="button" data-weather-choice="雨天">雨天</button>
-              <button class="weather-choice" type="button" data-weather-choice="大雨">大雨</button>
-              <button class="weather-choice" type="button" data-weather-choice="其他">其他</button>
-            </div>
           </div>
           <div class="work-actions">
             <button class="button primary" id="startRun" type="button">開始工作</button>
@@ -1870,6 +1855,17 @@
                 <div class="income-grid" id="incomeInputs"></div>
               </div>
             </form>
+          </div>
+        </div>
+
+        <div class="weather-control" id="workWeatherControl">
+          <span class="weather-label">天氣</span>
+          <div class="weather-options" aria-label="選擇目前天氣">
+            <button class="weather-choice" type="button" data-weather-choice="晴天">晴天</button>
+            <button class="weather-choice" type="button" data-weather-choice="陰天">陰天</button>
+            <button class="weather-choice" type="button" data-weather-choice="雨天">雨天</button>
+            <button class="weather-choice" type="button" data-weather-choice="大雨">大雨</button>
+            <button class="weather-choice" type="button" data-weather-choice="其他">其他</button>
           </div>
         </div>
 
@@ -2150,10 +2146,7 @@
       pauseRun: document.getElementById("pauseRun"),
       resumeRun: document.getElementById("resumeRun"),
       endRun: document.getElementById("endRun"),
-      homeWorkCard: document.getElementById("homeWorkCard"),
       workStatusText: document.getElementById("workStatusText"),
-      workIncome: document.getElementById("workIncome"),
-      workHourly: document.getElementById("workHourly"),
       workMetrics: document.getElementById("workMetrics"),
       workTotal: document.getElementById("workTotal"),
       workBreak: document.getElementById("workBreak"),
@@ -2776,8 +2769,6 @@
       const entry = entryForDate();
       const status = workStatus(entry);
       const details = sessionDetails(entry);
-      const currentIncome = entry ? entryTotal(entry) : 0;
-      const currentHourly = details.hours ? entryNet(entry) / details.hours : 0;
       const labels = {
         idle: "尚未開始",
         running: "跑車中",
@@ -2785,8 +2776,7 @@
         stopped: "今日已收工"
       };
       els.workStatusText.textContent = labels[status];
-      els.workIncome.textContent = money(currentIncome);
-      els.workHourly.textContent = money(currentHourly);
+      els.workStatusText.dataset.status = status;
       els.workTotal.textContent = clockDuration(details.elapsedMs);
       els.workBreak.textContent = clockDuration(details.breakMs);
       els.workActual.textContent = clockDuration(details.hours * 3600000);
@@ -3211,7 +3201,7 @@
     els.pauseRun.addEventListener("click", pauseRunNow);
     els.resumeRun.addEventListener("click", resumeRunNow);
     els.endRun.addEventListener("click", endRunNow);
-    els.homeWorkCard.addEventListener("click", event => {
+    els.workWeatherControl.addEventListener("click", event => {
       const button = event.target.closest("[data-weather-choice]");
       if (button) updateCurrentWeather(button.dataset.weatherChoice);
     });
