@@ -1717,6 +1717,37 @@
       box-shadow: 0 2px 8px rgba(26, 48, 38, .08);
     }
 
+    .report-panel-head {
+      min-width: 0;
+      flex-wrap: nowrap;
+    }
+
+    .report-panel-head h3 {
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+
+    .report-panel-head select {
+      width: auto;
+      min-width: 0;
+      max-width: 180px;
+      flex: 1 1 150px;
+    }
+
+    .week-item > div {
+      min-width: 0;
+    }
+
+    .week-item strong {
+      display: block;
+      color: #203128;
+      overflow-wrap: anywhere;
+    }
+
+    .entries-mobile-list {
+      display: none;
+    }
+
     .table-wrap {
       max-width: 100%;
       overflow-x: auto;
@@ -1734,6 +1765,145 @@
 
     body[data-active-view="week"] .history-panel {
       display: block;
+    }
+
+    @media (max-width: 699px) {
+      #view-week .panel-body {
+        padding: 12px;
+      }
+
+      .report-panel-head {
+        min-height: 56px;
+        padding: 9px 12px;
+        gap: 10px;
+      }
+
+      .report-panel-head h3 {
+        font-size: 17px;
+      }
+
+      .report-panel-head select {
+        max-width: 52%;
+      }
+
+      .week-list {
+        gap: 12px;
+      }
+
+      .week-item {
+        padding: 14px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px 14px;
+        border-radius: 14px;
+      }
+
+      .week-item > div:first-child {
+        grid-column: 1 / -1;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #edf1ef;
+      }
+
+      .week-item span {
+        margin-bottom: 4px;
+        color: #7e8982;
+        font-size: 12px;
+      }
+
+      .week-item strong {
+        font-size: 18px;
+        line-height: 1.25;
+      }
+
+      .week-item > div:first-child strong {
+        font-size: 15px;
+        white-space: nowrap;
+      }
+
+      .history-panel .table-wrap {
+        overflow-x: visible;
+      }
+
+      .entries-desktop-table {
+        display: none;
+      }
+
+      .entries-mobile-list {
+        padding: 0 12px 16px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .daily-entry-card {
+        min-width: 0;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: #fff;
+      }
+
+      .daily-entry-head {
+        min-width: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        gap: 10px;
+      }
+
+      .daily-entry-date,
+      .daily-entry-total {
+        color: #203128;
+        font-size: 15px;
+        line-height: 1.3;
+        white-space: nowrap;
+      }
+
+      .daily-entry-total {
+        text-align: right;
+      }
+
+      .daily-entry-meta {
+        margin: 4px 0 12px;
+        color: #7e8982;
+        font-size: 13px;
+      }
+
+      .daily-platform-grid {
+        min-width: 0;
+        padding-top: 11px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px 16px;
+        border-top: 1px solid #edf1ef;
+      }
+
+      .daily-platform-grid span {
+        min-width: 0;
+        overflow: hidden;
+        color: #68736e;
+        font-size: 14px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .daily-platform-grid strong {
+        color: #203128;
+        font-size: 15px;
+        text-align: right;
+        white-space: nowrap;
+      }
+
+      .daily-entry-actions {
+        margin-top: 12px;
+        padding-top: 10px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        border-top: 1px solid #edf1ef;
+      }
+
+      .history-panel {
+        margin-bottom: calc(8px + env(safe-area-inset-bottom));
+      }
     }
 
     .ai-panel {
@@ -1770,6 +1940,10 @@
 
       .layout:not(#view-today) {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .entries-desktop-table {
+        display: table;
       }
     }
 
@@ -2008,7 +2182,7 @@
           <button data-report-view="platform">平台</button>
         </div>
         <div class="panel">
-          <div class="panel-head">
+          <div class="panel-head report-panel-head">
             <h3>每週總額</h3>
             <select id="weekMonthFilter" aria-label="週報月份篩選"></select>
           </div>
@@ -2135,7 +2309,7 @@
       </section>
 
       <section class="panel history-panel">
-        <div class="panel-head"><h3>月份明細</h3><select id="monthFilter" aria-label="月份篩選"></select></div>
+        <div class="panel-head report-panel-head"><h3>月份明細</h3><select id="monthFilter" aria-label="月份篩選"></select></div>
         <div class="table-wrap" id="entriesTable"></div>
       </section>
     </main>
@@ -2587,7 +2761,7 @@
       }
 
       els.entriesTable.innerHTML = `
-        <table>
+        <table class="entries-desktop-table">
           <thead>
             <tr>
               <th>日期</th>
@@ -2628,6 +2802,32 @@
             </tr>
           </tfoot>
         </table>
+        <div class="entries-mobile-list" aria-label="每日月份明細">
+          ${entries.map(entry => {
+            const meta = [entry.shift, entry.weather].filter(Boolean).join("・") || "尚未填寫班別與天氣";
+            return `
+              <article class="daily-entry-card">
+                <div class="daily-entry-head">
+                  <strong class="daily-entry-date">${escapeHtml(entry.date)}</strong>
+                  <strong class="daily-entry-total">總收入 ${money(entryTotal(entry))}</strong>
+                </div>
+                <div class="daily-entry-meta">${escapeHtml(meta)}</div>
+                <div class="daily-platform-grid">
+                  ${state.platforms.map(name => {
+                    const amount = Number(entry.incomes?.[name] || 0);
+                    return `<span>${escapeHtml(name)}</span><strong>${amount ? money(amount) : "—"}</strong>`;
+                  }).join("")}
+                  <span>小費</span><strong>${Number(entry.tips || 0) ? money(entry.tips) : "—"}</strong>
+                  <span>淨收入</span><strong>${money(entryNet(entry))}</strong>
+                </div>
+                <div class="daily-entry-actions" aria-label="${escapeAttr(entry.date)} 紀錄操作">
+                  <button class="icon-button" type="button" title="編輯" aria-label="編輯 ${escapeAttr(entry.date)} 紀錄" data-edit="${escapeAttr(entry.id)}">編</button>
+                  <button class="icon-button" type="button" title="刪除" aria-label="刪除 ${escapeAttr(entry.date)} 紀錄" data-delete="${escapeAttr(entry.id)}">刪</button>
+                </div>
+              </article>
+            `;
+          }).join("")}
+        </div>
       `;
     }
 
@@ -2658,7 +2858,7 @@
         endDate.setDate(endDate.getDate() + 6);
         return `
           <div class="week-item">
-            <div><span>週期</span><strong>${start} - ${endDate.toISOString().slice(0, 10)}</strong></div>
+            <div><span>週期</span><strong>${start}－${endDate.toISOString().slice(0, 10)}</strong></div>
             <div><span>總額</span><strong>${money(summary.total)}</strong></div>
             <div><span>淨收入</span><strong>${money(summary.net)}</strong></div>
             <div><span>工時</span><strong>${number(summary.hours)} 小時</strong></div>
