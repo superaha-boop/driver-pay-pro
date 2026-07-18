@@ -1822,19 +1822,22 @@
       }
 
       .week-list {
-        gap: 12px;
+        gap: 10px;
       }
 
       .week-item {
-        padding: 14px;
+        padding: 12px;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px 14px;
+        gap: 10px 14px;
         border-radius: 14px;
       }
 
-      .week-item > div:first-child {
+      .week-item-period {
         grid-column: 1 / -1;
-        padding-bottom: 10px;
+        padding-bottom: 8px;
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
         border-bottom: 1px solid #edf1ef;
       }
 
@@ -1849,8 +1852,14 @@
         line-height: 1.25;
       }
 
-      .week-item > div:first-child strong {
-        font-size: 15px;
+      .week-item-period span {
+        margin: 0;
+        flex: 0 0 auto;
+      }
+
+      .week-item-period strong {
+        min-width: 0;
+        font-size: 16px;
         white-space: nowrap;
       }
 
@@ -1864,16 +1873,17 @@
 
       .entries-mobile-list {
         padding: 0 12px 16px;
-        display: grid;
-        gap: 12px;
+        display: block;
       }
 
-      .daily-entry-card {
+      .daily-entry-row {
         min-width: 0;
-        padding: 14px;
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        background: #fff;
+        padding: 12px 2px;
+        border-bottom: 1px solid #e3e9e5;
+      }
+
+      .daily-entry-row:last-child {
+        border-bottom: 0;
       }
 
       .daily-entry-head {
@@ -1884,12 +1894,24 @@
         gap: 10px;
       }
 
+      .daily-entry-title {
+        min-width: 0;
+        display: flex;
+        align-items: baseline;
+        white-space: nowrap;
+      }
+
       .daily-entry-date,
       .daily-entry-total {
         color: #203128;
-        font-size: 15px;
+        font-size: 18px;
+        font-weight: 700;
         line-height: 1.3;
         white-space: nowrap;
+      }
+
+      .daily-entry-date {
+        color: #17211b;
       }
 
       .daily-entry-total {
@@ -1897,43 +1919,69 @@
       }
 
       .daily-entry-meta {
-        margin: 4px 0 12px;
+        min-width: 0;
         color: #7e8982;
-        font-size: 13px;
-      }
-
-      .daily-platform-grid {
-        min-width: 0;
-        padding-top: 11px;
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 8px 16px;
-        border-top: 1px solid #edf1ef;
-      }
-
-      .daily-platform-grid span {
-        min-width: 0;
-        overflow: hidden;
-        color: #68736e;
         font-size: 14px;
+        font-weight: 500;
+        overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
 
-      .daily-platform-grid strong {
-        color: #203128;
-        font-size: 15px;
-        text-align: right;
+      .daily-entry-bottom {
+        min-width: 0;
+        margin-top: 7px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 6px;
+      }
+
+      .daily-income-items {
+        min-width: 0;
+        display: flex;
+        flex: 1 1 auto;
+        flex-wrap: wrap;
+        gap: 4px 6px;
+      }
+
+      .daily-platform-income {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 4px;
         white-space: nowrap;
       }
 
+      .daily-platform-name {
+        color: #68736e;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .daily-platform-income strong {
+        color: #203128;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .daily-income-empty {
+        color: #98a29c;
+        font-size: 13px;
+      }
+
       .daily-entry-actions {
-        margin-top: 12px;
-        padding-top: 10px;
+        margin: 0;
+        padding: 0;
         display: flex;
-        justify-content: flex-end;
-        gap: 8px;
-        border-top: 1px solid #edf1ef;
+        flex: 0 0 auto;
+        gap: 4px;
+        border: 0;
+      }
+
+      .daily-entry-actions .icon-button {
+        width: 28px;
+        height: 28px;
+        font-size: 11px;
       }
 
       .history-panel {
@@ -2501,6 +2549,22 @@
       return todayString().slice(0, 7);
     }
 
+    function compactWeekRange(start, end) {
+      const [startYear, startMonth, startDay] = start.split("-").map(Number);
+      const [endYear, endMonth, endDay] = end.split("-").map(Number);
+      if (startYear !== endYear) {
+        return `${startYear}/${startMonth}/${startDay}－${endYear}/${endMonth}/${endDay}`;
+      }
+      return `${startMonth}/${startDay}－${endMonth}/${endDay}`;
+    }
+
+    function compactDailyDate(dateString) {
+      const [year, month, day] = dateString.split("-").map(Number);
+      const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+      const weekday = weekdays[new Date(year, month - 1, day).getDay()];
+      return `${month}/${day}（${weekday}）`;
+    }
+
     function entryIncome(entry) {
       return state.platforms.reduce((sum, name) => sum + platformNetAmount(name, entry.incomes?.[name] || 0), 0);
     }
@@ -2848,25 +2912,31 @@
         </table>
         <div class="entries-mobile-list" aria-label="每日月份明細">
           ${entries.map(entry => {
-            const meta = [entry.shift, entry.weather].filter(Boolean).join("・") || "尚未填寫班別與天氣";
+            const meta = [entry.shift, entry.weather].filter(Boolean).join("・") || "未設定";
+            const activePlatforms = state.platforms
+              .map(name => [name, Number(entry.incomes?.[name] || 0)])
+              .filter(([, amount]) => amount > 0);
             return `
-              <article class="daily-entry-card">
+              <article class="daily-entry-row">
                 <div class="daily-entry-head">
-                  <strong class="daily-entry-date">${escapeHtml(entry.date)}</strong>
-                  <strong class="daily-entry-total">總收入 ${money(entryTotal(entry))}</strong>
+                  <div class="daily-entry-title">
+                    <strong class="daily-entry-date">${escapeHtml(compactDailyDate(entry.date))}</strong>
+                    <span class="daily-entry-meta">・${escapeHtml(meta)}</span>
+                  </div>
+                  <strong class="daily-entry-total">${money(entryTotal(entry))}</strong>
                 </div>
-                <div class="daily-entry-meta">${escapeHtml(meta)}</div>
-                <div class="daily-platform-grid">
-                  ${state.platforms.map(name => {
-                    const amount = Number(entry.incomes?.[name] || 0);
-                    return `<span>${escapeHtml(name)}</span><strong>${amount ? money(amount) : "—"}</strong>`;
-                  }).join("")}
-                  <span>小費</span><strong>${Number(entry.tips || 0) ? money(entry.tips) : "—"}</strong>
-                  <span>淨收入</span><strong>${money(entryNet(entry))}</strong>
-                </div>
-                <div class="daily-entry-actions" aria-label="${escapeAttr(entry.date)} 紀錄操作">
-                  <button class="icon-button" type="button" title="編輯" aria-label="編輯 ${escapeAttr(entry.date)} 紀錄" data-edit="${escapeAttr(entry.id)}">編</button>
-                  <button class="icon-button" type="button" title="刪除" aria-label="刪除 ${escapeAttr(entry.date)} 紀錄" data-delete="${escapeAttr(entry.id)}">刪</button>
+                <div class="daily-entry-bottom">
+                  <div class="daily-income-items">
+                    ${activePlatforms.length
+                      ? activePlatforms.map(([name, amount]) => `
+                          <span class="daily-platform-income"><span class="daily-platform-name">${escapeHtml(name)}</span><strong>${money(amount)}</strong></span>
+                        `).join("")
+                      : `<span class="daily-income-empty">尚無收入紀錄</span>`}
+                  </div>
+                  <div class="daily-entry-actions" aria-label="${escapeAttr(entry.date)} 紀錄操作">
+                    <button class="icon-button" type="button" title="編輯" aria-label="編輯 ${escapeAttr(entry.date)} 紀錄" data-edit="${escapeAttr(entry.id)}">編</button>
+                    <button class="icon-button" type="button" title="刪除" aria-label="刪除 ${escapeAttr(entry.date)} 紀錄" data-delete="${escapeAttr(entry.id)}">刪</button>
+                  </div>
                 </div>
               </article>
             `;
@@ -2900,9 +2970,10 @@
         const summary = summarize(entries);
         const endDate = new Date(`${start}T00:00:00`);
         endDate.setDate(endDate.getDate() + 6);
+        const end = endDate.toISOString().slice(0, 10);
         return `
           <div class="week-item">
-            <div><span>週期</span><strong>${start}－${endDate.toISOString().slice(0, 10)}</strong></div>
+            <div class="week-item-period"><span>週期</span><strong>${compactWeekRange(start, end)}</strong></div>
             <div><span>總額</span><strong>${money(summary.total)}</strong></div>
             <div><span>淨收入</span><strong>${money(summary.net)}</strong></div>
             <div><span>工時</span><strong>${number(summary.hours)} 小時</strong></div>
