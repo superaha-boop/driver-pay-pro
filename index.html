@@ -763,6 +763,34 @@
       margin-top: 18px;
     }
 
+    .expense-shortcut-settings {
+      display: grid;
+      gap: 12px;
+    }
+
+    .expense-shortcut-settings label {
+      display: grid;
+      gap: 7px;
+    }
+
+    .expense-shortcut-settings select {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .expense-shortcut-settings-note,
+    .expense-shortcut-settings-status {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .expense-shortcut-settings-status {
+      min-height: 18px;
+      color: var(--brand-strong);
+    }
+
     .ai-panel {
       min-height: 360px;
       display: grid;
@@ -1184,7 +1212,10 @@
     }
 
     .today-summary {
-      padding: 11px 15px 10px;
+      min-height: 214px;
+      padding: 14px 18px 12px;
+      display: flex;
+      flex-direction: column;
       border-radius: 20px;
       color: #fff;
       background: var(--brand-strong);
@@ -1193,24 +1224,24 @@
 
     .today-summary-label {
       display: block;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       color: rgba(255, 255, 255, .72);
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 600;
     }
 
     .today-income {
       display: block;
       overflow-wrap: anywhere;
-      font-size: clamp(38px, 12vw, 56px);
+      font-size: clamp(50px, 14vw, 64px);
       line-height: 1;
       letter-spacing: -.055em;
       font-variant-numeric: tabular-nums;
     }
 
     .today-secondary {
-      margin-top: 9px;
-      padding-top: 8px;
+      margin-top: 10px;
+      padding-top: 9px;
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
@@ -1225,15 +1256,44 @@
       display: block;
       margin-bottom: 3px;
       color: rgba(255, 255, 255, .7);
-      font-size: 12px;
+      font-size: 13px;
     }
 
     .today-secondary strong {
       display: block;
-      font-size: 24px;
+      font-size: clamp(26px, 7vw, 32px);
       line-height: 1.12;
       letter-spacing: -.02em;
       font-variant-numeric: tabular-nums;
+    }
+
+    .today-goal {
+      margin-top: auto;
+      padding-top: 10px;
+      display: grid;
+      gap: 7px;
+    }
+
+    .today-goal-status {
+      justify-self: end;
+      color: rgba(255, 255, 255, .78);
+      font-size: 12px;
+      font-weight: 650;
+      line-height: 1.2;
+      text-align: right;
+    }
+
+    .today-goal-track {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .24);
+    }
+
+    .today-goal-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: rgba(255, 255, 255, .96);
     }
 
     .layout,
@@ -1506,37 +1566,29 @@
       transform: scale(.96);
     }
 
-    .weather-control {
-      min-height: 52px;
-      padding: 6px 9px;
+    .direct-choice-field {
+      grid-column: 1 / -1;
       display: grid;
-      grid-template-columns: auto minmax(0, 1fr);
-      align-items: center;
-      gap: 8px;
-      border-radius: 8px;
-      background: #fff;
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
+      gap: 7px;
     }
 
-    .weather-label {
+    .direct-choice-label {
       color: var(--muted);
-      font-size: 12px;
-      font-weight: 750;
+      font-size: 13px;
     }
 
-    .weather-options {
+    .direct-choice-options {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 4px;
-      min-width: 0;
+      gap: 6px;
     }
 
-    .weather-choice {
-      min-height: 38px;
-      padding: 0 5px;
+    .direct-choice {
+      min-width: 0;
+      min-height: 44px;
+      padding: 0 4px;
       border: 1px solid var(--line);
-      border-radius: 10px;
+      border-radius: 11px;
       color: var(--text);
       background: #fff;
       font-size: 13px;
@@ -1544,49 +1596,14 @@
       white-space: nowrap;
     }
 
-    .weather-choice.active {
+    .direct-choice.active {
       color: #fff;
       border-color: var(--brand);
       background: var(--brand);
     }
 
-    .goal-card {
-      padding: 11px 13px;
-      gap: 8px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: #fff;
-    }
-
-    .goal-top,
-    .goal-bottom {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .goal-top span,
-    .goal-bottom span {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .goal-top strong {
-      font-size: 15px;
-    }
-
-    .goal-track {
-      height: 7px;
-      overflow: hidden;
-      border-radius: 999px;
-      background: var(--panel-2);
-    }
-
-    .goal-fill {
-      height: 100%;
-      border-radius: inherit;
-      background: var(--brand);
+    .choice-value-control {
+      display: none;
     }
 
     .recent-list {
@@ -1656,22 +1673,602 @@
       width: 100%;
     }
 
+    .smart-expense-form {
+      display: grid;
+      gap: 20px;
+      padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    }
+
+    #expenseInputs [hidden] {
+      display: none !important;
+    }
+
+    .smart-expense-primary {
+      display: grid;
+      gap: 16px;
+    }
+
+    .expense-section-label {
+      display: block;
+      margin-bottom: 9px;
+      color: #33413a;
+      font-size: 15px;
+      font-weight: 750;
+    }
+
+    .expense-quick-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .expense-quick-button {
+      min-width: 0;
+      min-height: 60px;
+      padding: 6px 4px;
+      display: grid;
+      place-items: center;
+      align-content: center;
+      gap: 3px;
+      border: 1px solid #dce4df;
+      border-radius: 14px;
+      color: #33413a;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 750;
+      line-height: 1.15;
+    }
+
+    .expense-quick-button.active {
+      color: #087653;
+      border-color: #15966f;
+      background: #eaf7f1;
+    }
+
+    .expense-quick-button span {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .expense-quick-icon {
+      width: 21px;
+      height: 21px;
+      color: #087653;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.8;
+    }
+
+    .smart-expense-field {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .smart-expense-field input,
+    .smart-expense-field select {
+      min-height: 52px;
+      padding-inline: 13px;
+      border-radius: 13px;
+      color: #17211d;
+      background: #fafcfb;
+      font-size: 16px;
+      font-weight: 650;
+    }
+
+    .smart-expense-field .expense-amount-input,
+    .smart-expense-field input[type="number"] {
+      font-size: 20px;
+      font-weight: 750;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .expense-amount-wrap {
+      position: relative;
+      min-width: 0;
+    }
+
+    .expense-amount-prefix {
+      position: absolute;
+      top: 50%;
+      left: 13px;
+      z-index: 1;
+      color: #68736e;
+      font-size: 18px;
+      font-weight: 700;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .smart-expense-field .expense-amount-input {
+      padding-left: 32px;
+    }
+
+    .expense-mode-options {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .expense-compact-row {
+      width: 100%;
+      min-width: 0;
+      min-height: 54px;
+      padding: 0 14px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid #dce4df;
+      border-radius: 14px;
+      color: #17211d;
+      background: #fafcfb;
+      text-align: left;
+    }
+
+    .expense-compact-row-label {
+      color: #68736e;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .expense-compact-row strong {
+      min-width: 0;
+      overflow: hidden;
+      color: #203128;
+      font-size: 16px;
+      font-weight: 750;
+      text-align: right;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .expense-compact-row-action {
+      color: #087653;
+      font-size: 13px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .expense-mode-option {
+      min-width: 0;
+      min-height: 50px;
+      padding: 0 4px;
+      border: 1px solid #dce4df;
+      border-radius: 12px;
+      color: #46534c;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 750;
+      line-height: 1.25;
+    }
+
+    .expense-mode-option.active {
+      color: #087653;
+      border-color: #15966f;
+      background: #e3f5ed;
+    }
+
+    .expense-compact-row + .expense-mode-options {
+      margin-top: 8px;
+    }
+
+    .date-card {
+      position: relative;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      min-height: 56px;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      border: 1px solid #dce4df;
+      border-radius: 15px;
+      color: #17211d;
+      background: #fafcfb;
+      cursor: pointer;
+    }
+
+    .date-card:focus-within {
+      border-color: #15966f;
+      box-shadow: 0 0 0 3px rgba(21, 150, 111, .12);
+    }
+
+    .date-card-copy {
+      min-width: 0;
+      display: grid;
+      place-items: center;
+      gap: 1px;
+      line-height: 1.15;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .date-card.inline-date .date-card-copy {
+      display: block;
+    }
+
+    .date-card.inline-date .date-card-value {
+      font-size: 21px;
+      font-weight: 650;
+    }
+
+    .date-card-value {
+      color: #17211d;
+      font-size: 21px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .date-card-today {
+      color: #68736e;
+      font-size: 11px;
+      font-weight: 650;
+    }
+
+    .date-card input[type="date"] {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      height: 100%;
+      min-height: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: inherit;
+      background: transparent;
+      box-shadow: none;
+      opacity: 0;
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .expense-suggestion-card {
+      padding: 14px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      border: 1px solid #dce4df;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 4px 18px rgba(26, 48, 38, .05);
+    }
+
+    .expense-recurring-card {
+      padding: 15px;
+      display: grid;
+      gap: 15px;
+      border: 1px solid #dce4df;
+      border-radius: 16px;
+      background: #f7faf8;
+    }
+
+    .expense-settings-title {
+      margin: 0;
+      color: #17211d;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .expense-recurring-summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .expense-recurring-summary div {
+      min-width: 0;
+      padding: 10px 11px;
+      border-radius: 11px;
+      background: #fff;
+    }
+
+    .expense-recurring-summary span,
+    .expense-model-note,
+    .expense-remainder-note {
+      color: #68736e;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .expense-recurring-summary strong {
+      display: block;
+      margin-top: 3px;
+      color: #203128;
+      font-size: 18px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .expense-end-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .expense-end-option {
+      min-height: 46px;
+      padding: 0 7px;
+      border: 1px solid #dce4df;
+      border-radius: 11px;
+      color: #46534c;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .expense-end-option.active {
+      color: #087653;
+      border-color: #15966f;
+      background: #e3f5ed;
+    }
+
+    .expense-model-note,
+    .expense-remainder-note {
+      margin: 0;
+    }
+
+    .expense-suggestion-copy {
+      min-width: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .expense-suggestion-category {
+      color: #17211d;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .expense-suggestion-label {
+      margin: 0;
+      color: #7e8982;
+      font-size: 12px;
+    }
+
+    .expense-suggestion-duration {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #087653;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .expense-suggestion-check {
+      width: 22px;
+      height: 22px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #087653;
+      background: #e3f5ed;
+      font-size: 13px;
+    }
+
+    .expense-cost-preview {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .expense-cost-preview span,
+    .expense-existing-hint {
+      display: block;
+      color: #7e8982;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .expense-cost-preview strong {
+      display: block;
+      margin-top: 2px;
+      color: #203128;
+      font-size: 16px;
+      font-weight: 750;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .expense-modify-button {
+      align-self: end;
+      min-height: 38px;
+      padding: 0 10px;
+      border-radius: 10px;
+      color: #087653;
+      background: #e3f5ed;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .expense-duration-settings {
+      padding: 14px;
+      display: grid;
+      gap: 14px;
+      border: 1px solid #dce4df;
+      border-radius: 15px;
+      background: #f7faf8;
+    }
+
+    .expense-duration-title {
+      color: #17211d;
+      font-size: 15px;
+      font-weight: 750;
+    }
+
+    .expense-duration-options {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .expense-duration-option {
+      min-height: 44px;
+      padding: 0 8px;
+      border: 1px solid #dce4df;
+      border-radius: 11px;
+      color: #33413a;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .expense-duration-option.active {
+      color: #fff;
+      border-color: #15966f;
+      background: #15966f;
+    }
+
+    .expense-save-button {
+      min-height: 56px;
+      width: 100%;
+      border-radius: 16px;
+      color: #fff;
+      background: #15966f;
+      font-size: 21px;
+      font-weight: 700;
+      scroll-margin-bottom: calc(96px + env(safe-area-inset-bottom));
+    }
+
+    .expense-save-button:active {
+      background: #087653;
+    }
+
+    .expense-save-button:disabled {
+      color: #8b9690;
+      background: #e5eae7;
+      cursor: not-allowed;
+    }
+
+    .expense-recent {
+      display: grid;
+      gap: 8px;
+    }
+
+    .expense-recent-label {
+      color: #68736e;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .expense-recent-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .expense-recent-pill {
+      min-height: 38px;
+      padding: 0 13px;
+      border: 1px solid #dce4df;
+      border-radius: 999px;
+      color: #33413a;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .expense-recent-pill.selected {
+      color: #087653;
+      border-color: #15966f;
+      background: #eaf7f1;
+    }
+
+    .expense-note-area {
+      display: grid;
+      gap: 9px;
+    }
+
+    .expense-note-toggle {
+      width: fit-content;
+      min-height: 44px;
+      padding: 0 2px;
+      color: #087653;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 750;
+      text-align: left;
+    }
+
+    .expense-note-field {
+      display: grid;
+      gap: 7px;
+      color: #68736e;
+      font-size: 13px;
+    }
+
+    .expense-note-field input {
+      width: 100%;
+      min-width: 0;
+      min-height: 50px;
+      padding: 0 13px;
+      border: 1px solid #dce4df;
+      border-radius: 13px;
+      color: #17211d;
+      background: #fafcfb;
+      font-size: 16px;
+    }
+
+    #smartExpenseAmount {
+      scroll-margin-bottom: calc(96px + env(safe-area-inset-bottom));
+    }
+
+    .expense-form-status {
+      min-height: 20px;
+      margin: -4px 2px 0;
+      color: #087653;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .expense-form-status.error {
+      color: var(--danger);
+    }
+
     .details-panel .panel-body,
     .details-panel form,
     .details-panel .quick-fields,
-    .details-panel .quick-fields label {
+    .details-panel .quick-fields .date-card-host {
       width: 100%;
       min-width: 0;
       max-width: 100%;
     }
 
-    .details-panel input[type="date"] {
+    .date-card-host {
       display: block;
-      width: 100%;
-      min-width: 0;
-      max-width: 100%;
-      box-sizing: border-box;
-      margin: 0;
+    }
+
+    .app-toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(78px + env(safe-area-inset-bottom));
+      z-index: 30;
+      max-width: calc(100vw - 32px);
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: #fff;
+      background: #203128;
+      box-shadow: 0 8px 24px rgba(23, 33, 29, .18);
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+      transform: translate(-50%, 12px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .16s ease, transform .16s ease;
+    }
+
+    .app-toast.visible {
+      transform: translate(-50%, 0);
+      opacity: 1;
     }
 
     .quick-preview {
@@ -1787,19 +2384,22 @@
       }
 
       .week-list {
-        gap: 12px;
+        gap: 10px;
       }
 
       .week-item {
-        padding: 14px;
+        padding: 12px;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px 14px;
+        gap: 10px 14px;
         border-radius: 14px;
       }
 
-      .week-item > div:first-child {
+      .week-item-period {
         grid-column: 1 / -1;
-        padding-bottom: 10px;
+        padding-bottom: 8px;
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
         border-bottom: 1px solid #edf1ef;
       }
 
@@ -1814,8 +2414,14 @@
         line-height: 1.25;
       }
 
-      .week-item > div:first-child strong {
-        font-size: 15px;
+      .week-item-period span {
+        margin: 0;
+        flex: 0 0 auto;
+      }
+
+      .week-item-period strong {
+        min-width: 0;
+        font-size: 16px;
         white-space: nowrap;
       }
 
@@ -1829,16 +2435,17 @@
 
       .entries-mobile-list {
         padding: 0 12px 16px;
-        display: grid;
-        gap: 12px;
+        display: block;
       }
 
-      .daily-entry-card {
+      .daily-entry-row {
         min-width: 0;
-        padding: 14px;
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        background: #fff;
+        padding: 12px 2px;
+        border-bottom: 1px solid #e3e9e5;
+      }
+
+      .daily-entry-row:last-child {
+        border-bottom: 0;
       }
 
       .daily-entry-head {
@@ -1849,12 +2456,24 @@
         gap: 10px;
       }
 
+      .daily-entry-title {
+        min-width: 0;
+        display: flex;
+        align-items: baseline;
+        white-space: nowrap;
+      }
+
       .daily-entry-date,
       .daily-entry-total {
         color: #203128;
-        font-size: 15px;
+        font-size: 18px;
+        font-weight: 700;
         line-height: 1.3;
         white-space: nowrap;
+      }
+
+      .daily-entry-date {
+        color: #17211b;
       }
 
       .daily-entry-total {
@@ -1862,43 +2481,90 @@
       }
 
       .daily-entry-meta {
-        margin: 4px 0 12px;
+        min-width: 0;
         color: #7e8982;
-        font-size: 13px;
-      }
-
-      .daily-platform-grid {
-        min-width: 0;
-        padding-top: 11px;
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 8px 16px;
-        border-top: 1px solid #edf1ef;
-      }
-
-      .daily-platform-grid span {
-        min-width: 0;
-        overflow: hidden;
-        color: #68736e;
         font-size: 14px;
+        font-weight: 500;
+        overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
 
-      .daily-platform-grid strong {
-        color: #203128;
-        font-size: 15px;
-        text-align: right;
+      .daily-entry-weather {
+        width: 20px;
+        height: 20px;
+        display: inline-flex;
+        flex: 0 0 20px;
+        align-items: center;
+        justify-content: center;
+        color: #7e8982;
+      }
+
+      .daily-entry-weather svg {
+        width: 19px;
+        height: 19px;
+        display: block;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .daily-entry-bottom {
+        min-width: 0;
+        margin-top: 7px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 6px;
+      }
+
+      .daily-income-items {
+        min-width: 0;
+        display: flex;
+        flex: 1 1 auto;
+        flex-wrap: wrap;
+        gap: 4px 6px;
+      }
+
+      .daily-platform-income {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 4px;
         white-space: nowrap;
       }
 
+      .daily-platform-name {
+        color: #68736e;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .daily-platform-income strong {
+        color: #203128;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .daily-income-empty {
+        color: #98a29c;
+        font-size: 13px;
+      }
+
       .daily-entry-actions {
-        margin-top: 12px;
-        padding-top: 10px;
+        margin: 0;
+        padding: 0;
         display: flex;
-        justify-content: flex-end;
-        gap: 8px;
-        border-top: 1px solid #edf1ef;
+        flex: 0 0 auto;
+        gap: 4px;
+        border: 0;
+      }
+
+      .daily-entry-actions .icon-button {
+        width: 28px;
+        height: 28px;
+        font-size: 11px;
       }
 
       .history-panel {
@@ -1906,9 +2572,207 @@
       }
     }
 
-    .ai-panel {
-      min-height: 320px;
-      padding: 24px;
+    body[data-active-view="ai"] .topbar {
+      display: none;
+    }
+
+    .ai-dashboard {
+      min-width: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .ai-page-intro {
+      padding: 4px 3px 2px;
+    }
+
+    .ai-page-intro h2 {
+      margin: 0;
+      color: #17211b;
+      font-size: 26px;
+      letter-spacing: -.025em;
+    }
+
+    .ai-page-intro p {
+      margin: 5px 0 0;
+      color: #68736e;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .ai-insight-card {
+      min-width: 0;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .ai-insight-card.primary {
+      color: #fff;
+      border-color: transparent;
+      background: var(--brand-strong);
+      box-shadow: none;
+    }
+
+    .ai-section-head {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .ai-section-head h3 {
+      margin: 0;
+      color: #17211b;
+      font-size: 18px;
+    }
+
+    .ai-insight-card.primary .ai-section-head h3 {
+      color: #fff;
+    }
+
+    .ai-section-kicker {
+      color: #7e8982;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .ai-insight-card.primary .ai-section-kicker {
+      color: rgba(255, 255, 255, .7);
+    }
+
+    .ai-advice-list,
+    .ai-alert-list {
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 9px;
+      list-style: none;
+    }
+
+    .ai-advice-list li,
+    .ai-alert-list li {
+      position: relative;
+      padding-left: 14px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .ai-advice-list li::before,
+    .ai-alert-list li::before {
+      content: "";
+      position: absolute;
+      top: .65em;
+      left: 0;
+      width: 5px;
+      height: 5px;
+      border-radius: 999px;
+      background: currentColor;
+      opacity: .55;
+    }
+
+    .ai-insight-card.primary .ai-advice-list li {
+      color: rgba(255, 255, 255, .92);
+    }
+
+    .ai-empty-state {
+      margin: 0;
+      color: #7e8982;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .ai-insight-card.primary .ai-empty-state {
+      color: rgba(255, 255, 255, .78);
+    }
+
+    .ai-month-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .ai-metric {
+      min-width: 0;
+      padding: 11px;
+      display: grid;
+      gap: 4px;
+      border-radius: 12px;
+      background: #f4f7f5;
+    }
+
+    .ai-metric span {
+      color: #7e8982;
+      font-size: 12px;
+    }
+
+    .ai-metric strong {
+      min-width: 0;
+      color: #203128;
+      font-size: 15px;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .ai-platform-list {
+      display: grid;
+    }
+
+    .ai-platform-row {
+      min-width: 0;
+      padding: 10px 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      align-items: baseline;
+      gap: 10px;
+      border-bottom: 1px solid #e3e9e5;
+    }
+
+    .ai-platform-row:first-child {
+      padding-top: 0;
+    }
+
+    .ai-platform-row:last-child {
+      border-bottom: 0;
+    }
+
+    .ai-platform-row strong {
+      min-width: 0;
+      color: #203128;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .ai-platform-amount {
+      color: #203128;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .ai-platform-share {
+      min-width: 38px;
+      color: #7e8982;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .ai-platform-summary {
+      margin: 10px 0 0;
+      padding-top: 11px;
+      color: #68736e;
+      border-top: 1px solid #edf1ef;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    @media (min-width: 700px) {
+      .ai-month-metrics {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
     }
 
     .driver-space-note {
@@ -1954,6 +2818,25 @@
     }
 
     @media (max-width: 350px) {
+      .expense-quick-actions,
+      .expense-mode-options {
+        gap: 5px;
+      }
+
+      .expense-quick-button,
+      .expense-mode-option {
+        font-size: 12px;
+      }
+
+      .expense-duration-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .today-secondary strong {
+        font-size: 22px;
+        white-space: nowrap;
+      }
+
       .platform-income-row {
         grid-template-columns: 126px minmax(96px, 1fr) 42px;
         gap: 3px;
@@ -1978,10 +2861,351 @@
       }
     }
 
+    /* Home record details: mobile-safe fields and compact work-time hierarchy */
+    label,
+    .fields > *,
+    .collapsible-body,
+    .collapsible-body > * {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    input,
+    select,
+    textarea {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    input[type="date"],
+    input[type="time"],
+    input[type="month"] {
+      inline-size: 100%;
+      min-inline-size: 0;
+      max-inline-size: 100%;
+    }
+
+    input[type="date"]::-webkit-date-and-time-value,
+    input[type="time"]::-webkit-date-and-time-value,
+    input[type="month"]::-webkit-date-and-time-value,
+    input[type="date"]::-webkit-datetime-edit,
+    input[type="time"]::-webkit-datetime-edit,
+    input[type="month"]::-webkit-datetime-edit {
+      min-width: 0;
+    }
+
+    .section-heading,
+    .home-heading,
+    .detail-summary-title {
+      min-width: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-icon {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .income-panel-head .section-heading,
+    .home-heading {
+      color: var(--brand-strong);
+    }
+
+    .work-status-row .home-heading > span {
+      color: var(--text);
+    }
+
+    .details-panel form {
+      gap: 12px;
+    }
+
+    .details-panel .detail-section {
+      position: relative;
+      margin-bottom: 0;
+      border-radius: 18px;
+    }
+
+    .details-panel .detail-section::before {
+      content: "";
+      position: absolute;
+      z-index: 2;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: #58a88f;
+      pointer-events: none;
+    }
+
+    .details-panel .expense-section::before {
+      background: #6e9da0;
+    }
+
+    .details-panel .other-section::before {
+      background: #bd9564;
+    }
+
+    .details-panel .detail-section summary {
+      min-width: 0;
+      min-height: 56px;
+      padding: 7px 12px 7px 16px;
+      gap: 10px;
+      outline: none;
+    }
+
+    .details-panel .detail-section summary:focus-visible {
+      border-radius: 16px;
+      box-shadow: inset 0 0 0 3px rgba(21, 150, 111, .2);
+    }
+
+    .details-panel .detail-section summary::after {
+      flex: 0 0 28px;
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      background: var(--brand);
+    }
+
+    .detail-summary-main {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .detail-summary-title {
+      color: #26372f;
+      gap: 10px;
+      font-size: 25px;
+      font-weight: 700;
+      line-height: 1.24;
+      white-space: nowrap;
+    }
+
+    .details-panel .detail-section .detail-summary-title .section-icon {
+      width: 25px;
+      height: 25px;
+      flex: 0 0 25px;
+    }
+
+    .work-section .detail-summary-title .section-icon {
+      color: #318b6f;
+    }
+
+    .expense-section .detail-summary-title .section-icon {
+      color: #4f8588;
+    }
+
+    .other-section .detail-summary-title .section-icon {
+      color: #a47640;
+    }
+
+    .work-collapse-summary {
+      min-width: 0;
+      display: grid;
+      gap: 2px;
+      justify-items: end;
+      text-align: right;
+    }
+
+    .work-collapse-summary strong,
+    .work-collapse-summary small {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .work-collapse-summary strong {
+      color: #33413a;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .work-collapse-summary small {
+      color: #7b8780;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .work-section[open] .work-collapse-summary {
+      display: none;
+    }
+
+    .details-panel .detail-section .collapsible-body {
+      padding: 2px 14px 14px 18px;
+    }
+
+    .work-time-fields {
+      gap: 12px;
+    }
+
+    .work-field-label {
+      color: #526159;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .work-time-fields input {
+      min-height: 50px;
+      border-radius: 15px;
+      border-color: #d8e1dc;
+      background: #fbfcfb;
+    }
+
+    .work-time-control {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      min-height: 50px;
+      position: relative;
+      display: block;
+      overflow: hidden;
+      border: 1px solid #d8e1dc;
+      border-radius: 15px;
+      box-sizing: border-box;
+      background: #fbfcfb;
+    }
+
+    .work-time-control input[type="time"] {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      height: 48px;
+      min-height: 48px;
+      margin: 0;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 14px;
+      box-sizing: border-box;
+      color: var(--text);
+      background: transparent;
+      box-shadow: none;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .work-time-control:focus-within {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(31, 122, 85, .13);
+    }
+
+    .work-time-control input[type="time"]:focus {
+      border: 0;
+      box-shadow: none;
+    }
+
+    .work-input-shell {
+      position: relative;
+      min-width: 0;
+      max-width: 100%;
+      display: block;
+    }
+
+    .work-input-shell input {
+      padding-right: 58px;
+    }
+
+    .work-input-unit {
+      position: absolute;
+      top: 50%;
+      right: 13px;
+      color: #7b8780;
+      font-size: 13px;
+      font-weight: 650;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .work-live-summary {
+      grid-column: 1 / -1;
+      min-width: 0;
+      min-height: 52px;
+      padding: 10px 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid #dce7e1;
+      border-radius: 15px;
+      background: #f1f7f4;
+    }
+
+    .work-live-summary span {
+      color: #65736b;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .work-live-summary strong {
+      min-width: 0;
+      color: var(--brand-strong);
+      font-size: 18px;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .details-panel .save-button {
+      min-height: 54px;
+      border-radius: 17px;
+    }
+
+    .detail-section::details-content {
+      block-size: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition:
+        block-size 200ms ease-out,
+        opacity 180ms ease-out,
+        content-visibility 200ms allow-discrete;
+    }
+
+    .detail-section[open]::details-content {
+      block-size: auto;
+      opacity: 1;
+    }
+
+    .detail-section[open] .collapsible-body {
+      animation: detail-section-open 200ms ease-out;
+    }
+
+    @keyframes detail-section-open {
+      from {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 350px) {
+      .detail-summary-main {
+        gap: 7px;
+      }
+
+      .work-collapse-summary strong {
+        font-size: 12px;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         scroll-behavior: auto !important;
         animation-duration: .01ms !important;
+      }
+
+      .detail-section::details-content {
+        transition-duration: .01ms !important;
       }
     }
   </style>
@@ -2057,7 +3281,14 @@
 
         <section class="home-work-card" id="homeWorkCard" aria-labelledby="workStatusTitle">
           <div class="work-status-row">
-            <span id="workStatusTitle">今日工作狀態</span>
+            <span class="home-heading" id="workStatusTitle">
+              <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="m21 8-2 2-1.5-3.7A2 2 0 0 0 15.65 5h-7.3A2 2 0 0 0 6.5 6.3L5 10 3 8"></path>
+                <rect width="18" height="8" x="3" y="10" rx="2"></rect>
+                <path d="M7 14h.01M17 14h.01M5 18v2M19 18v2"></path>
+              </svg>
+              <span>今日工作狀態</span>
+            </span>
             <strong id="workStatusText" data-status="idle">尚未開始</strong>
           </div>
           <div class="work-metrics" id="workMetrics" aria-label="今日工時計算">
@@ -2075,7 +3306,13 @@
 
         <div class="panel">
           <div class="panel-head income-panel-head">
-            <h3>平台收入</h3>
+            <h3 class="section-heading">
+              <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M12 6v12M16 8.5h-6a2.5 2.5 0 0 0 0 5h4a2.5 2.5 0 0 1 0 5H8"></path>
+              </svg>
+              <span>平台收入</span>
+            </h3>
             <span class="income-unit">單位：NT$</span>
           </div>
           <div class="panel-body">
@@ -2088,19 +3325,6 @@
           </div>
         </div>
 
-        <div class="weather-control" id="workWeatherControl">
-          <span class="weather-label">天氣</span>
-          <div class="weather-options" aria-label="選擇目前天氣">
-            <button class="weather-choice" type="button" data-weather-choice="晴天">晴天</button>
-            <button class="weather-choice" type="button" data-weather-choice="陰天">陰天</button>
-            <button class="weather-choice" type="button" data-weather-choice="雨天">雨天</button>
-            <button class="weather-choice" type="button" data-weather-choice="大雨">大雨</button>
-            <button class="weather-choice" type="button" data-weather-choice="其他">其他</button>
-          </div>
-        </div>
-
-        <div class="goal-card" id="dailyGoalCard"></div>
-
         <div class="panel details-panel">
           <div class="panel-head">
             <h3 id="formTitle">更新今日紀錄</h3>
@@ -2109,54 +3333,113 @@
           <div class="panel-body">
             <form id="detailForm">
               <div class="fields quick-fields">
-                <label>日期
-                  <input type="date" id="date" required>
-                </label>
+                <div class="date-card-host" id="entryDateCard"></div>
               </div>
               <div class="quick-preview" id="quickPreview"></div>
-              <details class="collapsible">
-                <summary>工時設定</summary>
-                <div class="collapsible-body fields">
-                  <label>開始時間
-                    <input type="time" id="startTime">
+              <details class="collapsible detail-section work-section" id="workTimeSection">
+                <summary>
+                  <span class="detail-summary-main">
+                    <span class="detail-summary-title">
+                      <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <path d="M12 7v5h4"></path>
+                      </svg>
+                      <span>工時設定</span>
+                    </span>
+                    <span class="work-collapse-summary" aria-live="polite">
+                      <strong id="workCollapsedPrimary">尚未設定</strong>
+                      <small id="workCollapsedSecondary">等待開始時間</small>
+                    </span>
+                  </span>
+                </summary>
+                <div class="collapsible-body fields work-time-fields">
+                  <label>
+                    <span class="work-field-label">開始跑車</span>
+                    <span class="work-time-control">
+                      <input type="time" id="startTime">
+                    </span>
                   </label>
-                  <label>結束時間
-                    <input type="time" id="endTime">
+                  <label>
+                    <span class="work-field-label">結束跑車</span>
+                    <span class="work-time-control">
+                      <input type="time" id="endTime">
+                    </span>
                   </label>
-                  <label>休息分鐘
-                    <input type="number" inputmode="numeric" id="breakMinutes" min="0" step="1" value="0">
+                  <label>
+                    <span class="work-field-label">休息</span>
+                    <span class="work-input-shell">
+                      <input type="number" inputmode="numeric" id="breakMinutes" min="0" step="1" value="0">
+                      <span class="work-input-unit" aria-hidden="true">分鐘</span>
+                    </span>
                   </label>
-                  <label>手動工時
-                    <input type="number" inputmode="decimal" id="manualHours" min="0" step="0.25" placeholder="可留空自動算">
+                  <label>
+                    <span class="work-field-label">手動工時</span>
+                    <input type="number" inputmode="decimal" id="manualHours" min="0" step="0.25" placeholder="可留空，自動計算">
                   </label>
+                  <div class="work-live-summary" aria-live="polite">
+                    <span>今日工時</span>
+                    <strong id="workLiveValue">等待設定</strong>
+                  </div>
                 </div>
               </details>
-              <details class="collapsible">
-                <summary>支出與罰單</summary>
-                <div class="collapsible-body expense-grid" id="expenseInputs"></div>
+              <details class="collapsible detail-section expense-section" id="expenseSection">
+                <summary>
+                  <span class="detail-summary-title">
+                    <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M4 2v20l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2V2l-2 2-2-2-2 2-2-2-2 2-2-2-2 2Z"></path>
+                      <path d="M10 8h6M10 12h6M10 16h3"></path>
+                    </svg>
+                    <span>新增支出</span>
+                  </span>
+                </summary>
+                <div class="collapsible-body" id="expenseInputs"></div>
               </details>
-              <details class="collapsible">
-                <summary>其他資料</summary>
+              <details class="collapsible detail-section other-section">
+                <summary>
+                  <span class="detail-summary-title">
+                    <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5Z"></path>
+                      <path d="M14 2v6h6M8 13h8M8 17h5"></path>
+                    </svg>
+                    <span>其他資料</span>
+                  </span>
+                </summary>
                 <div class="collapsible-body fields">
                   <label>小費
                     <input type="number" inputmode="numeric" id="tips" min="0" step="1" value="0">
                   </label>
-                  <label>班別
-                    <select id="shift">
+                  <div class="direct-choice-field">
+                    <span class="direct-choice-label">班別</span>
+                    <div class="direct-choice-options" role="group" aria-label="選擇班別">
+                      <button class="direct-choice" type="button" data-detail-choice="shift" data-choice-value="早班">早班</button>
+                      <button class="direct-choice" type="button" data-detail-choice="shift" data-choice-value="午班">午班</button>
+                      <button class="direct-choice" type="button" data-detail-choice="shift" data-choice-value="晚班">晚班</button>
+                      <button class="direct-choice" type="button" data-detail-choice="shift" data-choice-value="大夜班">大夜班</button>
+                      <button class="direct-choice" type="button" data-detail-choice="shift" data-choice-value="全天">全天</button>
+                    </div>
+                    <select class="choice-value-control" id="shift" aria-hidden="true" tabindex="-1">
                       <option>早班</option><option>午班</option><option>晚班</option><option>大夜班</option><option>全天</option>
                     </select>
-                  </label>
+                  </div>
                   <label>訂單數
                     <input type="number" inputmode="numeric" id="orders" min="0" step="1" value="0">
                   </label>
                   <label>公里數
                     <input type="number" inputmode="decimal" id="km" min="0" step="0.1" value="0">
                   </label>
-                  <label>天氣
-                    <select id="weather">
+                  <div class="direct-choice-field">
+                    <span class="direct-choice-label">天氣</span>
+                    <div class="direct-choice-options" role="group" aria-label="選擇天氣">
+                      <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="晴天">晴天</button>
+                      <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="陰天">陰天</button>
+                      <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="雨天">雨天</button>
+                      <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="大雨">大雨</button>
+                      <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="其他">其他</button>
+                    </div>
+                    <select class="choice-value-control" id="weather" aria-hidden="true" tabindex="-1">
                       <option value="" disabled selected>請選擇</option><option>晴天</option><option>陰天</option><option>雨天</option><option>大雨</option><option>其他</option>
                     </select>
-                  </label>
+                  </div>
                   <label style="grid-column: 1 / -1;">備註
                     <textarea id="note" placeholder="例如：雨天單多、機場單、車況、塞車路段"></textarea>
                   </label>
@@ -2248,16 +3531,58 @@
       </section>
 
       <section id="view-ai" class="view hidden">
-        <div class="panel ai-panel">
-          <div class="ai-mark">AI</div>
-          <h3>AI 分析功能開發中</h3>
-          <p>未來將根據收入、工時、平台與時段，給出最佳跑車建議，例如哪個時段最好賺、哪個平台效率最高、每日建議上線時間。</p>
+        <div class="ai-dashboard">
+          <header class="ai-page-intro">
+            <h2>AI 營運助理</h2>
+            <p>根據你的收入與工時紀錄提供分析</p>
+          </header>
+          <section class="ai-insight-card primary" aria-labelledby="aiTodayTitle">
+            <div class="ai-section-head">
+              <h3 id="aiTodayTitle">今日建議</h3>
+              <span class="ai-section-kicker">即時營運</span>
+            </div>
+            <div id="aiTodayAdvice"></div>
+          </section>
+          <section class="ai-insight-card" aria-labelledby="aiMonthTitle">
+            <div class="ai-section-head">
+              <h3 id="aiMonthTitle">本月洞察</h3>
+              <span class="ai-section-kicker">本月累計</span>
+            </div>
+            <div class="ai-month-metrics" id="aiMonthInsights"></div>
+          </section>
+          <section class="ai-insight-card" aria-labelledby="aiPlatformTitle">
+            <div class="ai-section-head">
+              <h3 id="aiPlatformTitle">平台表現</h3>
+              <span class="ai-section-kicker">收入占比</span>
+            </div>
+            <div id="aiPlatformInsights"></div>
+          </section>
+          <section class="ai-insight-card" aria-labelledby="aiAlertsTitle">
+            <div class="ai-section-head">
+              <h3 id="aiAlertsTitle">智慧提醒</h3>
+              <span class="ai-section-kicker">規則偵測</span>
+            </div>
+            <div id="aiAlerts"></div>
+          </section>
         </div>
       </section>
 
       <section id="view-settings" class="view hidden">
         <div class="driver-space-note">Driver Space 詳細內容將於後續版本開發；目前保留原有平台、費用、目標與匯出設定。</div>
         <div class="layout">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>快捷支出設定</h3>
+            </div>
+            <div class="panel-body">
+              <div class="expense-shortcut-settings" id="expenseShortcutSettings"></div>
+              <div class="settings-actions">
+                <button class="button secondary" id="restoreExpenseShortcuts" type="button">恢復預設</button>
+              </div>
+              <p class="expense-shortcut-settings-status" id="expenseShortcutStatus" role="status"></p>
+            </div>
+          </div>
+
           <div class="panel">
             <div class="panel-head">
               <h3>收入平台</h3>
@@ -2315,10 +3640,58 @@
     </main>
   </div>
 
+  <div class="app-toast" id="appToast" role="status" aria-live="polite"></div>
+
   <script>
     const storageKey = "driverPayApp.v2";
     const defaultPlatforms = ["Uber", "LINE GO", "Yoxi", "55688", "大都會", "台灣大車隊", "路邊客", "自訂"];
     const defaultExpenses = ["油錢/電費", "洗車", "停車費", "保養", "車租/車貸", "保險", "平台抽成", "罰單", "其他"];
+    const expenseCategoryGroups = [
+      ["每日常用", ["油錢／電費", "停車費", "洗車", "過路費"]],
+      ["每月固定", ["租車費", "靠行費", "註冊費", "停車月租"]],
+      ["長期車輛成本", ["汽車保險", "輪胎", "定期保養", "大型維修", "牌照稅", "燃料稅", "驗車費"]],
+      ["其他", ["罰單", "其他"]]
+    ];
+    const smartExpenseCategories = expenseCategoryGroups.flatMap(([, categories]) => categories);
+    const defaultExpenseShortcuts = ["油錢／電費", "停車費", "洗車"];
+    const expenseModeDefaults = {
+      "油錢／電費": "one_time",
+      "油錢/電費": "one_time",
+      "停車費": "one_time",
+      "停車": "one_time",
+      "洗車": "one_time",
+      "過路費": "one_time",
+      "罰單": "one_time",
+      "租車費": "recurring",
+      "車租/車貸": "recurring",
+      "靠行費": "recurring",
+      "註冊費": "recurring",
+      "停車月租": "recurring",
+      "汽車保險": "allocated",
+      "保險": "allocated",
+      "輪胎": "allocated",
+      "定期保養": "allocated",
+      "保養": "allocated",
+      "大型維修": "allocated",
+      "牌照稅": "allocated",
+      "燃料稅": "allocated",
+      "驗車費": "allocated",
+      "驗車": "allocated",
+      "其他": "one_time"
+    };
+    const expenseDurationDefaults = {
+      "汽車保險": 12,
+      "保險": 12,
+      "輪胎": 12,
+      "燃料稅": 12,
+      "牌照稅": 12,
+      "驗車費": 12,
+      "驗車": 12,
+      "定期保養": 3,
+      "保養": 3,
+      "大型維修": 6,
+      "其他": 2
+    };
     const defaultPlatformRates = {
       "Uber": 100,
       "LINE GO": 100,
@@ -2333,13 +3706,16 @@
     const state = loadState();
     let activeView = "today";
     let overviewVisible = false;
+    let expenseDraft = createExpenseDraft();
+    let expenseToastTimer = 0;
+    let expenseShortcutStatus = "";
 
     const titles = {
       today: ["今日輸入", "每天花一分鐘記錄收入、工時與支出。"],
       week: ["週報表", "比較每一週總額、工時、時薪與淨收入。"],
       month: ["月報表", "追蹤整個月份收入、成本與目標進度。"],
       platform: ["平台分析", "看出 Uber、LINE GO、Yoxi、55688 與其他來源的表現。"],
-      ai: ["AI 分析", "預留未來最佳跑車建議與收入效率分析。"],
+      ai: ["AI 營運助理", "根據你的收入與工時紀錄提供分析"],
       settings: ["Driver Space", "調整平台、支出類別與收入目標。"]
     };
 
@@ -2351,11 +3727,16 @@
       toggleOverview: document.getElementById("toggleOverview"),
       summaryStats: document.getElementById("summaryStats"),
       quickPreview: document.getElementById("quickPreview"),
-      dailyGoalCard: document.getElementById("dailyGoalCard"),
       incomeInputs: document.getElementById("incomeInputs"),
       expenseInputs: document.getElementById("expenseInputs"),
+      entryDateCard: document.getElementById("entryDateCard"),
+      appToast: document.getElementById("appToast"),
       entryForm: document.getElementById("entryForm"),
       detailForm: document.getElementById("detailForm"),
+      workTimeSection: document.getElementById("workTimeSection"),
+      workCollapsedPrimary: document.getElementById("workCollapsedPrimary"),
+      workCollapsedSecondary: document.getElementById("workCollapsedSecondary"),
+      workLiveValue: document.getElementById("workLiveValue"),
       entryId: document.getElementById("entryId"),
       formTitle: document.getElementById("formTitle"),
       cancelEdit: document.getElementById("cancelEdit"),
@@ -2369,9 +3750,15 @@
       goalProgress: document.getElementById("goalProgress"),
       platformBars: document.getElementById("platformBars"),
       platformTable: document.getElementById("platformTable"),
+      aiTodayAdvice: document.getElementById("aiTodayAdvice"),
+      aiMonthInsights: document.getElementById("aiMonthInsights"),
+      aiPlatformInsights: document.getElementById("aiPlatformInsights"),
+      aiAlerts: document.getElementById("aiAlerts"),
       platformChips: document.getElementById("platformChips"),
       platformRateInputs: document.getElementById("platformRateInputs"),
       expenseChips: document.getElementById("expenseChips"),
+      expenseShortcutSettings: document.getElementById("expenseShortcutSettings"),
+      expenseShortcutStatus: document.getElementById("expenseShortcutStatus"),
       startRun: document.getElementById("startRun"),
       pauseRun: document.getElementById("pauseRun"),
       resumeRun: document.getElementById("resumeRun"),
@@ -2381,7 +3768,6 @@
       workTotal: document.getElementById("workTotal"),
       workBreak: document.getElementById("workBreak"),
       workActual: document.getElementById("workActual"),
-      workWeatherControl: document.getElementById("workWeatherControl"),
       recentIncomeList: document.getElementById("recentIncomeList"),
       recentIncomePanel: document.getElementById("recentIncomePanel"),
       sideNet: document.getElementById("sideNet"),
@@ -2426,8 +3812,24 @@
         monthlyGoal: Number(settings.monthlyGoal || 0),
         dailyGoal: Number(settings.dailyGoal || 0),
         timeDetailsOpen: Boolean(settings.timeDetailsOpen),
+        expenseShortcuts: normalizeExpenseShortcuts(settings.expenseShortcuts),
         platformRates
       };
+    }
+
+    function normalizeExpenseShortcuts(shortcuts) {
+      const values = Array.isArray(shortcuts) ? shortcuts : [];
+      const result = [];
+      [...values, ...defaultExpenseShortcuts, ...smartExpenseCategories].forEach(value => {
+        const category = String(value || "").trim();
+        const identity = expenseCategoryIdentity(category);
+        if (category && !result.some(existing => expenseCategoryIdentity(existing) === identity) && result.length < 3) result.push(category);
+      });
+      return result;
+    }
+
+    function expenseCategoryIdentity(category) {
+      return String(category || "").trim().replaceAll("／", "/");
     }
 
     function saveState() {
@@ -2457,6 +3859,48 @@
 
     function currentMonth() {
       return todayString().slice(0, 7);
+    }
+
+    function compactWeekRange(start, end) {
+      const [startYear, startMonth, startDay] = start.split("-").map(Number);
+      const [endYear, endMonth, endDay] = end.split("-").map(Number);
+      if (startYear !== endYear) {
+        return `${startYear}/${startMonth}/${startDay}－${endYear}/${endMonth}/${endDay}`;
+      }
+      return `${startMonth}/${startDay}－${endMonth}/${endDay}`;
+    }
+
+    function compactDailyDate(dateString) {
+      const [year, month, day] = dateString.split("-").map(Number);
+      const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+      const weekday = weekdays[new Date(year, month - 1, day).getDay()];
+      return `${month}/${day}（${weekday}）`;
+    }
+
+    function weatherIconSvg(weather) {
+      const label = String(weather || "").trim();
+      const iconType = {
+        晴天: "sun",
+        多雲: "cloud-sun",
+        晴時多雲: "cloud-sun",
+        陰天: "cloud",
+        雨天: "cloud-rain",
+        大雨: "cloud-rain",
+        雷雨: "cloud-lightning",
+        霧天: "cloud-fog"
+      }[label];
+      if (!iconType) return "";
+
+      const paths = {
+        sun: `<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path>`,
+        "cloud-sun": `<path d="M12 2v2M4.93 4.93l1.42 1.42M20 12h2M17.66 6.34l1.41-1.41"></path><path d="M15.4 9.6A4 4 0 0 0 8.1 12"></path><path d="M17.5 19H9a5 5 0 1 1 4.4-7.4A4 4 0 1 1 17.5 19Z"></path>`,
+        cloud: `<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path>`,
+        "cloud-rain": `<path d="M16 13v8M8 13v8M12 15v8"></path><path d="M17.5 11H9a5 5 0 1 1 4.4-7.4A4 4 0 1 1 17.5 11Z"></path>`,
+        "cloud-lightning": `<path d="M17.5 11H9a5 5 0 1 1 4.4-7.4A4 4 0 1 1 17.5 11Z"></path><path d="m13 11-4 6h6l-4 6"></path>`,
+        "cloud-fog": `<path d="M17.5 11H9a5 5 0 1 1 4.4-7.4A4 4 0 1 1 17.5 11Z"></path><path d="M5 15h14M7 19h10M9 23h6"></path>`
+      };
+
+      return `<span class="daily-entry-weather"><svg viewBox="0 0 24 24" role="img" aria-label="${escapeAttr(label)}"><title>${escapeHtml(label)}</title>${paths[iconType]}</svg></span>`;
     }
 
     function entryIncome(entry) {
@@ -2529,7 +3973,8 @@
         weatherHistory: [],
         note: "",
         incomes: {},
-        expenses: {}
+        expenses: {},
+        expenseNotes: {}
       };
     }
 
@@ -2545,6 +3990,7 @@
       }
       entry.incomes ||= {};
       entry.expenses ||= {};
+      entry.expenseNotes ||= {};
       return entry;
     }
 
@@ -2586,6 +4032,811 @@
       return { total, tips, expenses, hours, orders, net, hourly: hours ? net / hours : 0 };
     }
 
+    function finiteNumber(value) {
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function nonNegativeNumber(value) {
+      return Math.max(0, finiteNumber(value));
+    }
+
+    function analysisPlatformRate(name) {
+      return Math.min(100, Math.max(0, finiteNumber(state.settings.platformRates?.[name] ?? defaultPlatformRates[name] ?? 100)));
+    }
+
+    function analysisPlatformIncome(entry, name) {
+      return nonNegativeNumber(entry?.incomes?.[name]) * analysisPlatformRate(name) / 100;
+    }
+
+    function analysisEntryTotal(entry) {
+      if (!entry) return 0;
+      const platformIncome = state.platforms.reduce((sum, name) => sum + analysisPlatformIncome(entry, name), 0);
+      return platformIncome + nonNegativeNumber(entry.tips);
+    }
+
+    function analysisEntryExpenses(entry) {
+      if (!entry?.expenses || typeof entry.expenses !== "object") return 0;
+      return Object.values(entry.expenses).reduce((sum, value) => sum + nonNegativeNumber(value), 0);
+    }
+
+    function analysisEntryHours(entry) {
+      if (!entry) return 0;
+      try {
+        const hours = nonNegativeNumber(calcHours(entry));
+        return hours >= 1 / 60 ? hours : 0;
+      } catch (error) {
+        return 0;
+      }
+    }
+
+    function analysisSummary(entries) {
+      const total = entries.reduce((sum, entry) => sum + analysisEntryTotal(entry), 0);
+      const expenses = entries.reduce((sum, entry) => sum + analysisEntryExpenses(entry), 0);
+      const hours = entries.reduce((sum, entry) => sum + analysisEntryHours(entry), 0);
+      const net = total - expenses;
+      return { total, expenses, hours, net, hourly: hours > 0 ? net / hours : 0 };
+    }
+
+    function analysisPlatformRows(entries) {
+      const rows = state.platforms.map(name => {
+        const amount = entries.reduce((sum, entry) => sum + analysisPlatformIncome(entry, name), 0);
+        return { name, amount };
+      }).filter(row => row.amount > 0).sort((a, b) => b.amount - a.amount);
+      const total = rows.reduce((sum, row) => sum + row.amount, 0);
+      return rows.map(row => ({
+        ...row,
+        share: total > 0 ? Math.round(row.amount / total * 100) : 0
+      }));
+    }
+
+    function validAnalysisEntries() {
+      return state.entries.filter(entry => {
+        return entry && typeof entry.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(entry.date);
+      });
+    }
+
+    function bestIncomeDay(entries) {
+      return entries.map(entry => ({ entry, amount: analysisEntryTotal(entry) }))
+        .filter(item => item.amount > 0)
+        .sort((a, b) => b.amount - a.amount || b.entry.date.localeCompare(a.entry.date))[0] || null;
+    }
+
+    function bestIncomeShift(entries) {
+      const totals = new Map();
+      entries.forEach(entry => {
+        const shift = String(entry.shift || "").trim();
+        const amount = analysisEntryTotal(entry);
+        if (!shift || amount <= 0) return;
+        totals.set(shift, (totals.get(shift) || 0) + amount);
+      });
+      return [...totals.entries()].sort((a, b) => b[1] - a[1])[0] || null;
+    }
+
+    function fuelExpenseTotal(entry) {
+      if (!entry?.expenses || typeof entry.expenses !== "object") return 0;
+      return Object.entries(entry.expenses).reduce((sum, [name, value]) => {
+        return /油|電費|充電|燃料/.test(name) ? sum + nonNegativeNumber(value) : sum;
+      }, 0);
+    }
+
+    function recentRisingPlatform(entries) {
+      const ordered = entries.slice().sort((a, b) => a.date.localeCompare(b.date));
+      if (ordered.length < 4) return null;
+      const recentSize = Math.min(3, Math.floor(ordered.length / 2));
+      const recent = ordered.slice(-recentSize);
+      const earlier = ordered.slice(0, -recentSize);
+      const recentRows = analysisPlatformRows(recent);
+      const earlierRows = analysisPlatformRows(earlier);
+      const recentShares = new Map(recentRows.map(row => [row.name, row.share]));
+      const earlierShares = new Map(earlierRows.map(row => [row.name, row.share]));
+      return state.platforms.map(name => ({
+        name,
+        increase: (recentShares.get(name) || 0) - (earlierShares.get(name) || 0),
+        recentAmount: recentRows.find(row => row.name === name)?.amount || 0
+      })).filter(item => item.recentAmount > 0 && item.increase >= 10)
+        .sort((a, b) => b.increase - a.increase)[0] || null;
+    }
+
+    function hasRecentIncomeDecline(entries) {
+      const recent = entries.slice().sort((a, b) => a.date.localeCompare(b.date)).slice(-3);
+      if (recent.length < 3) return false;
+      const totals = recent.map(analysisEntryTotal);
+      return totals[0] > totals[1] && totals[1] > totals[2];
+    }
+
+    function buildAiAnalysisContext() {
+      const entries = validAnalysisEntries();
+      const monthEntries = entries.filter(entry => entry.date.startsWith(currentMonth()));
+      const todayEntry = entries.find(entry => entry.date === todayString()) || null;
+      const monthSummary = analysisSummary(monthEntries);
+      return {
+        entries,
+        monthEntries,
+        monthSummary,
+        todayEntry,
+        todaySummary: analysisSummary(todayEntry ? [todayEntry] : []),
+        monthPlatforms: analysisPlatformRows(monthEntries),
+        bestDay: bestIncomeDay(monthEntries),
+        bestShift: bestIncomeShift(monthEntries),
+        risingPlatform: recentRisingPlatform(monthEntries)
+      };
+    }
+
+    function buildTodayAdvice(context) {
+      const { todayEntry, todaySummary, monthSummary } = context;
+      if (!todayEntry) {
+        return {
+          empty: "今天尚無完整營運紀錄，完成收入與工時輸入後即可查看建議。",
+          items: []
+        };
+      }
+
+      const items = [];
+      const add = message => {
+        if (message && !items.includes(message)) items.push(message);
+      };
+      const todayHours = analysisEntryHours(todayEntry);
+      const todayHourly = todayHours > 0 ? (todaySummary.net / todayHours) : 0;
+      const topPlatform = analysisPlatformRows([todayEntry])[0];
+      const dailyGoal = nonNegativeNumber(state.settings.dailyGoal);
+
+      if (todayHours >= 12) add(`今日已工作 ${number(todayHours)} 小時，工時偏長，建議安排休息。`);
+      if (todaySummary.total <= 0) add("今天尚未輸入收入，完成平台收入後才能評估營運效率。");
+
+      if (todayHours > 0 && monthSummary.hours > 0) {
+        const monthHourly = monthSummary.hourly;
+        if (todayHourly > monthHourly * 1.1) add(`今日時薪 ${money(todayHourly)}，高於本月平均 ${money(monthHourly)}。`);
+        else if (todayHourly < monthHourly * .9) add(`今日時薪 ${money(todayHourly)}，低於本月平均 ${money(monthHourly)}。`);
+        else add(`今日時薪 ${money(todayHourly)}，與本月平均 ${money(monthHourly)} 接近。`);
+      } else if (todayHours <= 0) {
+        add("今天尚未輸入完整工時，暫時無法計算時薪。");
+      }
+
+      if (dailyGoal > 0) {
+        const percent = Math.max(0, Math.round(todaySummary.total / dailyGoal * 100));
+        if (todaySummary.total < dailyGoal) add(`今日目標已達成 ${percent}%，尚差 ${money(dailyGoal - todaySummary.total)}。`);
+        else if (todaySummary.total === dailyGoal) add("今日收入已達成每日目標 100%。");
+        else add(`今日收入達成 ${percent}%，已超標 ${money(todaySummary.total - dailyGoal)}。`);
+      }
+
+      if (topPlatform) add(`${escapeHtml(topPlatform.name)} 是今日主要收入平台，貢獻 ${money(topPlatform.amount)}。`);
+      if (nonNegativeNumber(todayEntry.km) <= 0) add("今天尚未輸入里程，補上後可更完整評估每公里收益。");
+      if (fuelExpenseTotal(todayEntry) <= 0) add("今天尚未輸入油錢或電費，淨收入可能尚未完整。");
+
+      return { empty: "", items: items.slice(0, 4) };
+    }
+
+    function buildSmartAlerts(context) {
+      const { monthEntries, monthSummary, todayEntry, todaySummary, risingPlatform } = context;
+      const alerts = [];
+      const add = message => {
+        if (message && !alerts.includes(message)) alerts.push(message);
+      };
+
+      if (monthSummary.hourly > 0) {
+        const lowDay = monthEntries.map(entry => {
+          const hours = analysisEntryHours(entry);
+          const hourly = hours > 0 ? (analysisEntryTotal(entry) - analysisEntryExpenses(entry)) / hours : 0;
+          return { entry, hours, hourly };
+        }).filter(item => item.hours > 0 && item.hourly < monthSummary.hourly * .7)
+          .sort((a, b) => a.hourly - b.hourly)[0];
+        if (lowDay) add(`${compactDailyDate(lowDay.entry.date)} 時薪 ${money(lowDay.hourly)}，明顯低於本月平均。`);
+      }
+
+      const longDay = monthEntries.map(entry => ({ entry, hours: analysisEntryHours(entry) }))
+        .filter(item => item.hours >= 12).sort((a, b) => b.hours - a.hours)[0];
+      if (longDay) add(`${compactDailyDate(longDay.entry.date)} 工作 ${number(longDay.hours)} 小時，單日工時偏長。`);
+
+      const ordered = monthEntries.slice().sort((a, b) => a.date.localeCompare(b.date));
+      for (let index = 1; index < ordered.length; index += 1) {
+        const previousDate = new Date(`${ordered[index - 1].date}T00:00:00`);
+        const currentDate = new Date(`${ordered[index].date}T00:00:00`);
+        const consecutive = currentDate.getTime() - previousDate.getTime() === 86400000;
+        if (consecutive && analysisEntryHours(ordered[index - 1]) >= 10 && analysisEntryHours(ordered[index]) >= 10) {
+          add(`${compactDailyDate(ordered[index - 1].date)} 至 ${compactDailyDate(ordered[index].date)} 連續兩天工時偏長。`);
+          break;
+        }
+      }
+
+      if (todayEntry && nonNegativeNumber(todayEntry.km) <= 0) add("今天缺少里程資料。");
+      if (todayEntry && fuelExpenseTotal(todayEntry) <= 0) add("今天缺少油錢或電費資料。");
+      if (hasRecentIncomeDecline(monthEntries)) add("最近三筆每日收入呈下降趨勢，建議留意時段與平台配置。");
+      if (risingPlatform) add(`${risingPlatform.name} 近期收入占比增加 ${risingPlatform.increase} 個百分點。`);
+
+      const dailyGoal = nonNegativeNumber(state.settings.dailyGoal);
+      if (dailyGoal > 0 && todaySummary.total < dailyGoal) add(`今日目標尚差 ${money(dailyGoal - todaySummary.total)}。`);
+      const monthlyGoal = nonNegativeNumber(state.settings.monthlyGoal);
+      if (monthlyGoal > 0 && monthSummary.net < monthlyGoal) add(`本月淨收入目標尚差 ${money(monthlyGoal - monthSummary.net)}。`);
+
+      return alerts.slice(0, 6);
+    }
+
+    function renderAnalysisList(items, className, emptyText) {
+      if (!items.length) return `<p class="ai-empty-state">${escapeHtml(emptyText)}</p>`;
+      return `<ul class="${className}">${items.map(item => `<li>${item}</li>`).join("")}</ul>`;
+    }
+
+    function renderAiAnalysis() {
+      if (!els.aiTodayAdvice) return;
+      const context = buildAiAnalysisContext();
+      const todayAdvice = buildTodayAdvice(context);
+      const hasMonthData = context.monthEntries.length > 0;
+      const monthlyGoal = nonNegativeNumber(state.settings.monthlyGoal);
+      const monthlyGoalText = !hasMonthData || monthlyGoal <= 0
+        ? "資料不足"
+        : context.monthSummary.net < monthlyGoal
+          ? `尚差 ${money(monthlyGoal - context.monthSummary.net)}`
+          : context.monthSummary.net === monthlyGoal
+            ? "已達成"
+            : `已超標 ${money(context.monthSummary.net - monthlyGoal)}`;
+      const monthMetrics = [
+        ["本月總收入", hasMonthData ? money(context.monthSummary.total) : "資料不足"],
+        ["本月平均時薪", context.monthSummary.hours > 0 ? money(context.monthSummary.hourly) : "資料不足"],
+        ["最佳收入日", context.bestDay ? `${compactDailyDate(context.bestDay.entry.date)} ${money(context.bestDay.amount)}` : "資料不足"],
+        ["最佳班別", context.bestShift ? `${escapeHtml(context.bestShift[0])} ${money(context.bestShift[1])}` : "資料不足"],
+        ["最高收入平台", context.monthPlatforms[0] ? `${escapeHtml(context.monthPlatforms[0].name)} ${money(context.monthPlatforms[0].amount)}` : "資料不足"],
+        ["本月目標", monthlyGoalText]
+      ];
+
+      els.aiTodayAdvice.innerHTML = todayAdvice.empty
+        ? `<p class="ai-empty-state">${escapeHtml(todayAdvice.empty)}</p>`
+        : renderAnalysisList(todayAdvice.items, "ai-advice-list", "今天尚無可分析資料。");
+      els.aiMonthInsights.innerHTML = monthMetrics.map(([label, value]) => `
+        <div class="ai-metric"><span>${label}</span><strong>${value}</strong></div>
+      `).join("");
+
+      if (!context.monthPlatforms.length) {
+        els.aiPlatformInsights.innerHTML = `<p class="ai-empty-state">本月尚無平台收入資料。</p>`;
+      } else {
+        const top = context.monthPlatforms[0];
+        const rising = context.risingPlatform;
+        const platformSummary = `${top.name} 是本月主要收入來源，占平台收入 ${top.share}%。${rising ? ` ${rising.name} 在近期紀錄的收入占比增加。` : ""}`;
+        els.aiPlatformInsights.innerHTML = `
+          <div class="ai-platform-list">
+            ${context.monthPlatforms.map(row => `
+              <div class="ai-platform-row">
+                <strong>${escapeHtml(row.name)}</strong>
+                <span class="ai-platform-amount">${money(row.amount)}</span>
+                <span class="ai-platform-share">${row.share}%</span>
+              </div>
+            `).join("")}
+          </div>
+          <p class="ai-platform-summary">${escapeHtml(platformSummary)}</p>
+        `;
+      }
+
+      const alerts = buildSmartAlerts(context);
+      els.aiAlerts.innerHTML = renderAnalysisList(alerts.map(escapeHtml), "ai-alert-list", "目前沒有需要特別注意的異常紀錄。");
+    }
+
+    function formatFullDate(dateString) {
+      const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateString || "");
+      if (!match) return "選擇日期";
+      return `${Number(match[1])}年${Number(match[2])}月${Number(match[3])}日`;
+    }
+
+    function dateCardMarkup({ id, value, label, required = false, inlineToday = false }) {
+      const isToday = value === todayString();
+      const displayValue = inlineToday && isToday ? `今天・${formatFullDate(value)}` : formatFullDate(value);
+      return `
+        <label class="date-card${inlineToday ? " inline-date" : ""}" for="${escapeAttr(id)}">
+          <span class="date-card-copy">
+            <strong class="date-card-value" data-date-display${inlineToday ? " data-date-inline" : ""}>${escapeHtml(displayValue)}</strong>
+            ${inlineToday ? "" : `<small class="date-card-today" data-date-today${isToday ? "" : " hidden"}>今天</small>`}
+          </span>
+          <input type="date" id="${escapeAttr(id)}" value="${escapeAttr(value)}" aria-label="${escapeAttr(label)}"${required ? " required" : ""}>
+        </label>
+      `;
+    }
+
+    function renderEntryDateCard(value = todayString()) {
+      if (!els.entryDateCard) return;
+      els.entryDateCard.innerHTML = dateCardMarkup({ id: "date", value, label: "日期", required: true, inlineToday: true });
+    }
+
+    function syncDateCardDisplay(input) {
+      const card = input?.closest(".date-card");
+      if (!card) return;
+      const display = card.querySelector("[data-date-display]");
+      const today = card.querySelector("[data-date-today]");
+      if (display) {
+        const isInline = display.hasAttribute("data-date-inline");
+        display.textContent = isInline && input.value === todayString()
+          ? `今天・${formatFullDate(input.value)}`
+          : formatFullDate(input.value);
+      }
+      if (today) today.hidden = input.value !== todayString();
+    }
+
+    function showToast(message) {
+      if (!els.appToast) return;
+      window.clearTimeout(expenseToastTimer);
+      els.appToast.textContent = message;
+      els.appToast.classList.add("visible");
+      expenseToastTimer = window.setTimeout(() => els.appToast.classList.remove("visible"), 2200);
+    }
+
+    function formatExpenseAmount(value) {
+      const digits = String(value ?? "").replace(/\D/g, "").replace(/^0+(?=\d)/, "");
+      return digits ? Number(digits).toLocaleString("zh-TW") : "";
+    }
+
+    function createExpenseDraft(paymentDate = todayString(), status = "", statusType = "") {
+      const safeDate = /^\d{4}-\d{2}-\d{2}$/.test(paymentDate) ? paymentDate : todayString();
+      return {
+        category: "",
+        amount: "",
+        mode: "one_time",
+        paymentDate: safeDate,
+        recurringDay: Number(safeDate.slice(-2)),
+        recurringStartMonth: safeDate.slice(0, 7),
+        recurringStartMonthChanged: false,
+        recurringEndType: "ongoing",
+        recurringEndMonth: "",
+        durationChoice: "2",
+        customMonths: 2,
+        startMonth: safeDate.slice(0, 7),
+        startMonthChanged: false,
+        advancedOpen: false,
+        categoryOpen: false,
+        modeOpen: false,
+        noteOpen: false,
+        note: "",
+        status,
+        statusType
+      };
+    }
+
+    function legacyExpenseCategories() {
+      const seen = new Set(smartExpenseCategories);
+      return state.expenses.filter(name => {
+        if (!name || seen.has(name)) return false;
+        seen.add(name);
+        return true;
+      });
+    }
+
+    function expenseCategoryOptionsMarkup(selectedCategory = expenseDraft.category) {
+      const groups = expenseCategoryGroups.map(([label, categories]) => `
+        <optgroup label="${escapeAttr(label)}">
+          ${categories.map(name => `<option value="${escapeAttr(name)}"${name === selectedCategory ? " selected" : ""}>${escapeHtml(name)}</option>`).join("")}
+        </optgroup>
+      `).join("");
+      const legacy = legacyExpenseCategories();
+      return `${groups}${legacy.length ? `
+        <optgroup label="既有分類">
+          ${legacy.map(name => `<option value="${escapeAttr(name)}"${name === selectedCategory ? " selected" : ""}>${escapeHtml(name)}</option>`).join("")}
+        </optgroup>
+      ` : ""}`;
+    }
+
+    function suggestedExpenseMode(category) {
+      return expenseModeDefaults[category] || "one_time";
+    }
+
+    function suggestedExpenseMonths(category) {
+      const months = Number(expenseDurationDefaults[category] || 2);
+      return Number.isFinite(months) ? Math.min(60, Math.max(2, Math.floor(months))) : 2;
+    }
+
+    function selectedExpenseMonths() {
+      const raw = expenseDraft.durationChoice === "custom"
+        ? expenseDraft.customMonths
+        : expenseDraft.durationChoice;
+      const months = Math.floor(Number(raw || 2));
+      return Number.isFinite(months) ? Math.min(60, Math.max(2, months)) : 2;
+    }
+
+    function expenseDurationText(months = selectedExpenseMonths()) {
+      return `算 ${months} 個月`;
+    }
+
+    function expenseMonthRange(startMonth = expenseDraft.startMonth, months = selectedExpenseMonths()) {
+      const match = /^(\d{4})-(\d{2})$/.exec(startMonth || "");
+      if (!match) return "資料不足";
+      const start = new Date(Number(match[1]), Number(match[2]) - 1, 1);
+      const end = new Date(start.getFullYear(), start.getMonth() + months - 1, 1);
+      const format = date => `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}`;
+      return `${format(start)} ～ ${format(end)}`;
+    }
+
+    function expenseAllocationBreakdown(amount = Number(expenseDraft.amount || 0), months = selectedExpenseMonths()) {
+      const roundedAmount = Math.max(0, Math.round(Number(amount || 0)));
+      const monthly = months ? Math.floor(roundedAmount / months) : 0;
+      const lastMonth = roundedAmount - monthly * Math.max(0, months - 1);
+      return { monthly, lastMonth, hasRemainder: roundedAmount > 0 && lastMonth !== monthly };
+    }
+
+    function existingExpenseAmount(category = expenseDraft.category, date = expenseDraft.paymentDate) {
+      if (!category || !date) return 0;
+      return Math.max(0, Number(entryForDate(date)?.expenses?.[category] || 0));
+    }
+
+    function existingExpenseNote(category = expenseDraft.category, date = expenseDraft.paymentDate) {
+      if (!category || !date) return "";
+      return String(entryForDate(date)?.expenseNotes?.[category] || "").slice(0, 160);
+    }
+
+    function recentExpenseAmounts(category = expenseDraft.category) {
+      if (!category) return [];
+      const seen = new Set();
+      const amounts = [];
+      state.entries
+        .filter(entry => /^\d{4}-\d{2}-\d{2}$/.test(entry.date || ""))
+        .slice()
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .forEach(entry => {
+          const amount = Math.round(Number(entry.expenses?.[category] || 0));
+          if (Number.isFinite(amount) && amount > 0 && !seen.has(amount) && amounts.length < 3) {
+            seen.add(amount);
+            amounts.push(amount);
+          }
+        });
+      return amounts;
+    }
+
+    function expenseModeLabel(mode = expenseDraft.mode) {
+      return {
+        one_time: "一次支出",
+        recurring: "每月固定",
+        allocated: "分月計算"
+      }[mode] || "一次支出";
+    }
+
+    function expenseShortcutLabel(category) {
+      return category === "油錢／電費" || category === "油錢/電費" ? "油錢" : category;
+    }
+
+    function expenseQuickIconType(category) {
+      if (category === "油錢／電費" || category === "油錢/電費" || category === "燃料稅") return "fuel";
+      if (category === "停車費" || category === "停車月租") return "parking";
+      if (category === "洗車") return "wash";
+      if (category === "過路費") return "road";
+      if (["租車費", "靠行費", "註冊費"].includes(category)) return "calendar";
+      if (["汽車保險", "保險", "牌照稅"].includes(category)) return "shield";
+      if (["輪胎", "定期保養", "保養", "大型維修", "驗車費", "驗車"].includes(category)) return "tools";
+      if (category === "罰單") return "notice";
+      return "receipt";
+    }
+
+    function expenseQuickIcon(type) {
+      const paths = {
+        fuel: '<path d="M4 21V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v16"></path><path d="M6 8h7"></path><path d="M15 7h2l3 3v7a2 2 0 0 1-4 0v-5"></path><path d="M3 21h13"></path>',
+        parking: '<circle cx="12" cy="12" r="9"></circle><path d="M10 17V7h3a3 3 0 0 1 0 6h-3"></path>',
+        wash: '<path d="M5 16h14l-1.5-5h-11L5 16Z"></path><path d="M7 16v3M17 16v3M4 19h16"></path><path d="M8 7l1-2M12 7V4M16 7l-1-2"></path>',
+        road: '<path d="M8 21l2-18M16 21L14 3M12 5v3M12 11v3M12 17v3"></path>',
+        calendar: '<rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M8 3v4M16 3v4M3 10h18"></path>',
+        shield: '<path d="M12 3l7 3v5c0 4.5-2.8 8-7 10-4.2-2-7-5.5-7-10V6l7-3Z"></path><path d="M9 12l2 2 4-4"></path>',
+        tools: '<path d="M14.5 6.5a4 4 0 0 0-5-5L12 4 9 7 6.5 4.5a4 4 0 0 0 5 5L18 16a2 2 0 1 0 3-3l-6.5-6.5Z"></path><path d="M7 12l-4 4a2 2 0 0 0 3 3l4-4"></path>',
+        notice: '<path d="M12 3l9 17H3L12 3Z"></path><path d="M12 9v5M12 17h.01"></path>',
+        receipt: '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"></path><path d="M9 8h6M9 12h6"></path>'
+      };
+      return `<svg class="expense-quick-icon" viewBox="0 0 24 24" aria-hidden="true">${paths[type] || paths.receipt}</svg>`;
+    }
+
+    function recurringExpenseMarkup(amount) {
+      const dayOptions = Array.from({ length: 31 }, (_, index) => index + 1).map(day => `
+        <option value="${day}"${day === Number(expenseDraft.recurringDay) ? " selected" : ""}>${day}日</option>
+      `).join("");
+      return `
+        <section class="expense-recurring-card" aria-live="polite">
+          <h4 class="expense-settings-title">每月固定</h4>
+          <div class="expense-recurring-summary">
+            <div><span>每月金額</span><strong id="expenseRecurringAmount">${amount ? money(amount) : "輸入金額後顯示"}</strong></div>
+            <div><span>開始月份</span><strong id="expenseRecurringStartText">${escapeHtml(expenseDraft.recurringStartMonth.replace("-", "/"))}</strong></div>
+          </div>
+          <label class="smart-expense-field">每月幾號
+            <select id="expenseRecurringDay" aria-label="每月幾號">${dayOptions}</select>
+          </label>
+          <label class="smart-expense-field">開始月份
+            <input type="month" id="expenseRecurringStartMonth" value="${escapeAttr(expenseDraft.recurringStartMonth)}" aria-label="固定支出開始月份">
+          </label>
+          <div>
+            <span class="expense-section-label">結束方式</span>
+            <div class="expense-end-options" role="group" aria-label="固定支出結束方式">
+              <button class="expense-end-option${expenseDraft.recurringEndType === "ongoing" ? " active" : ""}" type="button" data-expense-end-type="ongoing" aria-pressed="${String(expenseDraft.recurringEndType === "ongoing")}">持續使用</button>
+              <button class="expense-end-option${expenseDraft.recurringEndType === "specified" ? " active" : ""}" type="button" data-expense-end-type="specified" aria-pressed="${String(expenseDraft.recurringEndType === "specified")}">指定結束月份</button>
+            </div>
+          </div>
+          <label class="smart-expense-field"${expenseDraft.recurringEndType === "specified" ? "" : " hidden"}>結束月份
+            <input type="month" id="expenseRecurringEndMonth" min="${escapeAttr(expenseDraft.recurringStartMonth)}" value="${escapeAttr(expenseDraft.recurringEndMonth)}" aria-label="固定支出結束月份">
+          </label>
+          <p class="expense-model-note">目前先預覽固定規則；儲存仍只記入付款日期，尚不會自動建立未來月份。</p>
+        </section>
+      `;
+    }
+
+    function allocatedExpenseMarkup(amount, months) {
+      const breakdown = expenseAllocationBreakdown(amount, months);
+      const durationOptions = [["2", "2個月"], ["3", "3個月"], ["6", "6個月"], ["12", "12個月"], ["custom", "自訂"]];
+      return `
+        <section class="expense-suggestion-card" aria-live="polite">
+          <div class="expense-suggestion-copy">
+            <strong class="expense-suggestion-category" id="expenseSuggestionCategory">${escapeHtml(expenseDraft.category || "分月計算")}</strong>
+            <div>
+              <p class="expense-suggestion-label">系統建議</p>
+              <div class="expense-suggestion-duration"><span class="expense-suggestion-check" aria-hidden="true">✓</span><span id="expenseDurationText">${escapeHtml(expenseDurationText(months))}</span></div>
+            </div>
+            <div class="expense-cost-preview">
+              <div><span>期間</span><strong id="expensePeriodText">${escapeHtml(expenseMonthRange(expenseDraft.startMonth, months))}</strong></div>
+              <div><span>每月成本</span><strong id="expenseMonthlyCost">${amount ? money(breakdown.monthly) : "輸入金額後顯示"}</strong></div>
+            </div>
+            <p class="expense-remainder-note" id="expenseRemainderNote"${breakdown.hasRemainder ? "" : " hidden"}>最後一個月為 ${money(breakdown.lastMonth)}，確保總額一致。</p>
+          </div>
+          <button class="expense-modify-button" type="button" data-expense-toggle-settings aria-expanded="${String(expenseDraft.advancedOpen)}">${expenseDraft.advancedOpen ? "收合" : "修改"}</button>
+        </section>
+        <div class="expense-duration-settings"${expenseDraft.advancedOpen ? "" : " hidden"}>
+          <span class="expense-duration-title">這筆費用要算多久？</span>
+          <div class="expense-duration-options" role="group" aria-label="這筆費用要算多久">
+            ${durationOptions.map(([value, label]) => `
+              <button class="expense-duration-option${expenseDraft.durationChoice === value ? " active" : ""}" type="button" data-expense-duration="${value}" aria-pressed="${String(expenseDraft.durationChoice === value)}">${label}</button>
+            `).join("")}
+          </div>
+          <label class="smart-expense-field"${expenseDraft.durationChoice === "custom" ? "" : " hidden"}>自訂月份
+            <input type="number" inputmode="numeric" id="expenseCustomMonths" min="2" max="60" step="1" value="${escapeAttr(expenseDraft.customMonths)}" aria-label="自訂月份">
+          </label>
+          <label class="smart-expense-field">開始月份
+            <input type="month" id="expenseStartMonth" value="${escapeAttr(expenseDraft.startMonth)}" aria-label="開始月份">
+          </label>
+        </div>
+        <p class="expense-model-note">目前先提供分月預覽；儲存仍只記入付款日期，月報尚不會分月計入。</p>
+      `;
+    }
+
+    function renderExpenseForm() {
+      if (!els.expenseInputs) return;
+      const amount = Math.max(0, Number(expenseDraft.amount || 0));
+      const months = selectedExpenseMonths();
+      const existingAmount = existingExpenseAmount();
+      const recentAmounts = recentExpenseAmounts();
+      const shortcuts = normalizeExpenseShortcuts(state.settings.expenseShortcuts);
+      const modes = [["one_time", "一次支出"], ["recurring", "每月固定"], ["allocated", "分月計算"]];
+      els.expenseInputs.innerHTML = `
+        <div class="smart-expense-form">
+          <section>
+            <span class="expense-section-label">快捷新增</span>
+            <div class="expense-quick-actions" role="group" aria-label="快捷新增支出">
+              ${shortcuts.map(category => `
+                <button class="expense-quick-button${expenseDraft.category === category ? " active" : ""}" type="button" data-expense-quick="${escapeAttr(category)}" aria-pressed="${String(expenseDraft.category === category)}">
+                  ${expenseQuickIcon(expenseQuickIconType(category))}
+                  <span>${escapeHtml(expenseShortcutLabel(category))}</span>
+                </button>
+              `).join("")}
+            </div>
+          </section>
+
+          <div class="smart-expense-primary">
+            ${expenseDraft.category && !expenseDraft.categoryOpen ? `
+              <button class="expense-compact-row" type="button" data-expense-toggle-category aria-expanded="false">
+                <span class="expense-compact-row-label">支出類別</span>
+                <strong>${escapeHtml(expenseDraft.category)}</strong>
+                <span class="expense-compact-row-action">更改</span>
+              </button>
+            ` : `
+              <label class="smart-expense-field">支出類別
+                <select id="smartExpenseCategory" aria-label="支出類別">
+                  <option value="">選擇支出類別</option>
+                  ${expenseCategoryOptionsMarkup()}
+                </select>
+              </label>
+            `}
+            <label class="smart-expense-field">金額
+              <span class="expense-amount-wrap">
+                <span class="expense-amount-prefix" aria-hidden="true">$</span>
+                <input class="expense-amount-input" type="text" inputmode="numeric" pattern="[0-9,]*" id="smartExpenseAmount" value="${escapeAttr(formatExpenseAmount(expenseDraft.amount))}" placeholder="輸入金額" aria-label="支出金額" autocomplete="off">
+              </span>
+            </label>
+            ${recentAmounts.length ? `
+              <div class="expense-recent">
+                <span class="expense-recent-label">最近使用</span>
+                <div class="expense-recent-pills">
+                  ${recentAmounts.map(value => `<button class="expense-recent-pill" type="button" data-expense-recent-amount="${value}">$${escapeHtml(formatExpenseAmount(value))}</button>`).join("")}
+                </div>
+              </div>
+            ` : ""}
+            <div>
+              <button class="expense-compact-row" type="button" data-expense-toggle-mode aria-expanded="${String(expenseDraft.modeOpen)}">
+                <span class="expense-compact-row-label">支出方式</span>
+                <strong>${escapeHtml(expenseModeLabel())}</strong>
+                <span class="expense-compact-row-action">修改</span>
+              </button>
+              <div class="expense-mode-options"${expenseDraft.modeOpen ? "" : " hidden"} role="group" aria-label="支出方式">
+                ${modes.map(([value, label]) => `<button class="expense-mode-option${expenseDraft.mode === value ? " active" : ""}" type="button" data-expense-mode="${value}" aria-pressed="${String(expenseDraft.mode === value)}">${label}</button>`).join("")}
+              </div>
+            </div>
+          </div>
+
+          ${expenseDraft.mode === "recurring" ? recurringExpenseMarkup(amount) : ""}
+          ${expenseDraft.mode === "allocated" ? allocatedExpenseMarkup(amount, months) : ""}
+          ${dateCardMarkup({ id: "smartExpenseDate", value: expenseDraft.paymentDate, label: "付款日期", inlineToday: true })}
+          <div class="expense-note-area">
+            <button class="expense-note-toggle" type="button" data-expense-toggle-note aria-expanded="${String(expenseDraft.noteOpen)}">${expenseDraft.noteOpen ? "－ 收起備註" : "＋ 加入備註"}</button>
+            ${expenseDraft.noteOpen ? `
+              <label class="expense-note-field">備註
+                <input type="text" id="smartExpenseNote" maxlength="160" value="${escapeAttr(expenseDraft.note)}" placeholder="輸入地點或補充說明" autocomplete="off">
+              </label>
+            ` : ""}
+          </div>
+          <span class="expense-existing-hint" id="expenseExistingHint"${existingAmount ? "" : " hidden"}>這天已有 ${money(existingAmount)}，儲存後會更新此類別。</span>
+          <button class="expense-save-button" type="button" id="saveSmartExpense"${amount > 0 ? "" : " disabled"}>儲存支出</button>
+          <p class="expense-form-status${expenseDraft.statusType === "error" ? " error" : ""}" id="expenseFormStatus" role="status">${escapeHtml(expenseDraft.status)}</p>
+        </div>
+      `;
+    }
+
+    function updateExpensePreview() {
+      const amount = Math.max(0, Number(expenseDraft.amount || 0));
+      const months = selectedExpenseMonths();
+      const saveButton = document.getElementById("saveSmartExpense");
+      if (saveButton) saveButton.disabled = amount <= 0;
+      const recurringAmount = document.getElementById("expenseRecurringAmount");
+      if (recurringAmount) recurringAmount.textContent = amount ? money(amount) : "輸入金額後顯示";
+      const recurringStartText = document.getElementById("expenseRecurringStartText");
+      if (recurringStartText) recurringStartText.textContent = expenseDraft.recurringStartMonth.replace("-", "/");
+      const recurringStartInput = document.getElementById("expenseRecurringStartMonth");
+      if (recurringStartInput && !expenseDraft.recurringStartMonthChanged) recurringStartInput.value = expenseDraft.recurringStartMonth;
+      const recurringDayInput = document.getElementById("expenseRecurringDay");
+      if (recurringDayInput) recurringDayInput.value = String(expenseDraft.recurringDay);
+      const durationText = document.getElementById("expenseDurationText");
+      const periodText = document.getElementById("expensePeriodText");
+      const monthlyCost = document.getElementById("expenseMonthlyCost");
+      const remainderNote = document.getElementById("expenseRemainderNote");
+      const breakdown = expenseAllocationBreakdown(amount, months);
+      if (durationText) durationText.textContent = expenseDurationText(months);
+      if (periodText) periodText.textContent = expenseMonthRange(expenseDraft.startMonth, months);
+      if (monthlyCost) monthlyCost.textContent = amount ? money(breakdown.monthly) : "輸入金額後顯示";
+      if (remainderNote) {
+        remainderNote.hidden = !breakdown.hasRemainder;
+        remainderNote.textContent = breakdown.hasRemainder ? `最後一個月為 ${money(breakdown.lastMonth)}，確保總額一致。` : "";
+      }
+      const hint = document.getElementById("expenseExistingHint");
+      if (hint) {
+        const existingAmount = existingExpenseAmount();
+        hint.hidden = !existingAmount;
+        hint.textContent = existingAmount ? `這天已有 ${money(existingAmount)}，儲存後會更新此類別。` : "";
+      }
+    }
+
+    function selectExpenseCategory(category, focusAmount = false) {
+      const sameCategory = expenseDraft.category === category;
+      const currentNote = expenseDraft.note;
+      const currentNoteOpen = expenseDraft.noteOpen;
+      expenseDraft.category = category;
+      expenseDraft.mode = suggestedExpenseMode(category);
+      const months = suggestedExpenseMonths(category);
+      expenseDraft.durationChoice = String(months);
+      expenseDraft.customMonths = months;
+      expenseDraft.startMonth = expenseDraft.paymentDate.slice(0, 7);
+      expenseDraft.recurringStartMonth = expenseDraft.paymentDate.slice(0, 7);
+      expenseDraft.recurringStartMonthChanged = false;
+      expenseDraft.recurringDay = Number(expenseDraft.paymentDate.slice(-2));
+      expenseDraft.startMonthChanged = false;
+      expenseDraft.advancedOpen = false;
+      expenseDraft.categoryOpen = false;
+      expenseDraft.modeOpen = false;
+      expenseDraft.note = sameCategory ? currentNote : existingExpenseNote(category, expenseDraft.paymentDate);
+      expenseDraft.noteOpen = sameCategory ? currentNoteOpen : false;
+      expenseDraft.status = "";
+      expenseDraft.statusType = "";
+      const existingAmount = existingExpenseAmount(category, expenseDraft.paymentDate);
+      expenseDraft.amount = existingAmount ? String(existingAmount) : "";
+      renderExpenseForm();
+      if (focusAmount) {
+        window.requestAnimationFrame(() => {
+          const input = document.getElementById("smartExpenseAmount");
+          input?.focus();
+          input?.select();
+        });
+      }
+    }
+
+    function selectExpenseMode(mode) {
+      if (!["one_time", "recurring", "allocated"].includes(mode)) return;
+      expenseDraft.mode = mode;
+      expenseDraft.modeOpen = false;
+      expenseDraft.advancedOpen = false;
+      if (mode === "allocated" && selectedExpenseMonths() < 2) {
+        const months = suggestedExpenseMonths(expenseDraft.category);
+        expenseDraft.durationChoice = String(months);
+        expenseDraft.customMonths = months;
+      }
+      expenseDraft.status = "";
+      expenseDraft.statusType = "";
+      renderExpenseForm();
+    }
+
+    function syncExpenseAmountInput(input) {
+      const cursor = input.selectionStart ?? input.value.length;
+      const digitsToRight = input.value.slice(cursor).replace(/\D/g, "").length;
+      const raw = input.value.replace(/\D/g, "").replace(/^0+(?=\d)/, "");
+      expenseDraft.amount = raw;
+      const formatted = formatExpenseAmount(raw);
+      input.value = formatted;
+      let nextCursor = formatted.length;
+      let remaining = digitsToRight;
+      while (remaining > 0 && nextCursor > 0) {
+        nextCursor -= 1;
+        if (/\d/.test(formatted[nextCursor])) remaining -= 1;
+      }
+      input.setSelectionRange(nextCursor, nextCursor);
+    }
+
+    function selectRecentExpenseAmount(amount, button) {
+      const value = Math.round(Number(amount || 0));
+      if (!Number.isFinite(value) || value <= 0) return;
+      expenseDraft.amount = String(value);
+      const input = document.getElementById("smartExpenseAmount");
+      if (input) input.value = formatExpenseAmount(value);
+      updateExpensePreview();
+      button?.classList.add("selected");
+      window.setTimeout(() => button?.classList.remove("selected"), 450);
+    }
+
+    function saveSmartExpense() {
+      const category = String(expenseDraft.category || "").trim();
+      const amount = Number(expenseDraft.amount);
+      const paymentDate = expenseDraft.paymentDate;
+      if (!category) {
+        expenseDraft.status = "請先選擇支出類別。";
+        expenseDraft.statusType = "error";
+        renderExpenseForm();
+        return;
+      }
+      if (!Number.isFinite(amount) || amount <= 0) {
+        expenseDraft.status = "請輸入大於 0 的金額。";
+        expenseDraft.statusType = "error";
+        renderExpenseForm();
+        return;
+      }
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(paymentDate)) {
+        expenseDraft.status = "請選擇付款日期。";
+        expenseDraft.statusType = "error";
+        renderExpenseForm();
+        return;
+      }
+      if (expenseDraft.mode === "recurring") {
+        const day = Number(expenseDraft.recurringDay);
+        if (!/^\d{4}-\d{2}$/.test(expenseDraft.recurringStartMonth) || day < 1 || day > 31) {
+          expenseDraft.status = "請確認固定支出的日期設定。";
+          expenseDraft.statusType = "error";
+          renderExpenseForm();
+          return;
+        }
+        if (expenseDraft.recurringEndType === "specified" && (!/^\d{4}-\d{2}$/.test(expenseDraft.recurringEndMonth) || expenseDraft.recurringEndMonth < expenseDraft.recurringStartMonth)) {
+          expenseDraft.status = "結束月份不可早於開始月份。";
+          expenseDraft.statusType = "error";
+          renderExpenseForm();
+          return;
+        }
+      }
+      const customMonths = Math.floor(Number(expenseDraft.customMonths));
+      const customMonthsInvalid = expenseDraft.durationChoice === "custom"
+        && (!Number.isFinite(customMonths) || customMonths < 2 || customMonths > 60);
+      if (expenseDraft.mode === "allocated" && (!/^\d{4}-\d{2}$/.test(expenseDraft.startMonth) || customMonthsInvalid)) {
+        expenseDraft.status = "請確認分月計算設定。";
+        expenseDraft.statusType = "error";
+        renderExpenseForm();
+        return;
+      }
+
+      const entry = ensureEntryForDate(paymentDate);
+      entry.expenses[category] = Math.round(amount);
+      entry.expenseNotes ||= {};
+      const note = String(expenseDraft.note || "").trim().slice(0, 160);
+      if (note) entry.expenseNotes[category] = note;
+      else delete entry.expenseNotes[category];
+      if (!state.expenses.includes(category)) state.expenses.push(category);
+      saveState();
+
+      expenseDraft = createExpenseDraft(paymentDate);
+      renderAll();
+      renderExpenseForm();
+      const section = document.getElementById("expenseSection");
+      if (section) section.open = false;
+      showToast(`已儲存 ${category} ${money(amount)}`);
+    }
+
     function renderInputs() {
       const todayEntry = entryForDate();
       els.incomeInputs.innerHTML = orderedHomePlatforms(todayEntry).map(name => {
@@ -2605,11 +4856,7 @@
         `;
       }).join("");
 
-      els.expenseInputs.innerHTML = state.expenses.map(name => `
-        <label>${name}
-          <input type="number" inputmode="numeric" min="0" step="1" value="0" data-expense="${escapeAttr(name)}">
-        </label>
-      `).join("");
+      renderExpenseForm();
       updateRateHints();
     }
 
@@ -2653,8 +4900,11 @@
             <div><span>今日實際工時</span><strong>${formatHours(todaySummary.hours)}</strong></div>
             <div><span>目前時薪</span><strong>${money(todaySummary.hourly)}</strong></div>
           </div>
+          <div class="today-goal" id="dailyGoalCard" aria-label="今日目標進度"></div>
         </article>
       `;
+
+      updateDailyGoal(todayEntry[0] || blankEntry());
 
       els.sideNet.textContent = money(monthSummary.net);
       els.heroNet.textContent = money(monthSummary.net);
@@ -2681,6 +4931,52 @@
       return `${h} 小時 ${String(m).padStart(2, "0")} 分`;
     }
 
+    function formatWorkTime(time) {
+      const match = /^(\d{2}):(\d{2})$/.exec(String(time || ""));
+      if (!match) return "";
+      const hour = Number(match[1]);
+      const period = hour < 12 ? "上午" : "下午";
+      const displayHour = hour % 12 || 12;
+      return `${period}${displayHour}:${match[2]}`;
+    }
+
+    function formatCompactWorkHours(hours) {
+      const totalMinutes = Math.max(0, Math.floor(Number(hours || 0) * 60));
+      const h = Math.floor(totalMinutes / 60);
+      const m = totalMinutes % 60;
+      if (h && m) return `${h}小時${m}分`;
+      if (h) return `${h}小時`;
+      return `${m}分`;
+    }
+
+    function updateWorkTimeUi(entry) {
+      if (!els.workCollapsedPrimary || !els.workCollapsedSecondary || !els.workLiveValue) return;
+      const start = entry.startTime;
+      const end = entry.endTime;
+      const hours = calcHours(entry);
+
+      if (!start) {
+        els.workCollapsedPrimary.textContent = "尚未設定";
+        els.workCollapsedSecondary.textContent = "等待開始時間";
+        els.workLiveValue.textContent = Number(entry.manualHours) > 0
+          ? formatCompactWorkHours(hours)
+          : "等待設定";
+        return;
+      }
+
+      if (!end) {
+        els.workCollapsedPrimary.textContent = `開始 ${formatWorkTime(start)}`;
+        els.workCollapsedSecondary.textContent = "跑車中";
+        els.workLiveValue.textContent = "等待結束時間";
+        return;
+      }
+
+      const duration = formatCompactWorkHours(hours);
+      els.workCollapsedPrimary.textContent = `${formatWorkTime(start)}－${formatWorkTime(end)}`;
+      els.workCollapsedSecondary.textContent = `實際工作 ${duration}`;
+      els.workLiveValue.textContent = duration;
+    }
+
     function updateQuickPreview() {
       if (!els.quickPreview) return;
       const entry = formData();
@@ -2690,6 +4986,7 @@
       const total = entryTotal(entry);
       const net = entryNet(entry);
       const hours = calcHours(entry);
+      updateWorkTimeUi(entry);
       updateRateHints();
       updateDailyGoal();
       els.quickPreview.innerHTML = `
@@ -2717,22 +5014,31 @@
     }
 
     function updateDailyGoal(entry = entryForDate() || blankEntry()) {
-      if (!els.dailyGoalCard) return;
-      const goal = Number(state.settings.dailyGoal || 0);
-      const current = entryTotal(entry);
-      if (!goal) {
-        els.dailyGoalCard.innerHTML = `
-          <div class="goal-top"><strong>今日目標</strong><span>尚未設定</span></div>
-          <div class="goal-bottom"><span>目前收入</span><strong>${money(current)}</strong></div>
+      const dailyGoalCard = document.getElementById("dailyGoalCard");
+      if (!dailyGoalCard) return;
+      const goal = finiteNumber(state.settings.dailyGoal);
+      const current = nonNegativeNumber(entryTotal(entry));
+      if (goal <= 0) {
+        dailyGoalCard.innerHTML = `
+          <div class="today-goal-status">尚未設定今日目標</div>
+          <div class="today-goal-track" role="progressbar" aria-label="今日目標進度" aria-disabled="true">
+            <div class="today-goal-fill" style="width:0%"></div>
+          </div>
         `;
         return;
       }
-      const diff = goal - current;
       const percent = Math.max(0, Math.round(current / goal * 100));
-      els.dailyGoalCard.innerHTML = `
-        <div class="goal-top"><strong>今日目標 ${money(goal)}</strong><span>${percent}%</span></div>
-        <div class="goal-track"><div class="goal-fill" style="width:${Math.min(100, percent)}%"></div></div>
-        <div class="goal-bottom"><span>目前 ${money(current)}</span><strong>${diff > 0 ? `尚差 ${money(diff)}` : "已達標"}</strong></div>
+      const progress = Math.min(100, percent);
+      const status = current === goal
+        ? "已達成 100%"
+        : current > goal
+          ? `達成 ${percent}%・超標 ${money(current - goal)}`
+          : `達成 ${percent}%・尚差 ${money(goal - current)}`;
+      dailyGoalCard.innerHTML = `
+        <div class="today-goal-status">${status}</div>
+        <div class="today-goal-track" role="progressbar" aria-label="今日目標進度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress}" aria-valuetext="${escapeAttr(status)}">
+          <div class="today-goal-fill" style="width:${progress}%"></div>
+        </div>
       `;
     }
 
@@ -2804,25 +5110,33 @@
         </table>
         <div class="entries-mobile-list" aria-label="每日月份明細">
           ${entries.map(entry => {
-            const meta = [entry.shift, entry.weather].filter(Boolean).join("・") || "尚未填寫班別與天氣";
+            const shift = String(entry.shift || "").trim();
+            const weatherIcon = weatherIconSvg(entry.weather);
+            const activePlatforms = state.platforms
+              .map(name => [name, Number(entry.incomes?.[name] || 0)])
+              .filter(([, amount]) => amount > 0);
             return `
-              <article class="daily-entry-card">
+              <article class="daily-entry-row">
                 <div class="daily-entry-head">
-                  <strong class="daily-entry-date">${escapeHtml(entry.date)}</strong>
-                  <strong class="daily-entry-total">總收入 ${money(entryTotal(entry))}</strong>
+                  <div class="daily-entry-title">
+                    <strong class="daily-entry-date">${escapeHtml(compactDailyDate(entry.date))}</strong>
+                    ${shift ? `<span class="daily-entry-meta">・${escapeHtml(shift)}</span>` : ""}
+                    ${weatherIcon ? `<span class="daily-entry-meta">・</span>${weatherIcon}` : ""}
+                  </div>
+                  <strong class="daily-entry-total">${money(entryTotal(entry))}</strong>
                 </div>
-                <div class="daily-entry-meta">${escapeHtml(meta)}</div>
-                <div class="daily-platform-grid">
-                  ${state.platforms.map(name => {
-                    const amount = Number(entry.incomes?.[name] || 0);
-                    return `<span>${escapeHtml(name)}</span><strong>${amount ? money(amount) : "—"}</strong>`;
-                  }).join("")}
-                  <span>小費</span><strong>${Number(entry.tips || 0) ? money(entry.tips) : "—"}</strong>
-                  <span>淨收入</span><strong>${money(entryNet(entry))}</strong>
-                </div>
-                <div class="daily-entry-actions" aria-label="${escapeAttr(entry.date)} 紀錄操作">
-                  <button class="icon-button" type="button" title="編輯" aria-label="編輯 ${escapeAttr(entry.date)} 紀錄" data-edit="${escapeAttr(entry.id)}">編</button>
-                  <button class="icon-button" type="button" title="刪除" aria-label="刪除 ${escapeAttr(entry.date)} 紀錄" data-delete="${escapeAttr(entry.id)}">刪</button>
+                <div class="daily-entry-bottom">
+                  <div class="daily-income-items">
+                    ${activePlatforms.length
+                      ? activePlatforms.map(([name, amount]) => `
+                          <span class="daily-platform-income"><span class="daily-platform-name">${escapeHtml(name)}</span><strong>${money(amount)}</strong></span>
+                        `).join("")
+                      : `<span class="daily-income-empty">尚無收入紀錄</span>`}
+                  </div>
+                  <div class="daily-entry-actions" aria-label="${escapeAttr(entry.date)} 紀錄操作">
+                    <button class="icon-button" type="button" title="編輯" aria-label="編輯 ${escapeAttr(entry.date)} 紀錄" data-edit="${escapeAttr(entry.id)}">編</button>
+                    <button class="icon-button" type="button" title="刪除" aria-label="刪除 ${escapeAttr(entry.date)} 紀錄" data-delete="${escapeAttr(entry.id)}">刪</button>
+                  </div>
                 </div>
               </article>
             `;
@@ -2856,9 +5170,10 @@
         const summary = summarize(entries);
         const endDate = new Date(`${start}T00:00:00`);
         endDate.setDate(endDate.getDate() + 6);
+        const end = endDate.toISOString().slice(0, 10);
         return `
           <div class="week-item">
-            <div><span>週期</span><strong>${start}－${endDate.toISOString().slice(0, 10)}</strong></div>
+            <div class="week-item-period"><span>週期</span><strong>${compactWeekRange(start, end)}</strong></div>
             <div><span>總額</span><strong>${money(summary.total)}</strong></div>
             <div><span>淨收入</span><strong>${money(summary.net)}</strong></div>
             <div><span>工時</span><strong>${number(summary.hours)} 小時</strong></div>
@@ -2944,6 +5259,15 @@
       `;
     }
 
+    function expenseShortcutOptionsMarkup(selectedCategory) {
+      const categories = [];
+      [...smartExpenseCategories, ...state.expenses, ...state.settings.expenseShortcuts].forEach(category => {
+        const name = String(category || "").trim();
+        if (name && !categories.includes(name)) categories.push(name);
+      });
+      return categories.map(name => `<option value="${escapeAttr(name)}"${name === selectedCategory ? " selected" : ""}>${escapeHtml(name)}</option>`).join("");
+    }
+
     function renderSettings() {
       els.platformChips.innerHTML = state.platforms.map(name => chip(name, "platform")).join("");
       els.platformRateInputs.innerHTML = state.platforms.map(name => `
@@ -2952,6 +5276,19 @@
         </label>
       `).join("");
       els.expenseChips.innerHTML = state.expenses.map(name => chip(name, "expense")).join("");
+      if (els.expenseShortcutSettings) {
+        els.expenseShortcutSettings.innerHTML = `
+          <p class="expense-shortcut-settings-note">固定保留三個位置；選擇後立即儲存，三個類別不可重複。</p>
+          ${state.settings.expenseShortcuts.map((category, index) => `
+            <label>快捷 ${index + 1}
+              <select data-expense-shortcut-index="${index}" aria-label="快捷 ${index + 1} 支出類別">
+                ${expenseShortcutOptionsMarkup(category)}
+              </select>
+            </label>
+          `).join("")}
+        `;
+      }
+      if (els.expenseShortcutStatus) els.expenseShortcutStatus.textContent = expenseShortcutStatus;
       document.getElementById("monthlyGoal").value = state.settings.monthlyGoal || "";
       document.getElementById("dailyGoal").value = state.settings.dailyGoal || "";
     }
@@ -3040,10 +5377,6 @@
       els.workBreak.textContent = clockDuration(details.breakMs);
       els.workActual.textContent = clockDuration(details.hours * 3600000);
       els.workMetrics.classList.remove("hidden");
-      els.workWeatherControl.classList.remove("hidden");
-      document.querySelectorAll("[data-weather-choice]").forEach(button => {
-        button.classList.toggle("active", button.dataset.weatherChoice === entry?.weather);
-      });
       els.startRun.classList.toggle("hidden", !["idle", "stopped"].includes(status));
       els.startRun.textContent = status === "stopped" ? "再次開始工作" : "開始工作";
       els.pauseRun.classList.toggle("hidden", status !== "running");
@@ -3053,7 +5386,8 @@
 
     function updateCurrentWeather(weather) {
       if (!weather) return;
-      const entry = ensureEntryForDate();
+      const date = document.getElementById("date").value || todayString();
+      const entry = ensureEntryForDate(date);
       const previous = entry.weather || "";
       entry.weatherHistory = Array.isArray(entry.weatherHistory) ? entry.weatherHistory : [];
       if (!entry.weatherHistory.length && previous && previous !== weather) {
@@ -3068,9 +5402,32 @@
       }
       const weatherSelect = document.getElementById("weather");
       if (weatherSelect) weatherSelect.value = weather;
+      els.entryId.value = entry.id;
       saveState();
-      updateWorkControls();
+      syncDetailChoiceButtons();
+      if (date === todayString()) updateWorkControls();
       renderEntries();
+    }
+
+    function updateCurrentShift(shift) {
+      if (!shift) return;
+      const date = document.getElementById("date").value || todayString();
+      const entry = ensureEntryForDate(date);
+      entry.shift = shift;
+      document.getElementById("shift").value = shift;
+      els.entryId.value = entry.id;
+      saveState();
+      syncDetailChoiceButtons();
+      renderEntries();
+    }
+
+    function syncDetailChoiceButtons() {
+      document.querySelectorAll("[data-detail-choice]").forEach(button => {
+        const control = document.getElementById(button.dataset.detailChoice);
+        const active = control?.value === button.dataset.choiceValue;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
     }
 
     function compactDuration(ms) {
@@ -3090,6 +5447,7 @@
       renderWeeks();
       renderMonthReport();
       renderPlatformReport();
+      renderAiAnalysis();
     }
 
     function renderAll() {
@@ -3100,6 +5458,7 @@
       renderWeeks();
       renderMonthReport();
       renderPlatformReport();
+      renderAiAnalysis();
       renderSettings();
       renderRecentIncome();
       updateWorkControls();
@@ -3108,6 +5467,7 @@
 
     function setView(view) {
       activeView = view;
+      if (view === "ai") renderAiAnalysis();
       document.querySelectorAll(".view").forEach(section => section.classList.add("hidden"));
       document.getElementById(`view-${view}`).classList.remove("hidden");
       const navView = view === "month" ? "platform" : view;
@@ -3124,11 +5484,14 @@
       els.detailForm.reset();
       els.entryId.value = "";
       document.getElementById("date").value = todayString();
+      syncDateCardDisplay(document.getElementById("date"));
       document.getElementById("breakMinutes").value = 0;
       document.getElementById("tips").value = 0;
       document.getElementById("orders").value = 0;
       document.getElementById("km").value = 0;
-      document.querySelectorAll("[data-income], [data-expense]").forEach(input => input.value = 0);
+      document.querySelectorAll("[data-income]").forEach(input => input.value = 0);
+      expenseDraft = createExpenseDraft(todayString());
+      renderExpenseForm();
       const todayEntry = state.entries.find(entry => entry.date === todayString());
       if (todayEntry) {
         fillEntryFields(todayEntry);
@@ -3136,12 +5499,15 @@
       els.formTitle.textContent = "更新今日紀錄";
       els.cancelEdit.classList.add("hidden");
       document.querySelectorAll("#detailForm details").forEach(details => details.open = false);
+      els.workTimeSection.open = Boolean(state.settings.timeDetailsOpen);
+      syncDetailChoiceButtons();
       updateQuickPreview();
     }
 
     function fillEntryFields(entry) {
       els.entryId.value = entry.id;
       document.getElementById("date").value = entry.date;
+      syncDateCardDisplay(document.getElementById("date"));
       document.getElementById("shift").value = entry.shift || "早班";
       document.getElementById("startTime").value = entry.startTime || "";
       document.getElementById("endTime").value = entry.endTime || "";
@@ -3152,13 +5518,12 @@
       document.getElementById("km").value = entry.km || 0;
       const weatherSelect = document.getElementById("weather");
       const weatherValue = entry.weather || "";
-      if (weatherValue && !Array.from(weatherSelect.options).some(option => option.value === weatherValue)) {
-        weatherSelect.add(new Option(weatherValue, weatherValue));
-      }
       weatherSelect.value = weatherValue;
       document.getElementById("note").value = entry.note || "";
       document.querySelectorAll("[data-income]").forEach(input => input.value = entry.incomes?.[input.dataset.income] || 0);
-      document.querySelectorAll("[data-expense]").forEach(input => input.value = entry.expenses?.[input.dataset.expense] || 0);
+      expenseDraft = createExpenseDraft(entry.date);
+      renderExpenseForm();
+      syncDetailChoiceButtons();
     }
 
     function editEntry(id) {
@@ -3187,11 +5552,13 @@
     function formData() {
       const incomes = {};
       document.querySelectorAll("[data-income]").forEach(input => incomes[input.dataset.income] = Number(input.value || 0));
-      const expenses = {};
-      document.querySelectorAll("[data-expense]").forEach(input => expenses[input.dataset.expense] = Number(input.value || 0));
+      const id = els.entryId.value || makeId();
+      const date = document.getElementById("date").value;
+      const existingEntry = state.entries.find(item => item.id === id) || state.entries.find(item => item.date === date);
+      const expenses = { ...(existingEntry?.expenses || {}) };
       return {
-        id: els.entryId.value || makeId(),
-        date: document.getElementById("date").value,
+        id,
+        date,
         shift: document.getElementById("shift").value,
         startTime: document.getElementById("startTime").value,
         endTime: document.getElementById("endTime").value,
@@ -3398,6 +5765,7 @@
       renderWeeks();
       renderMonthReport();
       renderPlatformReport();
+      renderAiAnalysis();
     }
 
     function startYoxiAdd(platform) {
@@ -3458,10 +5826,6 @@
     els.pauseRun.addEventListener("click", pauseRunNow);
     els.resumeRun.addEventListener("click", resumeRunNow);
     els.endRun.addEventListener("click", endRunNow);
-    els.workWeatherControl.addEventListener("click", event => {
-      const button = event.target.closest("[data-weather-choice]");
-      if (button) updateCurrentWeather(button.dataset.weatherChoice);
-    });
     els.toggleOverview.addEventListener("click", () => {
       overviewVisible = !overviewVisible;
       updateOverviewVisibility();
@@ -3496,10 +5860,170 @@
       resetForm();
     });
 
-    els.detailForm.addEventListener("input", updateQuickPreview);
-    els.detailForm.addEventListener("change", updateQuickPreview);
-    document.getElementById("weather").addEventListener("change", event => {
-      if (event.target.value) updateCurrentWeather(event.target.value);
+    els.detailForm.addEventListener("input", event => {
+      if (event.target.id === "date") syncDateCardDisplay(event.target);
+      updateQuickPreview();
+    });
+    els.detailForm.addEventListener("change", event => {
+      if (event.target.id === "date") syncDateCardDisplay(event.target);
+      updateQuickPreview();
+    });
+    els.workTimeSection.addEventListener("toggle", event => {
+      updateQuickPreview();
+      if (!event.isTrusted) return;
+      state.settings.timeDetailsOpen = event.currentTarget.open;
+      saveState();
+    });
+    els.detailForm.addEventListener("click", event => {
+      const button = event.target.closest("[data-detail-choice]");
+      if (!button) return;
+      const field = button.dataset.detailChoice;
+      const value = button.dataset.choiceValue;
+      if (field === "weather") updateCurrentWeather(value);
+      if (field === "shift") updateCurrentShift(value);
+      updateQuickPreview();
+    });
+
+    els.expenseInputs.addEventListener("input", event => {
+      if (event.target.id === "smartExpenseAmount") {
+        syncExpenseAmountInput(event.target);
+        expenseDraft.status = "";
+        expenseDraft.statusType = "";
+        updateExpensePreview();
+      }
+      if (event.target.id === "expenseCustomMonths") {
+        expenseDraft.customMonths = event.target.value;
+        expenseDraft.status = "";
+        expenseDraft.statusType = "";
+        updateExpensePreview();
+      }
+      if (event.target.id === "smartExpenseDate") {
+        expenseDraft.paymentDate = event.target.value;
+        syncDateCardDisplay(event.target);
+        if (!expenseDraft.startMonthChanged && /^\d{4}-\d{2}/.test(event.target.value)) {
+          expenseDraft.startMonth = event.target.value.slice(0, 7);
+        }
+        if (!expenseDraft.recurringStartMonthChanged && /^\d{4}-\d{2}/.test(event.target.value)) {
+          expenseDraft.recurringStartMonth = event.target.value.slice(0, 7);
+        }
+        if (/^\d{4}-\d{2}-\d{2}$/.test(event.target.value)) {
+          expenseDraft.recurringDay = Number(event.target.value.slice(-2));
+        }
+        expenseDraft.status = "";
+        expenseDraft.statusType = "";
+        updateExpensePreview();
+      }
+      if (event.target.id === "expenseStartMonth") {
+        expenseDraft.startMonth = event.target.value;
+        expenseDraft.startMonthChanged = true;
+        expenseDraft.status = "";
+        expenseDraft.statusType = "";
+        updateExpensePreview();
+      }
+      if (event.target.id === "expenseRecurringDay") {
+        expenseDraft.recurringDay = Number(event.target.value);
+      }
+      if (event.target.id === "expenseRecurringStartMonth") {
+        expenseDraft.recurringStartMonth = event.target.value;
+        expenseDraft.recurringStartMonthChanged = true;
+      }
+      if (event.target.id === "expenseRecurringEndMonth") {
+        expenseDraft.recurringEndMonth = event.target.value;
+      }
+      if (event.target.id === "smartExpenseNote") {
+        expenseDraft.note = event.target.value.slice(0, 160);
+      }
+    });
+
+    els.expenseInputs.addEventListener("change", event => {
+      if (event.target.id === "smartExpenseCategory") selectExpenseCategory(event.target.value);
+      if (event.target.id === "smartExpenseDate") syncDateCardDisplay(event.target);
+      if (event.target.id === "expenseRecurringDay") expenseDraft.recurringDay = Number(event.target.value);
+      if (event.target.id === "expenseRecurringStartMonth") {
+        expenseDraft.recurringStartMonth = event.target.value;
+        expenseDraft.recurringStartMonthChanged = true;
+        renderExpenseForm();
+      }
+      if (event.target.id === "expenseRecurringEndMonth") expenseDraft.recurringEndMonth = event.target.value;
+    });
+
+    els.expenseInputs.addEventListener("click", event => {
+      const quick = event.target.closest("[data-expense-quick]");
+      const mode = event.target.closest("[data-expense-mode]");
+      const categoryToggle = event.target.closest("[data-expense-toggle-category]");
+      const modeToggle = event.target.closest("[data-expense-toggle-mode]");
+      const noteToggle = event.target.closest("[data-expense-toggle-note]");
+      const recentAmount = event.target.closest("[data-expense-recent-amount]");
+      const endType = event.target.closest("[data-expense-end-type]");
+      const toggle = event.target.closest("[data-expense-toggle-settings]");
+      const duration = event.target.closest("[data-expense-duration]");
+      const saveButton = event.target.closest("#saveSmartExpense");
+      if (quick) {
+        selectExpenseCategory(quick.dataset.expenseQuick, true);
+        return;
+      }
+      if (mode) {
+        selectExpenseMode(mode.dataset.expenseMode);
+        return;
+      }
+      if (categoryToggle) {
+        expenseDraft.categoryOpen = true;
+        renderExpenseForm();
+        window.requestAnimationFrame(() => document.getElementById("smartExpenseCategory")?.focus());
+        return;
+      }
+      if (modeToggle) {
+        expenseDraft.modeOpen = !expenseDraft.modeOpen;
+        renderExpenseForm();
+        return;
+      }
+      if (noteToggle) {
+        expenseDraft.noteOpen = !expenseDraft.noteOpen;
+        renderExpenseForm();
+        if (expenseDraft.noteOpen) {
+          window.requestAnimationFrame(() => document.getElementById("smartExpenseNote")?.focus());
+        }
+        return;
+      }
+      if (recentAmount) {
+        selectRecentExpenseAmount(recentAmount.dataset.expenseRecentAmount, recentAmount);
+        return;
+      }
+      if (endType) {
+        expenseDraft.recurringEndType = endType.dataset.expenseEndType;
+        if (expenseDraft.recurringEndType === "specified" && !expenseDraft.recurringEndMonth) {
+          expenseDraft.recurringEndMonth = expenseDraft.recurringStartMonth;
+        }
+        renderExpenseForm();
+        return;
+      }
+      if (toggle) {
+        expenseDraft.advancedOpen = !expenseDraft.advancedOpen;
+        renderExpenseForm();
+        return;
+      }
+      if (duration) {
+        expenseDraft.durationChoice = duration.dataset.expenseDuration;
+        if (expenseDraft.durationChoice !== "custom") {
+          expenseDraft.customMonths = Number(expenseDraft.durationChoice);
+        }
+        expenseDraft.status = "";
+        expenseDraft.statusType = "";
+        renderExpenseForm();
+        return;
+      }
+      if (saveButton) saveSmartExpense();
+    });
+
+    els.expenseInputs.addEventListener("focusin", event => {
+      if (event.target.id !== "smartExpenseAmount") return;
+      window.requestAnimationFrame(() => event.target.scrollIntoView({ block: "center", behavior: "smooth" }));
+    });
+
+    els.expenseInputs.addEventListener("keydown", event => {
+      if (event.key !== "Enter" || !event.target.matches("input")) return;
+      event.preventDefault();
+      event.target.blur();
     });
 
     els.incomeInputs.addEventListener("focusin", event => {
@@ -3595,6 +6119,37 @@
       renderAll();
     });
 
+    document.getElementById("view-settings").addEventListener("change", event => {
+      const shortcutSelect = event.target.closest("[data-expense-shortcut-index]");
+      if (!shortcutSelect) return;
+      const index = Number(shortcutSelect.dataset.expenseShortcutIndex);
+      const category = shortcutSelect.value;
+      const nextShortcuts = state.settings.expenseShortcuts.slice();
+      if (!Number.isInteger(index) || index < 0 || index > 2 || !category) return;
+      if (nextShortcuts.some((value, currentIndex) => currentIndex !== index && expenseCategoryIdentity(value) === expenseCategoryIdentity(category))) {
+        expenseShortcutStatus = "三個快捷不能使用相同類別。";
+        renderSettings();
+        showToast(expenseShortcutStatus);
+        return;
+      }
+      nextShortcuts[index] = category;
+      state.settings.expenseShortcuts = normalizeExpenseShortcuts(nextShortcuts);
+      expenseShortcutStatus = `快捷 ${index + 1} 已更新為「${category}」。`;
+      saveState();
+      renderSettings();
+      renderExpenseForm();
+      showToast("快捷支出已更新");
+    });
+
+    document.getElementById("restoreExpenseShortcuts").addEventListener("click", () => {
+      state.settings.expenseShortcuts = defaultExpenseShortcuts.slice();
+      expenseShortcutStatus = "已恢復預設快捷支出。";
+      saveState();
+      renderSettings();
+      renderExpenseForm();
+      showToast(expenseShortcutStatus);
+    });
+
     document.getElementById("view-settings").addEventListener("click", event => {
       const platformButton = event.target.closest("[data-remove-platform]");
       const expenseButton = event.target.closest("[data-remove-expense]");
@@ -3612,6 +6167,7 @@
       }
     });
 
+    renderEntryDateCard(todayString());
     renderAll();
     resetForm();
     setView("today");
