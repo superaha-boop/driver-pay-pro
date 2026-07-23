@@ -3053,6 +3053,48 @@
       background: #fbfcfb;
     }
 
+    .work-time-control {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      min-height: 50px;
+      position: relative;
+      display: block;
+      overflow: hidden;
+      border: 1px solid #d8e1dc;
+      border-radius: 15px;
+      box-sizing: border-box;
+      background: #fbfcfb;
+    }
+
+    .work-time-control input[type="time"] {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      height: 48px;
+      min-height: 48px;
+      margin: 0;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 14px;
+      box-sizing: border-box;
+      color: var(--text);
+      background: transparent;
+      box-shadow: none;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .work-time-control:focus-within {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(31, 122, 85, .13);
+    }
+
+    .work-time-control input[type="time"]:focus {
+      border: 0;
+      box-shadow: none;
+    }
+
     .work-input-shell {
       position: relative;
       min-width: 0;
@@ -3305,11 +3347,15 @@
                 <div class="collapsible-body fields work-time-fields">
                   <label>
                     <span class="work-field-label">開始跑車</span>
-                    <input type="time" id="startTime">
+                    <span class="work-time-control">
+                      <input type="time" id="startTime">
+                    </span>
                   </label>
                   <label>
                     <span class="work-field-label">結束跑車</span>
-                    <input type="time" id="endTime">
+                    <span class="work-time-control">
+                      <input type="time" id="endTime">
+                    </span>
                   </label>
                   <label>
                     <span class="work-field-label">休息</span>
