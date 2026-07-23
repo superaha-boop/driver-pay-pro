@@ -1645,6 +1645,191 @@
       width: 100%;
     }
 
+    .smart-expense-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    #expenseInputs [hidden] {
+      display: none !important;
+    }
+
+    .smart-expense-primary {
+      display: grid;
+      gap: 12px;
+    }
+
+    .smart-expense-field {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .smart-expense-field input,
+    .smart-expense-field select {
+      min-height: 52px;
+      padding-inline: 13px;
+      border-radius: 13px;
+      color: #17211d;
+      background: #fafcfb;
+      font-size: 16px;
+      font-weight: 650;
+    }
+
+    .smart-expense-field input[type="number"] {
+      font-size: 20px;
+      font-weight: 750;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .expense-suggestion-card {
+      padding: 14px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      border: 1px solid #dce4df;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 4px 18px rgba(26, 48, 38, .05);
+    }
+
+    .expense-suggestion-copy {
+      min-width: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .expense-suggestion-category {
+      color: #17211d;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .expense-suggestion-label {
+      margin: 0;
+      color: #7e8982;
+      font-size: 12px;
+    }
+
+    .expense-suggestion-duration {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #087653;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .expense-suggestion-check {
+      width: 22px;
+      height: 22px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #087653;
+      background: #e3f5ed;
+      font-size: 13px;
+    }
+
+    .expense-cost-preview {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .expense-cost-preview span,
+    .expense-existing-hint {
+      display: block;
+      color: #7e8982;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .expense-cost-preview strong {
+      display: block;
+      margin-top: 2px;
+      color: #203128;
+      font-size: 14px;
+      font-weight: 750;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .expense-modify-button {
+      align-self: end;
+      min-height: 38px;
+      padding: 0 10px;
+      border-radius: 10px;
+      color: #087653;
+      background: #e3f5ed;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .expense-duration-settings {
+      padding: 14px;
+      display: grid;
+      gap: 14px;
+      border: 1px solid #dce4df;
+      border-radius: 15px;
+      background: #f7faf8;
+    }
+
+    .expense-duration-title {
+      color: #17211d;
+      font-size: 15px;
+      font-weight: 750;
+    }
+
+    .expense-duration-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .expense-duration-option {
+      min-height: 44px;
+      padding: 0 8px;
+      border: 1px solid #dce4df;
+      border-radius: 11px;
+      color: #33413a;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .expense-duration-option.active {
+      color: #fff;
+      border-color: #15966f;
+      background: #15966f;
+    }
+
+    .expense-save-button {
+      min-height: 52px;
+      width: 100%;
+      border-radius: 13px;
+      color: #fff;
+      background: #15966f;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .expense-save-button:active {
+      background: #087653;
+    }
+
+    .expense-form-status {
+      min-height: 20px;
+      margin: -4px 2px 0;
+      color: #087653;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .expense-form-status.error {
+      color: var(--danger);
+    }
+
     .details-panel .panel-body,
     .details-panel form,
     .details-panel .quick-fields,
@@ -2418,9 +2603,9 @@
                   </label>
                 </div>
               </details>
-              <details class="collapsible">
-                <summary>支出與罰單</summary>
-                <div class="collapsible-body expense-grid" id="expenseInputs"></div>
+              <details class="collapsible" id="expenseSection">
+                <summary>新增支出</summary>
+                <div class="collapsible-body" id="expenseInputs"></div>
               </details>
               <details class="collapsible">
                 <summary>其他資料</summary>
@@ -2651,6 +2836,24 @@
     const storageKey = "driverPayApp.v2";
     const defaultPlatforms = ["Uber", "LINE GO", "Yoxi", "55688", "大都會", "台灣大車隊", "路邊客", "自訂"];
     const defaultExpenses = ["油錢/電費", "洗車", "停車費", "保養", "車租/車貸", "保險", "平台抽成", "罰單", "其他"];
+    const smartExpenseCategories = ["汽車保險", "輪胎", "定期保養", "大型維修", "燃料稅", "牌照稅", "驗車", "洗車", "停車", "過路費", "罰單", "其他"];
+    const expenseDurationDefaults = {
+      "汽車保險": 12,
+      "保險": 12,
+      "輪胎": 12,
+      "燃料稅": 12,
+      "牌照稅": 12,
+      "驗車": 12,
+      "定期保養": 3,
+      "保養": 3,
+      "大型維修": 6,
+      "洗車": 1,
+      "停車": 1,
+      "停車費": 1,
+      "過路費": 1,
+      "罰單": 1,
+      "其他": 1
+    };
     const defaultPlatformRates = {
       "Uber": 100,
       "LINE GO": 100,
@@ -2665,6 +2868,7 @@
     const state = loadState();
     let activeView = "today";
     let overviewVisible = false;
+    let expenseDraft = createExpenseDraft();
 
     const titles = {
       today: ["今日輸入", "每天花一分鐘記錄收入、工時與支出。"],
@@ -3240,6 +3444,201 @@
       els.aiAlerts.innerHTML = renderAnalysisList(alerts.map(escapeHtml), "ai-alert-list", "目前沒有需要特別注意的異常紀錄。");
     }
 
+    function createExpenseDraft(paymentDate = todayString(), status = "", statusType = "") {
+      const safeDate = /^\d{4}-\d{2}-\d{2}$/.test(paymentDate) ? paymentDate : todayString();
+      return {
+        category: "",
+        amount: "",
+        paymentDate: safeDate,
+        durationChoice: "1",
+        customMonths: 1,
+        startMonth: safeDate.slice(0, 7),
+        startMonthChanged: false,
+        advancedOpen: false,
+        status,
+        statusType
+      };
+    }
+
+    function availableExpenseCategories() {
+      const seen = new Set(smartExpenseCategories);
+      return [
+        ...smartExpenseCategories,
+        ...state.expenses.filter(name => {
+          if (!name || seen.has(name)) return false;
+          seen.add(name);
+          return true;
+        })
+      ];
+    }
+
+    function suggestedExpenseMonths(category) {
+      const months = Number(expenseDurationDefaults[category] || 1);
+      return Number.isFinite(months) && months > 0 ? Math.floor(months) : 1;
+    }
+
+    function selectedExpenseMonths() {
+      const raw = expenseDraft.durationChoice === "custom"
+        ? expenseDraft.customMonths
+        : expenseDraft.durationChoice;
+      const months = Math.floor(Number(raw || 1));
+      return Number.isFinite(months) ? Math.min(120, Math.max(1, months)) : 1;
+    }
+
+    function expenseDurationText(months = selectedExpenseMonths()) {
+      return months === 1 ? "只算這個月" : `算 ${months} 個月`;
+    }
+
+    function expenseMonthRange(startMonth = expenseDraft.startMonth, months = selectedExpenseMonths()) {
+      const match = /^(\d{4})-(\d{2})$/.exec(startMonth || "");
+      if (!match) return "資料不足";
+      const start = new Date(Number(match[1]), Number(match[2]) - 1, 1);
+      const end = new Date(start.getFullYear(), start.getMonth() + months - 1, 1);
+      const format = date => `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}`;
+      return months === 1 ? format(start) : `${format(start)} ～ ${format(end)}`;
+    }
+
+    function existingExpenseAmount(category = expenseDraft.category, date = expenseDraft.paymentDate) {
+      if (!category || !date) return 0;
+      return Math.max(0, Number(entryForDate(date)?.expenses?.[category] || 0));
+    }
+
+    function renderExpenseForm() {
+      if (!els.expenseInputs) return;
+      const categories = availableExpenseCategories();
+      const months = selectedExpenseMonths();
+      const amount = Math.max(0, Number(expenseDraft.amount || 0));
+      const existingAmount = existingExpenseAmount();
+      const categoryOptions = categories.map(name => `
+        <option value="${escapeAttr(name)}"${name === expenseDraft.category ? " selected" : ""}>${escapeHtml(name)}</option>
+      `).join("");
+      const durationOptions = [
+        ["1", "只算這個月"],
+        ["2", "算 2 個月"],
+        ["3", "算 3 個月"],
+        ["6", "算 6 個月"],
+        ["12", "算 12 個月"],
+        ["custom", "自訂"]
+      ];
+
+      els.expenseInputs.innerHTML = `
+        <div class="smart-expense-form">
+          <div class="smart-expense-primary">
+            <label class="smart-expense-field">支出類別
+              <select id="smartExpenseCategory" aria-label="支出類別">
+                <option value="">請選擇</option>
+                ${categoryOptions}
+              </select>
+            </label>
+            <label class="smart-expense-field">金額
+              <input type="number" inputmode="numeric" id="smartExpenseAmount" min="0" step="1" value="${escapeAttr(expenseDraft.amount)}" placeholder="例如：24000" aria-label="支出金額">
+            </label>
+            <label class="smart-expense-field">付款日期
+              <input type="date" id="smartExpenseDate" value="${escapeAttr(expenseDraft.paymentDate)}" aria-label="付款日期">
+            </label>
+          </div>
+
+          <section class="expense-suggestion-card" id="expenseSuggestionCard"${expenseDraft.category ? "" : " hidden"} aria-live="polite">
+            <div class="expense-suggestion-copy">
+              <strong class="expense-suggestion-category" id="expenseSuggestionCategory">${escapeHtml(expenseDraft.category)}</strong>
+              <div>
+                <p class="expense-suggestion-label">系統建議</p>
+                <div class="expense-suggestion-duration"><span class="expense-suggestion-check" aria-hidden="true">✓</span><span id="expenseDurationText">${escapeHtml(expenseDurationText(months))}</span></div>
+              </div>
+              <div class="expense-cost-preview">
+                <div><span>期間</span><strong id="expensePeriodText">${escapeHtml(expenseMonthRange(expenseDraft.startMonth, months))}</strong></div>
+                <div><span>每月成本</span><strong id="expenseMonthlyCost">${amount ? money(amount / months) : "輸入金額後顯示"}</strong></div>
+              </div>
+              <span class="expense-existing-hint" id="expenseExistingHint"${existingAmount ? "" : " hidden"}>這天已有 ${money(existingAmount)}，儲存後會更新此類別。</span>
+            </div>
+            <button class="expense-modify-button" type="button" data-expense-toggle-settings aria-expanded="${String(expenseDraft.advancedOpen)}">${expenseDraft.advancedOpen ? "收合" : "修改"}</button>
+          </section>
+
+          <div class="expense-duration-settings" id="expenseDurationSettings"${expenseDraft.advancedOpen ? "" : " hidden"}>
+            <span class="expense-duration-title">這筆費用要算多久？</span>
+            <div class="expense-duration-options" role="group" aria-label="這筆費用要算多久">
+              ${durationOptions.map(([value, label]) => `
+                <button class="expense-duration-option${expenseDraft.durationChoice === value ? " active" : ""}" type="button" data-expense-duration="${value}" aria-pressed="${String(expenseDraft.durationChoice === value)}">${label}</button>
+              `).join("")}
+            </div>
+            <label class="smart-expense-field" id="expenseCustomMonthsField"${expenseDraft.durationChoice === "custom" ? "" : " hidden"}>月份
+              <input type="number" inputmode="numeric" id="expenseCustomMonths" min="1" max="120" step="1" value="${escapeAttr(expenseDraft.customMonths)}" aria-label="自訂月份">
+            </label>
+            <label class="smart-expense-field">開始月份
+              <input type="month" id="expenseStartMonth" value="${escapeAttr(expenseDraft.startMonth)}" aria-label="開始月份">
+            </label>
+          </div>
+
+          <button class="expense-save-button" type="button" id="saveSmartExpense">儲存支出</button>
+          <p class="expense-form-status${expenseDraft.statusType === "error" ? " error" : ""}" id="expenseFormStatus" role="status">${escapeHtml(expenseDraft.status)}</p>
+        </div>
+      `;
+    }
+
+    function updateExpensePreview() {
+      const category = document.getElementById("expenseSuggestionCategory");
+      if (!category) return;
+      const months = selectedExpenseMonths();
+      const amount = Math.max(0, Number(expenseDraft.amount || 0));
+      category.textContent = expenseDraft.category;
+      document.getElementById("expenseDurationText").textContent = expenseDurationText(months);
+      document.getElementById("expensePeriodText").textContent = expenseMonthRange(expenseDraft.startMonth, months);
+      document.getElementById("expenseMonthlyCost").textContent = amount ? money(amount / months) : "輸入金額後顯示";
+      const hint = document.getElementById("expenseExistingHint");
+      const existingAmount = existingExpenseAmount();
+      hint.hidden = !existingAmount;
+      hint.textContent = existingAmount ? `這天已有 ${money(existingAmount)}，儲存後會更新此類別。` : "";
+    }
+
+    function selectExpenseCategory(category) {
+      expenseDraft.category = category;
+      const months = suggestedExpenseMonths(category);
+      expenseDraft.durationChoice = String(months);
+      expenseDraft.customMonths = months;
+      expenseDraft.startMonth = expenseDraft.paymentDate.slice(0, 7);
+      expenseDraft.startMonthChanged = false;
+      expenseDraft.advancedOpen = false;
+      expenseDraft.status = "";
+      expenseDraft.statusType = "";
+      const existingAmount = existingExpenseAmount(category, expenseDraft.paymentDate);
+      expenseDraft.amount = existingAmount ? String(existingAmount) : "";
+      renderExpenseForm();
+    }
+
+    function saveSmartExpense() {
+      const category = String(expenseDraft.category || "").trim();
+      const amount = Number(expenseDraft.amount);
+      const paymentDate = expenseDraft.paymentDate;
+      if (!category) {
+        expenseDraft.status = "請先選擇支出類別。";
+        expenseDraft.statusType = "error";
+        renderExpenseForm();
+        return;
+      }
+      if (!Number.isFinite(amount) || amount <= 0) {
+        expenseDraft.status = "請輸入大於 0 的金額。";
+        expenseDraft.statusType = "error";
+        renderExpenseForm();
+        return;
+      }
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(paymentDate)) {
+        expenseDraft.status = "請選擇付款日期。";
+        expenseDraft.statusType = "error";
+        renderExpenseForm();
+        return;
+      }
+
+      const entry = ensureEntryForDate(paymentDate);
+      entry.expenses[category] = Math.round(amount);
+      if (!state.expenses.includes(category)) state.expenses.push(category);
+      saveState();
+
+      expenseDraft = createExpenseDraft(paymentDate, `已儲存 ${category} ${money(amount)}。`);
+      renderAll();
+      const section = document.getElementById("expenseSection");
+      if (section) section.open = true;
+    }
+
     function renderInputs() {
       const todayEntry = entryForDate();
       els.incomeInputs.innerHTML = orderedHomePlatforms(todayEntry).map(name => {
@@ -3259,11 +3658,7 @@
         `;
       }).join("");
 
-      els.expenseInputs.innerHTML = state.expenses.map(name => `
-        <label>${name}
-          <input type="number" inputmode="numeric" min="0" step="1" value="0" data-expense="${escapeAttr(name)}">
-        </label>
-      `).join("");
+      renderExpenseForm();
       updateRateHints();
     }
 
@@ -3826,7 +4221,9 @@
       document.getElementById("tips").value = 0;
       document.getElementById("orders").value = 0;
       document.getElementById("km").value = 0;
-      document.querySelectorAll("[data-income], [data-expense]").forEach(input => input.value = 0);
+      document.querySelectorAll("[data-income]").forEach(input => input.value = 0);
+      expenseDraft = createExpenseDraft(todayString());
+      renderExpenseForm();
       const todayEntry = state.entries.find(entry => entry.date === todayString());
       if (todayEntry) {
         fillEntryFields(todayEntry);
@@ -3854,7 +4251,8 @@
       weatherSelect.value = weatherValue;
       document.getElementById("note").value = entry.note || "";
       document.querySelectorAll("[data-income]").forEach(input => input.value = entry.incomes?.[input.dataset.income] || 0);
-      document.querySelectorAll("[data-expense]").forEach(input => input.value = entry.expenses?.[input.dataset.expense] || 0);
+      expenseDraft = createExpenseDraft(entry.date);
+      renderExpenseForm();
       syncDetailChoiceButtons();
     }
 
@@ -3884,11 +4282,13 @@
     function formData() {
       const incomes = {};
       document.querySelectorAll("[data-income]").forEach(input => incomes[input.dataset.income] = Number(input.value || 0));
-      const expenses = {};
-      document.querySelectorAll("[data-expense]").forEach(input => expenses[input.dataset.expense] = Number(input.value || 0));
+      const id = els.entryId.value || makeId();
+      const date = document.getElementById("date").value;
+      const existingEntry = state.entries.find(item => item.id === id) || state.entries.find(item => item.date === date);
+      const expenses = { ...(existingEntry?.expenses || {}) };
       return {
-        id: els.entryId.value || makeId(),
-        date: document.getElementById("date").value,
+        id,
+        date,
         shift: document.getElementById("shift").value,
         startTime: document.getElementById("startTime").value,
         endTime: document.getElementById("endTime").value,
@@ -4200,6 +4600,63 @@
       if (field === "weather") updateCurrentWeather(value);
       if (field === "shift") updateCurrentShift(value);
       updateQuickPreview();
+    });
+
+    els.expenseInputs.addEventListener("input", event => {
+      if (event.target.id === "smartExpenseAmount") {
+        expenseDraft.amount = event.target.value;
+        expenseDraft.status = "";
+        expenseDraft.statusType = "";
+        updateExpensePreview();
+      }
+      if (event.target.id === "expenseCustomMonths") {
+        expenseDraft.customMonths = event.target.value;
+        expenseDraft.status = "";
+        expenseDraft.statusType = "";
+        updateExpensePreview();
+      }
+      if (event.target.id === "smartExpenseDate") {
+        expenseDraft.paymentDate = event.target.value;
+        if (!expenseDraft.startMonthChanged && /^\d{4}-\d{2}/.test(event.target.value)) {
+          expenseDraft.startMonth = event.target.value.slice(0, 7);
+        }
+        expenseDraft.status = "";
+        expenseDraft.statusType = "";
+        updateExpensePreview();
+      }
+      if (event.target.id === "expenseStartMonth") {
+        expenseDraft.startMonth = event.target.value;
+        expenseDraft.startMonthChanged = true;
+        expenseDraft.status = "";
+        expenseDraft.statusType = "";
+        updateExpensePreview();
+      }
+    });
+
+    els.expenseInputs.addEventListener("change", event => {
+      if (event.target.id === "smartExpenseCategory") selectExpenseCategory(event.target.value);
+    });
+
+    els.expenseInputs.addEventListener("click", event => {
+      const toggle = event.target.closest("[data-expense-toggle-settings]");
+      const duration = event.target.closest("[data-expense-duration]");
+      const saveButton = event.target.closest("#saveSmartExpense");
+      if (toggle) {
+        expenseDraft.advancedOpen = !expenseDraft.advancedOpen;
+        renderExpenseForm();
+        return;
+      }
+      if (duration) {
+        expenseDraft.durationChoice = duration.dataset.expenseDuration;
+        if (expenseDraft.durationChoice !== "custom") {
+          expenseDraft.customMonths = Number(expenseDraft.durationChoice);
+        }
+        expenseDraft.status = "";
+        expenseDraft.statusType = "";
+        renderExpenseForm();
+        return;
+      }
+      if (saveButton) saveSmartExpense();
     });
 
     els.incomeInputs.addEventListener("focusin", event => {
