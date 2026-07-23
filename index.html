@@ -2861,10 +2861,301 @@
       }
     }
 
+    /* Home record details: mobile-safe fields and compact work-time hierarchy */
+    label,
+    .fields > *,
+    .collapsible-body,
+    .collapsible-body > * {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    input,
+    select,
+    textarea {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    input[type="date"],
+    input[type="time"],
+    input[type="month"] {
+      inline-size: 100%;
+      min-inline-size: 0;
+      max-inline-size: 100%;
+    }
+
+    input[type="date"]::-webkit-date-and-time-value,
+    input[type="time"]::-webkit-date-and-time-value,
+    input[type="month"]::-webkit-date-and-time-value,
+    input[type="date"]::-webkit-datetime-edit,
+    input[type="time"]::-webkit-datetime-edit,
+    input[type="month"]::-webkit-datetime-edit {
+      min-width: 0;
+    }
+
+    .section-heading,
+    .home-heading,
+    .detail-summary-title {
+      min-width: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-icon {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .income-panel-head .section-heading,
+    .home-heading {
+      color: var(--brand-strong);
+    }
+
+    .work-status-row .home-heading > span {
+      color: var(--text);
+    }
+
+    .details-panel form {
+      gap: 12px;
+    }
+
+    .details-panel .detail-section {
+      position: relative;
+      margin-bottom: 0;
+      border-radius: 18px;
+    }
+
+    .details-panel .detail-section::before {
+      content: "";
+      position: absolute;
+      z-index: 2;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: #58a88f;
+      pointer-events: none;
+    }
+
+    .details-panel .expense-section::before {
+      background: #6e9da0;
+    }
+
+    .details-panel .other-section::before {
+      background: #bd9564;
+    }
+
+    .details-panel .detail-section summary {
+      min-width: 0;
+      min-height: 56px;
+      padding: 7px 12px 7px 16px;
+      gap: 10px;
+      outline: none;
+    }
+
+    .details-panel .detail-section summary:focus-visible {
+      border-radius: 16px;
+      box-shadow: inset 0 0 0 3px rgba(21, 150, 111, .2);
+    }
+
+    .details-panel .detail-section summary::after {
+      flex: 0 0 28px;
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      background: var(--brand);
+    }
+
+    .detail-summary-main {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .detail-summary-title {
+      color: #26372f;
+      font-size: 15px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .work-section .detail-summary-title .section-icon {
+      color: #318b6f;
+    }
+
+    .expense-section .detail-summary-title .section-icon {
+      color: #4f8588;
+    }
+
+    .other-section .detail-summary-title .section-icon {
+      color: #a47640;
+    }
+
+    .work-collapse-summary {
+      min-width: 0;
+      display: grid;
+      gap: 2px;
+      justify-items: end;
+      text-align: right;
+    }
+
+    .work-collapse-summary strong,
+    .work-collapse-summary small {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .work-collapse-summary strong {
+      color: #33413a;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .work-collapse-summary small {
+      color: #7b8780;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .work-section[open] .work-collapse-summary {
+      display: none;
+    }
+
+    .details-panel .detail-section .collapsible-body {
+      padding: 2px 14px 14px 18px;
+    }
+
+    .work-time-fields {
+      gap: 12px;
+    }
+
+    .work-field-label {
+      color: #526159;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .work-time-fields input {
+      min-height: 50px;
+      border-radius: 15px;
+      border-color: #d8e1dc;
+      background: #fbfcfb;
+    }
+
+    .work-input-shell {
+      position: relative;
+      min-width: 0;
+      max-width: 100%;
+      display: block;
+    }
+
+    .work-input-shell input {
+      padding-right: 58px;
+    }
+
+    .work-input-unit {
+      position: absolute;
+      top: 50%;
+      right: 13px;
+      color: #7b8780;
+      font-size: 13px;
+      font-weight: 650;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .work-live-summary {
+      grid-column: 1 / -1;
+      min-width: 0;
+      min-height: 52px;
+      padding: 10px 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid #dce7e1;
+      border-radius: 15px;
+      background: #f1f7f4;
+    }
+
+    .work-live-summary span {
+      color: #65736b;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .work-live-summary strong {
+      min-width: 0;
+      color: var(--brand-strong);
+      font-size: 18px;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .details-panel .save-button {
+      min-height: 54px;
+      border-radius: 17px;
+    }
+
+    .detail-section::details-content {
+      block-size: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition:
+        block-size 200ms ease-out,
+        opacity 180ms ease-out,
+        content-visibility 200ms allow-discrete;
+    }
+
+    .detail-section[open]::details-content {
+      block-size: auto;
+      opacity: 1;
+    }
+
+    .detail-section[open] .collapsible-body {
+      animation: detail-section-open 200ms ease-out;
+    }
+
+    @keyframes detail-section-open {
+      from {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 350px) {
+      .detail-summary-main {
+        gap: 7px;
+      }
+
+      .work-collapse-summary strong {
+        font-size: 12px;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         scroll-behavior: auto !important;
         animation-duration: .01ms !important;
+      }
+
+      .detail-section::details-content {
+        transition-duration: .01ms !important;
       }
     }
   </style>
@@ -2940,7 +3231,14 @@
 
         <section class="home-work-card" id="homeWorkCard" aria-labelledby="workStatusTitle">
           <div class="work-status-row">
-            <span id="workStatusTitle">今日工作狀態</span>
+            <span class="home-heading" id="workStatusTitle">
+              <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="m21 8-2 2-1.5-3.7A2 2 0 0 0 15.65 5h-7.3A2 2 0 0 0 6.5 6.3L5 10 3 8"></path>
+                <rect width="18" height="8" x="3" y="10" rx="2"></rect>
+                <path d="M7 14h.01M17 14h.01M5 18v2M19 18v2"></path>
+              </svg>
+              <span>今日工作狀態</span>
+            </span>
             <strong id="workStatusText" data-status="idle">尚未開始</strong>
           </div>
           <div class="work-metrics" id="workMetrics" aria-label="今日工時計算">
@@ -2958,7 +3256,13 @@
 
         <div class="panel">
           <div class="panel-head income-panel-head">
-            <h3>平台收入</h3>
+            <h3 class="section-heading">
+              <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M12 6v12M16 8.5h-6a2.5 2.5 0 0 0 0 5h4a2.5 2.5 0 0 1 0 5H8"></path>
+              </svg>
+              <span>平台收入</span>
+            </h3>
             <span class="income-unit">單位：NT$</span>
           </div>
           <div class="panel-body">
@@ -2982,29 +3286,70 @@
                 <div class="date-card-host" id="entryDateCard"></div>
               </div>
               <div class="quick-preview" id="quickPreview"></div>
-              <details class="collapsible">
-                <summary>工時設定</summary>
-                <div class="collapsible-body fields">
-                  <label>開始時間
+              <details class="collapsible detail-section work-section" id="workTimeSection">
+                <summary>
+                  <span class="detail-summary-main">
+                    <span class="detail-summary-title">
+                      <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <path d="M12 7v5h4"></path>
+                      </svg>
+                      <span>工時設定</span>
+                    </span>
+                    <span class="work-collapse-summary" aria-live="polite">
+                      <strong id="workCollapsedPrimary">尚未設定</strong>
+                      <small id="workCollapsedSecondary">等待開始時間</small>
+                    </span>
+                  </span>
+                </summary>
+                <div class="collapsible-body fields work-time-fields">
+                  <label>
+                    <span class="work-field-label">開始跑車</span>
                     <input type="time" id="startTime">
                   </label>
-                  <label>結束時間
+                  <label>
+                    <span class="work-field-label">結束跑車</span>
                     <input type="time" id="endTime">
                   </label>
-                  <label>休息分鐘
-                    <input type="number" inputmode="numeric" id="breakMinutes" min="0" step="1" value="0">
+                  <label>
+                    <span class="work-field-label">休息</span>
+                    <span class="work-input-shell">
+                      <input type="number" inputmode="numeric" id="breakMinutes" min="0" step="1" value="0">
+                      <span class="work-input-unit" aria-hidden="true">分鐘</span>
+                    </span>
                   </label>
-                  <label>手動工時
-                    <input type="number" inputmode="decimal" id="manualHours" min="0" step="0.25" placeholder="可留空自動算">
+                  <label>
+                    <span class="work-field-label">手動工時</span>
+                    <input type="number" inputmode="decimal" id="manualHours" min="0" step="0.25" placeholder="可留空，自動計算">
                   </label>
+                  <div class="work-live-summary" aria-live="polite">
+                    <span>今日工時</span>
+                    <strong id="workLiveValue">等待設定</strong>
+                  </div>
                 </div>
               </details>
-              <details class="collapsible" id="expenseSection">
-                <summary>新增支出</summary>
+              <details class="collapsible detail-section expense-section" id="expenseSection">
+                <summary>
+                  <span class="detail-summary-title">
+                    <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M4 2v20l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2V2l-2 2-2-2-2 2-2-2-2 2-2-2-2 2Z"></path>
+                      <path d="M10 8h6M10 12h6M10 16h3"></path>
+                    </svg>
+                    <span>新增支出</span>
+                  </span>
+                </summary>
                 <div class="collapsible-body" id="expenseInputs"></div>
               </details>
-              <details class="collapsible">
-                <summary>其他資料</summary>
+              <details class="collapsible detail-section other-section">
+                <summary>
+                  <span class="detail-summary-title">
+                    <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5Z"></path>
+                      <path d="M14 2v6h6M8 13h8M8 17h5"></path>
+                    </svg>
+                    <span>其他資料</span>
+                  </span>
+                </summary>
                 <div class="collapsible-body fields">
                   <label>小費
                     <input type="number" inputmode="numeric" id="tips" min="0" step="1" value="0">
@@ -3334,6 +3679,10 @@
       appToast: document.getElementById("appToast"),
       entryForm: document.getElementById("entryForm"),
       detailForm: document.getElementById("detailForm"),
+      workTimeSection: document.getElementById("workTimeSection"),
+      workCollapsedPrimary: document.getElementById("workCollapsedPrimary"),
+      workCollapsedSecondary: document.getElementById("workCollapsedSecondary"),
+      workLiveValue: document.getElementById("workLiveValue"),
       entryId: document.getElementById("entryId"),
       formTitle: document.getElementById("formTitle"),
       cancelEdit: document.getElementById("cancelEdit"),
@@ -3929,7 +4278,7 @@
 
     function renderEntryDateCard(value = todayString()) {
       if (!els.entryDateCard) return;
-      els.entryDateCard.innerHTML = dateCardMarkup({ id: "date", value, label: "日期", required: true });
+      els.entryDateCard.innerHTML = dateCardMarkup({ id: "date", value, label: "日期", required: true, inlineToday: true });
     }
 
     function syncDateCardDisplay(input) {
@@ -4528,6 +4877,52 @@
       return `${h} 小時 ${String(m).padStart(2, "0")} 分`;
     }
 
+    function formatWorkTime(time) {
+      const match = /^(\d{2}):(\d{2})$/.exec(String(time || ""));
+      if (!match) return "";
+      const hour = Number(match[1]);
+      const period = hour < 12 ? "上午" : "下午";
+      const displayHour = hour % 12 || 12;
+      return `${period}${displayHour}:${match[2]}`;
+    }
+
+    function formatCompactWorkHours(hours) {
+      const totalMinutes = Math.max(0, Math.floor(Number(hours || 0) * 60));
+      const h = Math.floor(totalMinutes / 60);
+      const m = totalMinutes % 60;
+      if (h && m) return `${h}小時${m}分`;
+      if (h) return `${h}小時`;
+      return `${m}分`;
+    }
+
+    function updateWorkTimeUi(entry) {
+      if (!els.workCollapsedPrimary || !els.workCollapsedSecondary || !els.workLiveValue) return;
+      const start = entry.startTime;
+      const end = entry.endTime;
+      const hours = calcHours(entry);
+
+      if (!start) {
+        els.workCollapsedPrimary.textContent = "尚未設定";
+        els.workCollapsedSecondary.textContent = "等待開始時間";
+        els.workLiveValue.textContent = Number(entry.manualHours) > 0
+          ? formatCompactWorkHours(hours)
+          : "等待設定";
+        return;
+      }
+
+      if (!end) {
+        els.workCollapsedPrimary.textContent = `開始 ${formatWorkTime(start)}`;
+        els.workCollapsedSecondary.textContent = "跑車中";
+        els.workLiveValue.textContent = "等待結束時間";
+        return;
+      }
+
+      const duration = formatCompactWorkHours(hours);
+      els.workCollapsedPrimary.textContent = `${formatWorkTime(start)}－${formatWorkTime(end)}`;
+      els.workCollapsedSecondary.textContent = `實際工作 ${duration}`;
+      els.workLiveValue.textContent = duration;
+    }
+
     function updateQuickPreview() {
       if (!els.quickPreview) return;
       const entry = formData();
@@ -4537,6 +4932,7 @@
       const total = entryTotal(entry);
       const net = entryNet(entry);
       const hours = calcHours(entry);
+      updateWorkTimeUi(entry);
       updateRateHints();
       updateDailyGoal();
       els.quickPreview.innerHTML = `
@@ -5049,6 +5445,7 @@
       els.formTitle.textContent = "更新今日紀錄";
       els.cancelEdit.classList.add("hidden");
       document.querySelectorAll("#detailForm details").forEach(details => details.open = false);
+      els.workTimeSection.open = Boolean(state.settings.timeDetailsOpen);
       syncDetailChoiceButtons();
       updateQuickPreview();
     }
@@ -5416,6 +5813,12 @@
     els.detailForm.addEventListener("change", event => {
       if (event.target.id === "date") syncDateCardDisplay(event.target);
       updateQuickPreview();
+    });
+    els.workTimeSection.addEventListener("toggle", event => {
+      updateQuickPreview();
+      if (!event.isTrusted) return;
+      state.settings.timeDetailsOpen = event.currentTarget.open;
+      saveState();
     });
     els.detailForm.addEventListener("click", event => {
       const button = event.target.closest("[data-detail-choice]");
