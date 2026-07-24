@@ -763,6 +763,125 @@
       margin-top: 18px;
     }
 
+    .platform-create-form,
+    .platform-mode-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .platform-create-form {
+      margin-bottom: 16px;
+    }
+
+    .platform-create-form .settings-row {
+      margin-bottom: 0;
+    }
+
+    .platform-mode-heading {
+      margin: 18px 0 10px;
+      color: var(--text);
+      font-size: 16px;
+    }
+
+    .platform-mode-fieldset {
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .platform-mode-fieldset legend {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .platform-mode-card {
+      min-width: 0;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fafcfb;
+    }
+
+    .platform-mode-card-head {
+      min-width: 0;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .platform-mode-card-head strong {
+      min-width: 0;
+      overflow: hidden;
+      color: var(--text);
+      font-size: 16px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .platform-mode-card-head span {
+      flex: 0 0 auto;
+      color: var(--brand-strong);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .platform-mode-options {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 7px;
+    }
+
+    .platform-mode-choice {
+      position: relative;
+      min-width: 0;
+      cursor: pointer;
+    }
+
+    .platform-mode-choice input {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .platform-mode-choice span {
+      min-width: 0;
+      min-height: 44px;
+      padding: 6px 8px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #dce4df;
+      border-radius: 12px;
+      color: #46534c;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.25;
+      text-align: center;
+    }
+
+    .platform-mode-choice input:checked + span {
+      color: var(--brand-strong);
+      border-color: var(--brand);
+      background: var(--brand-soft);
+    }
+
+    .platform-mode-choice input:focus-visible + span {
+      box-shadow: 0 0 0 3px rgba(21, 150, 111, .16);
+    }
+
     .expense-shortcut-settings {
       display: grid;
       gap: 12px;
@@ -1551,7 +1670,7 @@
       50% { transform: translateX(2px); }
     }
 
-    .yoxi-add-button {
+    .income-add-button {
       width: 44px;
       height: 44px;
       padding: 0;
@@ -1562,8 +1681,14 @@
       font-weight: 800;
     }
 
-    .yoxi-add-button:active {
+    .income-add-button:active {
       transform: scale(.96);
+    }
+
+    .income-add-button:disabled {
+      opacity: .58;
+      transform: none;
+      cursor: default;
     }
 
     .direct-choice-field {
@@ -2271,6 +2396,28 @@
       opacity: 1;
     }
 
+    .app-toast.with-action {
+      width: max-content;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      text-align: left;
+      pointer-events: auto;
+    }
+
+    .app-toast-action {
+      min-height: 36px;
+      padding: 0 2px;
+      color: #aaf0d8;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 800;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      white-space: nowrap;
+    }
+
     .quick-preview {
       display: none;
     }
@@ -2855,7 +3002,7 @@
         font-size: 22px;
       }
 
-      .yoxi-add-button {
+      .income-add-button {
         width: 42px;
         height: 42px;
       }
@@ -2901,6 +3048,14 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
+    }
+
+    .section-heading {
+      color: var(--brand-strong);
+      font-size: 17px;
+      font-weight: 700;
+      line-height: normal;
+      letter-spacing: normal;
     }
 
     .section-icon {
@@ -2982,30 +3137,7 @@
     }
 
     .detail-summary-title {
-      color: #26372f;
-      gap: 10px;
-      font-size: 25px;
-      font-weight: 700;
-      line-height: 1.24;
       white-space: nowrap;
-    }
-
-    .details-panel .detail-section .detail-summary-title .section-icon {
-      width: 25px;
-      height: 25px;
-      flex: 0 0 25px;
-    }
-
-    .work-section .detail-summary-title .section-icon {
-      color: #318b6f;
-    }
-
-    .expense-section .detail-summary-title .section-icon {
-      color: #4f8588;
-    }
-
-    .other-section .detail-summary-title .section-icon {
-      color: #a47640;
     }
 
     .work-collapse-summary {
@@ -3339,7 +3471,7 @@
               <details class="collapsible detail-section work-section" id="workTimeSection">
                 <summary>
                   <span class="detail-summary-main">
-                    <span class="detail-summary-title">
+                    <span class="section-heading detail-summary-title">
                       <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <circle cx="12" cy="12" r="9"></circle>
                         <path d="M12 7v5h4"></path>
@@ -3384,7 +3516,7 @@
               </details>
               <details class="collapsible detail-section expense-section" id="expenseSection">
                 <summary>
-                  <span class="detail-summary-title">
+                  <span class="section-heading detail-summary-title">
                     <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                       <path d="M4 2v20l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2V2l-2 2-2-2-2 2-2-2-2 2-2-2-2 2Z"></path>
                       <path d="M10 8h6M10 12h6M10 16h3"></path>
@@ -3396,7 +3528,7 @@
               </details>
               <details class="collapsible detail-section other-section">
                 <summary>
-                  <span class="detail-summary-title">
+                  <span class="section-heading detail-summary-title">
                     <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                       <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5Z"></path>
                       <path d="M14 2v6h6M8 13h8M8 17h5"></path>
@@ -3585,16 +3717,33 @@
 
           <div class="panel">
             <div class="panel-head">
-              <h3>收入平台</h3>
+              <h3>平台設定</h3>
             </div>
             <div class="panel-body">
-              <div class="settings-row">
-                <label>新增平台
-                  <input id="newPlatformName" placeholder="例如：機場排班">
-                </label>
-                <button class="button" id="addPlatform">新增</button>
+              <div class="platform-create-form">
+                <div class="settings-row">
+                  <label>新增平台
+                    <input id="newPlatformName" placeholder="例如：大都會車隊">
+                  </label>
+                  <button class="button" id="addPlatform">新增</button>
+                </div>
+                <fieldset class="platform-mode-fieldset">
+                  <legend>收入怎麼輸入？</legend>
+                  <div class="platform-mode-options">
+                    <label class="platform-mode-choice">
+                      <input type="radio" name="newPlatformInputMode" value="total" checked>
+                      <span>直接輸入總額</span>
+                    </label>
+                    <label class="platform-mode-choice">
+                      <input type="radio" name="newPlatformInputMode" value="incremental">
+                      <span>每筆收入累加</span>
+                    </label>
+                  </div>
+                </fieldset>
               </div>
               <div class="chips" id="platformChips"></div>
+              <h3 class="platform-mode-heading">收入輸入方式</h3>
+              <div class="platform-mode-list" id="platformInputModeSettings"></div>
               <div style="height: 18px"></div>
               <h3 style="margin: 0 0 12px; font-size: 16px;">平台實拿比例</h3>
               <div class="rate-grid" id="platformRateInputs"></div>
@@ -3645,6 +3794,21 @@
   <script>
     const storageKey = "driverPayApp.v2";
     const defaultPlatforms = ["Uber", "LINE GO", "Yoxi", "55688", "大都會", "台灣大車隊", "路邊客", "自訂"];
+    const defaultPlatformIds = {
+      "Uber": "platform-uber",
+      "LINE GO": "platform-line-go",
+      "Yoxi": "platform-yoxi",
+      "55688": "platform-55688",
+      "大都會": "platform-metropolitan",
+      "台灣大車隊": "platform-taiwan-taxi",
+      "路邊客": "platform-street",
+      "自訂": "platform-custom-default"
+    };
+    const platformInputModeLabels = {
+      total: "直接輸入總額",
+      incremental: "每筆收入累加"
+    };
+    const maxPlatformIncome = 99999999;
     const defaultExpenses = ["油錢/電費", "洗車", "停車費", "保養", "車租/車貸", "保險", "平台抽成", "罰單", "其他"];
     const expenseCategoryGroups = [
       ["每日常用", ["油錢／電費", "停車費", "洗車", "過路費"]],
@@ -3709,6 +3873,8 @@
     let expenseDraft = createExpenseDraft();
     let expenseToastTimer = 0;
     let expenseShortcutStatus = "";
+    let incomeUndoTimer = 0;
+    let lastIncomeAddition = null;
 
     const titles = {
       today: ["今日輸入", "每天花一分鐘記錄收入、工時與支出。"],
@@ -3755,6 +3921,7 @@
       aiPlatformInsights: document.getElementById("aiPlatformInsights"),
       aiAlerts: document.getElementById("aiAlerts"),
       platformChips: document.getElementById("platformChips"),
+      platformInputModeSettings: document.getElementById("platformInputModeSettings"),
       platformRateInputs: document.getElementById("platformRateInputs"),
       expenseChips: document.getElementById("expenseChips"),
       expenseShortcutSettings: document.getElementById("expenseShortcutSettings"),
@@ -3782,11 +3949,11 @@
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          const platforms = parsed.platforms?.length ? parsed.platforms : defaultPlatforms;
+          const platforms = parsed.platforms?.length ? parsed.platforms.slice() : defaultPlatforms.slice();
           return {
             ...parsed,
             platforms,
-            expenses: parsed.expenses?.length ? parsed.expenses : defaultExpenses,
+            expenses: parsed.expenses?.length ? parsed.expenses.slice() : defaultExpenses.slice(),
             entries: Array.isArray(parsed.entries) ? parsed.entries : [],
             settings: normalizeSettings(parsed.settings, platforms)
           };
@@ -3795,8 +3962,8 @@
         }
       }
       return {
-        platforms: defaultPlatforms,
-        expenses: defaultExpenses,
+        platforms: defaultPlatforms.slice(),
+        expenses: defaultExpenses.slice(),
         entries: [],
         settings: normalizeSettings({ monthlyGoal: 0 }, defaultPlatforms)
       };
@@ -3813,8 +3980,76 @@
         dailyGoal: Number(settings.dailyGoal || 0),
         timeDetailsOpen: Boolean(settings.timeDetailsOpen),
         expenseShortcuts: normalizeExpenseShortcuts(settings.expenseShortcuts),
+        platformProfiles: normalizePlatformProfiles(settings, platforms),
         platformRates
       };
+    }
+
+    function normalizePlatformProfiles(settings = {}, platforms = defaultPlatforms) {
+      const savedProfiles = Array.isArray(settings.platformProfiles) ? settings.platformProfiles : [];
+      const savedModes = settings.platformInputModes && typeof settings.platformInputModes === "object"
+        ? settings.platformInputModes
+        : {};
+      const usedIds = new Set();
+      return platforms.map(name => {
+        const savedProfile = savedProfiles.find(profile => profile && profile.name === name) || {};
+        const id = uniquePlatformId(savedProfile.id || defaultPlatformIds[name] || customPlatformIdBase(name), usedIds);
+        usedIds.add(id);
+        const savedMode = savedProfile.inputMode || savedModes[id] || savedModes[name];
+        return {
+          id,
+          name,
+          inputMode: normalizePlatformInputMode(savedMode, name)
+        };
+      });
+    }
+
+    function normalizePlatformInputMode(mode, platformName = "") {
+      if (mode === "incremental") return "incremental";
+      if (mode === "total") return "total";
+      return String(platformName).toLowerCase() === "yoxi" ? "incremental" : "total";
+    }
+
+    function customPlatformIdBase(name) {
+      let hash = 2166136261;
+      for (const character of String(name || "")) {
+        hash ^= character.codePointAt(0);
+        hash = Math.imul(hash, 16777619);
+      }
+      return `platform-custom-${(hash >>> 0).toString(36)}`;
+    }
+
+    function uniquePlatformId(preferredId, usedIds = new Set()) {
+      const base = String(preferredId || "platform-custom").trim().replace(/[^a-zA-Z0-9_-]/g, "-") || "platform-custom";
+      let id = base;
+      let suffix = 2;
+      while (usedIds.has(id)) {
+        id = `${base}-${suffix}`;
+        suffix += 1;
+      }
+      return id;
+    }
+
+    function createCustomPlatformId() {
+      const usedIds = new Set((state.settings.platformProfiles || []).map(profile => profile.id));
+      return uniquePlatformId(`platform-${makeId()}`, usedIds);
+    }
+
+    function platformProfileByName(name) {
+      return state.settings.platformProfiles.find(profile => profile.name === name) || null;
+    }
+
+    function platformProfileById(id) {
+      return state.settings.platformProfiles.find(profile => profile.id === id) || null;
+    }
+
+    function platformInputMode(name) {
+      const profile = platformProfileByName(name);
+      return normalizePlatformInputMode(profile?.inputMode, name);
+    }
+
+    function platformInputModeLabel(mode) {
+      return platformInputModeLabels[normalizePlatformInputMode(mode)] || platformInputModeLabels.total;
     }
 
     function normalizeExpenseShortcuts(shortcuts) {
@@ -3833,7 +4068,13 @@
     }
 
     function saveState() {
-      localStorage.setItem(storageKey, JSON.stringify(state));
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(state));
+        return true;
+      } catch (error) {
+        console.error("無法儲存資料。", error);
+        return false;
+      }
     }
 
     function money(value) {
@@ -3980,6 +4221,11 @@
 
     function entryForDate(date = todayString()) {
       return state.entries.find(entry => entry.date === date);
+    }
+
+    function selectedIncomeDate() {
+      const selectedDate = document.getElementById("date")?.value;
+      return /^\d{4}-\d{2}-\d{2}$/.test(selectedDate || "") ? selectedDate : todayString();
     }
 
     function ensureEntryForDate(date = todayString()) {
@@ -4349,12 +4595,27 @@
       if (today) today.hidden = input.value !== todayString();
     }
 
-    function showToast(message) {
+    function showToast(message, options = {}) {
       if (!els.appToast) return;
       window.clearTimeout(expenseToastTimer);
-      els.appToast.textContent = message;
+      els.appToast.replaceChildren();
+      els.appToast.classList.toggle("with-action", Boolean(options.actionLabel && options.onAction));
+      const messageNode = document.createElement("span");
+      messageNode.textContent = message;
+      els.appToast.append(messageNode);
+      if (options.actionLabel && options.onAction) {
+        const actionButton = document.createElement("button");
+        actionButton.className = "app-toast-action";
+        actionButton.type = "button";
+        actionButton.textContent = options.actionLabel;
+        actionButton.addEventListener("click", options.onAction, { once: true });
+        els.appToast.append(actionButton);
+      }
       els.appToast.classList.add("visible");
-      expenseToastTimer = window.setTimeout(() => els.appToast.classList.remove("visible"), 2200);
+      expenseToastTimer = window.setTimeout(() => {
+        els.appToast.classList.remove("visible", "with-action");
+        if (typeof options.onExpire === "function") options.onExpire();
+      }, Number(options.duration || 2200));
     }
 
     function formatExpenseAmount(value) {
@@ -4837,27 +5098,31 @@
       showToast(`已儲存 ${category} ${money(amount)}`);
     }
 
-    function renderInputs() {
-      const todayEntry = entryForDate();
-      els.incomeInputs.innerHTML = orderedHomePlatforms(todayEntry).map(name => {
-        const amount = Number(todayEntry?.incomes?.[name] || 0);
-        const isYoxi = name.toLowerCase() === "yoxi";
+    function renderIncomeInputs(date = selectedIncomeDate()) {
+      const entry = entryForDate(date);
+      els.incomeInputs.innerHTML = orderedHomePlatforms().map(name => {
+        const amount = Number(entry?.incomes?.[name] || 0);
+        const profile = platformProfileByName(name);
+        const inputMode = platformInputMode(name);
         return `
           <div class="platform-income-row">
             <span class="platform-name">${escapeHtml(name)}</span>
             <div class="inline-income-wrap">
-              <input class="inline-income-input" type="text" inputmode="numeric" pattern="[0-9]*" value="${amount ? formatIncomeInput(amount) : ""}" placeholder="輸入收入" aria-label="${escapeAttr(name)} 當日收入" data-inline-income="${escapeAttr(name)}" data-income-mode="total" autocomplete="off">
+              <input class="inline-income-input" type="text" inputmode="numeric" pattern="[0-9]*" value="${amount ? formatIncomeInput(amount) : ""}" placeholder="輸入收入" aria-label="${escapeAttr(name)} 當日收入" data-inline-income="${escapeAttr(name)}" data-platform-id="${escapeAttr(profile?.id || "")}" data-income-date="${escapeAttr(date)}" data-income-mode="total" autocomplete="off">
             </div>
-            ${isYoxi
-              ? `<button class="yoxi-add-button" type="button" aria-label="新增一筆 Yoxi 收入" data-yoxi-add="${escapeAttr(name)}">＋</button>`
+            ${inputMode === "incremental"
+              ? `<button class="income-add-button" type="button" aria-label="新增一筆 ${escapeAttr(name)} 收入" data-income-add="${escapeAttr(profile?.id || "")}">＋</button>`
               : `<span aria-hidden="true"></span>`}
             <input type="hidden" value="${amount}" data-income="${escapeAttr(name)}">
           </div>
         `;
       }).join("");
-
-      renderExpenseForm();
       updateRateHints();
+    }
+
+    function renderInputs() {
+      renderIncomeInputs();
+      renderExpenseForm();
     }
 
     function escapeHtml(value) {
@@ -5270,8 +5535,33 @@
 
     function renderSettings() {
       els.platformChips.innerHTML = state.platforms.map(name => chip(name, "platform")).join("");
+      if (els.platformInputModeSettings) {
+        els.platformInputModeSettings.innerHTML = state.platforms.map(name => {
+          const profile = platformProfileByName(name);
+          const mode = platformInputMode(name);
+          return `
+            <section class="platform-mode-card" data-platform-mode-card="${escapeAttr(profile?.id || "")}">
+              <div class="platform-mode-card-head">
+                <strong>${escapeHtml(name)}</strong>
+                <span>${platformInputModeLabel(mode)}</span>
+              </div>
+              <fieldset class="platform-mode-fieldset">
+                <legend>收入輸入方式</legend>
+                <div class="platform-mode-options">
+                  ${Object.entries(platformInputModeLabels).map(([value, label]) => `
+                    <label class="platform-mode-choice">
+                      <input type="radio" name="platformInputMode-${escapeAttr(profile?.id || "")}" value="${value}" data-platform-input-mode="${escapeAttr(profile?.id || "")}"${mode === value ? " checked" : ""}>
+                      <span>${label}</span>
+                    </label>
+                  `).join("")}
+                </div>
+              </fieldset>
+            </section>
+          `;
+        }).join("");
+      }
       els.platformRateInputs.innerHTML = state.platforms.map(name => `
-        <label>${name} 實拿比例 %
+        <label>${escapeHtml(name)} 實拿比例 %
           <input type="number" inputmode="decimal" min="0" max="100" step="0.1" value="${platformRate(name)}" data-platform-rate="${escapeAttr(name)}">
         </label>
       `).join("");
@@ -5294,11 +5584,11 @@
     }
 
     function chip(name, type) {
-      return `<span class="chip">${name}<button title="移除" data-remove-${type}="${escapeAttr(name)}">×</button></span>`;
+      return `<span class="chip">${escapeHtml(name)}<button title="移除" data-remove-${type}="${escapeAttr(name)}">×</button></span>`;
     }
 
-    function renderRecentIncome() {
-      const entry = entryForDate();
+    function renderRecentIncome(date = selectedIncomeDate()) {
+      const entry = entryForDate(date);
       const records = Array.isArray(entry?.incomeRecords)
         ? entry.incomeRecords.filter(record => String(record.platform).toLowerCase() === "yoxi").slice().reverse()
         : [];
@@ -5485,6 +5775,7 @@
       els.entryId.value = "";
       document.getElementById("date").value = todayString();
       syncDateCardDisplay(document.getElementById("date"));
+      renderIncomeInputs(todayString());
       document.getElementById("breakMinutes").value = 0;
       document.getElementById("tips").value = 0;
       document.getElementById("orders").value = 0;
@@ -5508,6 +5799,7 @@
       els.entryId.value = entry.id;
       document.getElementById("date").value = entry.date;
       syncDateCardDisplay(document.getElementById("date"));
+      renderIncomeInputs(entry.date);
       document.getElementById("shift").value = entry.shift || "早班";
       document.getElementById("startTime").value = entry.startTime || "";
       document.getElementById("endTime").value = entry.endTime || "";
@@ -5715,50 +6007,25 @@
       refreshToday();
     }
 
-    function commitInlineIncome(input) {
-      if (!input || input.dataset.committed === "true") return;
-      input.dataset.committed = "true";
-      const platform = input.dataset.inlineIncome;
-      const mode = input.dataset.incomeMode || "total";
-      const raw = String(input.value || "").trim().replaceAll(",", "");
-      const amount = raw === "" ? 0 : Number(raw);
-      const entry = ensureEntryForDate();
-      const previous = Number(entry.incomes?.[platform] || 0);
-
-      if (!Number.isFinite(amount) || amount < 0) {
-        input.value = previous ? formatIncomeInput(previous) : "";
-        input.dataset.incomeMode = "total";
-        input.classList.add("input-error");
-        window.setTimeout(() => input.classList.remove("input-error"), 500);
-        return;
-      }
-
-      if (mode === "add") {
-        if (amount > 0) {
-          entry.incomes[platform] = previous + amount;
-          entry.incomeRecords ||= [];
-          entry.incomeRecords.push({
-            id: makeId(),
-            platform,
-            amount,
-            createdAt: new Date().toISOString()
-          });
-        }
-      } else {
-        entry.incomes[platform] = amount;
-      }
-
-      const total = Number(entry.incomes[platform] || 0);
+    function restoreIncomeInput(input, platform, total) {
+      if (!input) return;
       input.value = total ? formatIncomeInput(total) : "";
       input.placeholder = "輸入收入";
       input.dataset.incomeMode = "total";
+      input.dataset.addBeforeTotal = "";
+      input.dataset.invalidAmount = "";
       input.setAttribute("aria-label", `${platform} 當日收入`);
-      const hiddenInput = input.closest(".platform-income-row")?.querySelector("[data-income]");
+      const row = input.closest(".platform-income-row");
+      const hiddenInput = row?.querySelector("[data-income]");
+      const addButton = row?.querySelector("[data-income-add]");
       if (hiddenInput) hiddenInput.value = total;
-      saveState();
+      if (addButton) addButton.disabled = false;
+    }
+
+    function refreshIncomeViews() {
+      renderIncomeInputs(selectedIncomeDate());
       renderStats();
-      updateDailyGoal(entry);
-      renderRecentIncome();
+      renderRecentIncome(selectedIncomeDate());
       updateWorkControls();
       updateQuickPreview();
       renderEntries();
@@ -5768,23 +6035,175 @@
       renderAiAnalysis();
     }
 
-    function startYoxiAdd(platform) {
-      const input = els.incomeInputs.querySelector(`[data-inline-income="${cssEscape(platform)}"]`);
+    function registerIncomeUndo(action) {
+      window.clearTimeout(incomeUndoTimer);
+      lastIncomeAddition = action;
+      incomeUndoTimer = window.setTimeout(() => {
+        if (lastIncomeAddition?.recordId === action.recordId) lastIncomeAddition = null;
+      }, 5000);
+      showToast(`已加入 ${money(action.amount)}`, {
+        actionLabel: "復原",
+        duration: 5000,
+        onAction: undoLastIncomeAddition
+      });
+    }
+
+    function undoLastIncomeAddition() {
+      const action = lastIncomeAddition;
+      if (!action) {
+        showToast("已無可復原的收入");
+        return;
+      }
+      const entry = entryForDate(action.date);
+      const records = Array.isArray(entry?.incomeRecords) ? entry.incomeRecords : [];
+      const recordIndex = records.findIndex(record => record.id === action.recordId);
+      const currentTotal = Number(entry?.incomes?.[action.platform] || 0);
+      if (!entry || recordIndex < 0 || currentTotal !== action.afterTotal) {
+        window.clearTimeout(incomeUndoTimer);
+        lastIncomeAddition = null;
+        showToast("目前總額已變更，無法復原");
+        return;
+      }
+
+      const [removedRecord] = records.splice(recordIndex, 1);
+      entry.incomes[action.platform] = action.beforeTotal;
+      if (!saveState()) {
+        entry.incomes[action.platform] = action.afterTotal;
+        records.splice(recordIndex, 0, removedRecord);
+        showToast("復原失敗，請稍後再試");
+        return;
+      }
+
+      window.clearTimeout(incomeUndoTimer);
+      lastIncomeAddition = null;
+      refreshIncomeViews();
+      showToast(`已復原 ${money(action.amount)}`);
+    }
+
+    function commitInlineIncome(input) {
+      if (!input || input.dataset.committed === "true") return;
+      input.dataset.committed = "true";
+      const platformId = input.dataset.platformId;
+      const profile = platformProfileById(platformId);
+      const platform = profile?.name;
+      const date = /^\d{4}-\d{2}-\d{2}$/.test(input.dataset.incomeDate || "")
+        ? input.dataset.incomeDate
+        : selectedIncomeDate();
+      const mode = input.dataset.incomeMode || "total";
+      const raw = String(input.value || "").trim().replaceAll(",", "");
+      const amount = raw === "" ? 0 : Number(raw);
+      const existingEntry = entryForDate(date);
+      const entry = existingEntry || ensureEntryForDate(date);
+      const hadIncome = Boolean(platform && Object.prototype.hasOwnProperty.call(entry.incomes, platform));
+      const previous = Number(platform ? entry.incomes?.[platform] || 0 : 0);
+      const boundBefore = Number(input.dataset.addBeforeTotal || previous);
+      const hasNegativeInput = input.dataset.invalidAmount === "negative";
+      const invalidAmount = hasNegativeInput
+        || !Number.isSafeInteger(amount)
+        || amount < 0
+        || amount > maxPlatformIncome
+        || (mode === "add" && amount <= 0)
+        || (mode === "add" && previous + amount > maxPlatformIncome);
+      const invalidBinding = !profile
+        || !platform
+        || !state.platforms.includes(platform)
+        || (mode === "add" && platformInputMode(platform) !== "incremental")
+        || (mode === "add" && previous !== boundBefore);
+
+      if (invalidAmount || invalidBinding) {
+        if (!existingEntry && !Object.keys(entry.incomes).length) {
+          state.entries = state.entries.filter(item => item !== entry);
+        }
+        restoreIncomeInput(input, platform || input.dataset.inlineIncome || "平台", previous);
+        input.classList.add("input-error");
+        window.setTimeout(() => input.classList.remove("input-error"), 500);
+        showToast(
+          hasNegativeInput
+            ? "金額不可為負數，未儲存"
+            : mode === "add" && amount <= 0
+              ? "請輸入大於 0 的本次收入"
+              : "金額或平台狀態無效，未儲存"
+        );
+        return;
+      }
+
+      let record = null;
+      let total = amount;
+      if (mode === "add") {
+        total = previous + amount;
+        entry.incomes[platform] = total;
+        entry.incomeRecords ||= [];
+        record = {
+          id: makeId(),
+          platformId,
+          platform,
+          date,
+          amount,
+          createdAt: new Date().toISOString()
+        };
+        entry.incomeRecords.push(record);
+      } else {
+        entry.incomes[platform] = amount;
+      }
+
+      if (!saveState()) {
+        if (hadIncome) entry.incomes[platform] = previous;
+        else delete entry.incomes[platform];
+        if (record) entry.incomeRecords = entry.incomeRecords.filter(item => item.id !== record.id);
+        if (!existingEntry) state.entries = state.entries.filter(item => item !== entry);
+        restoreIncomeInput(input, platform, previous);
+        showToast("儲存失敗，原有收入未變更");
+        return;
+      }
+
+      if (mode !== "add" && lastIncomeAddition?.date === date && lastIncomeAddition?.platformId === platformId) {
+        window.clearTimeout(incomeUndoTimer);
+        lastIncomeAddition = null;
+      }
+      restoreIncomeInput(input, platform, total);
+      refreshIncomeViews();
+      if (record) {
+        registerIncomeUndo({
+          recordId: record.id,
+          platformId,
+          platform,
+          date,
+          amount,
+          beforeTotal: previous,
+          afterTotal: total
+        });
+      }
+    }
+
+    function startIncomeAdd(platformId) {
+      const profile = platformProfileById(platformId);
+      if (!profile || platformInputMode(profile.name) !== "incremental") return;
+      let input = els.incomeInputs.querySelector(`[data-platform-id="${cssEscape(platformId)}"]`);
       if (!input) return;
       if (document.activeElement === input && input.dataset.incomeMode === "total") {
         commitInlineIncome(input);
+        input = els.incomeInputs.querySelector(`[data-platform-id="${cssEscape(platformId)}"]`);
+        if (!input) return;
       }
+      if (input.dataset.incomeMode === "add") return;
+      const date = selectedIncomeDate();
+      const previous = Number(entryForDate(date)?.incomes?.[profile.name] || 0);
+      const addButton = input.closest(".platform-income-row")?.querySelector("[data-income-add]");
+      if (addButton) addButton.disabled = true;
       input.dataset.committed = "false";
       input.dataset.incomeMode = "add";
+      input.dataset.incomeDate = date;
+      input.dataset.addBeforeTotal = String(previous);
+      input.dataset.invalidAmount = "";
       input.value = "";
       input.placeholder = "新增一筆";
-      input.setAttribute("aria-label", `${platform} 新增一筆收入`);
+      input.setAttribute("aria-label", `${profile.name} 新增一筆收入`);
       input.focus();
       input.select();
     }
 
     function updateIncomeRecord(recordId) {
-      const entry = entryForDate();
+      const entry = entryForDate(selectedIncomeDate());
       const record = entry?.incomeRecords?.find(item => item.id === recordId);
       const input = els.recentIncomeList.querySelector(`[data-record-amount="${cssEscape(recordId)}"]`);
       const amount = Number(input?.value || 0);
@@ -5802,7 +6221,7 @@
     }
 
     function deleteIncomeRecord(recordId) {
-      const entry = entryForDate();
+      const entry = entryForDate(selectedIncomeDate());
       const record = entry?.incomeRecords?.find(item => item.id === recordId);
       if (!entry || !record) return;
       entry.incomes[record.platform] = Math.max(0, Number(entry.incomes?.[record.platform] || 0) - Number(record.amount || 0));
@@ -5865,7 +6284,11 @@
       updateQuickPreview();
     });
     els.detailForm.addEventListener("change", event => {
-      if (event.target.id === "date") syncDateCardDisplay(event.target);
+      if (event.target.id === "date") {
+        syncDateCardDisplay(event.target);
+        renderIncomeInputs(event.target.value || todayString());
+        renderRecentIncome(event.target.value || todayString());
+      }
       updateQuickPreview();
     });
     els.workTimeSection.addEventListener("toggle", event => {
@@ -6030,6 +6453,7 @@
       const input = event.target.closest("[data-inline-income]");
       if (!input) return;
       input.dataset.committed = "false";
+      input.dataset.invalidAmount = "";
       input.value = input.value.replaceAll(",", "");
       input.select();
       window.requestAnimationFrame(() => input.select());
@@ -6038,6 +6462,7 @@
     els.incomeInputs.addEventListener("input", event => {
       const input = event.target.closest("[data-inline-income]");
       if (!input) return;
+      if (input.value.includes("-")) input.dataset.invalidAmount = "negative";
       const sanitized = input.value.replace(/[^0-9]/g, "");
       if (input.value !== sanitized) input.value = sanitized;
     });
@@ -6055,10 +6480,10 @@
     });
 
     els.incomeInputs.addEventListener("pointerdown", event => {
-      const button = event.target.closest("[data-yoxi-add]");
+      const button = event.target.closest("[data-income-add]");
       if (!button) return;
       event.preventDefault();
-      startYoxiAdd(button.dataset.yoxiAdd);
+      startIncomeAdd(button.dataset.incomeAdd);
     });
 
     els.recentIncomeList.addEventListener("click", event => {
@@ -6085,11 +6510,27 @@
       const input = document.getElementById("newPlatformName");
       const name = input.value.trim();
       if (!name || state.platforms.includes(name)) return;
+      const selectedMode = document.querySelector('input[name="newPlatformInputMode"]:checked')?.value || "total";
+      const profile = {
+        id: createCustomPlatformId(),
+        name,
+        inputMode: normalizePlatformInputMode(selectedMode)
+      };
       state.platforms.push(name);
+      state.settings.platformProfiles.push(profile);
       state.settings.platformRates[name] = defaultPlatformRates[name] || 100;
+      if (!saveState()) {
+        state.platforms = state.platforms.filter(platform => platform !== name);
+        state.settings.platformProfiles = state.settings.platformProfiles.filter(item => item.id !== profile.id);
+        delete state.settings.platformRates[name];
+        showToast("新增平台失敗，請稍後再試");
+        return;
+      }
       input.value = "";
-      saveState();
+      const defaultModeInput = document.querySelector('input[name="newPlatformInputMode"][value="total"]');
+      if (defaultModeInput) defaultModeInput.checked = true;
       renderAll();
+      showToast(`${name} 已新增`);
     });
 
     document.getElementById("addExpense").addEventListener("click", () => {
@@ -6120,6 +6561,25 @@
     });
 
     document.getElementById("view-settings").addEventListener("change", event => {
+      const modeInput = event.target.closest("[data-platform-input-mode]");
+      if (modeInput) {
+        const profile = platformProfileById(modeInput.dataset.platformInputMode);
+        const nextMode = normalizePlatformInputMode(modeInput.value);
+        if (!profile || profile.inputMode === nextMode) return;
+        const previousMode = profile.inputMode;
+        profile.inputMode = nextMode;
+        if (!saveState()) {
+          profile.inputMode = previousMode;
+          renderSettings();
+          showToast("輸入方式儲存失敗");
+          return;
+        }
+        renderSettings();
+        renderIncomeInputs(selectedIncomeDate());
+        showToast(`${profile.name}：${platformInputModeLabel(nextMode)}`);
+        return;
+      }
+
       const shortcutSelect = event.target.closest("[data-expense-shortcut-index]");
       if (!shortcutSelect) return;
       const index = Number(shortcutSelect.dataset.expenseShortcutIndex);
@@ -6155,7 +6615,9 @@
       const expenseButton = event.target.closest("[data-remove-expense]");
       if (platformButton) {
         const name = platformButton.dataset.removePlatform;
+        const profile = platformProfileByName(name);
         state.platforms = state.platforms.filter(platform => platform !== name);
+        state.settings.platformProfiles = state.settings.platformProfiles.filter(item => item.id !== profile?.id);
         delete state.settings.platformRates[name];
       }
       if (expenseButton) {
