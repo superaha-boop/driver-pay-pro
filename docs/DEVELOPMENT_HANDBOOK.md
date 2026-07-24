@@ -1,8 +1,8 @@
 # Driver Pay Pro Development Handbook
 
-Version: 1.0
+Version: 1.1
 
-更新日期：2026-07-21
+更新日期：2026-07-24
 
 ## 文件定位
 
@@ -124,7 +124,7 @@ Codex 不負責自行決定產品方向。
 - 工時計算正確
 - 工作狀態正確
 - 資料重開後仍存在
-- 一般平台覆蓋總額、Yoxi 加號累加且不重複提交
+- 直接輸入模式覆蓋總額、累加模式正確加總且不重複提交
 
 ### Mobile
 
@@ -212,11 +212,40 @@ Release Notes：
 
 ## Git and Release Safety
 
-- 未經明確要求，不 commit、push、merge、deploy、切換分支或建立 PR。
-- 禁止未授權的 reset、rebase、force push、刪除分支或改寫歷史。
-- 使用者要求 commit 時，只 stage 本次核准檔案，不混入既有 dirty changes。
-- 建議使用功能分支、Draft PR、Vercel Preview 與 iPhone 實機驗收。
-- 正式 merge 與 production deploy 需由 Product Owner 明確授權。
+Sprint 完成並通過適用驗證後，Codex 可以直接：
+
+1. 檢查 `git diff`、`git diff --check` 與 `git status`。
+2. 只 stage 本 Sprint 核准的檔案。
+3. 建立符合規範的 Commit。
+4. Push 到目前工作 Branch。
+5. 更新 `HANDOFF.md` 及必要開發文件。
+6. 回報 Branch、Commit Hash、修改檔案、驗證結果、已知問題與人工 QA。
+
+Commit Message 前綴：
+
+- `feat:`
+- `fix:`
+- `refactor:`
+- `docs:`
+- `style:`
+- `test:`
+- `chore:`
+
+工作目錄若包含其他 dirty changes，必須明確辨識來源並採檔案級 staging，不得默認使用 `git add -A` 混入其他成果。
+
+以下操作必須先取得 Product Owner／使用者明確確認：
+
+- Merge Pull Request。
+- Production Deploy。
+- Push 到 `main` 或非目前工作 Branch。
+- Git Reset、Git Rebase 或 Force Push。
+- 刪除分支或改寫既有 Commit 歷史。
+- 修改 Supabase Schema 或建立／執行 Migration。
+- 刪除正式資料。
+- 修改主要架構或大規模重構已凍結 UI。
+- 任何可能造成資料遺失的操作。
+
+建立 Pull Request、Draft PR、Vercel Preview 與 iPhone 實機驗收仍依當次 Sprint 指令進行；push 工作 Branch 不代表可以自動 merge 或 deploy。
 
 ## Documentation Maintenance
 

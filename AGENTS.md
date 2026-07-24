@@ -1,6 +1,6 @@
 # Driver Pay Pro — Codex Instructions
 
-Version: 1.0
+Version: 1.1
 
 ## Project Documentation
 
@@ -100,14 +100,35 @@ Version: 1.0
 
 ## Git and Deployment Safety
 
-除非本次任務明確要求：
+完成一個 Sprint 並通過適用驗證後，Codex 可以直接：
 
-- 不自行 Commit。
-- 不自行 Push。
-- 不自行 Force Push。
-- 不自行 Deploy。
-- 不刪除遠端分支。
-- 不修改既有 Commit 歷史。
+- 只 stage 本 Sprint 核准的檔案。
+- 依 `feat:`、`fix:`、`refactor:`、`docs:`、`style:`、`test:` 或 `chore:` 規範建立 Commit。
+- Push 到目前工作 Branch。
+- 更新 `HANDOFF.md` 與必要的開發文件。
+- 回報 Branch、Commit Hash、修改檔案與驗證結果。
+
+若工作目錄包含其他未提交變更，不得使用會混入不相關內容的 staging；必須先辨識來源並採明確檔案範圍。
+
+以下操作仍必須先說明並等待使用者明確確認：
+
+- Merge Pull Request。
+- Deploy 至正式環境。
+- Push 到 `main` 或非目前工作 Branch。
+- Git Reset。
+- Git Rebase。
+- Force Push。
+- 刪除本機或遠端分支。
+- 修改既有 Commit 歷史。
+- 修改 Supabase Schema。
+- 建立或執行 Migration。
+- 刪除正式資料。
+- 修改主要架構。
+- 大規模 UI 重構。
+- 任何可能造成資料遺失的操作。
+
+永遠：
+
 - 不刪除 `backup-old-version` 或 `.backups/`。
 - 不直接修改正式 Production。
 

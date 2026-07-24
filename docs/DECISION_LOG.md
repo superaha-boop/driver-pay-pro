@@ -85,3 +85,17 @@
 - Decision: 文件按「產品方向、設計規範、開發流程、決策、實作規格、功能狀態、變更歷史」分工。
 - Reason: 避免同一規則散落於多份名稱相近文件，並保留產品與技術狀態的不同生命週期。
 - Impact: 不另建同義文件；重複內容應整合並以交叉連結取代多份平行版本。
+
+## D-013
+
+- Date: 2026-07-24
+- Decision: Sprint 完成並通過適用驗證後，Codex 可直接 Commit 並 Push 到目前工作 Branch。
+- Reason: 專案已進入多人測試與持續開發階段，需要降低每次完成修改後的發布等待，同時維持檔案範圍與 Git 歷史安全。
+- Impact: Codex 必須只 stage 本 Sprint 核准檔案、使用規範化 Commit Message、更新 `HANDOFF.md` 並回報 Branch、Commit Hash 與驗證結果；Merge、Production Deploy、Push 到 `main`、Reset、Rebase、Force Push、Schema／Migration、架構重構及資料破壞操作仍需使用者明確確認。
+
+## D-014
+
+- Date: 2026-07-24
+- Decision: D-008 的「只有 Yoxi 累加」固定規則已由可設定平台輸入模式取代。
+- Reason: 不同車隊的實際記錄方式不同，使用者需要讓每個平台獨立選擇直接輸入總額或每筆收入累加。
+- Impact: 預設仍只有 Yoxi 使用累加；其他平台與自訂平台預設直接輸入總額。切換模式不得清除既有收入，所有模式仍輸出同一個當日平台總額供既有報表使用。
