@@ -2932,58 +2932,6 @@
       line-height: 1.55;
     }
 
-    .app-splash {
-      position: fixed;
-      z-index: 100;
-      inset: 0;
-      padding:
-        max(24px, env(safe-area-inset-top))
-        max(24px, env(safe-area-inset-right))
-        max(24px, env(safe-area-inset-bottom))
-        max(24px, env(safe-area-inset-left));
-      display: grid;
-      place-items: center;
-      background: var(--bg);
-      opacity: 1;
-      visibility: visible;
-      pointer-events: none;
-      transition: opacity 160ms ease-out, visibility 160ms ease-out;
-    }
-
-    .app-splash.is-hidden {
-      opacity: 0;
-      visibility: hidden;
-    }
-
-    .app-splash-content {
-      display: grid;
-      justify-items: center;
-      gap: 18px;
-      text-align: center;
-    }
-
-    .app-splash-logo {
-      width: 112px;
-      height: 112px;
-      display: block;
-      object-fit: contain;
-    }
-
-    .app-splash-credit {
-      display: grid;
-      gap: 3px;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.25;
-    }
-
-    .app-splash-credit strong {
-      color: var(--text);
-      font-size: 40px;
-      font-weight: 700;
-      line-height: 1.15;
-    }
-
     .settings-about-panel {
       align-self: start;
     }
@@ -3021,7 +2969,6 @@
 
     .settings-link-icon svg,
     .settings-link-chevron,
-    .about-action-chevron,
     .about-back-button svg {
       width: 20px;
       height: 20px;
@@ -3051,8 +2998,7 @@
       font-size: 12px;
     }
 
-    .settings-link-chevron,
-    .about-action-chevron {
+    .settings-link-chevron {
       flex: 0 0 20px;
       color: #a2aca6;
     }
@@ -3604,16 +3550,6 @@
   </style>
 </head>
 <body>
-  <div class="app-splash" id="appSplash" aria-hidden="true">
-    <div class="app-splash-content">
-      <img class="app-splash-logo" src="assets/driver-pay-pro-master-icon.png" alt="">
-      <div class="app-splash-credit">
-        <span>Built by</span>
-        <strong id="splashAuthorName"></strong>
-      </div>
-    </div>
-  </div>
-
   <div class="app">
     <header class="sidebar">
       <div class="brand">
@@ -4089,17 +4025,7 @@
           <p class="about-tagline" id="aboutTagline"></p>
         </section>
 
-        <div class="about-actions" aria-label="作者連結">
-          <a class="about-action-row" id="aboutGithubLink" target="_blank" rel="noopener noreferrer external">
-            <span>GitHub</span>
-            <svg class="about-action-chevron" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="m9 18 6-6-6-6"></path>
-            </svg>
-          </a>
-          <button class="about-action-row" type="button" disabled>
-            <span>LinkedIn</span>
-            <span class="about-action-meta">即將推出</span>
-          </button>
+        <div class="about-actions" aria-label="聯絡選項">
           <button class="about-action-row" type="button" disabled>
             <span>Send Feedback</span>
             <span class="about-action-meta">即將推出</span>
@@ -4128,7 +4054,6 @@
       authorRole: "Designed & Developed by",
       authorName: "Mark Hu",
       tagline: "Designed to simplify everyday work.",
-      githubUrl: "https://github.com/superstar-boop",
       copyrightYear: "2026"
     });
     const storageKey = "driverPayApp.v2";
@@ -6572,7 +6497,6 @@
     }
 
     function renderBrandAttribution() {
-      document.getElementById("splashAuthorName").textContent = brandAttribution.authorName;
       document.getElementById("settingsAppVersion").textContent = `Version ${brandAttribution.version}`;
       document.getElementById("aboutProductName").textContent = brandAttribution.productName;
       document.getElementById("aboutAppVersion").textContent = `Version ${brandAttribution.version}`;
@@ -6581,25 +6505,6 @@
       document.getElementById("aboutTagline").textContent = brandAttribution.tagline;
       document.getElementById("aboutCopyright").textContent =
         `© ${brandAttribution.copyrightYear} ${brandAttribution.authorName}`;
-      const githubLink = document.getElementById("aboutGithubLink");
-      githubLink.href = brandAttribution.githubUrl;
-      githubLink.setAttribute(
-        "aria-label",
-        `使用系統瀏覽器開啟 ${brandAttribution.authorName} 的 GitHub`
-      );
-    }
-
-    function scheduleSplashDismissal() {
-      const splash = document.getElementById("appSplash");
-      if (!splash) return;
-      const dismiss = () => {
-        window.requestAnimationFrame(() => splash.classList.add("is-hidden"));
-      };
-      if (document.readyState === "complete") {
-        dismiss();
-      } else {
-        window.addEventListener("load", dismiss, { once: true });
-      }
     }
 
     function setupPwa() {
@@ -7008,7 +6913,6 @@
     resetForm();
     setView("today");
     updateOverviewVisibility();
-    scheduleSplashDismissal();
     setupPwa();
     window.setInterval(() => {
       if (activeView !== "today") return;
