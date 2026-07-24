@@ -2932,6 +2932,267 @@
       line-height: 1.55;
     }
 
+    .app-splash {
+      position: fixed;
+      z-index: 100;
+      inset: 0;
+      padding:
+        max(24px, env(safe-area-inset-top))
+        max(24px, env(safe-area-inset-right))
+        max(24px, env(safe-area-inset-bottom))
+        max(24px, env(safe-area-inset-left));
+      display: grid;
+      place-items: center;
+      background: var(--bg);
+      opacity: 1;
+      visibility: visible;
+      pointer-events: none;
+      transition: opacity 160ms ease-out, visibility 160ms ease-out;
+    }
+
+    .app-splash.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .app-splash-content {
+      display: grid;
+      justify-items: center;
+      gap: 18px;
+      text-align: center;
+    }
+
+    .app-splash-logo {
+      width: 112px;
+      height: 112px;
+      display: block;
+      object-fit: contain;
+    }
+
+    .app-splash-credit {
+      display: grid;
+      gap: 3px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.25;
+    }
+
+    .app-splash-credit strong {
+      color: var(--text);
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    .settings-about-panel {
+      align-self: start;
+    }
+
+    .settings-link-row {
+      width: 100%;
+      min-width: 0;
+      min-height: 62px;
+      padding: 10px 14px;
+      display: grid;
+      grid-template-columns: 36px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 11px;
+      color: var(--text);
+      background: #fff;
+      text-align: left;
+    }
+
+    .settings-link-row:focus-visible,
+    .about-back-button:focus-visible,
+    .about-action-row:focus-visible {
+      outline: 3px solid rgba(21, 150, 111, .22);
+      outline-offset: -3px;
+    }
+
+    .settings-link-icon {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      color: var(--brand-strong);
+      background: var(--brand-soft);
+    }
+
+    .settings-link-icon svg,
+    .settings-link-chevron,
+    .about-action-chevron,
+    .about-back-button svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .settings-link-copy {
+      min-width: 0;
+      display: grid;
+      gap: 2px;
+    }
+
+    .settings-link-copy strong {
+      overflow: hidden;
+      font-size: 16px;
+      font-weight: 650;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .settings-link-copy small {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .settings-link-chevron,
+    .about-action-chevron {
+      flex: 0 0 20px;
+      color: #a2aca6;
+    }
+
+    .about-view {
+      width: min(100%, 520px);
+      margin: 0 auto;
+      display: grid;
+      gap: 12px;
+    }
+
+    .about-back-button {
+      width: fit-content;
+      min-height: 44px;
+      padding: 0 8px 0 2px;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      color: var(--brand-strong);
+      background: transparent;
+      font-weight: 650;
+    }
+
+    .about-back-button svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .about-identity {
+      padding: 28px 20px 24px;
+      display: grid;
+      justify-items: center;
+      gap: 7px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .about-logo {
+      width: 84px;
+      height: 84px;
+      margin-bottom: 7px;
+      display: block;
+      object-fit: contain;
+    }
+
+    .about-identity h3 {
+      margin: 0;
+      color: var(--text);
+      font-size: 24px;
+      line-height: 1.2;
+      letter-spacing: -.02em;
+    }
+
+    .about-version,
+    .about-role,
+    .about-tagline,
+    .about-legal {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .about-version {
+      font-size: 13px;
+    }
+
+    .about-role {
+      margin-top: 17px;
+      font-size: 14px;
+    }
+
+    .about-author {
+      color: var(--text);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .about-tagline {
+      margin-top: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .about-actions {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .about-action-row {
+      width: 100%;
+      min-width: 0;
+      min-height: 54px;
+      padding: 0 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--text);
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      text-decoration: none;
+    }
+
+    .about-action-row:last-child {
+      border-bottom: 0;
+    }
+
+    .about-action-row > span:first-child {
+      min-width: 0;
+      font-size: 16px;
+      font-weight: 550;
+    }
+
+    .about-action-meta {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .about-action-row:disabled {
+      cursor: default;
+      color: #9aa49f;
+      opacity: 1;
+    }
+
+    .about-legal {
+      padding: 8px 18px 0;
+      font-size: 12px;
+      line-height: 1.55;
+      text-align: center;
+    }
+
     .empty.compact {
       padding: 13px 4px;
       text-align: left;
@@ -3343,6 +3604,16 @@
   </style>
 </head>
 <body>
+  <div class="app-splash" id="appSplash" aria-hidden="true">
+    <div class="app-splash-content">
+      <img class="app-splash-logo" src="assets/driver-pay-pro-master-icon.png" alt="">
+      <div class="app-splash-credit">
+        <span>Built by</span>
+        <strong id="splashAuthorName"></strong>
+      </div>
+    </div>
+  </div>
+
   <div class="app">
     <header class="sidebar">
       <div class="brand">
@@ -3779,7 +4050,66 @@
               </div>
             </div>
           </div>
+
+          <div class="panel settings-about-panel">
+            <button class="settings-link-row" id="openAbout" type="button" aria-label="開啟關於 Driver Pay Pro">
+              <span class="settings-link-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="9"></circle>
+                  <path d="M12 11v5"></path>
+                  <path d="M12 8h.01"></path>
+                </svg>
+              </span>
+              <span class="settings-link-copy">
+                <strong>關於 Driver Pay Pro</strong>
+                <small id="settingsAppVersion"></small>
+              </span>
+              <svg class="settings-link-chevron" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m9 18 6-6-6-6"></path>
+              </svg>
+            </button>
+          </div>
         </div>
+      </section>
+
+      <section id="view-about" class="view about-view hidden" aria-labelledby="aboutProductName">
+        <button class="about-back-button" id="closeAbout" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m15 18-6-6 6-6"></path>
+          </svg>
+          <span>設定</span>
+        </button>
+
+        <section class="about-identity">
+          <img class="about-logo" src="assets/driver-pay-pro-master-icon.png" alt="Driver Pay Pro App Logo">
+          <h3 id="aboutProductName"></h3>
+          <p class="about-version" id="aboutAppVersion"></p>
+          <p class="about-role" id="aboutAuthorRole"></p>
+          <strong class="about-author" id="aboutAuthorName"></strong>
+          <p class="about-tagline" id="aboutTagline"></p>
+        </section>
+
+        <div class="about-actions" aria-label="作者連結">
+          <a class="about-action-row" id="aboutGithubLink" target="_blank" rel="noopener noreferrer external">
+            <span>GitHub</span>
+            <svg class="about-action-chevron" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          </a>
+          <button class="about-action-row" type="button" disabled>
+            <span>LinkedIn</span>
+            <span class="about-action-meta">即將推出</span>
+          </button>
+          <button class="about-action-row" type="button" disabled>
+            <span>Send Feedback</span>
+            <span class="about-action-meta">即將推出</span>
+          </button>
+        </div>
+
+        <p class="about-legal">
+          <span id="aboutCopyright"></span><br>
+          All Rights Reserved.
+        </p>
       </section>
 
       <section class="panel history-panel">
@@ -3792,6 +4122,15 @@
   <div class="app-toast" id="appToast" role="status" aria-live="polite"></div>
 
   <script>
+    const brandAttribution = Object.freeze({
+      productName: "Driver Pay Pro",
+      version: "1.0.0",
+      authorRole: "Designed & Developed by",
+      authorName: "Mark Hu",
+      tagline: "Designed to simplify everyday work.",
+      githubUrl: "https://github.com/superstar-boop",
+      copyrightYear: "2026"
+    });
     const storageKey = "driverPayApp.v2";
     const defaultPlatforms = ["Uber", "LINE GO", "Yoxi", "55688", "大都會", "台灣大車隊", "路邊客", "自訂"];
     const defaultPlatformIds = {
@@ -3882,7 +4221,8 @@
       month: ["月報表", "追蹤整個月份收入、成本與目標進度。"],
       platform: ["平台分析", "看出 Uber、LINE GO、Yoxi、55688 與其他來源的表現。"],
       ai: ["AI 營運助理", "根據你的收入與工時紀錄提供分析"],
-      settings: ["Driver Space", "調整平台、支出類別與收入目標。"]
+      settings: ["Driver Space", "調整平台、支出類別與收入目標。"],
+      about: ["關於 Driver Pay Pro", "產品、版本與作者資訊。"]
     };
 
     const els = {
@@ -5760,12 +6100,12 @@
       if (view === "ai") renderAiAnalysis();
       document.querySelectorAll(".view").forEach(section => section.classList.add("hidden"));
       document.getElementById(`view-${view}`).classList.remove("hidden");
-      const navView = view === "month" ? "platform" : view;
+      const navView = view === "month" ? "platform" : view === "about" ? "settings" : view;
       els.navButtons.forEach(button => button.classList.toggle("active", button.dataset.view === navView));
       els.viewTitle.textContent = titles[view][0];
       els.viewSubtitle.textContent = titles[view][1];
       document.body.dataset.activeView = view;
-      document.getElementById("newEntry").classList.toggle("hidden", view === "today");
+      document.getElementById("newEntry").classList.toggle("hidden", view === "today" || view === "about");
       updateOverviewVisibility();
     }
 
@@ -6231,6 +6571,37 @@
       resetForm();
     }
 
+    function renderBrandAttribution() {
+      document.getElementById("splashAuthorName").textContent = brandAttribution.authorName;
+      document.getElementById("settingsAppVersion").textContent = `Version ${brandAttribution.version}`;
+      document.getElementById("aboutProductName").textContent = brandAttribution.productName;
+      document.getElementById("aboutAppVersion").textContent = `Version ${brandAttribution.version}`;
+      document.getElementById("aboutAuthorRole").textContent = brandAttribution.authorRole;
+      document.getElementById("aboutAuthorName").textContent = brandAttribution.authorName;
+      document.getElementById("aboutTagline").textContent = brandAttribution.tagline;
+      document.getElementById("aboutCopyright").textContent =
+        `© ${brandAttribution.copyrightYear} ${brandAttribution.authorName}`;
+      const githubLink = document.getElementById("aboutGithubLink");
+      githubLink.href = brandAttribution.githubUrl;
+      githubLink.setAttribute(
+        "aria-label",
+        `使用系統瀏覽器開啟 ${brandAttribution.authorName} 的 GitHub`
+      );
+    }
+
+    function scheduleSplashDismissal() {
+      const splash = document.getElementById("appSplash");
+      if (!splash) return;
+      const dismiss = () => {
+        window.requestAnimationFrame(() => splash.classList.add("is-hidden"));
+      };
+      if (document.readyState === "complete") {
+        dismiss();
+      } else {
+        window.addEventListener("load", dismiss, { once: true });
+      }
+    }
+
     function setupPwa() {
       if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
         navigator.serviceWorker.register("./sw.js").catch(error => console.warn("PWA 離線快取未啟用", error));
@@ -6498,6 +6869,8 @@
     });
 
     document.getElementById("driverSpaceLogo").addEventListener("click", () => setView("settings"));
+    document.getElementById("openAbout").addEventListener("click", () => setView("about"));
+    document.getElementById("closeAbout").addEventListener("click", () => setView("settings"));
 
     els.entriesTable.addEventListener("click", event => {
       const editButton = event.target.closest("[data-edit]");
@@ -6629,11 +7002,13 @@
       }
     });
 
+    renderBrandAttribution();
     renderEntryDateCard(todayString());
     renderAll();
     resetForm();
     setView("today");
     updateOverviewVisibility();
+    scheduleSplashDismissal();
     setupPwa();
     window.setInterval(() => {
       if (activeView !== "today") return;
