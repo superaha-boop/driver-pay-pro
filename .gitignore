@@ -1,1 +1,22 @@
+# macOS metadata
 .DS_Store
+**/.DS_Store
+
+# Local backups: keep on this computer, never publish or deploy
+.backups/
+
+# Local editor and AI-agent workspace state
+.vscode/
+.idea/
+.codex/
+.agents/
+
+# Local environment and deployment state
+.env
+.env.*
+!.env.example
+.vercel/
+
+# Local logs and temporary files
+*.log
+*.tmp
