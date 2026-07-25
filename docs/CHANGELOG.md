@@ -19,6 +19,9 @@
 
 ### Added
 
+- 新增正式 `docs/PRODUCT_SPEC.md`，固定產品願景、五頁責任、Feature Ownership Matrix、跨頁紀錄契約、單一資料來源、產品術語、Calendar 決策、Current State Audit 與 Roadmap。
+- 新增 `docs/TECH_DEBT.md`，集中記錄計算重複、legacy primitives、工具鏈、PWA／iPhone 實機 QA、Calendar 責任差距與資料限制。
+- 新增跨頁產品契約測試清單，供後續 Calendar、Reports、AI 與 Driver Sprint 做責任與資料回歸檢查。
 - 新增正式 Design System：CSS custom property tokens、共用 UI primitives、獨立開發展示頁、永久規格與測試清單。
 - 新增 `tests/design-system.test.js`，驗證 token、primitive、無障礙、PWA 接線、showcase 隔離與 time input 安全 wrapper。
 - 新增 hash 導覽與舊報表連結相容、報表分頁記憶、月曆／報表獨立月份及三分頁共用報表月份。
@@ -32,6 +35,7 @@
 
 ### Changed
 
+- `AGENTS.md`、專案背景、決策紀錄與交接文件改以正式 Product Specification 約束功能 owner、canonical calculations 與下一個 Calendar 規格 Sprint。
 - 現有 legacy variables 改由 Design System tokens 提供相同視覺值；Service Worker 更新為 v07 並快取共用樣式。
 - 底部導覽重整為「今天｜月曆｜報表｜AI｜Driver」，統一 24px Lucide 圖示與 14px 文字。
 - 月份明細完整移入月曆；週報、月報、平台統一移入固定標題「報表」。

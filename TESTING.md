@@ -10,6 +10,51 @@
 - 所有功能變更都必須確認 `driverPayApp.v2` 未被更名或清除。
 - PWA 資源變更必須同步檢查 `sw.js` cache version 與 App Shell。
 
+## Cross-page product contract checklist
+
+Use this checklist for every feature that affects navigation, records, calculations, or more than one primary page.
+
+### Page ownership
+
+- [ ] Bottom Navigation remains Today, Calendar, Reports, AI, Driver.
+- [ ] Every writable capability has exactly one Primary owner in `docs/PRODUCT_SPEC.md`.
+- [ ] Today only creates or updates today's record.
+- [ ] Calendar owns past-record creation, editing, and deletion.
+- [ ] Reports remains read-only and links to Calendar for record correction.
+- [ ] AI remains read-only and separates facts, inference, and advice.
+- [ ] Driver contains only persistent multi-day settings.
+- [ ] Future dates cannot create work records.
+
+### Shared data and calculations
+
+- [ ] Today and Calendar use the same record model, validation, and autosave behavior.
+- [ ] Income uses the canonical platform-rate and entry-total functions.
+- [ ] Expenses use the canonical entry-expense function.
+- [ ] Net income uses the canonical total-minus-expenses function.
+- [ ] Work duration uses `workMetrics()` or its approved successor.
+- [ ] Hourly rate uses `hourlyRate()` or its approved successor.
+- [ ] Weekly and monthly summaries use one shared summary source.
+- [ ] Zero or invalid duration produces `$0`, never `Infinity` or `NaN`.
+- [ ] The same fixture produces the same values in Today, Calendar, Reports, and AI.
+
+### Date and route behavior
+
+- [ ] Calendar starts on today after a fresh app launch.
+- [ ] Calendar retains the selected date during the same app session.
+- [ ] Calendar and Reports month state remain independent.
+- [ ] Selecting a date in another month updates the visible Calendar month.
+- [ ] Monday-through-Sunday week boundaries remain complete and timezone-safe.
+- [ ] Reports or AI record links preserve the exact target date.
+- [ ] Invalid routes or dates do not create records.
+
+### Product regression review
+
+- [ ] No feature was moved to a page that has View, Link, or None ownership.
+- [ ] No page-specific copy of a shared calculation or record form was introduced.
+- [ ] No sixth Bottom Navigation destination was added.
+- [ ] `driverPayApp.v2` and the existing data structure remain intact unless an approved migration exists.
+- [ ] `docs/TECH_DEBT.md` is updated when an approved Sprint intentionally leaves a known gap.
+
 ## Design System checklist
 
 ### Viewport and layout
@@ -88,3 +133,16 @@ node --test tests/*.test.js
 ```
 
 `tests/design-system.test.js` 驗證 tokens、primitives、PWA 接線、showcase 隔離、無障礙契約與 time input 安全 wrapper。自動測試不能取代真實 iPhone Safari／PWA 驗收。
+
+## Documentation-only Sprint validation
+
+When a Sprint explicitly prohibits product-code changes:
+
+- [ ] `git diff --name-only` contains only approved documentation files.
+- [ ] `git diff --exit-code -- index.html design-system.html sw.js manifest.webmanifest styles tests` succeeds.
+- [ ] Inline JavaScript syntax still passes against the unchanged `index.html`.
+- [ ] Service Worker syntax still passes against the unchanged `sw.js`.
+- [ ] `manifest.webmanifest` parses as JSON.
+- [ ] Existing Node tests pass.
+- [ ] Service Worker cache version is unchanged.
+- [ ] No dependency, schema, localStorage, navigation, UI, or business-logic change is present.

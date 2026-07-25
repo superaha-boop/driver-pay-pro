@@ -1,15 +1,17 @@
 # Driver Pay Pro — Codex Instructions
 
-Version: 1.4
+Version: 1.5
 
 ## Project Documentation
 
 開始任何工作前，必須先依需求讀取：
 
 - `docs/PRODUCT_GUIDE.md`
+- `docs/PRODUCT_SPEC.md`
 - `docs/DESIGN_KIT.md`
 - `docs/DEVELOPMENT_HANDBOOK.md`
 - `docs/DECISION_LOG.md`
+- `docs/TECH_DEBT.md`
 - `DECISIONS.md`
 - 本次核准的 PRD
 
@@ -18,10 +20,12 @@ Version: 1.4
 文件用途：
 
 - `PRODUCT_GUIDE.md`：產品方向與範圍
+- `PRODUCT_SPEC.md`：正式產品邊界、頁面責任、功能歸屬與跨頁資料契約
 - `DESIGN_KIT.md`：UI、UX 與品牌規則
 - `DESIGN_SYSTEM.md`：可實作的視覺 tokens 與共用 UI primitives
 - `DEVELOPMENT_HANDBOOK.md`：開發、測試與發布流程
 - `DECISION_LOG.md`：重要產品決策與原因
+- `TECH_DEBT.md`：已知技術債、影響、優先級與建議處理時機
 
 ## Instruction Priority
 
@@ -30,10 +34,11 @@ Version: 1.4
 1. 使用者本次明確指令
 2. 本次核准的 PRD
 3. `AGENTS.md`
-4. `PRODUCT_GUIDE.md`
-5. `DESIGN_KIT.md`
-6. `DEVELOPMENT_HANDBOOK.md`
-7. Codex 自行判斷
+4. `PRODUCT_SPEC.md`
+5. `PRODUCT_GUIDE.md`
+6. `DESIGN_KIT.md`
+7. `DEVELOPMENT_HANDBOOK.md`
+8. Codex 自行判斷
 
 若指令可能造成資料遺失、覆蓋正式版本、刪除分支或改寫 Git 歷史，必須先停止並說明風險。
 
@@ -75,6 +80,20 @@ Version: 1.4
 - 避免厚重 gradient、border 與 shadow，不為視覺效果犧牲可讀性或速度。
 - 現有頁面採漸進式遷移；不得因 Design System 存在就一次性重寫凍結頁面。
 - 完整 token、primitive、表單與 showcase 規格請讀取 `docs/DESIGN_SYSTEM.md`。
+
+## Product Architecture Execution Rules
+
+- 底部主要資訊架構固定為「今天｜月曆｜報表｜AI｜Driver」，不得自行增加第六個主要分頁。
+- 新功能或修改既有功能前，必須先核對 `docs/PRODUCT_SPEC.md` 的 Feature Ownership Matrix。
+- 每個可寫入功能只能有一個 Primary owner；其他頁面只能 View、Link 或 None。
+- 今天只負責今日即時工作與今日紀錄；月曆負責過去日期定位、補登、編輯與刪除。
+- 報表與 AI 保持唯讀；需要修正紀錄時只能連到月曆的確切日期。
+- Driver 只管理跨日持久設定，不得放入某一天的收入、班別、天氣或備註。
+- 未來日期不得建立工作紀錄。
+- 收入、支出、淨收入、實際工時、平均時薪及週／月彙總必須使用同一套 canonical calculation；禁止為單一頁面複製另一套公式。
+- 同一個產品概念在多頁出現時，必須優先重用同一資料 selector、validation 與共用元件。
+- Calendar 新實作必須先完成獨立的「Calendar Interaction and Implementation Specification」，不得直接由目前產品規格推定所有互動細節。
+- 發現現況不符合正式產品規格時，先記錄於 `docs/TECH_DEBT.md` 或 Current State Audit；除非本次 PRD 明確授權，不得順便修正。
 
 # Driver Pay Pro Product Design Rules
 

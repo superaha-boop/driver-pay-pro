@@ -6,6 +6,50 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
+## Product Specification and Information Architecture Sprint
+
+### 本次分支與範圍
+
+- 分支：`codex/product-specification-20260725`
+- 本 Sprint 僅建立產品規格、資訊架構、Current State Audit、技術債與測試契約。
+- 依本次 PRD，不修改 `index.html`、`design-system.html`、`sw.js`、manifest、資料模型、localStorage、導航、UI 或業務邏輯。
+- 本次只推送功能分支，不合併 `main`、不部署 Production。
+
+### 已完成
+
+- 新增 `docs/PRODUCT_SPEC.md`，正式定義 Product Vision、Persona、Today／Calendar／Reports／AI／Driver 責任、Feature Ownership Matrix、跨頁紀錄契約、Single Source of Truth、Single Component Principle、互動原則、產品術語、Calendar 決策與 V1／V1.5／V2 Roadmap。
+- 新增 `docs/TECH_DEBT.md`，記錄工具鏈、計算重複、legacy primitives、iPhone／PWA QA、time input、Calendar owner、未來日期、收入術語與 localStorage 限制。
+- `AGENTS.md` 新增永久 Product Architecture Execution Rules。
+- `PROJECT_CONTEXT.md`、`DECISIONS.md`、`docs/DECISION_LOG.md`、`TESTING.md` 與 `docs/CHANGELOG.md` 已同步。
+- 正式決策新增 D-021。
+
+### Current State Audit 結論
+
+- 已確認 Bottom Navigation 為 Today、Calendar、Reports、AI、Driver；Calendar 與 Reports 已分離；Reports 與 AI 目前唯讀。
+- 已確認 `workMetrics()` 與 `hourlyRate()` 是跨頁共用工時與時薪來源。
+- 已確認 AI 另有 `analysisPlatformIncome()`、`analysisEntryTotal()`、`analysisEntryExpenses()` 與 `analysisSummary()`，存在與 canonical income／expense summary 分歧的風險。
+- 已確認 Calendar 編輯歷史紀錄時會由 `editEntry()` 導回 Today 表單。
+- 已確認 Today 日期欄位沒有 future `max`，submit path 也沒有未來日期 guard；目前可透過 Today 保存非今日日期。
+- 已確認目前 Calendar 仍是月份篩選與每日清單，尚無日期格、session selected date、日期 deep link 或工作紀錄卡片。
+- 上述差距本 Sprint 只記錄，未修改 production code 或使用者資料。
+
+### 驗證與相容性
+
+- 既有 Node 自動測試 21/21 通過。
+- Inline JavaScript 與 Service Worker 語法檢查通過；`manifest.webmanifest` JSON 解析通過。
+- `git diff --check` 通過；變更範圍僅限本 Sprint 核准文件。
+- 專案仍沒有 TypeScript、ESLint 或 build pipeline，對應結果為 Not available。
+- `driverPayApp.v2`、資料結構與 PWA cache version 均不得變更。
+- 真實 iPhone Safari 與 installed PWA 不受文件變更影響，但正式裝置 QA 仍不能由桌面測試取代。
+
+### 下一步
+
+**Calendar Interaction and Implementation Specification**
+
+下一個 Sprint 必須先定義 selected-date session state、日期 deep link、Today／Calendar 編輯邊界、未來日期 validation、Work Record Card interaction 與完整驗收，再開始 Calendar 程式實作。
+
+---
+
 ## Design System Foundation Sprint
 
 ### 本次分支與範圍
@@ -44,7 +88,7 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ### 下一步
 
-Calendar implementation specification and refactor。新的 Calendar UI 必須直接使用本 Design System，不建立第二套 tokens 或 primitives。
+Calendar Interaction and Implementation Specification。新的 Calendar UI 必須直接使用本 Design System，不建立第二套 tokens 或 primitives。
 
 ---
 

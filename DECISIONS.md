@@ -79,3 +79,30 @@ Driver Pay Pro 需要讓後續頁面不再各自猜測色彩、間距、圓角�
 - 完整實作規格與使用方式見 [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md)。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-020](docs/DECISION_LOG.md#d-020)；若摘要措辭出現差異，以該編號條目的最新核准內容為準。
+
+## D-021 — Product Specification and Information Architecture
+
+- Date: 2026-07-25
+
+### 決策
+
+1. 以 `docs/PRODUCT_SPEC.md` 作為正式產品邊界與資訊架構來源。
+2. Bottom Navigation 固定為 Today、Calendar、Reports、AI、Driver，不增加第六個主要分頁。
+3. 每個可寫入功能只有一個 Primary owner。
+4. Today 只處理今日工作與今日紀錄；Calendar 管理過去紀錄；Reports 與 AI 唯讀；Driver 管理持久設定。
+5. 收入、支出、淨收入、實際工時、平均時薪及週／月彙總必須共用 canonical calculation。
+6. Calendar 新啟動選今天、同 session 保留選取日期、星期一至星期日、未來日期不可建立紀錄。
+7. 目前實作差距只記錄於 Current State Audit 與 `docs/TECH_DEBT.md`，本 Sprint 不修改 UI、資料模型或業務邏輯。
+8. 下一個正式工作是「Calendar Interaction and Implementation Specification」。
+
+### 原因
+
+現有功能已成長至五個主要頁面，需要固定責任邊界、資料來源與跨頁操作契約，避免後續 Calendar、Reports 與 AI Sprint 重複表單、公式或導航。
+
+### 影響範圍
+
+- 後續 PRD、UI、元件、路由、資料 selector、測試與技術債評估必須核對 `docs/PRODUCT_SPEC.md`。
+- 任何改變頁面 owner、Bottom Navigation、canonical calculation、localStorage key 或 Calendar 已定決策的工作，都需要新的明確產品決策。
+- 本決策不代表 Calendar 日期格、工作紀錄卡片、deep link、未來日期 guard 或計算去重已完成。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-021](docs/DECISION_LOG.md#d-021)；若摘要措辭出現差異，以該編號條目的最新核准內容為準。

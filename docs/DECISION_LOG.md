@@ -184,3 +184,29 @@
   - 不一次性重寫全站 CSS 或已凍結頁面。
   - 不為 dark mode 在本 Sprint 擴大範圍。
   - 不建立第二套 Button、Card、EmptyState、Skeleton 或 SaveStatus。
+
+## D-021
+
+- Date: 2026-07-25
+- Decision:
+  1. 建立 `docs/PRODUCT_SPEC.md` 作為 Driver Pay Pro 正式產品邊界、頁面責任、功能歸屬與跨頁資料契約。
+  2. Bottom Navigation 固定為 Today、Calendar、Reports、AI、Driver，不增加第六個主要分頁。
+  3. 每個可寫入功能只有一個 Primary owner；其他頁面只能 View、Link 或 None。
+  4. Today 只處理今日工作與今日紀錄；Calendar 負責定位日期、補登、編輯與刪除過去紀錄；Reports 與 AI 唯讀；Driver 只管理持久設定。
+  5. 收入、支出、淨收入、實際工時、平均時薪及週／月彙總必須共用 canonical calculation，不得由各頁複製公式。
+  6. Calendar 週期為星期一至星期日；新啟動選今天，同一 App session 保留選取日期，未來日期不可建立紀錄。
+  7. Calendar 與 Reports 月份狀態維持獨立；Reports 記住內部分頁。
+  8. 現況差距記錄在 Current State Audit 與 `docs/TECH_DEBT.md`，本 Sprint 不修改 UI、資料、localStorage、PWA 或業務邏輯。
+  9. 下一個正式工作為「Calendar Interaction and Implementation Specification」。
+- Reason: 五頁資訊架構與功能數量增加後，需要一個能約束後續 PRD 與實作的責任矩陣、單一資料來源和跨頁行為契約，避免功能漂移、重複表單及計算分歧。
+- Impact:
+  - 所有後續 UI、元件、路由、資料 selector 與測試都必須核對 `docs/PRODUCT_SPEC.md`。
+  - Today 與 Calendar 必須共用資料模型、validation、autosave 與 canonical calculations，但可依頁面任務採不同 composition。
+  - Reports 與 AI 需要修正紀錄時只能連到 Calendar 的確切日期。
+  - 改變頁面 owner、Bottom Navigation、canonical calculations、localStorage key 或 Calendar 決策需要新的 Product Owner 核准。
+  - 本決策不代表 Calendar 日期格、工作紀錄卡片、deep link、未來日期 guard 或 AI 計算去重已實作。
+- Rejected alternatives:
+  - 不讓多個頁面各自擁有同一個寫入功能。
+  - 不讓 Reports 或 AI 直接編輯紀錄。
+  - 不把 Calendar 與 Reports 重新合併。
+  - 不以文件 Sprint 為理由修改 production code、資料模型或 PWA cache。
