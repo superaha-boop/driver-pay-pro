@@ -4573,6 +4573,166 @@
       ].join("-");
     }
 
+    function normalizeDateKey(value, fallback = "") {
+      const candidate = String(value || "");
+      if (dateOnlyParts(candidate)) return candidate;
+      const safeFallback = String(fallback || "");
+      return dateOnlyParts(safeFallback) ? safeFallback : "";
+    }
+
+    function monthKeyFromDate(dateKey) {
+      const normalized = normalizeDateKey(dateKey);
+      return normalized ? normalized.slice(0, 7) : "";
+    }
+
+    function daysInCalendarMonth(monthKey) {
+      const match = /^(\d{4})-(\d{2})$/.exec(String(monthKey || ""));
+      if (!match) return 0;
+      const year = Number(match[1]);
+      const month = Number(match[2]);
+      if (month < 1 || month > 12) return 0;
+      return new Date(Date.UTC(year, month, 0)).getUTCDate();
+    }
+
+    function addCalendarMonths(monthKey, offset) {
+      if (!daysInCalendarMonth(monthKey)) return "";
+      const [year, month] = monthKey.split("-").map(Number);
+      const date = new Date(Date.UTC(year, month - 1, 1));
+      date.setUTCMonth(date.getUTCMonth() + Math.trunc(Number(offset || 0)));
+      return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
+    }
+
+    function mondayFirstWeekdayIndex(dateKey) {
+      const parts = dateOnlyParts(dateKey);
+      if (!parts) return -1;
+      const weekday = new Date(Date.UTC(parts.year, parts.month - 1, parts.day)).getUTCDay();
+      return (weekday + 6) % 7;
+    }
+
+    function generateCalendarMonthGrid(monthKey) {
+      const daysInMonth = daysInCalendarMonth(monthKey);
+      if (!daysInMonth) return [];
+      const firstDate = `${monthKey}-01`;
+      const leadingDays = mondayFirstWeekdayIndex(firstDate);
+      const requiredCells = leadingDays + daysInMonth;
+      const cellCount = requiredCells <= 35 ? 35 : 42;
+      const gridStart = addLocalDays(firstDate, -leadingDays);
+      return Array.from({ length: cellCount }, (_, index) => {
+        const date = addLocalDays(gridStart, index);
+        return {
+          date,
+          day: Number(date.slice(-2)),
+          month: monthKeyFromDate(date),
+          isCurrentMonth: monthKeyFromDate(date) === monthKey
+        };
+      });
+    }
+
+    function formatCalendarNetAmount(netIncome, hasRecord = true) {
+      if (!hasRecord) return "";
+      const value = Number(netIncome);
+      if (!Number.isFinite(value)) return "—";
+      if (value === 0) return "—";
+      const sign = value < 0 ? "-" : "";
+      const absolute = Math.abs(value);
+      if (absolute < 1000) return `${sign}${Math.round(absolute)}`;
+      if (absolute < 10000) {
+        const compact = (absolute / 1000).toFixed(1).replace(/\.0$/, "");
+        return `${sign}${compact}k`;
+      }
+      return `${sign}${Math.round(absolute / 1000)}k`;
+    }
+
+    function buildCalendarIncomeLevels(records, todayDate) {
+      const today = normalizeDateKey(todayDate);
+      const eligible = (Array.isArray(records) ? records : [])
+        .map(record => ({
+          date: normalizeDateKey(record?.date),
+          net: Number(record?.net)
+        }))
+        .filter(record => record.date && Number.isFinite(record.net) && record.net > 0 && (!today || record.date <= today));
+      const levels = new Map();
+      if (!eligible.length) return levels;
+      const uniqueValues = new Set(eligible.map(record => record.net));
+      if (eligible.length >= 2 && uniqueValues.size === 1) {
+        eligible.forEach(record => levels.set(record.date, 2));
+        return levels;
+      }
+      if (eligible.length < 4) {
+        const maximum = Math.max(...eligible.map(record => record.net));
+        eligible.forEach(record => {
+          const ratio = record.net / maximum;
+          const level = ratio <= 0.25 ? 1 : ratio <= 0.5 ? 2 : ratio <= 0.75 ? 3 : 4;
+          levels.set(record.date, level);
+        });
+        return levels;
+      }
+      const sortedValues = eligible.map(record => record.net).sort((a, b) => a - b);
+      const levelByValue = new Map();
+      uniqueValues.forEach(value => {
+        const firstRank = sortedValues.indexOf(value) + 1;
+        const lastRank = sortedValues.lastIndexOf(value) + 1;
+        const percentile = (firstRank + lastRank) / (2 * sortedValues.length);
+        const level = percentile <= 0.25 ? 1 : percentile <= 0.5 ? 2 : percentile <= 0.75 ? 3 : 4;
+        levelByValue.set(value, level);
+      });
+      eligible.forEach(record => levels.set(record.date, levelByValue.get(record.net)));
+      return levels;
+    }
+
+    function getCalendarIncomeLevel(levelMap, dateKey) {
+      const level = Number(levelMap?.get?.(dateKey) || 0);
+      return [1, 2, 3, 4].includes(level) ? level : 0;
+    }
+
+    function createCalendarState(todayDate, externalDate = "") {
+      const today = normalizeDateKey(todayDate);
+      const selectedDate = normalizeDateKey(externalDate, today);
+      return {
+        displayedMonth: monthKeyFromDate(selectedDate),
+        selectedDate,
+        today,
+        focusedDate: selectedDate,
+        loadStatus: "ready",
+        error: null,
+        gesture: "idle",
+        monthTransition: "idle"
+      };
+    }
+
+    function calendarStateWithDisplayedMonth(calendarState, monthKey) {
+      const displayedMonth = daysInCalendarMonth(monthKey) ? monthKey : calendarState.displayedMonth;
+      return { ...calendarState, displayedMonth, monthTransition: "idle" };
+    }
+
+    function calendarStateWithSelectedDate(calendarState, dateKey) {
+      const selectedDate = normalizeDateKey(dateKey, calendarState.today);
+      return {
+        ...calendarState,
+        selectedDate,
+        displayedMonth: monthKeyFromDate(selectedDate),
+        focusedDate: selectedDate,
+        monthTransition: "idle"
+      };
+    }
+
+    function calendarStateForToday(calendarState, todayDate) {
+      const today = normalizeDateKey(todayDate, calendarState.today);
+      return {
+        ...calendarState,
+        today,
+        selectedDate: today,
+        displayedMonth: monthKeyFromDate(today),
+        focusedDate: today,
+        monthTransition: "idle"
+      };
+    }
+
+    function calendarStateWithRefreshedToday(calendarState, todayDate) {
+      const today = normalizeDateKey(todayDate, calendarState.today);
+      return { ...calendarState, today };
+    }
+
     function currentTimeString() {
       const now = new Date();
       return `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
@@ -4596,6 +4756,48 @@
       const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
       const weekday = weekdays[new Date(year, month - 1, day).getDay()];
       return `${month}/${day}（${weekday}）`;
+    }
+
+    function calendarWeekdayLabel(dateKey) {
+      const index = mondayFirstWeekdayIndex(dateKey);
+      return index < 0 ? "" : ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"][index];
+    }
+
+    function formatCalendarFullDate(dateKey) {
+      const parts = dateOnlyParts(dateKey);
+      if (!parts) return "";
+      return `${parts.year}年${parts.month}月${parts.day}日`;
+    }
+
+    function formatCalendarMonthTitle(monthKey) {
+      if (!daysInCalendarMonth(monthKey)) return "";
+      const [year, month] = monthKey.split("-").map(Number);
+      return `${year} 年 ${month} 月`;
+    }
+
+    function calendarDateAriaLabel(options) {
+      const {
+        date,
+        today = "",
+        selected = false,
+        hasRecord = false,
+        net = 0,
+        future = false
+      } = options || {};
+      const normalized = normalizeDateKey(date);
+      if (!normalized) return "無效日期";
+      const labels = [formatCalendarFullDate(normalized), calendarWeekdayLabel(normalized)];
+      if (normalized === today) labels.push("今天");
+      if (selected) labels.push("已選取");
+      if (future) labels.push("未來日期");
+      if (hasRecord) {
+        const safeNet = Number(net);
+        labels.push("有工作紀錄");
+        labels.push(Number.isFinite(safeNet) ? `淨收入 ${money(safeNet)}` : "淨收入資料無效");
+      } else {
+        labels.push("尚無工作紀錄");
+      }
+      return labels.join("，");
     }
 
     function weatherIconSvg(weather) {
@@ -4823,6 +5025,29 @@
       const orders = entries.reduce((sum, entry) => sum + Number(entry.orders || 0), 0);
       const net = total - expenses;
       return { total, tips, expenses, durationMs, hours, orders, net, hourly: hourlyRate(net, durationMs) };
+    }
+
+    function isWorkDayRecord(entry, derived = null) {
+      if (!entry || !normalizeDateKey(entry.date)) return false;
+      const values = derived || {
+        durationMs: workMetrics(entry).durationMs,
+        total: entryTotal(entry),
+        expenses: entryExpenses(entry)
+      };
+      return nonNegativeNumber(values.durationMs) > 0
+        || Math.abs(finiteNumber(values.total)) > 0
+        || Math.abs(finiteNumber(values.expenses)) > 0
+        || nonNegativeNumber(entry.orders) > 0
+        || nonNegativeNumber(entry.km) > 0;
+    }
+
+    function summarizeCalendarMonth(entries) {
+      const validEntries = (Array.isArray(entries) ? entries : []).filter(entry => normalizeDateKey(entry?.date));
+      const summary = summarize(validEntries);
+      const workDays = new Set(
+        validEntries.filter(entry => isWorkDayRecord(entry)).map(entry => entry.date)
+      ).size;
+      return { ...summary, workDays };
     }
 
     function finiteNumber(value) {
