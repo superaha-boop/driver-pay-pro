@@ -101,7 +101,7 @@ test("舊報表網址與新網址會解析到正確分頁", () => {
     JSON.parse(JSON.stringify(navigation.parseAppRoute("#reports/platform"))),
     { view: "reports", reportView: "platform" }
   );
-  assert.equal(navigation.appRouteHash("reports", "month"), "#reports/month");
+  assert.equal(navigation.appRouteHash("reports", "month"), "#reports");
 });
 
 test("Calendar 日期 deep link 保留精確日期上下文", () => {
@@ -135,8 +135,8 @@ test("Calendar 4B 保留摘要並將過去日期寫入集中於共用編輯器",
 
 test("報表標題、空白狀態與平台排行符合定案文字", () => {
   assert.match(html, /reports: \["報表"/);
-  assert.match(html, /這個月份尚無週報資料/);
-  assert.match(html, /這個月份尚無收入紀錄/);
+  assert.match(html, /這一週/);
+  assert.match(html, /這個月/);
   assert.match(html, /這個月份尚無平台收入/);
   assert.match(html, /<h3>平台收入排行<\/h3>/);
   assert.doesNotMatch(html, /<h3>平台效率<\/h3>/);

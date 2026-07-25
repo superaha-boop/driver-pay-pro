@@ -163,8 +163,8 @@ test("Today、Calendar 與 Reports 的 canonical 計算符合固定預期", () =
   const sourceContracts = {
     renderStats: ["summarize"],
     renderCalendarRecordCard: ["entryTotal", "entryExpenses", "entryNet", "workMetrics", "hourlyRate"],
-    renderWeeks: ["summarize"],
-    renderMonthReport: ["summarize", "entryTotal"]
+    renderWeeks: ["aggregateReport"],
+    renderMonthReport: ["aggregateReport"]
   };
   Object.entries(sourceContracts).forEach(([renderer, selectors]) => {
     const source = extractFunction(renderer);
