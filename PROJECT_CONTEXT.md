@@ -407,7 +407,7 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 - 工時已統一由毫秒制的 `workMetrics()` 計算，平均時薪統一由 `hourlyRate()` 計算；歷史未收工紀錄不再持續累加到今天。
 - 週報週期已改用本地日期計算星期日至星期六，避免 `toISOString()` 時區退日造成六天區間。
 - 目前程式主要修改集中在 `index.html`；專案沒有 package.json、TypeScript、ESLint 或 build pipeline。
-- 目前工作分支為 `codex/home-restore-ui-20260717`；最新功能提交為 `4d4637b`，Git 流程文件於 2026-07-24 更新。實際 push 與同步狀態仍以即時 Git 檢查為準。
+- 目前已發布至 `main`；本次正式發布整合提交為 `823bfdf`，最新功能提交為 `d58d0a1`，持續發布規則於 2026-07-25 更新。實際 push 與 Production 狀態仍以即時 Git／Vercel 檢查為準。
 
 ## 6. 下一步工作
 

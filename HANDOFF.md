@@ -14,12 +14,16 @@ Driver Pay Pro 目前是單頁式網頁 App，主要介面、樣式與邏輯集�
 
 ### Git 現況
 
-- 目前工作分支：`codex/add-brand-attribution-20260724`
-- 分支基準：`main@a6c9776`
-- 本次作者資訊、About 精簡與工時／週期修正將依 Product Owner 的持續發布授權合併至 `main` 並確認 Production Deployment。
+- 目前分支：`main`
+- 本次發布工作分支：`codex/add-brand-attribution-20260724`
+- 本次作者資訊、About 精簡與工時／週期修正已合併至 `main`。
+- 正式發布整合提交：`823bfdf merge: release latest Driver Pay Pro updates`
+- Vercel Production Deployment：`dpl_Fgh8JyF9FQsB5k7nFb5Adr4zE44G`，狀態 `READY`，穩定網址 `https://driver-pay-app.vercel.app/`
 - 本次 Main 整合提交：`ab7b2cb merge: sync latest Driver Pay Pro`
 - 合併來源：`codex/home-restore-ui-20260717`
-- 最新功能提交：`4d4637b feat: add configurable platform input modes`
+- 最新功能提交：`d58d0a1 fix: unify work time and weekly reporting`
+- 錯誤舊圖示刪除提交：`5a3b2cd chore: remove obsolete app icon`
+- 持續發布規則提交：`0e4f457 docs: enable verified production releases`
 - Git 流程文件提交：`53aa540 docs: update sprint git workflow`
 - 作者資訊與 About 基礎提交：`42f9f31 feat: add brand attribution and about page`
 - `main` 已用標準 merge commit 保留雙方歷史；本次不需要 rebase、reset 或 force push。
@@ -348,7 +352,7 @@ Sprint 完成且通過適用驗證後，Codex 可以直接：
 - `codex/home-restore-ui-20260717` 已透過 `ab7b2cb` 合併至 `main`，雙方歷史均保留。
 - 本次整合使用一般 push；未使用 force push。
 - 遠端 `main` push 後由既有 Vercel Git Integration 自動建立 Production Deployment。
-- 未刪除 GitHub 追蹤檔案；無法確認為多餘的官方圖示、PWA 資源、文件與備份保護規則全部保留。
+- 已依 Product Owner 明確確認刪除未被程式、manifest 或 Service Worker 引用的錯誤舊圖 `assets/driver-pay-icon-512.png`；正式 Master Icon 與現行 PWA 圖示完整保留。
 - 每次開始工作仍需以 `git status -sb` 與遠端 Fetch 結果確認是否同步。
 - 未來每個驗證通過的 Sprint 均依持續發布授權合併、Push `main` 並確認 Production；當次使用者可明確要求不要部署。
 - GitHub CLI 目前未登入；若後續要建立或管理 Pull Request，需先完成 `gh auth login`，但一般 Git push 可使用既有 Git／GitHub Desktop 認證。
