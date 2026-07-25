@@ -6,6 +6,65 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
+## Reports Sprint 5B1 — Weekly and Monthly Core
+
+### 分支與範圍
+
+- 工作分支：`codex/reports-weekly-monthly-core-20260726`。
+- Base branch：`codex/reports-specification-20260726`。
+- Base commit：`f3cf76320ccc1cea489291aaae0fb97269fafa91`。
+- 本 Sprint 只實作 Reports 的週報／月報核心、共用期間與彙總、比較、趨勢、
+  重要日期、session-only state、基本資料狀態與回歸測試。
+- 明確未正式實作平台頁、Calendar deep link／return context、平台名稱
+  normalization、AI refactor、Calendar／Today／Driver 修改、schema、migration、
+  dependency、main merge 或 Production deploy。
+
+### Reports Core 實作
+
+- 新增台北 date-only 的週／月期間 utilities：Monday-first 完整七天、曆月半開
+  區間、前期、標籤、月份週桶與範圍篩選。
+- 新增單一 `aggregateReport()`，統一輸出總收入、支出、淨收入、工作天數、
+  實際工時、期間平均時薪、日期群組及平台 totals；收入與工時仍重用既有
+  canonical calculations。
+- 新增 `compareReportPeriods()`／`compareReportMetric()`，明確區分無本期、
+  無上期、上期為零、負值／正負跨越、可比較百分比與方向。
+- 週報顯示本週期間、主要／次要 KPI、上週比較、固定七日淨收入趨勢與最高／
+  最低淨收入日。
+- 月報顯示曆月期間、同一套 KPI、上月比較、四至六個 Monday-first 週淨收入
+  彙總、重要日期及既有月目標的次要呈現；跨月週只計入選定月份日期。
+- 新的 Reports runtime state 不再讀寫 legacy `lastReportView`／`reportMonth`；
+  同一頁面 session 保留 tab 與期間，重新載入 `#reports` 回到本週。舊
+  `#reports/{tab}` 路由仍可安全解析。
+- Tabs 使用正式 tab semantics、箭頭鍵導覽與焦點移動；期間控制至少 44px，
+  重要日期目前是靜態文字，不偽裝為 Calendar 連結。
+- Empty、Loading、Error、Offline 與 last-valid recovery presentation 已具備；
+  Reports 瀏覽與選期不呼叫 `saveState()`。
+- App Shell 變更後 Service Worker cache 更新為 `driver-pay-pro-v11`。
+
+### 驗證摘要
+
+- Node 自動測試：68/68 passed；本 Sprint 新增 10 項 Reports Core 測試。
+- Inline JavaScript、Service Worker syntax、Manifest JSON 與
+  `git diff --check`：passed。
+- 瀏覽器 Console：0 error／warning。
+- 320、375、390、393、430、768、1024px：
+  `scrollWidth === clientWidth`，tabs 單行，period controls 與兩欄 primary KPI
+  未溢出；Bottom Navigation 與結尾內容保留可捲動空間。
+- 實測 tab 點擊、左右鍵導覽、上一／下一期間、未來期間中性空狀態、同 session
+  返回與 reload 回本週。
+- `driverPayApp.v2` key、WorkRecord schema、Manifest 與 assets 不變。
+- TypeScript、ESLint、production build：專案未配置，Not available。
+- 實體 iPhone Safari、installed PWA、VoiceOver、reduced-motion 與離線重開仍需
+  Human QA；完成狀態只能是 `Status: Ready for Human QA`。
+
+### 下一步
+
+Sprint 5B2 — Platform, Drill-Down, and Hardening。屆時再處理平台正式報表、
+重要日期到 Calendar 精確日期、return context、record-change notification 與
+完整 hardening；不得回頭破壞 Calendar UX Freeze。
+
+---
+
 ## Reports Sprint 5A — Specification and Current-State Audit
 
 ### 分支與範圍

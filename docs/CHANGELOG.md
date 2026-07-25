@@ -19,6 +19,13 @@
 
 ### Added
 
+- Reports Sprint 5B1：新增共用台北週／月 period utilities、單一 report
+  aggregator、comparison calculator、session-only Reports state、週／月 KPI、
+  前期比較、七日／月份週淨收入趨勢、重要日期及 Empty／Loading／Error／Offline
+  presentation。
+- 新增 10 項 Reports Core 自動測試，涵蓋 Monday-first 期間、月份邊界、
+  canonical aggregation、零工時、比較 edge cases、無紀錄／stored zero、
+  月週彙總、重要日期、唯讀 session state 與 PWA v11；全部測試增為 68 項。
 - Reports Sprint 5A：新增正式 `docs/REPORTS_SPEC.md`，定義週／月／平台 state、台北期間、canonical KPI、前期比較、淨收入趨勢、平台貢獻、Calendar drill-down、資料狀態、35 個 edge cases、實作架構與完整驗收契約。
 - 新增 20 題 Reports Current-State Audit、D-027、Reports 永久執行規則及 `tests/reports-spec.test.js` 文件契約測試；全部自動測試增為 58 項。
 - Calendar Final Regression：新增固定 12 情境 fixture、跨頁 canonical calculation、月份摘要、heatmap、serialization rollback、validation accessibility 與 focus-return contract tests；全部自動測試增為 52 項。
@@ -51,6 +58,9 @@
 
 ### Changed
 
+- Reports 週報／月報由 renderer 內各自選期與彙總，改為共用純 selector 流程；
+  tab 與週／月選擇不再寫入 `driverPayApp.v2`，App Shell cache 更新為
+  `driver-pay-pro-v11`。
 - 下一個產品實作增量定為 Reports Sprint 5B1 — Weekly and Monthly Core；Sprint 5A 沒有修改 Production 程式、PWA 或資料。
 - Calendar persistence 在任何 clone／serialization 前保存主 key 與 last-valid 快照，失敗時完整回復；Record Editor validation error 與關閉後 focus return 完成無障礙 hardening。
 - Calendar V1 Read／Navigate／Create／Edit／Delete、Product Owner iPhone Safari／installed PWA／Offline Human QA 與 Final Regression 完成；下一個產品 Sprint 為 Reports。
