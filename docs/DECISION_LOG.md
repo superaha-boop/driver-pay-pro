@@ -265,3 +265,22 @@
   - 不把 selectedDate 寫入 localStorage 或 sessionStorage。
   - 不讓月份切換自動選最近工作日、同日或月初。
   - 不在 renderer 重新計算收入、淨收入、工時或時薪。
+
+## D-024
+
+- Date: 2026-07-25
+- Decision:
+  1. Calendar Sprint 4A.5 僅進行 Visual Polish，不改變 state、日期、手勢、鍵盤、ARIA、read-only 或資料行為。
+  2. 頂部採更緊湊的頁內 spacing，但月份箭頭、今天與日期格觸控操作不得低於 44×44px。
+  3. 工作紀錄卡片保持相同資料內容，以 typography、spacing 與低對比分隔線建立 Primary／Secondary metrics 層級。
+  4. Income Heatmap 只微調 Design System 的四級 semantic tokens；分級演算法、fallback、同值規則、Selected 與 Today 語意不變。
+  5. Month switch preserving `selectedDate` 維持 D-022／D-023，繼續列為 Needs UX Validation。
+- Reason: Sprint 4A 的互動與資料契約已固定；以低風險 presentation 調整減少非必要留白，可讓手機更早看到 Work Record Card，並改善戶外閱讀與資料掃讀，不需承擔資料寫入風險。
+- Impact:
+  - 只修改 Calendar presentation、heat semantic tokens、相關 contract tests 與 Service Worker cache version。
+  - `driverPayApp.v2`、WorkRecord schema、canonical calculations、heat algorithm、月份摘要、導航與其他頁面不變。
+  - Human QA Gate 必須覆蓋實體 iPhone Safari、installed PWA、VoiceOver、iOS 返回手勢、safe area、Service Worker 更新及月份保留選取日期 UX。
+- Rejected alternatives:
+  - 不以縮小 touch target 或字級換取垂直空間。
+  - 不新增圖例、裝飾圖示、卡片巢狀或額外指標標題。
+  - 不在視覺 Sprint 修改 heat 分級、日期選取或月份切換規則。

@@ -162,3 +162,27 @@ Driver Pay Pro 需要讓後續頁面不再各自猜測色彩、間距、圓角�
 - 本決策不授權新增、編輯、刪除、Record Editor、schema、migration 或其他頁面重構。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-023](docs/DECISION_LOG.md#d-023)。
+
+## D-024 — Calendar Visual Polish
+
+- Date: 2026-07-25
+
+### 決策
+
+1. Sprint 4A.5 僅調整 Calendar 視覺層級與空間效率，不改 state、日期、互動、ARIA、read-only 或資料規則。
+2. Calendar 頁內採更緊湊的垂直節奏，優先減少多餘 spacing，月份與日期觸控操作仍保持至少 44×44px。
+3. Work Record Card 保持相同資料內容，以 typography、spacing 與低對比分隔線區分 Primary／Secondary metrics。
+4. Income Heatmap 只調整 `--color-calendar-heat-1` 至 `--color-calendar-heat-4` semantic tokens；分級、fallback、同值規則與 Selected 優先級不變。
+5. Month switch preserving `selectedDate` 維持既有決策，繼續列為 Human QA 的 Needs UX Validation。
+
+### 原因
+
+Sprint 4A 的資訊架構與互動已通過自動驗證，但手機首屏仍可藉由減少非必要留白、強化文字層級及略增熱度差異，讓使用者更早看到工作紀錄卡片且更容易掃讀。
+
+### 影響範圍
+
+- 只影響 Calendar presentation CSS、工作紀錄標題的可見文字分層、Design System heat tokens、相關 contract tests 與 PWA cache version。
+- `driverPayApp.v2`、WorkRecord schema、canonical calculations、heat algorithm、月份摘要、導航、手勢及其他頁面均不變。
+- 下一步必須先完成實體 iPhone Safari／installed PWA Human QA Gate，再進入 Sprint 4B。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-024](docs/DECISION_LOG.md#d-024)。

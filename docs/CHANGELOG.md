@@ -19,6 +19,9 @@
 
 ### Added
 
+- Calendar Sprint 4A.5 Visual Polish：壓縮頁內垂直節奏、強化月份導覽與星期辨識、拉近日期／收入、改善工作紀錄卡片 Primary／Secondary metrics 層級。
+- Calendar heat semantic tokens 增加柔和的級距差異，演算法、Selected／Today 語意與資料保持不變；PWA cache 更新為 `driver-pay-pro-v9`。
+- 新增 D-024 Calendar Visual Polish 決策與非脆弱的視覺結構 contract test。
 - Calendar Sprint 4A：Monday-first Month Grid、session-only 日期選取、精確日期 deep link、相鄰月份日期、Today／Selected／Focus／Future 狀態。
 - Calendar 唯讀標準工作紀錄卡片、四級收入熱度、月份摘要、鍵盤操作、ARIA、水平手勢與 reduced-motion 支援。
 - `tests/calendar.test.js` 純函式與 Calendar contract 測試，並擴充導航、Design System、Reporting 與 PWA 回歸測試。

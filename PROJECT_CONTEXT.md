@@ -37,6 +37,8 @@
 - 收入、支出、淨收入、實際工時、平均時薪及週／月彙總必須共用單一計算來源。
 - 月曆正式定義為星期一至星期日；新啟動選今天，同一 App session 保留選取日期，未來日期不可建立紀錄。
 - Calendar Sprint 4A 已完成 Monday-first 月份格、session-only selected date、日期 deep link、收入熱度、唯讀工作紀錄卡片與月份摘要。
+- Calendar Sprint 4A.5 已完成低風險 Visual Polish：壓縮頁內垂直節奏、強化月份導覽／星期標題、拉近日期與收入、微調 heat tokens，並以字重、間距與淡分隔線強化工作紀錄卡片層級。
+- Sprint 4A.5 沒有改變 Calendar state、日期／手勢／鍵盤／ARIA、heat 演算法、canonical calculation 或資料；Calendar 仍完全 read-only。
 - 現況差距與技術限制集中記錄於 `docs/TECH_DEBT.md`，不因文件建立而自動授權實作。
 
 ### Calendar Specification 摘要
@@ -46,7 +48,7 @@
 - 單純切換月份不改 selectedDate；點日期或滑動日期才更新工作紀錄卡片，跨月時同步 displayedMonth。
 - 日期格只顯示淨收入簡寫與柔和相對熱度；Today 與 Selected 分開，未來日期可查看但不可新增。
 - 工作紀錄卡片第一版固定標準模式，唯讀數值已使用 canonical calculations 與 Design System primitives；同一套 Record Editor 尚待 Sprint 4B。
-- Calendar Implementation — Sprint 4A: Read and Navigate 已完成程式與自動驗證；下一步是 Sprint 4B: Record Mutation and Hardening。
+- Calendar Implementation — Sprint 4A Read and Navigate 與 Sprint 4A.5 Visual Polish 已完成程式與自動驗證；下一步先通過 Human QA Gate，再進入 Sprint 4B: Record Mutation and Hardening。
 - 單純月份切換保留原 `selectedDate`，若選取日不在顯示月份，卡片保留該日並提示；此行為標記為 Needs UX Validation。
 
 # Development Principles
@@ -455,13 +457,13 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 - 週報週期已改用不受 UTC 轉換影響的 date-only 曆法計算星期一至星期日；星期日仍歸屬前一個星期一開始的週。
 - 底部導覽已重整為今天、月曆、報表、AI、Driver；月曆與報表資料責任、月份狀態及 hash 路由已分離。
 - 月份明細已完整移入月曆；報表固定包含週報、月報與平台收入排行，並記住最後查看分頁。
-- PWA Service Worker 使用短版 cache `driver-pay-pro-v8`、略過 HTTP cache 檢查更新並在新 worker 接管後安全重載。
+- PWA Service Worker 使用短版 cache `driver-pay-pro-v9`、略過 HTTP cache 檢查更新並在新 worker 接管後安全重載。
 - 目前程式主要修改集中在 `index.html`；專案沒有 package.json、TypeScript、ESLint 或 build pipeline。
-- Calendar Sprint 4A 位於功能分支 `codex/calendar-read-navigate-20260725`；依本次 PRD 不合併 `main`、不部署。實際 push 狀態仍以即時 Git／GitHub 檢查為準。
+- Calendar Sprint 4A.5 位於功能分支 `codex/calendar-visual-polish-20260725`，base 為 `codex/calendar-read-navigate-20260725`；依本次 PRD 不合併 `main`、不部署。實際 push 狀態仍以即時 Git／GitHub 檢查為準。
 
 ## 6. 下一步工作
 
-1. 使用 iPhone Safari 與 installed PWA 完成 Calendar Sprint 4A 人工 UX／手勢／safe-area 驗收。
+1. 使用 iPhone Safari 與 installed PWA 完成 Calendar Sprint 4A／4A.5 Human QA Gate，包含視覺、手勢、VoiceOver、safe-area、Service Worker 更新及關閉重開驗收。
 2. 經 Product Owner 驗收後執行 Calendar Implementation — Sprint B: Record Mutation and Hardening。
 3. 使用 iPhone Safari 與加入主畫面的 PWA 驗收五欄底部導覽、月曆、報表切換及返回行為。
 4. 確認 Service Worker 沒有持續提供舊快取。

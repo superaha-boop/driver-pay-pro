@@ -932,8 +932,9 @@ Do not subdivide further unless implementation discovers a new data-loss or arch
 Audit base: `cc6b678` on `codex/product-specification-20260725`.
 
 Implementation status (2026-07-25): Sprint 4A Read and Navigate is implemented on
-`codex/calendar-read-navigate-20260725`. The table below remains the pre-implementation
-audit evidence used to scope that Sprint. Sprint 4B mutation and hardening is still pending.
+`codex/calendar-read-navigate-20260725`; Sprint 4A.5 Visual Polish is implemented on
+`codex/calendar-visual-polish-20260725`. The table below remains the pre-implementation
+audit evidence used to scope Sprint 4A. Sprint 4B mutation and hardening is still pending.
 
 | Question | Status | Repository evidence |
 | --- | --- | --- |

@@ -6,6 +6,68 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
+## Calendar Sprint 4A.5 — Visual Polish
+
+### 分支與範圍
+
+- Base：`codex/calendar-read-navigate-20260725`，exact base commit `09cde36eb61e85d8e78b1246b1096a1428d212b0`。
+- 工作分支：`codex/calendar-visual-polish-20260725`。
+- 本 Sprint 僅做 Calendar presentation 微調；沒有 merge、deploy、資料寫入、功能新增或互動規則變更。
+
+### 修改前後差異
+
+- Calendar 頁內 top padding 由 `--spacing-2` 改為 `--spacing-1`，主要區塊 gap 由 `--spacing-5` 改為 `--spacing-3`；390px 的 Month Grid 提前約 16px、Work Record Card 提前約 24px。
+- 月份標題仍是操作中心；今天按鈕保持 Ghost／Text Button，新增 56px 最小寬度、`--spacing-3` 水平 padding、`--radius-sm` 與柔和 hover／pressed surface，所有導覽控制仍至少 44px 高。
+- 星期標題維持 secondary color 與七欄，只提高字重並縮短多餘垂直空間。
+- 日期格整體點擊高度不變；日期與收入 gap 改為 1px，收入仍 nowrap、tabular-nums，金額縮寫規則不變。
+- Heat Level 1–4 改用較容易區分但仍柔和的 `--color-calendar-heat-1` 至 `--color-calendar-heat-4`；演算法、fallback、同值 Level 2、Selected 與 Today 規則未變。
+- Work Record Card 採方案 C：相同完整日期／星期與相同 ARIA label，日期使用 primary semibold，星期使用 secondary medium。
+- Primary metrics 使用 `--font-size-section-title`；Secondary metrics 使用 18px semibold，兩組以 `--border-subtle` 與 `--spacing-3` 分隔；卡片資料、順序與格式化未變。
+- Service Worker cache 由 `driver-pay-pro-v8` 更新為 `driver-pay-pro-v9`。
+
+### 驗證摘要
+
+- Node 自動測試：41/41 通過。
+- Inline JavaScript、Service Worker、manifest、App Shell、`git diff --check` 通過；Browser Console 無 error／warning。
+- 320、375、390、393、430、768、1024px 無水平 overflow；七欄、金額 nowrap、Selected border、44px touch target、窄螢幕卡片標題與 Desktop bounded width 均通過。
+- 2026 年 8 月六週月份於 390／430px 均為 42 格、每列 7 欄，Calendar／Card gap 12px。
+- `driverPayApp.v2`、WorkRecord schema、canonical calculations、Calendar state、日期／月份／手勢／鍵盤／ARIA、read-only 與 heat algorithm 均未變。
+- TypeScript、ESLint、production build：專案未配置，Not available。
+
+### Open：Human QA、Sprint 4B 與既有技術債
+
+以下項目均未在 Sprint 4A.5 完成，不得標記 Done：
+
+1. 實體 iPhone Safari QA。
+2. installed PWA QA。
+3. VoiceOver 日期朗讀。
+4. iOS 返回手勢。
+5. safe area 與 Bottom Navigation。
+6. PWA 關閉重開回到今天。
+7. Service Worker 更新行為。
+8. Month switch 保留 `selectedDate` UX。
+9. Sprint 4B 共用 Record Editor。
+10. 過去紀錄補登。
+11. 歷史紀錄編輯。
+12. 刪除確認與 rollback。
+13. SaveStatus。
+14. Offline／Error hardening。
+15. Record-level `createdAt`／`updatedAt` 評估。
+16. localStorage 損壞錯誤狀態。
+17. AI 重複彙總風險。
+18. TypeScript 評估。
+19. lint pipeline。
+20. production build pipeline。
+21. Design System showcase route。
+22. 真實 iPhone Time Input 驗證。
+23. 每個主要功能後的 UX Review Sprint。
+
+### 下一步
+
+先完成 Human QA Gate；通過後才進入 Sprint 4B — Record Mutation and Hardening。Sprint 4B 前置條件仍是單一 Record Editor、past-only mutation、transaction rollback、SaveStatus、離線／錯誤保護及資料完整性測試。
+
+---
+
 ## Calendar Sprint 4A — Read and Navigate Implementation
 
 ### 本次分支與範圍

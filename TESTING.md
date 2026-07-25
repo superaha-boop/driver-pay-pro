@@ -26,6 +26,37 @@ Date: 2026-07-25
 - Physical iPhone Safari and installed PWA: pending Product Owner human QA.
 - Needs UX Validation: month navigation preserves an out-of-month selected date and keeps that date's card visible with a quiet context label.
 
+## Calendar Sprint 4A.5 Visual Polish validation record
+
+Date: 2026-07-25
+
+- Automated Node tests: 41/41 passed.
+- Inline JavaScript, Service Worker syntax, manifest JSON, App Shell, and `git diff --check`: passed.
+- Browser Console: no errors or warnings.
+- Responsive checks: 320, 375, 390, 393, 430, 768, and 1024px passed without horizontal overflow; seven columns, month navigation, nowrap amounts, selected border, bounded desktop width, and Work Record Card alignment remained intact.
+- Six-row month: August 2026 passed at 390 and 430px with 42 date cells, seven columns, a 12px Calendar/Card gap, and no horizontal overflow.
+- 390px before/after measurement: Month Navigation moved from y=109.5 to y=105.5; Month Grid from y=207.0 to y=191.0; Work Record Card from y=519.0 to y=495.0, so the card appears about 24px earlier without reducing control hit areas.
+- Verified presentation contracts: Today button remains at least 44px high, weekday header keeps seven columns, date amount is nowrap/tabular, selected/current ARIA remains, Work Record Card keeps the same accessible header label, and heat remains a four-level semantic-token presentation.
+- Verified regressions: Monday-first, exact date route, month-only navigation, Today action, selected/current separation, canonical card calculations, read-only behavior, unchanged `driverPayApp.v2`, and unchanged heat algorithm.
+- TypeScript: Not available.
+- ESLint: Not available.
+- Production build: Not available.
+- Physical iPhone Safari, installed PWA, VoiceOver, iOS return gesture, safe area, Service Worker lifecycle, relaunch-to-today, and month-switch UX: pending Product Owner Human QA.
+
+### Calendar Visual Polish human checklist
+
+- [ ] Header feels clearly shorter without losing brand recognition.
+- [ ] Month navigation remains understandable and all controls are comfortable to tap.
+- [ ] Today button is visible but does not compete with the month title.
+- [ ] Weekday labels are easier to read outdoors and remain secondary.
+- [ ] Date and compact income amount feel related without touching or wrapping.
+- [ ] Heat levels are slightly easier to distinguish while remaining soft.
+- [ ] Selected remains the strongest visual state and Today remains identifiable.
+- [ ] Work Record Card date is primary and weekday is secondary; VoiceOver wording is unchanged.
+- [ ] Primary and secondary metrics scan clearly without new visual noise.
+- [ ] 390px reveals the Work Record Card earlier; 430px retains comfortable spacing.
+- [ ] Physical iPhone Safari and installed PWA preserve safe area, Bottom Navigation, gestures, focus, offline shell, and relaunch behavior.
+
 ## Cross-page product contract checklist
 
 Use this checklist for every feature that affects navigation, records, calculations, or more than one primary page.
