@@ -238,3 +238,35 @@ validation、資料模型與 canonical calculations 分裂。
 決策、提供 Regression，並同步更新本文件與正式決策紀錄。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-026](docs/DECISION_LOG.md#d-026)。
+
+## D-027 — Reports Specification Version 1
+
+- Date: 2026-07-26
+
+### 決策
+
+1. `docs/REPORTS_SPEC.md` 成為 Reports Core Implementation 的唯一主要功能規格。
+2. Reports 固定包含週報、月報與平台；新 session 預設週報，tab、週、月、平台期間與返回 context 均為 session-only。
+3. 週報以台北星期一至星期日為完整七天；月報以台北曆月為完整期間，兩者支援前後與當期導覽。
+4. 週／月 KPI、比較、趨勢、平台與重要日期必須來自 canonical calculations 與純 selector；renderer 不得複製公式。
+5. 週趨勢使用每日淨收入；月趨勢使用 Monday-first 週彙總。
+6. 平台頁只描述收入貢獻，不推論效率；小費不歸入平台總額。
+7. Reports 保持唯讀，需要檢查或修正紀錄時連到 Calendar 的確切日期。
+8. 實作拆為 Sprint 5B1 Weekly and Monthly Core 與 Sprint 5B2 Platform, Drill-Down, and Hardening。
+9. 本決策取代 D-018 中「報表分頁與月份需 durable 保存」的部分；D-018 的五頁資訊架構與 Calendar／Reports 分離仍有效。
+10. 趨勢與排行必須提供可見數值與螢幕閱讀器文字替代，不得只靠顏色或圖形。
+11. Calendar UX Freeze 對 Reports 實作完整生效；Reports 只能重用已凍結能力，不得為報表回頭重設 Calendar。
+
+### 原因
+
+現有 Reports 已有基本週／月彙總與平台排行，但缺少明確 period state、前期比較、
+淨收入趨勢、錯誤狀態、精確日期導覽與 accessibility 契約；先固定規格可避免
+下一個 Sprint 複製日期／計算公式或把 Reports 變成第二個資料編輯頁。
+
+### 影響範圍
+
+- Sprint 5A 只更新規格、稽核、測試契約與永久文件，不修改 Production。
+- `driverPayApp.v2`、WorkRecord schema、Calendar Freeze、Service Worker 與 App Shell 不變。
+- 現況差距登錄於 `docs/TECH_DEBT.md`，不因規格定案而自動授權全部修正。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-027](docs/DECISION_LOG.md#d-027)。

@@ -1,6 +1,6 @@
 # Driver Pay Pro — Technical Debt Register
 
-Updated: 2026-07-25
+Updated: 2026-07-26
 
 This register records known limitations and follow-up work. An entry does not authorize implementation. Each item requires its own approved Sprint when scheduled.
 
@@ -35,6 +35,10 @@ Priority:
 | TD-020 | WorkRecord has no record-level `createdAt` or `updatedAt`. | Calendar cannot display or use reliable record timestamps, and conflict logic cannot assume them. | P2 | Reassess only with an approved data migration or future sync design | No; Calendar Data Contract marks both fields unavailable. |
 | TD-021 | Calendar mutation, transactional failure, and physical iPhone/PWA behavior previously lacked final coverage. | Record writing and true Safari/standalone behavior could regress without detection. | P1 | Resolved for Calendar V1 on 2026-07-25 | Resolved for Calendar V1: final fixture, mutation, validation, rollback and browser flows pass; Product Owner confirmed iPhone Safari, installed PWA and offline QA. Recurring device automation remains tracked by TD-008. |
 | TD-022 | `workSession` stores aggregate/current session state rather than a list of completed work segments. | Calendar can show canonical aggregate duration but cannot render a trustworthy multi-segment timeline. | P2 | Later Work Record detail/data-model Sprint with migration plan | No; detailed session history is out of Calendar v1 scope. |
+| TD-023 | Reports period selection and aggregation are embedded in weekly, monthly, trend, and platform renderers. | New comparisons or trends can rescan state, duplicate rules, or diverge across tabs. | P1 | Reports Sprint 5B1 before adding comparison UI | No; Sprint 5A specifies pure selectors only. |
+| TD-024 | Reports refresh relies on direct renderer calls from several flows and has no reusable committed-record notification. | As page controllers become more modular, Reports can become stale or refresh multiple times after a mutation. | P1 | Reports Sprint 5B2 hardening | No; Sprint 5A records the required notification contract. |
+| TD-025 | Reports transient tab and month choices are stored in durable `lastReportView` and `reportMonth` settings. | A fresh App session can reopen stale analysis context and UI-only state remains coupled to the user-data payload. | P2 | Reports Sprint 5B1 with backward-compatible reads and no migration | No; existing fields are preserved in Sprint 5A. |
+| TD-026 | Historical platform income is keyed by platform display name rather than a stable platform ID. | Renaming a custom platform can split historical ranking, while silently merging names could corrupt attribution. | P1 | Define alias/migration contract before any platform-history merge | No; V1 Reports must display stored keys without silent merging. |
 
 ## Maintenance Rules
 

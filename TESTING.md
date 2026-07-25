@@ -1,6 +1,6 @@
 # Driver Pay Pro Testing
 
-更新日期：2026-07-25
+更新日期：2026-07-26
 
 ## 基本規則
 
@@ -9,6 +9,37 @@
 - 現行自動測試使用 Node.js 內建 `node:test`。
 - 所有功能變更都必須確認 `driverPayApp.v2` 未被更名或清除。
 - PWA 資源變更必須同步檢查 `sw.js` cache version 與 App Shell。
+
+## Reports Sprint 5A Specification Validation
+
+Date: 2026-07-26
+
+- `tests/reports-spec.test.js` 驗證 `docs/REPORTS_SPEC.md` 的 30 個正式章節。
+- 契約涵蓋固定 tabs、session-only state、Monday-first Taipei periods、canonical
+  KPI、comparison、weekly/monthly trend、platform semantics、Calendar drill-down、
+  data safety、35 個 edge cases 與 20 題 Current-State Audit。
+- 同步驗證 `AGENTS.md` Reports 永久規則、`PRODUCT_SPEC.md` owner contract 與
+  `FEATURE_FREEZE_CHECKLIST.md`。
+- Sprint 5A 不改正式 UI；iPhone Safari／installed PWA 視覺驗收不適用，
+  並不得沿用 Calendar Human QA 宣稱 Reports UI 已通過。
+- TypeScript、ESLint、Production build：Not available。
+- Result: 全部 Node tests 58/58 passed；Reports／Reporting／Calendar regression
+  targeted tests 21/21 passed；`TZ=UTC` 與 `TZ=Asia/Taipei` 子集各 14/14 passed。
+- Inline JavaScript、Service Worker syntax、Manifest JSON、App Shell 與
+  `git diff --check`：passed。
+
+### Reports Core Implementation Future Acceptance
+
+- [ ] Weekly：完整台北星期一至星期日、canonical KPIs、前週比較與七日淨收入趨勢。
+- [ ] Monthly：完整台北曆月、canonical KPIs、前月比較與 Monday-first 週趨勢。
+- [ ] Platform：週／月期間、收入總額、排行、占比與安全前期比較，不推論效率。
+- [ ] Comparison：無資料、前期零值、負值與正負跨越不顯示誤導百分比。
+- [ ] Trend：無紀錄、零、負值分開，具 visible values 與文字替代。
+- [ ] Deep link：開啟 Calendar exact date，返回時保留同 session Reports context。
+- [ ] Accessibility：tabs、44px targets、focus、live region、chart alternative 與 reduced motion。
+- [ ] Responsive：375、390、393、430px 無 document-level horizontal overflow。
+- [ ] Offline：本機有效資料可讀，損壞資料與 last-valid fallback 有明確狀態。
+- [ ] Cross-page consistency：Today、Calendar、Reports、AI 共用 fixture 產生相同 canonical values。
 
 ## Calendar Final Regression Matrix
 

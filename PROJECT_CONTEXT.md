@@ -1,6 +1,6 @@
 # Driver Pay Pro 專案固定背景
 
-更新日期：2026-07-25
+更新日期：2026-07-26
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
@@ -11,7 +11,18 @@
 - Product Owner 已完成並確認 iPhone Safari、installed PWA、Preview 與 Offline Human QA。
 - Calendar UX Freeze — Version 1 已生效；後續只接受 Bug、Accessibility、Data Integrity 與重大使用障礙修正。
 - `driverPayApp.v2`、WorkRecord schema、Heatmap 演算法與計算公式均未因封板改變。
-- 下一個產品 Sprint 為 Reports Product and Implementation Sprint；不得因此回頭改造 Calendar。
+- Reports Sprint 5A 已完成正式規格與現況稽核；下一個實作增量是 Sprint 5B1 — Weekly and Monthly Core。
+- Reports 實作必須以 `docs/REPORTS_SPEC.md` 為唯一主要功能規格，不得因此回頭改造 Calendar。
+
+## Reports Specification 狀態
+
+- `docs/REPORTS_SPEC.md` Version 1.0 已定案，涵蓋週／月／平台資訊架構、session state、台北期間、canonical KPI、前期比較、淨收入趨勢、平台貢獻、Calendar exact-date drill-down、empty／loading／error／offline 與驗收規格。
+- 新 App session 固定預設週報；Reports 的 tab、週、月、平台期間與返回 context 都是 session-only，不新增到 `driverPayApp.v2`。
+- 週報固定星期一至星期日；月報採完整台北曆月；月趨勢採四至六個 Monday-first 週彙總。
+- 平台頁只描述收入貢獻、排行、占比與安全比較，不得推論效率或最佳平台；小費不歸入平台收入。
+- Current-State Audit 確認現況已有 canonical 週／月彙總與平台排行，但缺少前期比較、週趨勢、exact-date drill-down、讀取錯誤狀態與正式可及性契約。
+- Reports 文件契約加入後，全套 Node tests 為 58/58 通過；UTC 與 Asia/Taipei 的 Reporting／Reports Spec 子集均通過。
+- Sprint 5A 未修改 `index.html`、CSS、Service Worker、Manifest、資料結構、localStorage 或 Production。
 
 ## 1. App 的核心設計原則
 
@@ -406,8 +417,8 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 
 - 底部導覽固定為「今天｜月曆｜報表｜AI｜Driver」，使用 24px Lucide inline SVG 與 14px 單行文字。
 - 月曆只顯示月份明細與每日歷史紀錄，不放週報、月報或平台分析。
-- 報表使用固定主標題「報表」，內含週報、月報與平台三個分頁；離開後會記住最後查看的分頁。
-- 月曆月份與報表月份互相獨立；報表三個分頁共用同一個月份。
+- 報表使用固定主標題「報表」，內含週報、月報與平台三個分頁；同一 App session 會記住分頁，fresh session 固定回到週報。
+- 月曆月份與報表期間互相獨立；正式 Reports period state 以 `docs/REPORTS_SPEC.md` 為準。
 - 每日歷史紀錄顯示總收入、平台收入、支出、淨收入與實際工時；編輯與刪除操作至少 44px，刪除保留確認。
 - 舊 `#week`、`#month`、`#platform`、`#analysis` 連結仍會導向對應報表內容。
 
@@ -437,7 +448,7 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 - 班別與天氣：展開「其他資料」後直接點選，無下拉選單與確認按鈕。
 - 日期：點擊完整置中日期卡即可開啟原生日期選擇器，選擇後立即更新。
 - 月曆：使用獨立月份選擇器閱讀每日歷史紀錄，並可直接編輯或刪除既有紀錄。
-- 報表：從「報表」進入週報、月報或平台收入排行；三個分頁共用報表月份並記住最後分頁。
+- 報表：從「報表」進入週報、月報或平台收入排行；同 session 保留各自期間與分頁，fresh session 回到週報。
 
 ## 4. 不能退回的舊設計
 
@@ -465,15 +476,15 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 - 工時已統一由毫秒制的 `workMetrics()` 計算，平均時薪統一由 `hourlyRate()` 計算；歷史未收工紀錄不再持續累加到今天。
 - 週報週期已改用不受 UTC 轉換影響的 date-only 曆法計算星期一至星期日；星期日仍歸屬前一個星期一開始的週。
 - 底部導覽已重整為今天、月曆、報表、AI、Driver；月曆與報表資料責任、月份狀態及 hash 路由已分離。
-- 月份明細已完整移入月曆；報表固定包含週報、月報與平台收入排行，並記住最後查看分頁。
+- 月份明細已完整移入月曆；報表固定包含週報、月報與平台收入排行；現有 durable 分頁記憶是待 Sprint 5B1 相容處理的 legacy 行為。
 - PWA Service Worker 使用短版 cache `driver-pay-pro-v10`、略過 HTTP cache 檢查更新並在新 worker 接管後安全重載。
 - 目前程式主要修改集中在 `index.html`；專案沒有 package.json、TypeScript、ESLint 或 build pipeline。
 - Calendar Final Regression 位於功能分支 `codex/calendar-final-regression-20260725`，base 為 `codex/calendar-record-mutation-20260725`；依本次 PRD 不合併 `main`、不 Production deploy。實際 push 狀態仍以即時 Git／GitHub 檢查為準。
 
 ## 6. 下一步工作
 
-1. 執行 Reports Product and Implementation Sprint，先核對正式 Reports 責任與規格。
-2. Reports 必須重用既有日期、Monday-first、canonical calculations 與 aggregation，不建立第二套公式。
+1. 執行 Reports Sprint 5B1 — Weekly and Monthly Core，逐項依 `docs/REPORTS_SPEC.md` 實作。
+2. Reports 必須重用既有日期、Monday-first、canonical calculations，並把 report aggregation 從 renderer 抽成純 selector，不建立第二套公式。
 3. Calendar 已 UX Freeze；一般視覺偏好與新想法加入 Backlog，不直接修改。
 4. 每次 Calendar、PWA 或原生 input 相關發布仍需實體 iPhone Safari 與 installed PWA 回歸。
 5. 未經使用者確認，不修改已凍結首頁或重新設計週報。

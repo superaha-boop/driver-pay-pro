@@ -1,6 +1,6 @@
 # Driver Pay Pro — Codex Instructions
 
-Version: 1.6
+Version: 1.7
 
 ## Project Documentation
 
@@ -9,6 +9,7 @@ Version: 1.6
 - `docs/PRODUCT_GUIDE.md`
 - `docs/PRODUCT_SPEC.md`
 - `docs/CALENDAR_SPEC.md`（涉及 Calendar 時）
+- `docs/REPORTS_SPEC.md`（涉及 Reports 時）
 - `docs/DESIGN_KIT.md`
 - `docs/DEVELOPMENT_HANDBOOK.md`
 - `docs/DECISION_LOG.md`
@@ -23,6 +24,7 @@ Version: 1.6
 - `PRODUCT_GUIDE.md`：產品方向與範圍
 - `PRODUCT_SPEC.md`：正式產品邊界、頁面責任、功能歸屬與跨頁資料契約
 - `CALENDAR_SPEC.md`：Calendar 正式互動、狀態、資料契約、實作架構與驗收規格
+- `REPORTS_SPEC.md`：Reports 正式期間、KPI、比較、趨勢、平台、狀態與驗收規格
 - `DESIGN_KIT.md`：UI、UX 與品牌規則
 - `DESIGN_SYSTEM.md`：可實作的視覺 tokens 與共用 UI primitives
 - `DEVELOPMENT_HANDBOOK.md`：開發、測試與發布流程
@@ -38,10 +40,11 @@ Version: 1.6
 3. `AGENTS.md`
 4. `PRODUCT_SPEC.md`
 5. `CALENDAR_SPEC.md`（涉及 Calendar 時）
-6. `PRODUCT_GUIDE.md`
-7. `DESIGN_KIT.md`
-8. `DEVELOPMENT_HANDBOOK.md`
-9. Codex 自行判斷
+6. `REPORTS_SPEC.md`（涉及 Reports 時）
+7. `PRODUCT_GUIDE.md`
+8. `DESIGN_KIT.md`
+9. `DEVELOPMENT_HANDBOOK.md`
+10. Codex 自行判斷
 
 若指令可能造成資料遺失、覆蓋正式版本、刪除分支或改寫 Git 歷史，必須先停止並說明風險。
 
@@ -125,6 +128,21 @@ Version: 1.6
 - Calendar 不取代 Reports，不加入即時工作控制、趨勢、平台排行或 AI 洞察。
 - Calendar 必須使用 canonical calculations、`styles/design-system.css` primitives 與同一套 Record Editor；不得建立第二套表單、資料模型或公式。
 - 完整狀態、手勢、Accessibility、資料與驗收規格以 `docs/CALENDAR_SPEC.md` 為準。
+
+## Reports Execution Rules
+
+- Reports 是唯讀的比較與分析頁；不得新增、編輯或刪除工作紀錄，也不得建立第二套 Record Editor。
+- Reports 固定包含「週報｜月報｜平台」；新 App session 預設週報，同 session 可保留分頁與期間，但不得將 transient Reports state 新增到 `driverPayApp.v2`。
+- 週報以台北本地星期一至星期日為完整七天，月報以台北本地曆月為完整期間；日期運算必須重用 Calendar 的 date-only utilities。
+- 週／月 KPI、比較、趨勢、平台總額與重要日期必須建立在 canonical calculations 與純 selector 上；renderer 不得自行複製公式。
+- 平均時薪固定為期間淨收入除以期間有效工作時數；零工時不得出現 `Infinity` 或 `NaN`。
+- 週趨勢使用七個每日淨收入點；月趨勢使用四至六個 Monday-first 週彙總，且月份邊界只計入選定月份日期。
+- 平台頁只描述收入貢獻、排行與占比，不得推論平台效率、最佳平台或平台時薪；小費不得誤歸入平台收入。
+- 比較前一期為緊鄰的同等期間；前期零值、無紀錄、負值或正負跨越時不得顯示誤導百分比。
+- 重要日期只能連到 Calendar 的確切日期；Reports 本身維持唯讀，同 session 返回時保留 Reports context。
+- Empty、Loading、Error、Offline、stored zero 與 no record 必須是不同狀態；讀取錯誤不得覆寫或清除原始 localStorage。
+- Reports UI 必須使用 Design System、Lucide、44×44px touch targets、正確 tab semantics 與可讀的圖表文字替代。
+- 完整 state、period、KPI、comparison、trend、platform、deep-link、edge-case 與驗收規格以 `docs/REPORTS_SPEC.md` 為準。
 
 # Driver Pay Pro Product Design Rules
 

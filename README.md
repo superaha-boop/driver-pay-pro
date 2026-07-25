@@ -8,6 +8,9 @@ Driver Pay Pro 是為多元計程車與職業駕駛設計的手機優先收入�
 
 - [Codex Instructions](AGENTS.md)：所有 Codex 工作都必須遵守的核心執行、安全與驗證規則。
 - [Product Guide](docs/PRODUCT_GUIDE.md)：產品定位、目標使用者、產品價值、MVP 與 Backlog。
+- [Product Specification](docs/PRODUCT_SPEC.md)：正式產品邊界、頁面責任與跨頁資料契約。
+- [Calendar Specification](docs/CALENDAR_SPEC.md)：Calendar 正式互動、資料與驗收契約。
+- [Reports Specification](docs/REPORTS_SPEC.md)：Reports 正式期間、KPI、比較、趨勢、平台與驗收契約。
 - [Design Kit](docs/DESIGN_KIT.md)：Mobile First、UI／UX、互動、響應式與品牌規範。
 - [Development Handbook](docs/DEVELOPMENT_HANDBOOK.md)：Sprint、PRD、開發、QA、Beta 與發布流程。
 - [Decision Log](docs/DECISION_LOG.md)：重要產品與工程決策、理由及影響。

@@ -19,6 +19,8 @@
 
 ### Added
 
+- Reports Sprint 5A：新增正式 `docs/REPORTS_SPEC.md`，定義週／月／平台 state、台北期間、canonical KPI、前期比較、淨收入趨勢、平台貢獻、Calendar drill-down、資料狀態、35 個 edge cases、實作架構與完整驗收契約。
+- 新增 20 題 Reports Current-State Audit、D-027、Reports 永久執行規則及 `tests/reports-spec.test.js` 文件契約測試；全部自動測試增為 58 項。
 - Calendar Final Regression：新增固定 12 情境 fixture、跨頁 canonical calculation、月份摘要、heatmap、serialization rollback、validation accessibility 與 focus-return contract tests；全部自動測試增為 52 項。
 - 新增共用 `docs/FEATURE_FREEZE_CHECKLIST.md` 與 D-026，正式宣告 Calendar UX Freeze — Version 1。
 - Calendar Sprint 4B：過去日期新增／編輯／刪除、共用 Record Editor、UI draft、dirty close confirmation、日期明確刪除確認與 SaveStatus。
@@ -49,6 +51,7 @@
 
 ### Changed
 
+- 下一個產品實作增量定為 Reports Sprint 5B1 — Weekly and Monthly Core；Sprint 5A 沒有修改 Production 程式、PWA 或資料。
 - Calendar persistence 在任何 clone／serialization 前保存主 key 與 last-valid 快照，失敗時完整回復；Record Editor validation error 與關閉後 focus return 完成無障礙 hardening。
 - Calendar V1 Read／Navigate／Create／Edit／Delete、Product Owner iPhone Safari／installed PWA／Offline Human QA 與 Final Regression 完成；下一個產品 Sprint 為 Reports。
 - Calendar 由唯讀 Read and Navigate 進入 past-only mutation；Today 仍擁有今日紀錄，未來日期仍不可建立。

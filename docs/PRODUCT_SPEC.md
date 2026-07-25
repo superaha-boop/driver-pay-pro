@@ -105,6 +105,10 @@ Calendar must not:
 
 Purpose: compare and analyze performance over time.
 
+The formal Reports period, state, KPI, comparison, trend, platform, drill-down, and
+acceptance contract is defined in `docs/REPORTS_SPEC.md`. Reports implementation
+must use that document as its primary feature specification.
+
 Primary responsibilities:
 
 - Weekly summaries.
@@ -230,7 +234,8 @@ Reports and AI links to a record must carry the exact date. If the date is inval
 - During the same app session, Calendar retains its selected date.
 - Selecting a date in another month updates both selected date and visible month.
 - Calendar month and Reports month remain independent.
-- Reports remembers its last internal tab.
+- Reports retains its internal tab only during the same App session; a fresh session
+  starts on Weekly according to `REPORTS_SPEC.md`.
 - Persistent configuration belongs in `state.settings`; transient view state does not.
 - No page may silently choose the nearest working day when the requested day has no record.
 
@@ -412,7 +417,9 @@ Calendar implementation status (2026-07-25):
 - Sprint 4A.5 Visual Polish implemented.
 - Sprint 4B Record Mutation and Hardening and Calendar Final Regression implemented on their feature branches.
 - Product Owner confirmed physical iPhone Safari, installed-PWA, Preview and offline Human QA on 2026-07-25.
-- Calendar UX Freeze — Version 1 is active; the next product Sprint is Reports.
+- Calendar UX Freeze — Version 1 is active.
+- Reports Specification and Current-State Audit completed on 2026-07-26; the next
+  implementation increment is Reports Sprint 5B1 — Weekly and Monthly Core.
 
 ## 14. Change Control
 

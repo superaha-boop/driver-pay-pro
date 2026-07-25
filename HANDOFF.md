@@ -1,8 +1,59 @@
 # Driver Pay Pro 開發交接摘要
 
-更新日期：2026-07-25
+更新日期：2026-07-26
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
+
+---
+
+## Reports Sprint 5A — Specification and Current-State Audit
+
+### 分支與範圍
+
+- 工作分支：`codex/reports-specification-20260726`。
+- Base：`2c8b30fb588e2a262a69b24e82f548a3b253d639`。
+- 本 Sprint 只建立正式 Reports 規格、現況稽核、永久文件與規格契約測試。
+- 明確未修改 `index.html`、正式 CSS、Reports renderer、Calendar、`sw.js`、Manifest、資料、localStorage schema、main 或 Production。
+
+### 正式規格
+
+- 新增 `docs/REPORTS_SPEC.md` Version 1.0，成為下一個 Reports Core Implementation 的唯一主要實作規格。
+- 固定 `週報｜月報｜平台`，新 session 預設週報；所有 Reports navigation state 維持 session-only。
+- 週報採台北星期一至星期日，月報採台北曆月；支援前一期間、下一期間與返回本週／本月。
+- 週／月共用 canonical KPI，平均時薪為期間淨收入除以期間有效工時。
+- 週趨勢採七個每日淨收入點；月趨勢採四至六個 Monday-first 週彙總。
+- 平台只分析收入貢獻；小費不歸入平台，也不推論效率或最佳平台。
+- 重要日期連到 Calendar 精確日期，Reports 本身保持唯讀並在同 session 保留返回 context。
+
+### Current-State Audit 結論
+
+- 現有週／月報已重用 `summarize()` 等 canonical calculations，但選期與 aggregation 仍寫在 renderers。
+- 現有月趨勢是每日總收入，不是核准規格的淨收入；週報沒有趨勢或前期比較。
+- 現有 `lastReportView`／`reportMonth` 是 durable settings，與新 session-only 契約不同；不在 Sprint 5A 刪除或 migration。
+- 平台排行存在且命名正確，但 `每日平均` 缺乏可靠產品意義；歷史平台收入仍以顯示名稱為 key。
+- Calendar exact-date API 存在，但 Reports 尚未提供 date drill-down 或返回 context。
+- Reports 尚無獨立 Loading／Error／last-valid fallback UI，也沒有正式 tab/chart accessibility。
+- 可直接重用的 Calendar 基礎包含 date-only utilities、Monday-first week、
+  exact-date navigation、canonical calculations、work-day selector、verified
+  persistence read path、金額格式與 Design System primitives。
+- AI 仍有 `analysisEntryTotal()`、`analysisEntryExpenses()`、`analysisSummary()`
+  與 platform aggregation 複本；這是 TD-006，Reports 不得依賴或再複製這套公式。
+
+### 下一步
+
+1. Sprint 5B1 — Weekly and Monthly Core。
+2. Sprint 5B2 — Platform, Drill-Down, and Hardening。
+3. 實作前再次核對 Git、PRD、`REPORTS_SPEC.md` 與 Product Owner 當次指令。
+
+### Sprint 5A 驗證
+
+- 全部 Node tests：58/58 passed。
+- Reports／Reporting／Calendar regression targeted tests：21/21 passed。
+- Reporting／Reports Spec 在 `TZ=UTC` 與 `TZ=Asia/Taipei`：各 14/14 passed。
+- Inline JavaScript、Service Worker syntax、Manifest JSON、App Shell 與
+  `git diff --check`：passed。
+- 正式程式／CSS／PWA／Calendar diff：none。
+- TypeScript、ESLint、Production build：Not available。
 
 ---
 
@@ -60,11 +111,12 @@ SaveStatus。後續只接受 Bug、Accessibility、Data Integrity 與重大使�
 - Date utilities、Monday-first week logic、date-key handling。
 - Canonical income／expense／net／work time／hourly rate calculations。
 - Monthly aggregation、work-day selector、platform totals。
-- Persistence adapter read API、record change notification。
+- Persistence adapter read API；record-change notification 尚未存在，已列入
+  Reports Sprint 5B2 與 TD-024。
 - Amount formatting、Design System primitives、Empty／Error／Loading states。
 
-下一步是 Reports Product and Implementation Sprint；不得在該 Sprint 回頭
-重設 Calendar 或複製計算公式。
+下一步是 Reports Sprint 5B1 — Weekly and Monthly Core；不得在該 Sprint 回頭
+重設 Calendar 或複製計算公式，必須遵循 `docs/REPORTS_SPEC.md`。
 
 ---
 
@@ -404,7 +456,8 @@ Driver Pay Pro 目前是單頁式網頁 App，主要介面、樣式與邏輯集�
 
 - 底部導覽改為「今天｜月曆｜報表｜AI｜Driver」，圖示統一為 24px、2px stroke 的 Lucide inline SVG。
 - 月曆只保留月份明細與每日歷史紀錄；週報、月報與平台分析移入固定主標題「報表」的三個內部分頁。
-- 月曆與報表月份互相獨立；報表三個分頁共用月份並記住最後查看分頁。
+- 月曆與報表月份互相獨立；上述 durable `reportMonth`／`lastReportView` 是目前
+  legacy 行為，正式新契約由 D-027 改為 Reports session-only。
 - 每日歷史紀錄補齊總收入、平台收入、支出、淨收入與實際工時；編輯／刪除至少 44px，刪除仍有確認。
 - 新增 hash 導覽與舊 `#week`、`#month`、`#platform`、`#analysis` 相容；瀏覽器返回可回到原本月曆或報表狀態。
 - Service Worker cache 更新為 `driver-pay-pro-v06-calendar-report-navigation`。

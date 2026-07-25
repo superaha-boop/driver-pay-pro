@@ -317,7 +317,7 @@
   3. 凍結後只接受可重現 Bug、Accessibility、Data Integrity 與重大使用障礙修正；一般視覺偏好與新功能進入 Backlog。
   4. 突破 Freeze 必須先說明使用者問題與影響範圍、取得正式產品決策、提供 Regression，並更新決策文件。
   5. `docs/FEATURE_FREEZE_CHECKLIST.md` 成為 Calendar、Reports、AI 與 Driver 的共同 Feature Freeze Gate。
-  6. Reports 可安全重用 Calendar 日期工具、Monday-first 週期、date-key handling、canonical calculations、月份彙總、工作天判斷、平台總額、persistence read API、record change notification、金額格式與 Design System states。
+  6. Reports 可安全重用 Calendar 日期工具、Monday-first 週期、date-key handling、canonical calculations、月份彙總、工作天判斷、平台總額、persistence read API、金額格式與 Design System states；可重用 record-change notification 仍屬待補能力，不宣稱現況已存在。
 - Reason: Calendar 的讀取、導覽與完整 record lifecycle 已通過固定資料基準、自動 regression、瀏覽器回歸及 Product Owner iPhone／PWA Human QA。正式凍結可避免 Reports 開發重新設計 Calendar 或複製資料公式。
 - Impact:
   - Calendar 後續只接受有限類型修正。
@@ -328,3 +328,28 @@
   - 不以封板名義隱藏或刪除仍存在的技術債。
   - 不在 Final Regression 新增 Calendar 功能或重設視覺。
   - 不讓 Reports 建立另一套日期、收入、工時或彙總公式。
+
+## D-027
+
+- Date: 2026-07-26
+- Decision:
+  1. `docs/REPORTS_SPEC.md` Version 1.0 成為 Reports Core Implementation 的唯一主要功能規格。
+  2. Reports 固定包含週報、月報與平台；新 session 預設週報，所有 Reports navigation state 維持 session-only。
+  3. 週報使用台北星期一至星期日，月報使用台北曆月；比較緊鄰的同等前期。
+  4. KPI、comparison、trend、platform 與 important dates 必須使用 canonical calculations 與純 selector。
+  5. 週趨勢使用七個每日淨收入點；月趨勢使用四至六個 Monday-first 週彙總。
+  6. 平台頁只描述收入貢獻；小費不歸入平台總額，不推論效率或最佳平台。
+  7. Reports 保持唯讀，record-level correction 只連到 Calendar 的 exact date。
+  8. Implementation 分為 Sprint 5B1 Weekly and Monthly Core 與 Sprint 5B2 Platform, Drill-Down, and Hardening。
+  9. 本決策取代 D-018 中 Reports 分頁／月份 durable 記憶部分；其五頁 IA 與 Calendar／Reports separation 仍有效。
+  10. Trend 與 ranking 必須有 visible values 與 screen-reader text alternative，不得只靠顏色或圖形。
+  11. Calendar UX Freeze 完整適用於 Reports implementation；可重用能力，不得回頭重設 Calendar。
+- Reason: 現況基本彙總可用，但 period state、前期比較、淨收入趨勢、讀取狀態、date drill-down、return context 與 accessibility 尚無共同契約；先定案可避免下一階段公式與導航分裂。
+- Impact:
+  - Sprint 5A 只建立文件、稽核與 contract tests。
+  - `index.html`、資料、schema、localStorage key、Calendar、PWA 與 Production 不變。
+  - Reports Current-State Audit 發現的實際差距列入 Technical Debt。
+- Rejected alternatives:
+  - 不把現有 UI 偶然行為直接當作正式產品規格。
+  - 不在 specification Sprint 順手改 renderer 或重新設計 Reports。
+  - 不用第三方 chart/date library 解決現有 no-build 專案可由純函式處理的需求。
