@@ -4,6 +4,8 @@ const test = require("node:test");
 const vm = require("node:vm");
 
 const html = fs.readFileSync(new URL("../index.html", `file://${__filename}`), "utf8");
+const designSystem = fs.readFileSync(new URL("../styles/design-system.css", `file://${__filename}`), "utf8");
+const serviceWorker = fs.readFileSync(new URL("../sw.js", `file://${__filename}`), "utf8");
 
 function extractFunction(name) {
   const signature = `function ${name}(`;
@@ -241,4 +243,87 @@ test("工作天 selector 使用 canonical 衍生值且不修改紀錄", () => {
   assert.equal(calendar.isWorkDayRecord(entry, { durationMs: 60_000, total: 0, expenses: 0 }), true);
   assert.equal(calendar.isWorkDayRecord(entry, { durationMs: 0, total: 0, expenses: 100 }), true);
   assert.deepEqual(entry, { date: "2026-07-24", orders: 0, km: 0 });
+});
+
+test("Calendar shell 使用 Design System、Monday-first 與必要導覽", () => {
+  const calendarSection = html.match(/<section id="view-calendar"[\s\S]*?<\/section>\s*<section id="view-reports"/)?.[0] || "";
+  assert.match(calendarSection, /class="calendar-page ds-page-container"/);
+  assert.match(calendarSection, /id="calendarPreviousMonth"[\s\S]*?aria-label="上一個月"/);
+  assert.match(calendarSection, /id="calendarNextMonth"[\s\S]*?aria-label="下一個月"/);
+  assert.match(calendarSection, /id="calendarTodayButton"[\s\S]*?>今天<\/button>/);
+  assert.match(calendarSection, /<span role="columnheader">一<\/span>[\s\S]*<span role="columnheader">日<\/span>/);
+  assert.match(calendarSection, /id="calendarGrid" role="grid"/);
+  assert.match(calendarSection, /class="ds-card calendar-record-card"/);
+});
+
+test("熱度只使用 Design System semantic tokens", () => {
+  for (const level of [1, 2, 3, 4]) {
+    assert.match(designSystem, new RegExp(`--color-calendar-heat-${level}:`));
+    assert.match(html, new RegExp(`data-heat="${level}"\\] \\{ background: var\\(--color-calendar-heat-${level}\\)`));
+  }
+  const renderer = extractFunction("renderCalendarGrid");
+  assert.doesNotMatch(renderer, /#[0-9a-f]{3,8}/i);
+});
+
+test("Calendar render、導覽與選取完全不呼叫寫入函式", () => {
+  const readOnlyFunctions = [
+    "renderCalendarGrid",
+    "renderCalendarRecordCard",
+    "renderCalendarMonthSummary",
+    "renderCalendar",
+    "changeCalendarDisplayedMonth",
+    "selectCalendarDate",
+    "goToCalendarToday",
+    "openCalendar"
+  ].map(extractFunction).join("\n");
+  assert.doesNotMatch(readOnlyFunctions, /saveState|ensureEntryForDate|blankEntry|localStorage\.setItem/);
+  assert.match(html, /本 Sprint 為唯讀瀏覽/);
+  assert.doesNotMatch(
+    html.match(/<section id="view-calendar"[\s\S]*?<\/section>\s*<section id="view-reports"/)?.[0] || "",
+    /data-edit|data-delete|新增紀錄/
+  );
+});
+
+test("Work Record Card 重用 canonical calculations 且不顯示平台 Logo", () => {
+  const renderer = extractFunction("renderCalendarRecordCard");
+  for (const name of ["entryTotal", "entryExpenses", "entryNet", "workMetrics", "hourlyRate", "platformNetAmount"]) {
+    assert.match(renderer, new RegExp(`${name}\\(`));
+  }
+  assert.doesNotMatch(renderer, /<img|platform-logo|brand-color/i);
+  assert.match(renderer, /formatHours\(duration\.hours\)/);
+  assert.match(renderer, /money\(item\.recognized\)/);
+});
+
+test("鍵盤、ARIA、手勢與 reduced motion 契約存在", () => {
+  assert.match(html, /role="gridcell"/);
+  assert.match(html, /aria-selected="\$\{String\(isSelected\)\}"/);
+  assert.match(html, /aria-current="date"/);
+  assert.match(html, /tabindex="\$\{cell\.date === calendarState\.focusedDate \? "0" : "-1"\}"/);
+  assert.match(html, /ArrowLeft:[\s\S]*?ArrowRight:[\s\S]*?ArrowUp:[\s\S]*?ArrowDown:/);
+  assert.match(html, /Math\.abs\(deltaX\) < 48/);
+  assert.match(html, /Math\.abs\(deltaX\) < Math\.abs\(deltaY\) \* 1\.25/);
+  assert.match(html, /event\.clientX < 24 \|\| event\.clientX > window\.innerWidth - 24/);
+  assert.match(html, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.calendar-grid/);
+});
+
+test("Calendar session state 不寫入 durable storage 並支援 lifecycle refresh", () => {
+  const stateSource = [
+    extractFunction("createCalendarState"),
+    extractFunction("calendarStateWithDisplayedMonth"),
+    extractFunction("calendarStateWithSelectedDate"),
+    extractFunction("calendarStateWithRefreshedToday")
+  ].join("\n");
+  assert.doesNotMatch(stateSource, /localStorage|sessionStorage|saveState/);
+  assert.match(html, /window\.addEventListener\("pageshow", refreshCalendarToday\)/);
+  assert.match(html, /window\.addEventListener\("focus", refreshCalendarToday\)/);
+  assert.match(html, /visibilitychange/);
+  assert.match(html, /scheduleCalendarMidnightRefresh/);
+});
+
+test("PWA App Shell 更新為簡短 v8 cache 且保留必要資源", () => {
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v8"/);
+  assert.match(serviceWorker, /"\.\/index\.html"/);
+  assert.match(serviceWorker, /"\.\/styles\/design-system\.css"/);
+  assert.match(serviceWorker, /keys\.filter\(key => key !== CACHE_NAME\)/);
+  assert.match(html, /const storageKey = "driverPayApp\.v2"/);
 });

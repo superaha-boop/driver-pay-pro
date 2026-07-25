@@ -3649,6 +3649,382 @@
       }
     }
 
+    .calendar-page.ds-page-container {
+      width: 100%;
+      padding: var(--spacing-2) 0 var(--spacing-6);
+      display: grid;
+      gap: var(--spacing-5);
+    }
+
+    .calendar-month-navigation {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: var(--touch-target-min) minmax(0, 1fr) var(--touch-target-min) auto;
+      align-items: center;
+      gap: var(--spacing-1);
+    }
+
+    .calendar-month-navigation .ds-icon-button svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .calendar-month-title {
+      min-width: 0;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .calendar-today-button {
+      padding-inline: var(--spacing-2);
+    }
+
+    .calendar-weekdays,
+    .calendar-grid-row {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .calendar-weekdays {
+      margin-bottom: calc(var(--spacing-3) * -1);
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-caption);
+      font-weight: var(--font-weight-semibold);
+      line-height: var(--line-height-caption);
+      text-align: center;
+    }
+
+    .calendar-weekdays span {
+      min-width: 0;
+      padding-block: var(--spacing-1);
+    }
+
+    .calendar-grid {
+      min-width: 0;
+      overflow: clip;
+      border-block: var(--border-subtle);
+      touch-action: pan-y;
+      transition:
+        opacity var(--motion-normal) var(--ease-standard),
+        transform var(--motion-normal) var(--ease-standard);
+    }
+
+    .calendar-grid[data-transition="previous"] {
+      animation: calendar-month-from-left var(--motion-normal) var(--ease-enter);
+    }
+
+    .calendar-grid[data-transition="next"] {
+      animation: calendar-month-from-right var(--motion-normal) var(--ease-enter);
+    }
+
+    @keyframes calendar-month-from-left {
+      from { opacity: .72; transform: translateX(-8px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes calendar-month-from-right {
+      from { opacity: .72; transform: translateX(8px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .calendar-date {
+      position: relative;
+      min-width: 0;
+      min-height: 58px;
+      padding: 6px 2px 5px;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      display: grid;
+      grid-template-rows: auto 1fr;
+      align-items: start;
+      justify-items: center;
+      gap: 2px;
+      box-sizing: border-box;
+      color: var(--color-text-primary);
+      background: transparent;
+      font: inherit;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition:
+        color var(--motion-fast) var(--ease-standard),
+        background-color var(--motion-fast) var(--ease-standard),
+        border-color var(--motion-fast) var(--ease-standard);
+    }
+
+    .calendar-date:hover {
+      background: var(--color-surface-muted);
+    }
+
+    .calendar-date:focus-visible {
+      outline: 3px solid var(--color-focus-ring);
+      outline-offset: -3px;
+      z-index: 2;
+    }
+
+    .calendar-date[data-adjacent="true"] {
+      color: var(--color-text-tertiary);
+    }
+
+    .calendar-date[data-future="true"] {
+      color: var(--color-text-disabled);
+    }
+
+    .calendar-date[data-heat="1"] { background: var(--color-calendar-heat-1); }
+    .calendar-date[data-heat="2"] { background: var(--color-calendar-heat-2); }
+    .calendar-date[data-heat="3"] { background: var(--color-calendar-heat-3); }
+    .calendar-date[data-heat="4"] { background: var(--color-calendar-heat-4); }
+
+    .calendar-date[aria-selected="true"] {
+      color: var(--color-text-primary);
+      background: var(--color-brand-soft);
+      border-color: var(--color-brand);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .calendar-date__day,
+    .calendar-date__amount {
+      max-width: 100%;
+      overflow: hidden;
+      font-variant-numeric: tabular-nums;
+      text-overflow: clip;
+      white-space: nowrap;
+    }
+
+    .calendar-date__day {
+      font-size: var(--font-size-body);
+      line-height: 1.15;
+    }
+
+    .calendar-date__amount {
+      align-self: center;
+      color: var(--color-text-secondary);
+      font-size: 11px;
+      font-weight: var(--font-weight-semibold);
+      line-height: 1.1;
+    }
+
+    .calendar-date[aria-selected="true"] .calendar-date__amount {
+      color: var(--color-brand-pressed);
+    }
+
+    .calendar-date__today-dot {
+      position: absolute;
+      left: 50%;
+      bottom: 3px;
+      width: 4px;
+      height: 4px;
+      border-radius: var(--radius-pill);
+      background: var(--color-brand-pressed);
+      transform: translateX(-50%);
+    }
+
+    .calendar-record-card {
+      min-width: 0;
+      min-height: 178px;
+      padding: var(--spacing-5);
+      touch-action: pan-y;
+    }
+
+    .calendar-record-card.is-updating #calendarRecordContent {
+      animation: calendar-card-update var(--motion-normal) var(--ease-enter);
+    }
+
+    @keyframes calendar-card-update {
+      from { opacity: .58; }
+      to { opacity: 1; }
+    }
+
+    .calendar-record-header {
+      min-width: 0;
+      margin-bottom: var(--spacing-4);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--spacing-3);
+    }
+
+    .calendar-record-heading {
+      min-width: 0;
+      display: grid;
+      gap: var(--spacing-1);
+    }
+
+    .calendar-record-heading .ds-card-title {
+      overflow-wrap: anywhere;
+    }
+
+    .calendar-record-context {
+      color: var(--color-text-tertiary);
+      font-size: var(--font-size-caption);
+      line-height: var(--line-height-caption);
+    }
+
+    .calendar-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-4) var(--spacing-5);
+    }
+
+    .calendar-metric {
+      min-width: 0;
+      display: grid;
+      gap: var(--spacing-1);
+    }
+
+    .calendar-metric span,
+    .calendar-support-row span,
+    .calendar-platform-row span {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-secondary);
+      line-height: var(--line-height-caption);
+    }
+
+    .calendar-metric strong {
+      min-width: 0;
+      color: var(--color-text-primary);
+      font-size: 20px;
+      line-height: var(--line-height-title);
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+    }
+
+    .calendar-record-section {
+      margin-top: var(--spacing-5);
+      padding-top: var(--spacing-4);
+      border-top: var(--border-subtle);
+      display: grid;
+      gap: var(--spacing-3);
+    }
+
+    .calendar-platform-row,
+    .calendar-support-row {
+      min-width: 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--spacing-4);
+    }
+
+    .calendar-platform-row span,
+    .calendar-support-row span {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .calendar-platform-row strong,
+    .calendar-support-row strong {
+      flex: 0 0 auto;
+      color: var(--color-text-primary);
+      font-size: var(--font-size-body);
+      line-height: var(--line-height-caption);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .calendar-note {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-secondary);
+      line-height: var(--line-height-body);
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .calendar-record-card .ds-empty-state {
+      min-height: 136px;
+      padding: var(--spacing-4) 0;
+      justify-content: center;
+    }
+
+    .calendar-month-summary {
+      min-width: 0;
+      padding-top: var(--spacing-4);
+      border-top: var(--border-subtle);
+      display: grid;
+      gap: var(--spacing-3);
+    }
+
+    .calendar-month-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-4);
+    }
+
+    .calendar-month-summary-item {
+      min-width: 0;
+      display: grid;
+      gap: var(--spacing-1);
+    }
+
+    .calendar-month-summary-item span {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-secondary);
+    }
+
+    .calendar-month-summary-item strong {
+      color: var(--color-text-primary);
+      font-size: 20px;
+      line-height: var(--line-height-title);
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+    }
+
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    @media (max-width: 350px) {
+      .calendar-page.ds-page-container {
+        gap: var(--spacing-4);
+      }
+
+      .calendar-month-navigation {
+        gap: 0;
+      }
+
+      .calendar-month-title {
+        font-size: 18px;
+      }
+
+      .calendar-date {
+        min-height: 54px;
+      }
+
+      .calendar-date__day {
+        font-size: 15px;
+      }
+
+      .calendar-date__amount {
+        font-size: 10px;
+      }
+
+      .calendar-record-card {
+        padding: var(--spacing-4);
+      }
+
+      .calendar-metrics {
+        gap: var(--spacing-3);
+      }
+
+      .calendar-metric strong,
+      .calendar-month-summary-item strong {
+        font-size: 18px;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         scroll-behavior: auto !important;
@@ -3657,6 +4033,13 @@
 
       .detail-section::details-content {
         transition-duration: .01ms !important;
+      }
+
+      .calendar-grid,
+      .calendar-record-card #calendarRecordContent {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
       }
     }
   </style>
@@ -3935,12 +4318,43 @@
       </section>
 
       <section id="view-calendar" class="view hidden">
-        <div class="panel history-panel calendar-history-panel">
-          <div class="panel-head report-panel-head">
-            <h3>月份明細</h3>
-            <select id="monthFilter" aria-label="月曆月份篩選"></select>
+        <div class="calendar-page ds-page-container">
+          <div class="calendar-month-navigation" aria-label="月份導覽">
+            <button class="ds-icon-button" id="calendarPreviousMonth" type="button" aria-label="上一個月">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m15 18-6-6 6-6"></path>
+              </svg>
+            </button>
+            <h3 class="calendar-month-title ds-section-title ds-numeric" id="calendarMonthTitle"></h3>
+            <button class="ds-icon-button" id="calendarNextMonth" type="button" aria-label="下一個月">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m9 18 6-6-6-6"></path>
+              </svg>
+            </button>
+            <button class="ds-button ds-button--text calendar-today-button" id="calendarTodayButton" type="button">今天</button>
           </div>
-          <div class="table-wrap" id="entriesTable"></div>
+
+          <div class="calendar-weekdays" role="row" aria-hidden="true">
+            <span role="columnheader">一</span>
+            <span role="columnheader">二</span>
+            <span role="columnheader">三</span>
+            <span role="columnheader">四</span>
+            <span role="columnheader">五</span>
+            <span role="columnheader">六</span>
+            <span role="columnheader">日</span>
+          </div>
+          <div class="calendar-grid" id="calendarGrid" role="grid" aria-labelledby="calendarMonthTitle"></div>
+
+          <article class="ds-card calendar-record-card" id="calendarRecordCard" aria-live="polite">
+            <div id="calendarRecordContent"></div>
+          </article>
+
+          <section class="calendar-month-summary" id="calendarMonthSummary" aria-labelledby="calendarMonthSummaryTitle">
+            <h3 class="ds-card-title" id="calendarMonthSummaryTitle">月份摘要</h3>
+            <div id="calendarMonthSummaryContent"></div>
+          </section>
+
+          <p class="sr-only" id="calendarAnnouncement" role="status" aria-live="polite"></p>
         </div>
       </section>
 
@@ -4277,6 +4691,7 @@
       "自訂": 100
     };
 
+    let stateLoadError = null;
     const state = loadState();
     let activeView = "today";
     let activeReportView = state.settings.lastReportView;
@@ -4286,6 +4701,9 @@
     let expenseShortcutStatus = "";
     let incomeUndoTimer = 0;
     let lastIncomeAddition = null;
+    let calendarState = createCalendarState(todayString());
+    let calendarTodayTimer = 0;
+    let calendarGesture = null;
 
     const titles = {
       today: ["今日輸入", "每天花一分鐘記錄收入、工時與支出。"],
@@ -4317,8 +4735,16 @@
       entryId: document.getElementById("entryId"),
       formTitle: document.getElementById("formTitle"),
       cancelEdit: document.getElementById("cancelEdit"),
-      entriesTable: document.getElementById("entriesTable"),
-      monthFilter: document.getElementById("monthFilter"),
+      calendarGrid: document.getElementById("calendarGrid"),
+      calendarMonthTitle: document.getElementById("calendarMonthTitle"),
+      calendarPreviousMonth: document.getElementById("calendarPreviousMonth"),
+      calendarNextMonth: document.getElementById("calendarNextMonth"),
+      calendarTodayButton: document.getElementById("calendarTodayButton"),
+      calendarRecordCard: document.getElementById("calendarRecordCard"),
+      calendarRecordContent: document.getElementById("calendarRecordContent"),
+      calendarMonthSummary: document.getElementById("calendarMonthSummary"),
+      calendarMonthSummaryContent: document.getElementById("calendarMonthSummaryContent"),
+      calendarAnnouncement: document.getElementById("calendarAnnouncement"),
       weekMonthFilter: document.getElementById("weekMonthFilter"),
       monthReportFilter: document.getElementById("monthReportFilter"),
       platformMonthFilter: document.getElementById("platformMonthFilter"),
@@ -4361,7 +4787,14 @@
     };
 
     function loadState() {
-      const saved = localStorage.getItem(storageKey);
+      stateLoadError = null;
+      let saved = null;
+      try {
+        saved = localStorage.getItem(storageKey);
+      } catch (error) {
+        stateLoadError = error;
+        console.error("無法讀取既有資料，將保留原始 localStorage 內容。", error);
+      }
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
@@ -4374,6 +4807,7 @@
             settings: normalizeSettings(parsed.settings, platforms)
           };
         } catch (error) {
+          stateLoadError = error;
           console.error("無法讀取既有資料，將保留原始 localStorage 內容。", error);
         }
       }
@@ -4693,8 +5127,11 @@
         selectedDate,
         today,
         focusedDate: selectedDate,
+        recordsForDisplayedMonth: [],
+        selectedDateRecord: null,
         loadStatus: "ready",
         error: null,
+        offline: false,
         gesture: "idle",
         monthTransition: "idle"
       };
@@ -5917,25 +6354,13 @@
     function fillSelects() {
       const availableMonths = months();
       const options = availableMonths.map(month => `<option value="${month}">${month}</option>`).join("");
-      const calendarMonth = availableMonths.includes(state.settings.calendarMonth)
-        ? state.settings.calendarMonth
-        : currentMonth();
       const reportMonth = availableMonths.includes(state.settings.reportMonth)
         ? state.settings.reportMonth
         : currentMonth();
-      els.monthFilter.innerHTML = options;
-      els.monthFilter.value = calendarMonth;
       [els.weekMonthFilter, els.monthReportFilter, els.platformMonthFilter].forEach(select => {
         select.innerHTML = options;
         select.value = reportMonth;
       });
-    }
-
-    function updateCalendarMonth(month) {
-      state.settings.calendarMonth = normalizeMonthKey(month);
-      saveState();
-      fillSelects();
-      renderEntries();
     }
 
     function updateReportMonth(month) {
@@ -6121,117 +6546,389 @@
       return String(value).replaceAll("\\", "\\\\").replaceAll('"', '\\"');
     }
 
-    function renderEntries() {
-      const entries = entriesForMonth(selectedMonth(els.monthFilter));
-      if (!entries.length) {
-        els.entriesTable.innerHTML = `
-          <div class="empty empty-state">
-            <strong>這個月份尚無工作紀錄</strong>
-            <span>完成一天工作後，紀錄會顯示在這裡。</span>
+    function calendarEntriesForMonth(monthKey) {
+      return state.entries
+        .filter(entry => normalizeDateKey(entry?.date) && monthKeyFromDate(entry.date) === monthKey)
+        .sort((a, b) => a.date.localeCompare(b.date));
+    }
+
+    function calendarRecordMap() {
+      const records = new Map();
+      state.entries.forEach(entry => {
+        const date = normalizeDateKey(entry?.date);
+        if (date && !records.has(date)) records.set(date, entry);
+      });
+      return records;
+    }
+
+    function renderCalendarGrid(recordMap) {
+      const cells = generateCalendarMonthGrid(calendarState.displayedMonth);
+      const monthRecords = calendarEntriesForMonth(calendarState.displayedMonth);
+      const incomeLevels = buildCalendarIncomeLevels(
+        monthRecords.map(entry => ({ date: entry.date, net: entryNet(entry) })),
+        calendarState.today
+      );
+      const visibleDates = new Set(cells.map(cell => cell.date));
+      if (!visibleDates.has(calendarState.focusedDate)) {
+        calendarState.focusedDate = visibleDates.has(calendarState.selectedDate)
+          ? calendarState.selectedDate
+          : `${calendarState.displayedMonth}-01`;
+      }
+
+      els.calendarMonthTitle.textContent = formatCalendarMonthTitle(calendarState.displayedMonth);
+      els.calendarGrid.setAttribute("aria-label", `${formatCalendarMonthTitle(calendarState.displayedMonth)}，星期一至星期日`);
+      els.calendarGrid.dataset.transition = calendarState.monthTransition;
+      els.calendarGrid.innerHTML = Array.from({ length: cells.length / 7 }, (_, rowIndex) => {
+        const row = cells.slice(rowIndex * 7, rowIndex * 7 + 7);
+        return `
+          <div class="calendar-grid-row" role="row">
+            ${row.map(cell => {
+              const entry = recordMap.get(cell.date);
+              const net = entry ? entryNet(entry) : 0;
+              const isSelected = cell.date === calendarState.selectedDate;
+              const isToday = cell.date === calendarState.today;
+              const isFuture = cell.date > calendarState.today;
+              const heatLevel = cell.isCurrentMonth && !isFuture
+                ? getCalendarIncomeLevel(incomeLevels, cell.date)
+                : 0;
+              const amount = formatCalendarNetAmount(net, Boolean(entry));
+              return `
+                <button
+                  class="calendar-date"
+                  type="button"
+                  role="gridcell"
+                  data-calendar-date="${cell.date}"
+                  data-adjacent="${String(!cell.isCurrentMonth)}"
+                  data-future="${String(isFuture)}"
+                  data-heat="${heatLevel}"
+                  aria-label="${escapeAttr(calendarDateAriaLabel({
+                    date: cell.date,
+                    today: calendarState.today,
+                    selected: isSelected,
+                    hasRecord: Boolean(entry),
+                    net,
+                    future: isFuture
+                  }))}"
+                  aria-selected="${String(isSelected)}"
+                  ${isToday ? `aria-current="date"` : ""}
+                  tabindex="${cell.date === calendarState.focusedDate ? "0" : "-1"}"
+                >
+                  <span class="calendar-date__day">${cell.day}</span>
+                  <span class="calendar-date__amount">${escapeHtml(amount)}</span>
+                  ${isToday ? `<span class="calendar-date__today-dot" aria-hidden="true"></span>` : ""}
+                </button>
+              `;
+            }).join("")}
+          </div>
+        `;
+      }).join("");
+
+      if (calendarState.monthTransition !== "idle") {
+        window.setTimeout(() => {
+          if (els.calendarGrid) els.calendarGrid.dataset.transition = "idle";
+        }, 280);
+      }
+    }
+
+    function calendarRecordHeader() {
+      const outOfMonth = monthKeyFromDate(calendarState.selectedDate) !== calendarState.displayedMonth;
+      return `
+        <header class="calendar-record-header">
+          <div class="calendar-record-heading">
+            <h3 class="ds-card-title">${escapeHtml(formatCalendarFullDate(calendarState.selectedDate))}・${escapeHtml(calendarWeekdayLabel(calendarState.selectedDate))}</h3>
+            ${outOfMonth ? `<span class="calendar-record-context">所選日期不在目前月份</span>` : ""}
+          </div>
+          <span data-calendar-editor-slot hidden></span>
+        </header>
+      `;
+    }
+
+    function renderCalendarRecordCard(recordMap) {
+      const selectedDate = normalizeDateKey(calendarState.selectedDate, calendarState.today);
+      const entry = recordMap.get(selectedDate);
+      const isFuture = selectedDate > calendarState.today;
+      els.calendarRecordCard.classList.remove("is-updating");
+      void els.calendarRecordCard.offsetWidth;
+      els.calendarRecordCard.classList.add("is-updating");
+
+      if (!entry) {
+        const isToday = selectedDate === calendarState.today;
+        const title = isFuture
+          ? "尚未到此日期"
+          : isToday
+            ? "今天尚無工作紀錄"
+            : "此日期尚無工作紀錄";
+        const description = isFuture
+          ? "你可以查看日期，但未來日期不能建立工作紀錄。"
+          : isToday
+            ? "回到今天即可開始工作或更新今日紀錄。"
+            : "本 Sprint 為唯讀瀏覽，新增紀錄會在下一階段提供。";
+        els.calendarRecordContent.innerHTML = `
+          ${calendarRecordHeader()}
+          <div class="ds-empty-state ds-empty-state--compact">
+            <strong class="ds-card-title">${title}</strong>
+            <span class="ds-secondary">${description}</span>
+            ${isToday ? `<button class="ds-button ds-button--primary" type="button" data-calendar-go-today>前往今天</button>` : ""}
           </div>
         `;
         return;
       }
 
-      els.entriesTable.innerHTML = `
-        <table class="entries-desktop-table">
-          <thead>
-            <tr>
-              <th>日期</th>
-              ${state.platforms.map(name => `<th>${escapeHtml(name)}</th>`).join("")}
-              <th>Tips</th>
-              <th>總收入</th>
-              <th>支出</th>
-              <th>淨收入</th>
-              <th>實際工時</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${entries.map(entry => {
-              const work = workMetrics(entry);
-              return `
-                <tr>
-                  <td>${escapeHtml(entry.date)}<div class="muted">${escapeHtml(entry.shift || "")} ${escapeHtml(entry.weather || "")}</div></td>
-                  ${state.platforms.map(name => `<td>${Number(entry.incomes?.[name] || 0) ? money(entry.incomes[name]) : ""}</td>`).join("")}
-                  <td>${money(entry.tips)}</td>
-                  <td>${money(entryTotal(entry))}</td>
-                  <td>${money(entryExpenses(entry))}</td>
-                  <td>${money(entryNet(entry))}</td>
-                  <td>${formatCompactWorkHours(work.hours)}</td>
-                  <td>
-                    <div class="row-actions">
-                      <button class="icon-button entry-action-button" type="button" title="編輯" data-edit="${escapeAttr(entry.id)}">編輯</button>
-                      <button class="icon-button entry-action-button danger" type="button" title="刪除" data-delete="${escapeAttr(entry.id)}">刪除</button>
-                    </div>
-                  </td>
-                </tr>
-              `;
-            }).join("")}
-          </tbody>
-          <tfoot>
-            <tr>
-              <th>TOTAL</th>
-              ${state.platforms.map(name => {
-                const sum = entries.reduce((total, entry) => total + Number(entry.incomes?.[name] || 0), 0);
-                return `<th>${sum ? money(sum) : ""}</th>`;
-              }).join("")}
-              <th>${money(entries.reduce((total, entry) => total + Number(entry.tips || 0), 0))}</th>
-              <th>${money(entries.reduce((total, entry) => total + entryTotal(entry), 0))}</th>
-              <th>${money(entries.reduce((total, entry) => total + entryExpenses(entry), 0))}</th>
-              <th>${money(entries.reduce((total, entry) => total + entryNet(entry), 0))}</th>
-              <th>${formatCompactWorkHours(summarize(entries).hours)}</th>
-              <th></th>
-            </tr>
-          </tfoot>
-        </table>
-        <div class="entries-mobile-list" aria-label="每日月份明細">
-          ${entries.map(entry => {
-            const shift = String(entry.shift || "").trim();
-            const weatherIcon = weatherIconSvg(entry.weather);
-            const expenses = entryExpenses(entry);
-            const net = entryNet(entry);
-            const work = workMetrics(entry);
-            const activePlatforms = state.platforms
-              .map(name => [name, Number(entry.incomes?.[name] || 0)])
-              .filter(([, amount]) => amount > 0);
-            return `
-              <article class="daily-entry-row">
-                <div class="daily-entry-head">
-                  <div class="daily-entry-title">
-                    <strong class="daily-entry-date">${escapeHtml(compactDailyDate(entry.date))}</strong>
-                    ${shift ? `<span class="daily-entry-meta">・${escapeHtml(shift)}</span>` : ""}
-                    ${weatherIcon ? `<span class="daily-entry-meta">・</span>${weatherIcon}` : ""}
-                  </div>
-                  <div class="daily-entry-total-wrap">
-                    <span>總收入</span>
-                    <strong class="daily-entry-total">${money(entryTotal(entry))}</strong>
-                  </div>
-                </div>
-                <div class="daily-entry-bottom">
-                  <div class="daily-income-items">
-                    ${activePlatforms.length
-                      ? activePlatforms.map(([name, amount]) => `
-                          <span class="daily-platform-income"><span class="daily-platform-name">${escapeHtml(name)}</span><strong>${money(amount)}</strong></span>
-                        `).join("")
-                      : `<span class="daily-income-empty">尚無收入紀錄</span>`}
-                  </div>
-                  <div class="daily-entry-summary">
-                    <span>支出<strong>${money(expenses)}</strong></span>
-                    <span>淨收入<strong>${money(net)}</strong></span>
-                    <span>實際工時<strong>${formatCompactWorkHours(work.hours)}</strong></span>
-                  </div>
-                  <div class="daily-entry-actions" aria-label="${escapeAttr(entry.date)} 紀錄操作">
-                    <button class="icon-button entry-action-button" type="button" title="編輯" aria-label="編輯 ${escapeAttr(entry.date)} 紀錄" data-edit="${escapeAttr(entry.id)}">編輯</button>
-                    <button class="icon-button entry-action-button danger" type="button" title="刪除" aria-label="刪除 ${escapeAttr(entry.date)} 紀錄" data-delete="${escapeAttr(entry.id)}">刪除</button>
-                  </div>
-                </div>
-              </article>
-            `;
-          }).join("")}
+      const duration = workMetrics(entry);
+      const total = entryTotal(entry);
+      const expenses = entryExpenses(entry);
+      const net = entryNet(entry);
+      const platformNames = [...new Set([...state.platforms, ...Object.keys(entry.incomes || {})])];
+      const platformRows = platformNames
+        .map(name => ({ name, raw: Number(entry.incomes?.[name]), recognized: platformNetAmount(name, entry.incomes?.[name]) }))
+        .filter(item => Number.isFinite(item.raw) && item.raw !== 0);
+      const tips = finiteNumber(entry.tips);
+      const weather = String(entry.weather || "").trim();
+      const note = String(entry.note || "").trim();
+
+      els.calendarRecordContent.innerHTML = `
+        ${calendarRecordHeader()}
+        <div class="calendar-metrics">
+          <div class="calendar-metric"><span>總收入</span><strong>${money(total)}</strong></div>
+          <div class="calendar-metric"><span>淨收入</span><strong>${money(net)}</strong></div>
+          <div class="calendar-metric"><span>工作時間</span><strong>${formatHours(duration.hours)}</strong></div>
+          <div class="calendar-metric"><span>時薪</span><strong>${money(hourlyRate(net, duration.durationMs))}</strong></div>
         </div>
+        ${platformRows.length || tips > 0 ? `
+          <section class="calendar-record-section" aria-label="平台收入">
+            <h4 class="ds-card-title">平台收入</h4>
+            ${platformRows.map(item => `
+              <div class="calendar-platform-row">
+                <span>${escapeHtml(item.name)}</span>
+                <strong>${money(item.recognized)}</strong>
+              </div>
+            `).join("")}
+            ${tips > 0 ? `<div class="calendar-platform-row"><span>小費</span><strong>${money(tips)}</strong></div>` : ""}
+          </section>
+        ` : ""}
+        ${expenses !== 0 || weather || note ? `
+          <section class="calendar-record-section" aria-label="其他紀錄">
+            ${expenses !== 0 ? `<div class="calendar-support-row"><span>總支出</span><strong>${money(expenses)}</strong></div>` : ""}
+            ${weather ? `<div class="calendar-support-row"><span>天氣</span><strong>${escapeHtml(weather)}</strong></div>` : ""}
+            ${note ? `<div><span class="ds-secondary">備註</span><p class="calendar-note">${escapeHtml(note)}</p></div>` : ""}
+          </section>
+        ` : ""}
       `;
     }
+
+    function renderCalendarMonthSummary() {
+      const entries = calendarEntriesForMonth(calendarState.displayedMonth);
+      const title = `${formatCalendarMonthTitle(calendarState.displayedMonth)}摘要`;
+      const invalidRecordCount = state.entries.filter(entry => !normalizeDateKey(entry?.date)).length;
+      const dataQualityNotice = invalidRecordCount
+        ? `<p class="ds-caption">有 ${invalidRecordCount} 筆日期格式異常的舊資料未顯示；原始資料沒有被修改。</p>`
+        : "";
+      document.getElementById("calendarMonthSummaryTitle").textContent = title;
+      if (!entries.length) {
+        els.calendarMonthSummaryContent.innerHTML = `<p class="ds-secondary">本月尚無工作紀錄</p>${dataQualityNotice}`;
+        return;
+      }
+      const summary = summarizeCalendarMonth(entries);
+      els.calendarMonthSummaryContent.innerHTML = `
+        <div class="calendar-month-summary-grid">
+          <div class="calendar-month-summary-item">
+            <span>本月淨收入</span>
+            <strong>${money(summary.net)}</strong>
+          </div>
+          <div class="calendar-month-summary-item">
+            <span>工作天數</span>
+            <strong>${summary.workDays} 天</strong>
+          </div>
+        </div>
+        ${dataQualityNotice}
+      `;
+    }
+
+    function renderCalendar() {
+      if (!els.calendarGrid) return;
+      const records = calendarRecordMap();
+      calendarState.recordsForDisplayedMonth = calendarEntriesForMonth(calendarState.displayedMonth);
+      calendarState.selectedDateRecord = records.get(calendarState.selectedDate) || null;
+      calendarState.loadStatus = stateLoadError ? "error" : "ready";
+      calendarState.error = stateLoadError;
+      calendarState.offline = !navigator.onLine;
+      renderCalendarGrid(records);
+      if (stateLoadError) {
+        els.calendarRecordContent.innerHTML = `
+          ${calendarRecordHeader()}
+          <div class="ds-empty-state ds-empty-state--compact" role="alert">
+            <strong class="ds-card-title">無法讀取工作紀錄</strong>
+            <span class="ds-secondary">原始資料仍保留在此瀏覽器中，請重試讀取。</span>
+            <button class="ds-button ds-button--secondary" type="button" data-calendar-retry>重試</button>
+          </div>
+        `;
+        els.calendarMonthSummaryContent.innerHTML = `<p class="ds-secondary">暫時無法計算月份摘要</p>`;
+        return;
+      }
+      renderCalendarRecordCard(records);
+      renderCalendarMonthSummary();
+    }
+
+    function renderEntries() {
+      renderCalendar();
+    }
+
+    function announceCalendar(message) {
+      if (!els.calendarAnnouncement) return;
+      els.calendarAnnouncement.textContent = "";
+      window.requestAnimationFrame(() => {
+        els.calendarAnnouncement.textContent = message;
+      });
+    }
+
+    function changeCalendarDisplayedMonth(offset) {
+      const nextMonth = addCalendarMonths(calendarState.displayedMonth, offset);
+      if (!nextMonth) return;
+      calendarState = calendarStateWithDisplayedMonth(calendarState, nextMonth);
+      calendarState.focusedDate = `${nextMonth}-01`;
+      calendarState.monthTransition = offset < 0 ? "previous" : "next";
+      renderCalendar();
+      announceCalendar(`已顯示 ${formatCalendarMonthTitle(nextMonth)}`);
+    }
+
+    function revealCalendarRecordHeader() {
+      const header = els.calendarRecordCard?.querySelector(".calendar-record-header");
+      if (!header) return;
+      const rect = header.getBoundingClientRect();
+      const viewportTop = 0;
+      const viewportBottom = window.innerHeight;
+      const fullyOutside = rect.bottom <= viewportTop || rect.top >= viewportBottom;
+      if (!fullyOutside) return;
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      header.scrollIntoView({ block: "nearest", behavior: reducedMotion ? "auto" : "smooth" });
+    }
+
+    function selectCalendarDate(dateKey, options) {
+      options ||= {};
+      const selectedDate = normalizeDateKey(dateKey);
+      if (!selectedDate) return;
+      calendarState = calendarStateWithSelectedDate(calendarState, selectedDate);
+      renderCalendar();
+      announceCalendar(`已選取 ${formatCalendarFullDate(selectedDate)}，${calendarWeekdayLabel(selectedDate)}`);
+      if (options.revealCard) window.requestAnimationFrame(revealCalendarRecordHeader);
+    }
+
+    function goToCalendarToday() {
+      const today = todayString();
+      calendarState = calendarStateForToday(calendarState, today);
+      renderCalendar();
+      announceCalendar(`已回到今天，${formatCalendarFullDate(today)}`);
+    }
+
+    function openCalendar(options) {
+      options ||= {};
+      const hasExternalDate = Object.prototype.hasOwnProperty.call(options, "selectedDate");
+      if (hasExternalDate) {
+        const target = normalizeDateKey(options.selectedDate, todayString());
+        calendarState = calendarStateWithSelectedDate(calendarState, target);
+      }
+      renderCalendar();
+      return {
+        selectedDate: calendarState.selectedDate,
+        displayedMonth: calendarState.displayedMonth,
+        source: String(options.source || "")
+      };
+    }
+
+    function retryCalendarRead() {
+      const recoveredState = loadState();
+      if (stateLoadError) {
+        renderCalendar();
+        announceCalendar("仍然無法讀取工作紀錄");
+        return;
+      }
+      Object.keys(state).forEach(key => delete state[key]);
+      Object.assign(state, recoveredState);
+      renderAll();
+      announceCalendar("工作紀錄已重新讀取");
+    }
+
+    function refreshCalendarToday() {
+      const nextToday = todayString();
+      if (calendarState.today !== nextToday) {
+        calendarState = calendarStateWithRefreshedToday(calendarState, nextToday);
+        if (activeView === "calendar") renderCalendar();
+      }
+      scheduleCalendarMidnightRefresh();
+    }
+
+    function scheduleCalendarMidnightRefresh() {
+      window.clearTimeout(calendarTodayTimer);
+      const tomorrow = addLocalDays(todayString(), 1);
+      const parts = dateOnlyParts(tomorrow);
+      if (!parts) return;
+      const nextTaipeiMidnight = Date.UTC(parts.year, parts.month - 1, parts.day) - 8 * 60 * 60 * 1000;
+      const delay = Math.max(1000, nextTaipeiMidnight - Date.now() + 250);
+      calendarTodayTimer = window.setTimeout(refreshCalendarToday, delay);
+    }
+
+    function moveCalendarFocus(dateKey) {
+      const targetDate = normalizeDateKey(dateKey);
+      if (!targetDate) return;
+      const targetMonth = monthKeyFromDate(targetDate);
+      if (targetMonth !== calendarState.displayedMonth) {
+        calendarState = calendarStateWithDisplayedMonth(calendarState, targetMonth);
+      }
+      calendarState.focusedDate = targetDate;
+      renderCalendar();
+      window.requestAnimationFrame(() => {
+        els.calendarGrid.querySelector(`[data-calendar-date="${targetDate}"]`)?.focus();
+      });
+    }
+
+    function handleCalendarGridKeydown(event) {
+      const dateButton = event.target.closest("[data-calendar-date]");
+      if (!dateButton) return;
+      const date = dateButton.dataset.calendarDate;
+      const offset = {
+        ArrowLeft: -1,
+        ArrowRight: 1,
+        ArrowUp: -7,
+        ArrowDown: 7
+      }[event.key];
+      if (offset) {
+        event.preventDefault();
+        moveCalendarFocus(addLocalDays(date, offset));
+        return;
+      }
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        selectCalendarDate(date, { revealCard: true });
+      }
+    }
+
+    function beginCalendarGesture(type, event) {
+      if (!event.isPrimary || event.pointerType === "mouse") return;
+      if (event.clientX < 24 || event.clientX > window.innerWidth - 24) return;
+      calendarGesture = {
+        type,
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY
+      };
+    }
+
+    function finishCalendarGesture(event, cancelled = false) {
+      const gesture = calendarGesture;
+      calendarGesture = null;
+      if (!gesture || cancelled || gesture.pointerId !== event.pointerId) return;
+      const deltaX = event.clientX - gesture.startX;
+      const deltaY = event.clientY - gesture.startY;
+      if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY) * 1.25) return;
+      if (gesture.type === "month") {
+        changeCalendarDisplayedMonth(deltaX < 0 ? 1 : -1);
+        return;
+      }
+      const target = addLocalDays(calendarState.selectedDate, deltaX < 0 ? 1 : -1);
+      selectCalendarDate(target);
+    }
+
+    window.openCalendar = openCalendar;
 
     function weekStart(dateString) {
       const parts = dateOnlyParts(dateString);
@@ -6622,6 +7319,10 @@
     function setView(view) {
       activeView = view;
       if (view === "ai") renderAiAnalysis();
+      if (view === "calendar") {
+        refreshCalendarToday();
+        renderCalendar();
+      }
       document.querySelectorAll(".view").forEach(section => section.classList.add("hidden"));
       document.getElementById(`view-${view}`)?.classList.remove("hidden");
       const navView = view === "about" ? "settings" : view;
@@ -6646,7 +7347,13 @@
         const queryReport = query.get("report");
         return { view: "reports", reportView: normalizeReportView(second || queryReport || (first === "analysis" ? "platform" : "")) };
       }
-      if (first === "calendar") return { view: "calendar", reportView: activeReportView };
+      if (first === "calendar") {
+        return {
+          view: "calendar",
+          reportView: activeReportView,
+          calendarDate: second || null
+        };
+      }
       if (first === "ai") return { view: "ai", reportView: activeReportView };
       if (["driver", "settings"].includes(first)) return { view: "settings", reportView: activeReportView };
       if (first === "about") return { view: "about", reportView: activeReportView };
@@ -6664,6 +7371,9 @@
         ? route.view
         : "today";
       if (view === "reports") setReportView(route.reportView, true);
+      if (view === "calendar" && route.calendarDate !== null && route.calendarDate !== undefined) {
+        openCalendar({ selectedDate: route.calendarDate, source: "route" });
+      }
       setView(view);
     }
 
@@ -7186,7 +7896,35 @@
       updateOverviewVisibility();
     });
 
-    els.monthFilter.addEventListener("change", () => updateCalendarMonth(els.monthFilter.value));
+    els.calendarPreviousMonth.addEventListener("click", () => changeCalendarDisplayedMonth(-1));
+    els.calendarNextMonth.addEventListener("click", () => changeCalendarDisplayedMonth(1));
+    els.calendarTodayButton.addEventListener("click", goToCalendarToday);
+    els.calendarGrid.addEventListener("click", event => {
+      const dateButton = event.target.closest("[data-calendar-date]");
+      if (dateButton) selectCalendarDate(dateButton.dataset.calendarDate, { revealCard: true });
+    });
+    els.calendarGrid.addEventListener("keydown", handleCalendarGridKeydown);
+    els.calendarGrid.addEventListener("focusin", event => {
+      const dateButton = event.target.closest("[data-calendar-date]");
+      if (!dateButton) return;
+      calendarState.focusedDate = dateButton.dataset.calendarDate;
+      els.calendarGrid.querySelectorAll("[data-calendar-date]").forEach(button => {
+        button.tabIndex = button === dateButton ? 0 : -1;
+      });
+    });
+    els.calendarRecordCard.addEventListener("click", event => {
+      if (event.target.closest("[data-calendar-go-today]")) {
+        resetForm();
+        navigateTo("today");
+      }
+      if (event.target.closest("[data-calendar-retry]")) retryCalendarRead();
+    });
+    els.calendarGrid.addEventListener("pointerdown", event => beginCalendarGesture("month", event));
+    els.calendarGrid.addEventListener("pointerup", event => finishCalendarGesture(event));
+    els.calendarGrid.addEventListener("pointercancel", event => finishCalendarGesture(event, true));
+    els.calendarRecordCard.addEventListener("pointerdown", event => beginCalendarGesture("day", event));
+    els.calendarRecordCard.addEventListener("pointerup", event => finishCalendarGesture(event));
+    els.calendarRecordCard.addEventListener("pointercancel", event => finishCalendarGesture(event, true));
     [els.weekMonthFilter, els.monthReportFilter, els.platformMonthFilter].forEach(select => {
       select.addEventListener("change", () => updateReportMonth(select.value));
     });
@@ -7433,13 +8171,6 @@
     document.getElementById("openAbout").addEventListener("click", () => navigateTo("about"));
     document.getElementById("closeAbout").addEventListener("click", () => navigateTo("settings"));
 
-    els.entriesTable.addEventListener("click", event => {
-      const editButton = event.target.closest("[data-edit]");
-      const deleteButton = event.target.closest("[data-delete]");
-      if (editButton) editEntry(editButton.dataset.edit);
-      if (deleteButton) deleteEntry(deleteButton.dataset.delete);
-    });
-
     document.getElementById("addPlatform").addEventListener("click", () => {
       const input = document.getElementById("newPlatformName");
       const name = input.value.trim();
@@ -7567,11 +8298,22 @@
     renderEntryDateCard(todayString());
     renderAll();
     resetForm();
-    navigateTo(parseAppRoute(location.hash, location.search).view, parseAppRoute(location.hash, location.search).reportView, true);
+    const initialRoute = parseAppRoute(location.hash, location.search);
+    if (initialRoute.view === "calendar" && initialRoute.calendarDate) {
+      applyRoute(initialRoute);
+    } else {
+      navigateTo(initialRoute.view, initialRoute.reportView, true);
+    }
     updateOverviewVisibility();
     setupPwa();
+    scheduleCalendarMidnightRefresh();
     window.addEventListener("popstate", () => applyRoute(parseAppRoute(location.hash, location.search)));
     window.addEventListener("hashchange", () => applyRoute(parseAppRoute(location.hash, location.search)));
+    window.addEventListener("pageshow", refreshCalendarToday);
+    window.addEventListener("focus", refreshCalendarToday);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") refreshCalendarToday();
+    });
     window.setInterval(() => {
       if (activeView !== "today") return;
       renderStats();
