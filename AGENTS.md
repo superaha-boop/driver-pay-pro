@@ -1,6 +1,6 @@
 # Driver Pay Pro — Codex Instructions
 
-Version: 1.3
+Version: 1.4
 
 ## Project Documentation
 
@@ -19,6 +19,7 @@ Version: 1.3
 
 - `PRODUCT_GUIDE.md`：產品方向與範圍
 - `DESIGN_KIT.md`：UI、UX 與品牌規則
+- `DESIGN_SYSTEM.md`：可實作的視覺 tokens 與共用 UI primitives
 - `DEVELOPMENT_HANDBOOK.md`：開發、測試與發布流程
 - `DECISION_LOG.md`：重要產品決策與原因
 
@@ -60,6 +61,20 @@ Version: 1.3
 - 不修改與任務無關的檔案。
 - 不大範圍格式化無關程式。
 - 額外發現的問題只列入 Known Issues 或 Backlog Suggestions。
+
+## Design System Execution Rules
+
+- 新 UI 必須優先使用 `styles/design-system.css` 的 Design Tokens。
+- 新 UI 必須優先使用現有 `.ds-*` 共用基礎元件；禁止建立第二套 Button、Card、EmptyState、Skeleton 或 SaveStatus。
+- 不任意加入孤立顏色、圓角、陰影或間距；如需突破 Design System，必須先將理由記錄於 `DECISIONS.md` 與正式決策紀錄。
+- 正式 UI 只使用 Lucide icons，不使用 emoji 或混用其他 icon library。
+- 互動區域至少 44×44px，採 mobile-first 並支援 iPhone safe area。
+- 動畫必須尊重 `prefers-reduced-motion`。
+- 金額、時數、百分比與 KPI 必須維持 `tabular-nums`。
+- 每頁原則上只有一個主要操作，不建立 Card inside Card 或 KPI card wall。
+- 避免厚重 gradient、border 與 shadow，不為視覺效果犧牲可讀性或速度。
+- 現有頁面採漸進式遷移；不得因 Design System 存在就一次性重寫凍結頁面。
+- 完整 token、primitive、表單與 showcase 規格請讀取 `docs/DESIGN_SYSTEM.md`。
 
 # Driver Pay Pro Product Design Rules
 

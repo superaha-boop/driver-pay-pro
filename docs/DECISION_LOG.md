@@ -156,3 +156,31 @@
   - 不採單純增加圓角來模仿 Apple 風格。
   - 不採傳統 Dashboard、彩色 KPI 卡片牆、大量漸層、厚重陰影或過度裝飾。
 - Change control: 未來如需修改本決策、工作紀錄卡片布局或四種顯示模式，必須先取得 Product Owner 的明確產品決策與核准 PRD，不得由 Codex 在實作任務中自行改寫。
+
+## D-020
+
+- Date: 2026-07-25
+- Decision:
+  1. Design Tokens 採 CSS custom properties，並由 `styles/design-system.css` 作為單一程式來源。
+  2. 不新增大型 UI framework、Tailwind、字型或測試框架。
+  3. 顏色採 brand、surface、text、border、status 與 overlay 等語意命名。
+  4. 間距、圓角、陰影、框線與動畫只使用有限級距。
+  5. Lucide 是唯一正式 UI icon 形式。
+  6. 所有主要 touch target 至少 44×44px。
+  7. 建立共用 Button、IconButton、Card、SectionHeader、EmptyState、Skeleton、SaveStatus、PageContainer、Surface 與 Divider。
+  8. 本 Sprint 不進行全站重構；Design System 採漸進式導入。
+  9. Dark mode 此階段不強制完成，但語意 token 保留未來擴充能力。
+  10. Design showcase 不出現在一般使用者導航，也不加入 PWA App Shell。
+  11. 後續 Calendar 重構必須使用本 Design System。
+- Reason: 讓後續頁面不再各自猜測視覺規格與基礎元件，同時避免在現有靜態單頁 PWA 中引入大型框架或一次性重寫風險。
+- Impact:
+  - 新 UI 優先使用 `styles/design-system.css` 與 `.ds-*` primitives。
+  - 現有首頁、月曆、報表、AI 與 Driver 保持功能及版型，依核准 Sprint 漸進遷移。
+  - 專案目前沒有 TypeScript 或 build pipeline；共用 API 使用語意 HTML、CSS class 與原生 ARIA 狀態。
+  - Design showcase 使用獨立 `design-system.html`，不在產品導航或 PWA App Shell。
+  - 完整使用方式與相容性說明見 `docs/DESIGN_SYSTEM.md`。
+- Rejected alternatives:
+  - 不新增 React、Storybook、Tailwind 或其他大型 UI framework。
+  - 不一次性重寫全站 CSS 或已凍結頁面。
+  - 不為 dark mode 在本 Sprint 擴大範圍。
+  - 不建立第二套 Button、Card、EmptyState、Skeleton 或 SaveStatus。

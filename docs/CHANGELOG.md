@@ -19,6 +19,8 @@
 
 ### Added
 
+- 新增正式 Design System：CSS custom property tokens、共用 UI primitives、獨立開發展示頁、永久規格與測試清單。
+- 新增 `tests/design-system.test.js`，驗證 token、primitive、無障礙、PWA 接線、showcase 隔離與 time input 安全 wrapper。
 - 新增 hash 導覽與舊報表連結相容、報表分頁記憶、月曆／報表獨立月份及三分頁共用報表月份。
 - 新增導覽架構自動測試，涵蓋 Lucide 圖示、路由、空白狀態、44px 操作與月份狀態。
 - 新增無套件的 `node:test` 報表測試，涵蓋星期一週期、跨月／跨年、工時標準化、619 小時舊算法重現與 PWA 更新。
@@ -30,6 +32,7 @@
 
 ### Changed
 
+- 現有 legacy variables 改由 Design System tokens 提供相同視覺值；Service Worker 更新為 v07 並快取共用樣式。
 - 底部導覽重整為「今天｜月曆｜報表｜AI｜Driver」，統一 24px Lucide 圖示與 14px 文字。
 - 月份明細完整移入月曆；週報、月報、平台統一移入固定標題「報表」。
 - 月曆每日列補齊總收入、支出、淨收入、實際工時與 44px 編輯／刪除操作；平台效率改名平台收入排行。

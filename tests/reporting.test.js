@@ -189,7 +189,8 @@ test("七天工時加總為 33 小時 30 分，平均時薪一致", () => {
 });
 
 test("PWA 發布會更新 Service Worker 並淘汰舊 App Shell", () => {
-  assert.match(serviceWorker, /driver-pay-pro-v06-calendar-report-navigation/);
+  assert.match(serviceWorker, /driver-pay-pro-v07-design-system-foundation/);
+  assert.doesNotMatch(serviceWorker, /driver-pay-pro-v06-calendar-report-navigation/);
   assert.doesNotMatch(serviceWorker, /driver-pay-pro-v05-monday-week-worktime-fix/);
   assert.doesNotMatch(serviceWorker, /driver-pay-pro-v04-official-master-icon-v1/);
   assert.match(serviceWorker, /new Request\(event\.request, \{ cache: "no-store" \}\)/);

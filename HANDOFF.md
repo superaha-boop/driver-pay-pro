@@ -6,6 +6,48 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
+## Design System Foundation Sprint
+
+### 本次分支與範圍
+
+- 分支：`codex/design-system-foundation-20260725`
+- 本 Sprint 只建立全 App 共用視覺 foundation、開發展示頁、測試與永久文件。
+- 依本次 PRD 明確要求，不合併 `main`、不部署 Production、不改導航、資料結構或業務邏輯。
+
+### 已完成
+
+- 新增 `styles/design-system.css`，統一 spacing、radius、typography、語意色彩、shadows、borders、motion、touch target、safe area 與 layout tokens。
+- 新增 Button、IconButton、Card、SectionHeader、EmptyState、Skeleton、SaveStatus、PageContainer、Surface、Divider 及基礎表單／time input primitives。
+- `index.html` 只將既有 legacy variables 對應至新 token，沒有遷移或重做首頁、月曆、報表、AI 或 Driver。
+- `sw.js` App Shell 加入 Design System 樣式，cache 更新為 `driver-pay-pro-v07-design-system-foundation`。
+- 新增獨立 `design-system.html`；直接開啟 `/design-system.html` 使用，不在 Bottom Navigation、不在 PWA App Shell，並設定 `noindex, nofollow`。
+- 新增 `docs/DESIGN_SYSTEM.md`、`TESTING.md` 與 `tests/design-system.test.js`。
+
+### 相容性與尚未遷移
+
+- 專案沒有 TypeScript、Tailwind、React、Storybook、ESLint 或 build pipeline，因此本次沒有新增 typed component framework 或任何 dependency。
+- 共用 API 使用語意 HTML、`.ds-*` classes、原生 `disabled` 與 ARIA 狀態；未來若建立 TypeScript 元件層必須向下相容。
+- 現有頁面仍保留大量歷史 CSS，應由後續核准 Sprint 逐區遷移，不可一次性全站重寫。
+- 現有 `.work-time-control` 已具備安全 wrapper；本次新增 `.ds-time-control` 並以自動測試固定寬度、box-sizing、margin 與 Safari appearance 契約。沒有改工時 UI 或計算。
+- 真實 iPhone Safari 與 installed PWA 仍需 Product Owner 實機驗收。
+
+### 驗證結果
+
+- Node 自動測試 21/21 通過。
+- Inline JavaScript 與 Service Worker 語法檢查通過。
+- Design showcase 與主程式在 375、390、393、430、1024px 均無水平 overflow。
+- 18 個 showcase 互動元件均達 44×44px 最小觸控範圍。
+- Showcase 與首頁原生 time input 在所有測試寬度都完整限制於 wrapper；既有右側框線沒有回歸。
+- 鍵盤 focus-visible 實測為 3px focus ring；disabled、loading、SaveStatus aria-live 與 no-navigation 契約通過。
+- 瀏覽器 Console 無 error 或 warning。
+- TypeScript、lint 與 production build：專案未配置對應工具，Not available。
+
+### 下一步
+
+Calendar implementation specification and refactor。新的 Calendar UI 必須直接使用本 Design System，不建立第二套 tokens 或 primitives。
+
+---
+
 ## 1. 目前整體狀態
 
 Driver Pay Pro 目前是單頁式網頁 App，主要介面、樣式與邏輯集中在 `index.html`。首頁、平台收入、週報手機版、月份明細、目標進度條與規則式 AI 營運助理已有本機成果；平台輸入模式功能已建立獨立功能提交，Git 工作流程文件於本次 Sprint 更新。

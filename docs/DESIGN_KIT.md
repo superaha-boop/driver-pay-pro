@@ -1,12 +1,14 @@
 # Driver Pay Pro Design Kit
 
-Version: 1.0
+Version: 1.1
 
-更新日期：2026-07-21
+更新日期：2026-07-25
 
 ## 文件定位
 
-本文件定義 Driver Pay Pro 的產品級 UI、UX、互動與品牌規則。現行尺寸與實作細節可在 `docs/UI_GUIDELINES.md` 查閱；若兩者與目前畫面不一致，先核對實際程式與核准 PRD，不得自行改版。
+本文件定義 Driver Pay Pro 的產品級 UI、UX、互動與品牌規則。可實作的 Design Tokens、共用 UI primitives、表單與 showcase 規格統一維護於 `docs/DESIGN_SYSTEM.md`，實際 token 單一來源是 `styles/design-system.css`。現行頁面尺寸與歷史實作細節可在 `docs/UI_GUIDELINES.md` 查閱；若文件與目前畫面不一致，先核對實際程式與核准 PRD，不得自行改版。
+
+Design System 採漸進式導入；本文件不授權一次性重寫首頁、月曆、報表、AI 或 Driver。
 
 ## Design Principles
 

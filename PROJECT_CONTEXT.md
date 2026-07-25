@@ -20,6 +20,9 @@
 
 - Driver Pay Pro 是 mobile-first PWA，主要體驗目標依序為 iPhone Safari、installed PWA、其他手機、平板與 Desktop。
 - 視覺方向採 Apple-like 的低彩度、清楚層級與柔和深度感；Apple-like 不等於只增加圓角。
+- Driver Pay Pro 已建立正式 Design System，作為後續 Calendar、Reports、AI 與 Driver UI 的共用基礎。
+- `styles/design-system.css` 的 CSS custom properties 是 spacing、radius、typography、語意色彩、shadow、border、motion、touch target 與 safe area 的單一視覺來源。
+- Design System 採 Apple-inspired、mobile-first、one-hand、calm interface；後續頁面逐步遷移，不進行一次性全站重寫。
 - 全 App 遵循三秒原則、兩層原則、免思考原則、單手操作原則與 Apple 美學原則；完整永久規則以 `AGENTS.md` 為準。
 - 未來月曆改版採 `Overview → Detail`：先定位日期與辨識工作狀況，再開啟當日工作紀錄。
 - 月曆點選日期後顯示的正式區域名稱為「工作紀錄卡片」，採核心資訊雙欄、延伸資訊單欄的混合式布局。
