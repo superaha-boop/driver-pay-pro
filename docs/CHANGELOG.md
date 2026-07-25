@@ -19,6 +19,9 @@
 
 ### Added
 
+- Calendar Sprint 4B：過去日期新增／編輯／刪除、共用 Record Editor、UI draft、dirty close confirmation、日期明確刪除確認與 SaveStatus。
+- 新增本機交易式 persistence adapter：主 key 寫入後讀回驗證、最近有效快照、失敗回復與損壞資料 fallback；主 key 仍為 `driverPayApp.v2`。
+- Calendar mutation／validation／rollback／共享表單／future guard contract tests；自動測試由 41 項增為 45 項。
 - Calendar Sprint 4A.5 Visual Polish：壓縮頁內垂直節奏、強化月份導覽與星期辨識、拉近日期／收入、改善工作紀錄卡片 Primary／Secondary metrics 層級。
 - Calendar heat semantic tokens 增加柔和的級距差異，演算法、Selected／Today 語意與資料保持不變；PWA cache 更新為 `driver-pay-pro-v9`。
 - 新增 D-024 Calendar Visual Polish 決策與非脆弱的視覺結構 contract test。
@@ -44,6 +47,8 @@
 
 ### Changed
 
+- Calendar 由唯讀 Read and Navigate 進入 past-only mutation；Today 仍擁有今日紀錄，未來日期仍不可建立。
+- Service Worker cache 更新為 `driver-pay-pro-v10`。
 - Calendar 由 legacy 月份下拉／每日清單改為唯讀 Overview → Locate → Open 體驗；新增、編輯、刪除保留至 Sprint 4B。
 - Service Worker cache 使用短版 `driver-pay-pro-v8`，並快取本 Sprint 使用的 App Shell。
 - Calendar 下一步由規格階段更新為兩個可控 Implementation Sprint：Read and Navigate、Record Mutation and Hardening；本次未修改產品程式。

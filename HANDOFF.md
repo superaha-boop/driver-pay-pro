@@ -6,6 +6,47 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
+## Calendar Sprint 4B — Record Mutation and Hardening
+
+### 分支與範圍
+
+- Base：`codex/calendar-visual-polish-20260725`，exact base commit `574536f7d632f71d2ffe91c75fb61cecbcea8962`。
+- 工作分支：`codex/calendar-record-mutation-20260725`。
+- 本 Sprint 只實作 Calendar 過去紀錄新增、編輯、刪除與本機儲存 hardening；不修改 Calendar Month Grid／Heat／導覽、Today 即時工作控制、Reports、AI、Driver、資料公式或 schema。
+- 依 PRD 不 merge `main`、不 Production deploy。
+
+### 已完成
+
+- 過去空日期顯示「新增紀錄」，已有紀錄顯示直接可見的「編輯」；今天仍導回 Today，未來日期沒有寫入入口。
+- Calendar 以原本的 `#entryForm`、`#detailForm`、收入欄位與支出元件作為唯一 Record Editor，開啟時將同一組 DOM 移入全螢幕 dialog，關閉後移回 Today；沒有第二套欄位 ID、資料模型或計算公式。
+- Calendar 編輯使用 UI draft；收入、班別、天氣、支出與其他欄位在按「完成」前不寫入 durable state。
+- 離開 dirty editor 會顯示日期明確的放棄確認；刪除是次級操作，確認內容包含日期及收入／支出／工時影響範圍。
+- 新增日期、未來日期、數值範圍、開始／結束配對、休息時間與最小內容驗證；歷史時間欄位被校正時移除該紀錄不再可信的 aggregate `workSession`，避免覆蓋已編輯時間。
+- Calendar 支出可加入草稿，也可移除既有類別；歷史平台收入統一直接校正當日總額，不建立第二套逐筆歷史編輯流程。
+- `persistStatePayload()` 會建立記憶體快照、寫入 `driverPayApp.v2`、讀回驗證、保存 `driverPayApp.v2.lastValid`；失敗時回復原始值，Calendar in-memory state 只在成功後替換。
+- `loadState()` 在主 key 損壞時保留原始字串，並優先使用最近一次有效本機快照；若無安全快照，Calendar 顯示中性錯誤與重試。
+- Service Worker cache 更新為 `driver-pay-pro-v10`。
+
+### 驗證摘要
+
+- Node 自動測試：45/45 通過。
+- Inline JavaScript 語法、`git diff --check` 通過；瀏覽器 Console 無 error／warning。
+- 隔離 localStorage 來源完成新增 $2,300、放棄 $2,500 草稿、正式更新 $2,500、刪除回空狀態；未來日期沒有新增入口。
+- 390／393／430px 的 `scrollWidth === clientWidth`；390px 全螢幕編輯器、共用收入欄位與兩個 time input 均在 viewport 內。
+- `driverPayApp.v2` key 與 WorkRecord schema 不變；新增的是獨立的 last-valid safety key，沒有 Supabase、後端或跨裝置同步。
+- TypeScript、ESLint、production build：專案未配置，Not available。
+
+### Open：Human QA 與既有技術債
+
+1. 實體 iPhone Safari 新增／編輯／刪除與鍵盤 QA。
+2. installed PWA 的 safe area、重開保留與 `driver-pay-pro-v10` 更新 QA。
+3. VoiceOver dialog、日期與 SaveStatus 朗讀。
+4. 真實 iOS time picker 與原生 date／time intrinsic width。
+5. WorkRecord `createdAt`／`updatedAt` 仍未加入；需要 migration／sync 決策，不可在目前 schema 中猜測。
+6. Today 的 legacy 非交易式寫入與可選非今日日期仍是獨立技術債，未在本 Sprint 擴大處理。
+
+---
+
 ## Calendar Sprint 4A.5 — Visual Polish
 
 ### 分支與範圍

@@ -406,9 +406,12 @@ Implementation must:
 5. Add Calendar month/date, leap-year, timezone, heat, empty-state, interaction, and accessibility tests.
 6. Complete physical iPhone Safari and installed-PWA acceptance checks.
 
-The required next Sprint is:
+Calendar implementation status (2026-07-25):
 
-**Calendar Implementation — Sprint A: Read and Navigate**
+- Sprint 4A Read and Navigate implemented.
+- Sprint 4A.5 Visual Polish implemented.
+- Sprint 4B Record Mutation and Hardening implemented on its feature branch.
+- Physical iPhone Safari and installed-PWA Human QA remains required before Product Owner acceptance.
 
 ## 14. Change Control
 

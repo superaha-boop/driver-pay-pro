@@ -186,3 +186,31 @@ Sprint 4A 的資訊架構與互動已通過自動驗證，但手機首屏仍可�
 - 下一步必須先完成實體 iPhone Safari／installed PWA Human QA Gate，再進入 Sprint 4B。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-024](docs/DECISION_LOG.md#d-024)。
+
+## D-025 — Calendar Record Mutation and Hardening
+
+- Date: 2026-07-25
+
+### 決策
+
+1. Calendar 只新增、編輯與刪除過去日期；Today 擁有今天，未來日期保持唯讀。
+2. Calendar 將 Today 的同一組 `entryForm`／`detailForm` DOM 移入全螢幕 Record Editor，關閉後移回；不得複製第二套表單。
+3. Calendar 使用 UI draft 與明確「完成」commit；dirty close 與 delete 使用日期明確的確認。
+4. Calendar mutation 透過 snapshot、主 key 寫入、讀回驗證、last-valid safety copy 與 failure rollback；成功後才更新 in-memory state。
+5. `driverPayApp.v2` 與 WorkRecord schema 維持不變；`driverPayApp.v2.lastValid` 只作本機 recovery safety copy。
+6. 不在缺少 migration／sync 規格時新增 `createdAt`／`updatedAt`，也不建立完整收入或支出明細模型。
+
+### 原因
+
+Calendar 成為過去紀錄 Primary owner 後，需要安全的 record lifecycle，同時避免表單、
+validation、資料模型與 canonical calculations 分裂。
+
+### 影響範圍
+
+- 過去空日期可補登，既有過去紀錄可直接編輯與日期明確刪除。
+- 今天仍導回 Today，未來日期不顯示寫入入口。
+- Calendar 成功寫入後重算 grid、card、heat、month summary、Reports 與 AI。
+- Service Worker cache 更新為 `driver-pay-pro-v10`。
+- 實體 iPhone Safari／installed PWA Human QA 仍是完成 Gate。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-025](docs/DECISION_LOG.md#d-025)。

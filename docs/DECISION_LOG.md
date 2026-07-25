@@ -284,3 +284,26 @@
   - 不以縮小 touch target 或字級換取垂直空間。
   - 不新增圖例、裝飾圖示、卡片巢狀或額外指標標題。
   - 不在視覺 Sprint 修改 heat 分級、日期選取或月份切換規則。
+
+## D-025
+
+- Date: 2026-07-25
+- Decision:
+  1. Calendar Sprint 4B 只允許過去日期新增、編輯與刪除；今天仍由 Today 擁有，未來日期維持唯讀。
+  2. Calendar 與 Today 使用同一組 `entryForm`／`detailForm` DOM、validation、WorkRecord schema 與 canonical calculations；不得建立第二套表單。
+  3. Calendar 編輯採 UI draft 與明確「完成」commit；切換欄位、收入、班別、天氣或支出不直接寫入 durable state。
+  4. Calendar mutation 使用 snapshot、寫入、讀回驗證、last-valid safety copy 與 failure rollback；成功後才替換 in-memory state。
+  5. 損壞的 `driverPayApp.v2` 原始字串不得自動覆寫；有最近有效快照時只作安全顯示，沒有時顯示錯誤與重試。
+  6. 歷史平台收入使用直接校正當日總額；不在本 Sprint 建立完整逐筆收入或支出明細模型。
+  7. WorkRecord 不新增 `createdAt`／`updatedAt`；缺乏可靠 migration 與 sync 規格時，不以顯示日期或目前時間猜測 metadata。
+- Reason: Calendar 成為過去紀錄 Primary owner 後，必須在不複製 Today 表單、不改 schema、不讓失敗寫入污染畫面的前提下提供完整 mutation。
+- Impact:
+  - Calendar 新增／編輯／刪除後，Month Grid、Work Record Card、月份摘要、Reports 與 AI 由同一 state 重新渲染。
+  - 本機新增 `driverPayApp.v2.lastValid` 作為 recovery safety copy；正式資料 key 與 WorkRecord schema 不變。
+  - Calendar 時間欄位被校正時，不再讓舊 `workSession` aggregate 覆蓋使用者的新時間。
+  - Service Worker 使用 `driver-pay-pro-v10`。
+- Rejected alternatives:
+  - 不複製一套 Calendar-only 表單或計算。
+  - 不讓歷史欄位變更立即自動寫入。
+  - 不用 `overflow: hidden`、數字截斷或無條件歸零掩蓋資料／版面問題。
+  - 不在沒有 migration 的情況新增 record metadata 或收入／支出明細 schema。

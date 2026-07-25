@@ -104,7 +104,10 @@ Use this checklist for every feature that affects navigation, records, calculati
 
 ## Calendar implementation checklist
 
-This checklist applies across Calendar Implementation Sprints. Sprint 4A read/navigation results are recorded above; mutation items remain for Sprint 4B. Full expected behavior is defined in `docs/CALENDAR_SPEC.md`.
+This checklist applies across Calendar Implementation Sprints. Sprint 4A read/navigation
+and Sprint 4B mutation/hardening automated results are recorded in the repository tests
+and `HANDOFF.md`. Physical iPhone Safari and installed-PWA items remain Human QA. Full
+expected behavior is defined in `docs/CALENDAR_SPEC.md`.
 
 ### Month grid and dates
 
@@ -151,17 +154,17 @@ This checklist applies across Calendar Implementation Sprints. Sprint 4A read/na
 
 ### Record mutation
 
-- [ ] Past backfill prefills and locks selected date.
-- [ ] Existing record opens the one reusable Record Editor.
-- [ ] Calendar editing does not navigate into or masquerade as Today.
-- [ ] Successful create/edit returns to the same selected date.
-- [ ] Routine saves show SaveStatus without success Toast spam.
-- [ ] Dirty grouped fields cannot be silently discarded.
-- [ ] Delete is secondary and confirmation includes exact date and affected data.
-- [ ] Delete success keeps selected date and updates card/grid/heat/summary.
-- [ ] localStorage write failure rolls back create/edit/delete and preserves a retryable draft.
-- [ ] Corrupted localStorage shows read error/retry and does not appear as an empty month.
-- [ ] Offline create/edit/delete accurately says locally saved and does not claim cloud sync.
+- [x] Past backfill prefills and locks selected date.
+- [x] Existing record opens the one reusable Record Editor.
+- [x] Calendar editing does not navigate into or masquerade as Today.
+- [x] Successful create/edit returns to the same selected date.
+- [x] Routine saves show SaveStatus without success Toast spam.
+- [x] Dirty grouped fields cannot be silently discarded.
+- [x] Delete is secondary and confirmation includes exact date and affected data.
+- [x] Delete success keeps selected date and updates card/grid/heat/summary.
+- [x] localStorage write failure rolls back create/edit/delete and preserves a retryable draft.
+- [x] Corrupted localStorage shows read error/retry and does not appear as an empty month when a last-valid safety copy exists.
+- [x] Offline create/edit/delete accurately says locally saved and does not claim cloud sync.
 
 ### Gesture, motion, and accessibility
 
