@@ -55,6 +55,92 @@ Use this checklist for every feature that affects navigation, records, calculati
 - [ ] `driverPayApp.v2` and the existing data structure remain intact unless an approved migration exists.
 - [ ] `docs/TECH_DEBT.md` is updated when an approved Sprint intentionally leaves a known gap.
 
+## Calendar implementation checklist
+
+This checklist applies to the future Calendar Implementation Sprints. Full expected behavior is defined in `docs/CALENDAR_SPEC.md`.
+
+### Month grid and dates
+
+- [ ] Fresh Calendar entry selects Taipei-local today.
+- [ ] Same session preserves selected date and displayed month.
+- [ ] New session resets normal entry to today.
+- [ ] Grid is Monday-first with headers 一 through 日.
+- [ ] Normal February has 28 days.
+- [ ] Leap-year February has 29 days.
+- [ ] Month starting Monday aligns day 1 to the first column.
+- [ ] A six-row month renders without clipping or overflow.
+- [ ] Leading/trailing adjacent-month dates are valid and selectable.
+- [ ] Previous/next arrows change displayed month only.
+- [ ] Today button selects and displays current today.
+- [ ] Month-only navigation does not silently change selected date.
+- [ ] Rapid month changes settle on the final requested month.
+- [ ] Date utilities pass in Asia/Taipei and UTC test processes.
+
+### Date-cell states and heat
+
+- [ ] Today and Selected are distinct and can coexist.
+- [ ] Focus and Selected are visually distinct.
+- [ ] Record with no net displays `—`; no record displays no amount.
+- [ ] Negative net displays a signed compact amount and no positive heat.
+- [ ] Future date displays no heat and cannot create.
+- [ ] One to three positive days use maximum-ratio fallback.
+- [ ] Four or more positive days use quantile levels 1–4.
+- [ ] All equal positive values receive the same Level 2.
+- [ ] One extreme value does not erase differentiation among other days.
+- [ ] Compact values cover under 1,000, one-decimal k, integer k, negative, and very large amounts.
+- [ ] Heat uses semantic Design System tokens and Selected overrides its surface.
+
+### Work Record Card and empty states
+
+- [ ] Selecting a date updates the card without navigation or auto-creation.
+- [ ] Card uses canonical total, expenses, net, duration, and hourly calculations.
+- [ ] Platform rows use text, recognized values, and no logos/colors.
+- [ ] Empty platform section is hidden.
+- [ ] Today empty state shows `前往今天`.
+- [ ] Past empty state shows `新增紀錄`.
+- [ ] Future empty state has no action.
+- [ ] Card and grid update after another page changes records.
+- [ ] Monthly net and shared work-day count are correct.
+
+### Record mutation
+
+- [ ] Past backfill prefills and locks selected date.
+- [ ] Existing record opens the one reusable Record Editor.
+- [ ] Calendar editing does not navigate into or masquerade as Today.
+- [ ] Successful create/edit returns to the same selected date.
+- [ ] Routine saves show SaveStatus without success Toast spam.
+- [ ] Dirty grouped fields cannot be silently discarded.
+- [ ] Delete is secondary and confirmation includes exact date and affected data.
+- [ ] Delete success keeps selected date and updates card/grid/heat/summary.
+- [ ] localStorage write failure rolls back create/edit/delete and preserves a retryable draft.
+- [ ] Corrupted localStorage shows read error/retry and does not appear as an empty month.
+- [ ] Offline create/edit/delete accurately says locally saved and does not claim cloud sync.
+
+### Gesture, motion, and accessibility
+
+- [ ] Grid swipe changes one month and arrows remain available.
+- [ ] Card swipe changes one day and crossing month syncs displayed month.
+- [ ] Vertical scrolling is not intercepted by horizontal gesture detection.
+- [ ] iOS screen-edge browser gesture is not hijacked.
+- [ ] Reduced motion removes transforms and smooth scrolling.
+- [ ] Grid supports roving focus and Arrow/Enter/Space behavior.
+- [ ] Date labels announce full date, Today/Selected, record, full net, and future status.
+- [ ] Selected uses `aria-selected`; Today uses `aria-current="date"`.
+- [ ] Month/card announcements are polite and not repetitive.
+- [ ] IconButtons have accessible names.
+
+### Responsive, PWA, and regression
+
+- [ ] 375, 390, 393, and 430px have no horizontal overflow.
+- [ ] 320px stress layout remains usable without forcing 44px-wide columns.
+- [ ] 768 and 1024px retain a bounded Calendar width and information order.
+- [ ] Full date cells remain at least 44px high; primary widths meet the touch target where physically possible.
+- [ ] Compact amounts never wrap.
+- [ ] Bottom Navigation and installed-PWA safe area do not cover Calendar content.
+- [ ] Today, Reports, AI, Driver, navigation, Service Worker, and manifest do not regress.
+- [ ] Today, Calendar, Reports, and AI return identical values for shared fixtures.
+- [ ] `driverPayApp.v2` and old records remain intact.
+
 ## Design System checklist
 
 ### Viewport and layout

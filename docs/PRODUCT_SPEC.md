@@ -393,19 +393,22 @@ V2 requires separate architecture, privacy, migration, security, and rollback ap
 
 ## 13. Calendar Implementation Prerequisites
 
-Before Calendar UI implementation begins:
+The approved Calendar interaction, state, data, architecture, and acceptance contract is now defined in:
 
-1. Approve a dedicated Calendar Interaction and Implementation Specification.
-2. Define selected-date session state and route format.
-3. Define Today-versus-Calendar record editing boundaries.
-4. Reuse canonical calculations and Design System primitives.
-5. Add future-date validation tests.
-6. Add Calendar month/date, leap-year, timezone, and empty-record tests.
-7. Define physical iPhone Safari and installed-PWA acceptance checks.
+`docs/CALENDAR_SPEC.md`
+
+Implementation must:
+
+1. Follow the selected-date session state and route contract.
+2. Enforce Today-versus-Calendar record editing boundaries.
+3. Reuse canonical calculations and Design System primitives.
+4. Add future-date validation tests.
+5. Add Calendar month/date, leap-year, timezone, heat, empty-state, interaction, and accessibility tests.
+6. Complete physical iPhone Safari and installed-PWA acceptance checks.
 
 The required next Sprint is:
 
-**Calendar Interaction and Implementation Specification**
+**Calendar Implementation — Sprint A: Read and Navigate**
 
 ## 14. Change Control
 

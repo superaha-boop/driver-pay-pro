@@ -6,6 +6,69 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
+## Calendar Interaction and Implementation Specification Sprint
+
+### 本次分支與範圍
+
+- Base branch：`codex/product-specification-20260725`
+- 工作分支：`codex/calendar-specification-20260725`
+- Sprint 2 commit：`cc6b678`；已確認 ancestry 包含 Design System Foundation `bf29913`。
+- 本 Sprint 只建立 Calendar 互動／實作規格與程式現況稽核。
+- 沒有修改 Calendar UI、任何 production code、資料模型、localStorage、PWA、Bottom Navigation 或計算。
+- 依 PRD 只推送工作分支，不 merge、不 deploy。
+
+### 已完成規格
+
+- 新增 `docs/CALENDAR_SPEC.md`，涵蓋 Purpose、User Goals、Scope、資訊架構、State Model、月份／日期互動、日期格狀態矩陣、收入熱度、Today／Selected、標準工作紀錄卡片、空狀態、未來日期、CRUD、SaveStatus、手勢、動畫、Accessibility、Responsive、Data Contract、計算、效能、錯誤、Offline、30 項 edge cases、Implementation Architecture 與 Acceptance Criteria。
+- Calendar 一般新 session 選今天，同 session 保留 selectedDate／displayedMonth；月份瀏覽不改 selectedDate，也不選最近工作日。
+- 熱度使用四級 positive-net quantile；少於四筆使用相對最大值 fallback；零與負值不使用正收入熱度。
+- 今天空狀態連到 Today；過去空日期可補登；未來日期可查看但不可新增。
+- 工作紀錄卡片第一版使用標準模式，不用平台 Logo，全部數值引用 canonical calculations。
+- 正式決策新增 D-022；永久規則、專案背景、Product Spec、Testing、Technical Debt 與 Changelog 已同步。
+
+### Current Calendar Audit
+
+- Calendar 全部位於 `index.html`，目前是 `monthFilter`＋`entriesTable` 月份清單，不是真正 Month Grid。
+- Calendar 與 Reports 已分離；Reports 的週／月／平台程式不得搬入 Calendar。
+- 目前沒有 Calendar selectedDate、income heat、Work Record Card 或日期 deep link；只有持久化 `settings.calendarMonth`。
+- `dateOnlyParts()`／`addLocalDays()` 可作為 date-only 基礎；新 month generator 仍需月末、閏年、六列與 timezone 測試。
+- `entryTotal()`、`entryExpenses()`、`entryNet()`、`workMetrics()`、`hourlyRate()`、`summarize()` 可直接重用。
+- AI 仍有重複的收入／支出／summary 計算；Calendar 不得建立第三套。
+- 現有 `#detailForm` 的欄位與 handlers 可部分重用，但它是 DOM-global、Today-bound，`editEntry()` 會跳回 Today；下一輪需先抽出單一 Editor controller。
+- WorkRecord 沒有 record-level `createdAt`／`updatedAt`；Calendar 不得假造。
+- `loadState()` parse 失敗時保留原始 localStorage，但目前回傳預設空狀態；detail save／delete 在 `saveState()` 失敗時沒有 transactional rollback。
+- 現有測試只涵蓋 Calendar／Reports 分離、月份狀態、legacy actions 與週期日期；Month Grid、Selected、Heat、Card、Gesture、Future、Editor 和 Accessibility 尚無測試。
+
+### Data Contract 與儲存
+
+- 維持既有 WorkRecord：`id`、`date`、shift/time/break/manualHours、tips/orders/km、weather/note、`incomes`、`expenses`、optional `workSession`／`incomeRecords`。
+- Derived values 只引用正式函式；compact amount、heat、localized date 與 CalendarState 全部是 display/UI state，不寫回 record。
+- `driverPayApp.v2` 與資料 schema 不變；目前只有 localStorage，無 Supabase、server queue、跨裝置同步或 conflict resolution。
+- 現有 grouped detail form 保留單一明確提交；平台收入、班別與天氣沿用現有即時儲存；不新增另一個 Calendar Save。
+
+### 建議 Implementation 拆分
+
+1. **Sprint A — Read and Navigate**：date utilities、month grid、state、navigation、cells／heat、read-only card、summary、gestures、Accessibility 與 responsive。
+2. **Sprint B — Record Mutation and Hardening**：單一 Record Editor、backfill/edit/delete、transaction rollback、SaveStatus、offline/error、完整回歸與實機 QA。
+
+拆為兩輪是因為目前沒有 Grid／selection 測試，Editor 又緊密綁定 Today；不應在同一輪同時承擔全新視覺與資料寫入風險。
+
+### 驗證
+
+- Calendar Specification contract：32 個必要章節、10 個核心 state、完整日期格矩陣與 30 項 edge cases 通過。
+- Product Ownership Matrix：每列恰好一個 Primary。
+- 既有 Node 自動測試：21/21 通過。
+- Inline JavaScript、Service Worker 語法與 manifest JSON 解析通過。
+- `git diff --check` 通過；產品程式、styles、tests、assets、manifest 與 Service Worker 都沒有差異。
+- TypeScript、lint、production build：專案未配置，Not available。
+- localStorage key 仍為 `driverPayApp.v2`；cache 仍為 `driver-pay-pro-v07-design-system-foundation`。
+
+### 下一步
+
+**Calendar Implementation — Sprint A: Read and Navigate**
+
+---
+
 ## Product Specification and Information Architecture Sprint
 
 ### 本次分支與範圍

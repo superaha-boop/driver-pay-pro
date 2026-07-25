@@ -106,3 +106,32 @@ Driver Pay Pro 需要讓後續頁面不再各自猜測色彩、間距、圓角�
 - 本決策不代表 Calendar 日期格、工作紀錄卡片、deep link、未來日期 guard 或計算去重已完成。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-021](docs/DECISION_LOG.md#d-021)；若摘要措辭出現差異，以該編號條目的最新核准內容為準。
+
+## D-022 — Calendar Interaction and Implementation Specification
+
+- Date: 2026-07-25
+
+### 決策
+
+1. Calendar 一般新 session 選今天，同 session 保留選取；不得自動選最近工作日。
+2. 單純月份導覽不改 selectedDate；selectedDate 不在顯示月份時不製造假選取。
+3. Calendar 固定 Monday-first；月份箭頭、今天與日期點擊是必要操作，手勢只是增強。
+4. Today、Selected 與 Income Heat 是可組合但彼此不同的狀態。
+5. 熱度以當月有效正淨收入的分位數四級計算；少於四筆時採相對最大值 fallback。
+6. 工作紀錄卡片位於月曆下方，第一版使用標準模式且不顯示平台 Logo。
+7. 今天空狀態連到 Today；過去空日期可補登；未來日期不可新增。
+8. 編輯直接可見；刪除是次級、具日期與影響說明的確認操作。
+9. Calendar 使用 canonical calculations、Design System 與單一 Record Editor，不取代 Reports。
+10. Calendar Implementation 建議拆為 Read and Navigate、Record Mutation and Hardening 兩個 Sprint。
+
+### 原因
+
+目前 Calendar 只有月份清單，尚無日期狀態、工作紀錄卡片或可重用 Editor。先固定互動、資料與錯誤契約，才能避免下一輪同時猜測 UX、複製計算或造成紀錄寫入風險。
+
+### 影響範圍
+
+- 完整規格以 `docs/CALENDAR_SPEC.md` 為準。
+- 本決策不代表 Calendar UI、日期格、熱度、手勢、Editor 或資料寫入已實作。
+- 改變 session 選取、月份導覽、熱度、未來日期或 Record Editor 規則，需要新的 Product Owner 核准。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-022](docs/DECISION_LOG.md#d-022)。

@@ -1,6 +1,6 @@
 # Driver Pay Pro — Codex Instructions
 
-Version: 1.5
+Version: 1.6
 
 ## Project Documentation
 
@@ -8,6 +8,7 @@ Version: 1.5
 
 - `docs/PRODUCT_GUIDE.md`
 - `docs/PRODUCT_SPEC.md`
+- `docs/CALENDAR_SPEC.md`（涉及 Calendar 時）
 - `docs/DESIGN_KIT.md`
 - `docs/DEVELOPMENT_HANDBOOK.md`
 - `docs/DECISION_LOG.md`
@@ -21,6 +22,7 @@ Version: 1.5
 
 - `PRODUCT_GUIDE.md`：產品方向與範圍
 - `PRODUCT_SPEC.md`：正式產品邊界、頁面責任、功能歸屬與跨頁資料契約
+- `CALENDAR_SPEC.md`：Calendar 正式互動、狀態、資料契約、實作架構與驗收規格
 - `DESIGN_KIT.md`：UI、UX 與品牌規則
 - `DESIGN_SYSTEM.md`：可實作的視覺 tokens 與共用 UI primitives
 - `DEVELOPMENT_HANDBOOK.md`：開發、測試與發布流程
@@ -35,10 +37,11 @@ Version: 1.5
 2. 本次核准的 PRD
 3. `AGENTS.md`
 4. `PRODUCT_SPEC.md`
-5. `PRODUCT_GUIDE.md`
-6. `DESIGN_KIT.md`
-7. `DEVELOPMENT_HANDBOOK.md`
-8. Codex 自行判斷
+5. `CALENDAR_SPEC.md`（涉及 Calendar 時）
+6. `PRODUCT_GUIDE.md`
+7. `DESIGN_KIT.md`
+8. `DEVELOPMENT_HANDBOOK.md`
+9. Codex 自行判斷
 
 若指令可能造成資料遺失、覆蓋正式版本、刪除分支或改寫 Git 歷史，必須先停止並說明風險。
 
@@ -94,6 +97,24 @@ Version: 1.5
 - 同一個產品概念在多頁出現時，必須優先重用同一資料 selector、validation 與共用元件。
 - Calendar 新實作必須先完成獨立的「Calendar Interaction and Implementation Specification」，不得直接由目前產品規格推定所有互動細節。
 - 發現現況不符合正式產品規格時，先記錄於 `docs/TECH_DEBT.md` 或 Current State Audit；除非本次 PRD 明確授權，不得順便修正。
+
+## Calendar Execution Rules
+
+- Calendar 以星期一為每週第一天，欄位固定為一、二、三、四、五、六、日。
+- 一般新啟動預設選取台北當地今天；不得自動選最近工作日。
+- 同一次 App session 返回 Calendar 時保留 `selectedDate` 與 `displayedMonth`；新 session 重設今天，不把選取日期永久寫入 localStorage。
+- 單純切換月份只改 `displayedMonth`，不得偷偷改變 `selectedDate`。
+- 月份箭頭、今天按鈕與日期點擊必須存在；滑動只能是增強，不能是唯一操作。
+- Today 與 Selected 是不同狀態；Selected 視覺優先，但 Today indicator 仍可辨識。
+- 未來日期可以查看，但不得新增工作紀錄。
+- 日期格只顯示淨收入簡寫；完整金額與資料顯示於下方工作紀錄卡片。
+- 收入熱度依當月有效正淨收入的相對分布計算，使用 Design System 語意 token，不在 renderer 硬編碼色票。
+- 工作紀錄卡片第一版固定使用標準模式，位於月曆正下方，不使用平台 Logo。
+- 編輯入口必須直接可見；刪除是次級操作，必須包含日期與影響範圍的確認。
+- 今天空狀態連到 Today；過去空日期可補登；未來空日期沒有新增入口。
+- Calendar 不取代 Reports，不加入即時工作控制、趨勢、平台排行或 AI 洞察。
+- Calendar 必須使用 canonical calculations、`styles/design-system.css` primitives 與同一套 Record Editor；不得建立第二套表單、資料模型或公式。
+- 完整狀態、手勢、Accessibility、資料與驗收規格以 `docs/CALENDAR_SPEC.md` 為準。
 
 # Driver Pay Pro Product Design Rules
 

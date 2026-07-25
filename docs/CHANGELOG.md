@@ -19,6 +19,9 @@
 
 ### Added
 
+- 新增正式 `docs/CALENDAR_SPEC.md`，定義 Calendar 狀態、月份／日期互動、日期格矩陣、熱度、工作紀錄卡片、Editor、錯誤／離線、實作架構與完整驗收契約。
+- 新增 Calendar Implementation 未來測試清單，涵蓋月份格、日期狀態、熱度、手勢、Accessibility、紀錄寫入、localStorage 錯誤與 PWA。
+- 新增 D-022 Calendar 正式產品決策。
 - 新增正式 `docs/PRODUCT_SPEC.md`，固定產品願景、五頁責任、Feature Ownership Matrix、跨頁紀錄契約、單一資料來源、產品術語、Calendar 決策、Current State Audit 與 Roadmap。
 - 新增 `docs/TECH_DEBT.md`，集中記錄計算重複、legacy primitives、工具鏈、PWA／iPhone 實機 QA、Calendar 責任差距與資料限制。
 - 新增跨頁產品契約測試清單，供後續 Calendar、Reports、AI 與 Driver Sprint 做責任與資料回歸檢查。
@@ -35,6 +38,7 @@
 
 ### Changed
 
+- Calendar 下一步由規格階段更新為兩個可控 Implementation Sprint：Read and Navigate、Record Mutation and Hardening；本次未修改產品程式。
 - `AGENTS.md`、專案背景、決策紀錄與交接文件改以正式 Product Specification 約束功能 owner、canonical calculations 與下一個 Calendar 規格 Sprint。
 - 現有 legacy variables 改由 Design System tokens 提供相同視覺值；Service Worker 更新為 v07 並快取共用樣式。
 - 底部導覽重整為「今天｜月曆｜報表｜AI｜Driver」，統一 24px Lucide 圖示與 14px 文字。

@@ -39,6 +39,15 @@
 - Calendar 目前仍是月份明細清單；日期格、session selected date 與工作紀錄卡片尚未實作。
 - 現況差距與技術限制集中記錄於 `docs/TECH_DEBT.md`，不因文件建立而自動授權實作。
 
+### Calendar Specification 摘要
+
+- `docs/CALENDAR_SPEC.md` 已定案；Calendar 定位是歷史日期定位、查看、補登與修正，不取代 Today 或 Reports。
+- Calendar 採 Monday-first；一般新 session 選今天，同 session 保留 selectedDate／displayedMonth，不自動選最近工作日。
+- 單純切換月份不改 selectedDate；點日期或滑動日期才更新工作紀錄卡片，跨月時同步 displayedMonth。
+- 日期格只顯示淨收入簡寫與柔和相對熱度；Today 與 Selected 分開，未來日期可查看但不可新增。
+- 工作紀錄卡片第一版固定標準模式，使用 canonical calculations、Design System primitives 與同一套 Record Editor。
+- 下一步為 Calendar Implementation，建議分成 Read and Navigate 與 Record Mutation and Hardening 兩個可控 Sprint。
+
 # Development Principles
 
 ## 1. 一次只做一個 Sprint
@@ -451,9 +460,10 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 
 ## 6. 下一步工作
 
-1. 建立並核准「Calendar Interaction and Implementation Specification」。
-2. 使用 iPhone Safari 與加入主畫面的 PWA 驗收五欄底部導覽、月曆、報表切換及返回行為。
-3. 確認 Service Worker 沒有持續提供舊快取。
-4. 確認 375、390、393、430px 下沒有水平 overflow，底部導覽不遮住最後一筆紀錄。
-5. 未經使用者確認，不修改已凍結首頁或重新設計週報。
-6. 若要讓每月固定或分月計算真正影響未來月報，需另立資料 migration 與報表規格，不可直接複製未來月份資料。
+1. 執行 Calendar Implementation — Sprint A: Read and Navigate。
+2. 之後執行 Calendar Implementation — Sprint B: Record Mutation and Hardening。
+3. 使用 iPhone Safari 與加入主畫面的 PWA 驗收五欄底部導覽、月曆、報表切換及返回行為。
+4. 確認 Service Worker 沒有持續提供舊快取。
+5. 確認 375、390、393、430px 下沒有水平 overflow，底部導覽不遮住最後一筆紀錄。
+6. 未經使用者確認，不修改已凍結首頁或重新設計週報。
+7. 若要讓每月固定或分月計算真正影響未來月報，需另立資料 migration 與報表規格，不可直接複製未來月份資料。

@@ -210,3 +210,33 @@
   - 不讓 Reports 或 AI 直接編輯紀錄。
   - 不把 Calendar 與 Reports 重新合併。
   - 不以文件 Sprint 為理由修改 production code、資料模型或 PWA cache。
+
+## D-022
+
+- Date: 2026-07-25
+- Decision:
+  1. Calendar 一般新 session 的 `selectedDate` 與 `displayedMonth` 都使用台北當地今天；同 session 返回時保留兩者，新 session 重設今天。
+  2. Calendar 不自動選最近工作日，也不因今天無資料跳到其他日期。
+  3. 單純使用月份箭頭或月份滑動只改 `displayedMonth`，不得偷偷改變 `selectedDate`；選取日期不在目前月份時，grid 不製造假選取。
+  4. Calendar 固定 Monday-first。
+  5. 月份箭頭、今天按鈕與日期點擊是必要操作；月份／日期滑動只是增強。
+  6. Today、Selected 與 Income Heat 是不同且可組合的狀態；Selected 優先，Today indicator 保留。
+  7. 收入熱度使用當月有效正淨收入的分位數四級；少於四筆採相對最大值 fallback，零與負值不使用正收入熱度。
+  8. 工作紀錄卡片位於 Month Grid 正下方，第一版固定標準模式，不使用平台 Logo。
+  9. 今天空狀態連到 Today；過去空日期可補登；未來日期可查看但不可新增。
+  10. 編輯入口直接顯示於卡片；刪除放在次級位置並使用包含日期與影響範圍的確認。
+  11. Calendar 必須使用 canonical calculations、Design System primitives 與單一可重用 Record Editor。
+  12. Calendar 不加入即時工作控制、趨勢、平台排行或 AI 洞察，也不取代 Reports。
+  13. Calendar Implementation 建議拆為 Read and Navigate、Record Mutation and Hardening 兩個 Sprint。
+- Reason: 目前實作只有月份下拉與每日清單，Editor 又緊密綁定 Today。先固定狀態、互動、資料、錯誤與驗收契約，可避免下一輪同時猜測 UX、建立第二套表單或引入資料寫入風險。
+- Impact:
+  - `docs/CALENDAR_SPEC.md` 是 Calendar Implementation 的主要依據。
+  - 一般新啟動不再由持久化 `settings.calendarMonth` 決定選取日期；舊欄位仍保留相容性，未經 migration 不刪除。
+  - 日期格只顯示淨收入簡寫；完整資料由標準工作紀錄卡片顯示。
+  - Calendar create/edit/delete 必須在下一輪先建立可回復的 persistence transaction 與同一 Record Editor origin/return contract。
+  - 本決策不代表 UI、日期格、熱度、手勢、Editor、future guard 或資料寫入已完成。
+- Rejected alternatives:
+  - 不把手勢作為唯一月份或日期操作。
+  - 不讓月份瀏覽偷偷改變使用者正在查看的紀錄。
+  - 不在 Calendar 複製 Today 表單或 Reports 計算。
+  - 不在規格 Sprint 修改 production UI、資料模型、PWA cache、導航或商業邏輯。
