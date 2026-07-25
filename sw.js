@@ -1,4 +1,4 @@
-const CACHE_NAME = "driver-pay-pro-v04-official-master-icon-v1";
+const CACHE_NAME = "driver-pay-pro-v05-monday-week-worktime-fix";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -24,13 +24,20 @@ self.addEventListener("activate", event => {
 
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
+  const isNavigation = event.request.mode === "navigate";
+  const networkRequest = isNavigation
+    ? new Request(event.request, { cache: "no-store" })
+    : event.request;
   event.respondWith(
-    fetch(event.request)
+    fetch(networkRequest)
       .then(response => {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+        if (response.ok && response.type === "basic") {
+          const copy = response.clone();
+          const cacheKey = isNavigation ? "./index.html" : event.request;
+          caches.open(CACHE_NAME).then(cache => cache.put(cacheKey, copy));
+        }
         return response;
       })
-      .catch(() => caches.match(event.request).then(cached => cached || caches.match("./index.html")))
+      .catch(() => isNavigation ? caches.match("./index.html") : caches.match(event.request))
   );
 });

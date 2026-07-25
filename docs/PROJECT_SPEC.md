@@ -255,10 +255,11 @@ driverPayApp.v2
 ## PWA 與離線行為
 
 - Manifest 使用 standalone、直向優先與繁體中文。
-- Service Worker cache 名稱為 `driver-pay-pro-v04-official-master-icon-v1`。
+- Service Worker cache 名稱為 `driver-pay-pro-v05-monday-week-worktime-fix`。
 - App Shell 包含首頁、manifest、主要 icon 與 hero 圖。
-- fetch 採 network-first：成功時更新快取，失敗時讀快取，最後 fallback 到 `index.html`。
+- navigation 採略過 HTTP cache 的 network-first：成功時更新 `index.html` 快取，離線時才 fallback；其他同源 GET 資源成功時更新各自快取。
 - activate 會刪除非目前名稱的舊快取並 claim clients。
+- Service Worker 註冊使用 `updateViaCache: "none"`；新 worker 接管既有 PWA 後會安全重載一次，不清除 localStorage。
 
 ## 非功能需求
 

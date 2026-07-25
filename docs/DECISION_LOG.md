@@ -113,3 +113,10 @@
 - Decision: Sprint 完成並通過適用驗證後，Codex 預設將工作 Branch 以一般 Git 合併整合至 `main`，Push `main` 並確認 Vercel Production Deployment，不需逐次再次取得發布確認。
 - Reason: Product Owner 希望每次完成修改後，手機正式版可直接取得最新版，不再需要額外手動合併或部署。
 - Impact: 發布仍必須保留可追溯 Git 歷史並核對 Production commit；當次明確要求不部署、驗證未通過、遠端衝突無法安全判定或可能造成資料遺失時必須停止。Reset、Rebase、Force Push、Schema／Migration、正式資料刪除與架構級變更仍需另行明確確認。
+
+## D-017
+
+- Date: 2026-07-25
+- Decision: D-015 的週期定義改為星期一至星期日；週期與台灣日期以不受 UTC 序列化偏移影響的 date-only 曆法計算。
+- Reason: Product Owner 正式確認營運週由星期一開始，且舊版將台灣午夜轉為 UTC 日期字串，造成週期兩端各往前一天與六天顯示。
+- Impact: 星期日歸屬前一個星期一開始的週，週末固定為開始日加 6 天；同月、跨月與跨年分別顯示如 `7/13－7/19`、`6/29－7/5`、`2026/12/28－2027/1/3`。PWA 發布必須同步更新 Service Worker cache 版本，避免手機繼續使用舊週期或工時程式。
