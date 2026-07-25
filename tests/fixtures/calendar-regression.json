@@ -1,0 +1,127 @@
+{
+  "emptyDate": "2026-06-12",
+  "platforms": ["Uber", "LINE GO", "Yoxi", "55688"],
+  "platformRates": {
+    "Uber": 100,
+    "LINE GO": 100,
+    "Yoxi": 100,
+    "55688": 85
+  },
+  "records": [
+    {
+      "scenario": "positive-net",
+      "entry": {
+        "date": "2026-06-01",
+        "incomes": { "Uber": 4000 },
+        "expenses": {},
+        "startTime": "08:00",
+        "endTime": "17:00",
+        "breakMinutes": 60
+      },
+      "expected": { "total": 4000, "expenses": 0, "net": 4000, "durationMinutes": 480, "hourly": 500 }
+    },
+    {
+      "scenario": "zero-net",
+      "entry": {
+        "date": "2026-06-02",
+        "incomes": { "Uber": 1000 },
+        "expenses": { "停車費": 1000 },
+        "manualHours": 2
+      },
+      "expected": { "total": 1000, "expenses": 1000, "net": 0, "durationMinutes": 120, "hourly": 0 }
+    },
+    {
+      "scenario": "negative-net",
+      "entry": {
+        "date": "2026-06-03",
+        "incomes": { "Uber": 500 },
+        "expenses": { "油錢／電費": 800 }
+      },
+      "expected": { "total": 500, "expenses": 800, "net": -300, "durationMinutes": 0, "hourly": 0 }
+    },
+    {
+      "scenario": "income-without-work-time",
+      "entry": {
+        "date": "2026-06-04",
+        "incomes": { "Uber": 2750 },
+        "expenses": {}
+      },
+      "expected": { "total": 2750, "expenses": 0, "net": 2750, "durationMinutes": 0, "hourly": 0 }
+    },
+    {
+      "scenario": "work-time-without-income",
+      "entry": {
+        "date": "2026-06-05",
+        "incomes": {},
+        "expenses": {},
+        "manualHours": 4
+      },
+      "expected": { "total": 0, "expenses": 0, "net": 0, "durationMinutes": 240, "hourly": 0 }
+    },
+    {
+      "scenario": "multiple-platforms",
+      "entry": {
+        "date": "2026-06-06",
+        "incomes": { "Uber": 1000, "LINE GO": 2000, "55688": 1000 },
+        "expenses": {},
+        "tips": 150,
+        "manualHours": 4
+      },
+      "expected": { "total": 4000, "expenses": 0, "net": 4000, "durationMinutes": 240, "hourly": 1000 }
+    },
+    {
+      "scenario": "expenses",
+      "entry": {
+        "date": "2026-06-07",
+        "incomes": { "Uber": 3000 },
+        "expenses": { "油錢／電費": 500, "停車費": 200 }
+      },
+      "expected": { "total": 3000, "expenses": 700, "net": 2300, "durationMinutes": 0, "hourly": 0 }
+    },
+    {
+      "scenario": "weather-and-note",
+      "entry": {
+        "date": "2026-06-08",
+        "incomes": { "Uber": 1200 },
+        "expenses": {},
+        "weather": "雨天",
+        "note": "機場排班"
+      },
+      "expected": { "total": 1200, "expenses": 0, "net": 1200, "durationMinutes": 0, "hourly": 0 }
+    },
+    {
+      "scenario": "cross-midnight",
+      "entry": {
+        "date": "2026-06-09",
+        "incomes": { "Uber": 1750 },
+        "expenses": {},
+        "startTime": "22:00",
+        "endTime": "02:00",
+        "breakMinutes": 30
+      },
+      "expected": { "total": 1750, "expenses": 0, "net": 1750, "durationMinutes": 210, "hourly": 500 }
+    },
+    {
+      "scenario": "very-large-amount",
+      "entry": {
+        "date": "2026-06-10",
+        "incomes": { "Uber": 99999999 },
+        "expenses": {}
+      },
+      "expected": { "total": 99999999, "expenses": 0, "net": 99999999, "durationMinutes": 0, "hourly": 0 }
+    },
+    {
+      "scenario": "incomplete-legacy-record",
+      "entry": {
+        "date": "2026-06-11",
+        "incomes": null,
+        "expenses": null,
+        "startTime": "08:00",
+        "endTime": "",
+        "breakMinutes": "invalid",
+        "manualHours": "invalid"
+      },
+      "expected": { "total": 0, "expenses": 0, "net": 0, "durationMinutes": 0, "hourly": 0 }
+    }
+  ]
+}
