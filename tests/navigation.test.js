@@ -121,13 +121,16 @@ test("月曆與報表月份狀態互相獨立", () => {
   assert.match(html, /lastReportView: normalizeReportView\(settings\.lastReportView\)/);
 });
 
-test("Calendar 4A 保留完整唯讀摘要且沒有寫入入口", () => {
+test("Calendar 4B 保留摘要並將過去日期寫入集中於共用編輯器", () => {
   const calendarSection = html.match(/<section id="view-calendar"[\s\S]*?<\/section>\s*<section id="view-reports"/)?.[0] || "";
   assert.match(html, /總收入[\s\S]*淨收入[\s\S]*工作時間[\s\S]*時薪/);
   assert.match(html, /\.calendar-date[\s\S]*?min-height: 58px;/);
-  assert.doesNotMatch(calendarSection, /data-edit|data-delete|新增紀錄|>編輯<|>刪除</);
-  assert.match(html, /本 Sprint 為唯讀瀏覽/);
-  assert.match(html, /data-calendar-editor-slot hidden/);
+  assert.doesNotMatch(calendarSection, /id="entryForm"|id="detailForm"/);
+  assert.match(html, /data-calendar-add/);
+  assert.match(html, /data-calendar-edit/);
+  assert.match(html, /id="recordEditorDialog"/);
+  assert.match(html, /moveSharedEditorToDialog\(\)/);
+  assert.match(html, /els\.recordEditorContent\.append\(els\.sharedIncomePanel, els\.sharedDetailPanel\)/);
 });
 
 test("報表標題、空白狀態與平台排行符合定案文字", () => {

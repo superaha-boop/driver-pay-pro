@@ -265,23 +265,105 @@ test("熱度只使用 Design System semantic tokens", () => {
   assert.doesNotMatch(renderer, /#[0-9a-f]{3,8}/i);
 });
 
-test("Calendar render、導覽與選取完全不呼叫寫入函式", () => {
+test("Calendar render、月份導覽與日期選取本身保持唯讀", () => {
   const readOnlyFunctions = [
     "renderCalendarGrid",
-    "renderCalendarRecordCard",
     "renderCalendarMonthSummary",
-    "renderCalendar",
     "changeCalendarDisplayedMonth",
     "selectCalendarDate",
     "goToCalendarToday",
     "openCalendar"
   ].map(extractFunction).join("\n");
   assert.doesNotMatch(readOnlyFunctions, /saveState|ensureEntryForDate|blankEntry|localStorage\.setItem/);
-  assert.match(html, /本 Sprint 為唯讀瀏覽/);
-  assert.doesNotMatch(
-    html.match(/<section id="view-calendar"[\s\S]*?<\/section>\s*<section id="view-reports"/)?.[0] || "",
-    /data-edit|data-delete|新增紀錄/
-  );
+  assert.match(html, /selectedDate > calendarState\.today/);
+  assert.match(html, /data-calendar-add/);
+  assert.match(html, /data-calendar-edit/);
+});
+
+test("Calendar mutation 使用同一組表單、草稿與明確 commit", () => {
+  assert.match(html, /id="sharedIncomePanel"/);
+  assert.match(html, /id="sharedDetailPanel"/);
+  assert.match(html, /els\.recordEditorContent\.append\(els\.sharedIncomePanel, els\.sharedDetailPanel\)/);
+  assert.match(html, /recordEditorState\.draft/);
+  assert.match(extractFunction("commitCalendarRecord"), /persistStatePayload\(nextState, \{ updateMemory: true \}\)/);
+  assert.match(extractFunction("requestRecordEditorClose"), /recordEditorState\.dirty/);
+  assert.match(extractFunction("requestRecordEditorClose"), /放棄尚未儲存的修改/);
+});
+
+test("Calendar mutation 限制日期、驗證欄位並提供日期明確刪除確認", () => {
+  const opener = extractFunction("openCalendarRecordEditor");
+  const validator = extractFunction("validateCalendarRecord");
+  const deleter = extractFunction("deleteCalendarRecord");
+  assert.match(opener, /normalizedDate >= todayString\(\)/);
+  assert.match(validator, /entry\.date >= todayString\(\)/);
+  assert.match(validator, /開始與結束時間必須同時填寫/);
+  assert.match(validator, /休息時間不可超過總經過時間/);
+  assert.match(validator, /recordHasMeaningfulContent/);
+  assert.match(deleter, /formatCalendarFullDate\(recordEditorState\.date\)/);
+  assert.match(deleter, /無法復原/);
+});
+
+test("本機儲存具備讀回驗證、最後有效快照與失敗回復", () => {
+  assert.match(html, /const storageKey = "driverPayApp\.v2"/);
+  assert.match(html, /const lastValidStorageKey = `\$\{storageKey\}\.lastValid`/);
+  assert.match(html, /localStorage\.setItem\(storageKey, serialized\)/);
+  assert.match(html, /readBack !== serialized/);
+  assert.match(html, /localStorage\.setItem\(lastValidStorageKey, serialized\)/);
+  assert.match(html, /previousSerialized === null\) localStorage\.removeItem\(storageKey\)/);
+  assert.match(html, /localStorage\.setItem\(storageKey, previousSerialized\)/);
+  assert.match(extractFunction("loadState"), /stateRecoveryNotice/);
+});
+
+test("persistence adapter 成功才更新記憶體，備份失敗會回復原值", () => {
+  const persistenceSource = extractFunction("persistStatePayload");
+  const runPersistence = ({ initial = null, failBackup = false }) => {
+    const values = new Map();
+    if (initial !== null) values.set("driverPayApp.v2", initial);
+    const sandbox = {
+      JSON,
+      stateLoadError: new Error("old"),
+      stateRecoveryNotice: "old",
+      storageKey: "driverPayApp.v2",
+      lastValidStorageKey: "driverPayApp.v2.lastValid",
+      memory: null,
+      console: { error() {} },
+      cloneStatePayload(value) {
+        return JSON.parse(JSON.stringify(value));
+      },
+      normalizeStatePayload(value) {
+        if (!value || !Array.isArray(value.entries)) throw new Error("invalid");
+        return value;
+      },
+      replaceStateContents(value) {
+        sandbox.memory = value;
+      },
+      localStorage: {
+        getItem(key) {
+          return values.has(key) ? values.get(key) : null;
+        },
+        setItem(key, value) {
+          if (failBackup && key === "driverPayApp.v2.lastValid") throw new Error("quota");
+          values.set(key, value);
+        },
+        removeItem(key) {
+          values.delete(key);
+        }
+      }
+    };
+    vm.runInNewContext(`${persistenceSource}; globalThis.result = persistStatePayload({ entries: [{ id: "new" }] }, { updateMemory: true });`, sandbox);
+    return { result: sandbox.result, memory: sandbox.memory, values };
+  };
+
+  const success = runPersistence({});
+  assert.equal(success.result, true);
+  assert.deepEqual(success.memory, { entries: [{ id: "new" }] });
+  assert.equal(success.values.get("driverPayApp.v2"), success.values.get("driverPayApp.v2.lastValid"));
+
+  const original = JSON.stringify({ entries: [{ id: "original" }] });
+  const failure = runPersistence({ initial: original, failBackup: true });
+  assert.equal(failure.result, false);
+  assert.equal(failure.memory, null);
+  assert.equal(failure.values.get("driverPayApp.v2"), original);
 });
 
 test("Work Record Card 重用 canonical calculations 且不顯示平台 Logo", () => {
@@ -331,8 +413,8 @@ test("Calendar session state 不寫入 durable storage 並支援 lifecycle refre
   assert.match(html, /scheduleCalendarMidnightRefresh/);
 });
 
-test("PWA App Shell 更新為簡短 v9 cache 且保留必要資源", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v9"/);
+test("PWA App Shell 更新為簡短 v10 cache 且保留必要資源", () => {
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v10"/);
   assert.match(serviceWorker, /"\.\/index\.html"/);
   assert.match(serviceWorker, /"\.\/styles\/design-system\.css"/);
   assert.match(serviceWorker, /keys\.filter\(key => key !== CACHE_NAME\)/);
