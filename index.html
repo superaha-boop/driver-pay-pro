@@ -3651,9 +3651,9 @@
 
     .calendar-page.ds-page-container {
       width: 100%;
-      padding: var(--spacing-2) 0 var(--spacing-6);
+      padding: var(--spacing-1) 0 var(--spacing-6);
       display: grid;
-      gap: var(--spacing-5);
+      gap: var(--spacing-3);
     }
 
     .calendar-month-navigation {
@@ -3681,7 +3681,17 @@
     }
 
     .calendar-today-button {
-      padding-inline: var(--spacing-2);
+      min-width: 56px;
+      padding-inline: var(--spacing-3);
+      border-radius: var(--radius-sm);
+    }
+
+    .calendar-today-button:hover {
+      background: var(--color-surface-muted);
+    }
+
+    .calendar-today-button:active {
+      background: var(--color-brand-subtle);
     }
 
     .calendar-weekdays,
@@ -3692,17 +3702,17 @@
     }
 
     .calendar-weekdays {
-      margin-bottom: calc(var(--spacing-3) * -1);
+      margin-bottom: calc(var(--spacing-1) * -1);
       color: var(--color-text-secondary);
       font-size: var(--font-size-caption);
-      font-weight: var(--font-weight-semibold);
+      font-weight: var(--font-weight-bold);
       line-height: var(--line-height-caption);
       text-align: center;
     }
 
     .calendar-weekdays span {
       min-width: 0;
-      padding-block: var(--spacing-1);
+      padding-block: 2px;
     }
 
     .calendar-grid {
@@ -3741,10 +3751,10 @@
       border: 1px solid transparent;
       border-radius: var(--radius-sm);
       display: grid;
-      grid-template-rows: auto 1fr;
+      grid-template-rows: auto auto 1fr;
       align-items: start;
       justify-items: center;
-      gap: 2px;
+      gap: 1px;
       box-sizing: border-box;
       color: var(--color-text-primary);
       background: transparent;
@@ -3803,7 +3813,6 @@
     }
 
     .calendar-date__amount {
-      align-self: center;
       color: var(--color-text-secondary);
       font-size: 11px;
       font-weight: var(--font-weight-semibold);
@@ -3828,7 +3837,7 @@
     .calendar-record-card {
       min-width: 0;
       min-height: 178px;
-      padding: var(--spacing-5);
+      padding: var(--spacing-4) var(--spacing-5);
       touch-action: pan-y;
     }
 
@@ -3843,7 +3852,7 @@
 
     .calendar-record-header {
       min-width: 0;
-      margin-bottom: var(--spacing-4);
+      margin-bottom: var(--spacing-3);
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
@@ -3857,7 +3866,27 @@
     }
 
     .calendar-record-heading .ds-card-title {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
       overflow-wrap: anywhere;
+    }
+
+    .calendar-record-date {
+      color: var(--color-text-primary);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .calendar-record-separator {
+      margin-inline: var(--spacing-1);
+      color: var(--color-text-tertiary);
+      font-weight: var(--font-weight-regular);
+    }
+
+    .calendar-record-weekday {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-secondary);
+      font-weight: var(--font-weight-medium);
     }
 
     .calendar-record-context {
@@ -3869,7 +3898,7 @@
     .calendar-metrics {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--spacing-4) var(--spacing-5);
+      gap: 0 var(--spacing-5);
     }
 
     .calendar-metric {
@@ -3889,10 +3918,24 @@
     .calendar-metric strong {
       min-width: 0;
       color: var(--color-text-primary);
-      font-size: 20px;
       line-height: var(--line-height-title);
       font-variant-numeric: tabular-nums;
       overflow-wrap: anywhere;
+    }
+
+    .calendar-metric--primary strong {
+      font-size: var(--font-size-section-title);
+    }
+
+    .calendar-metric--secondary strong {
+      font-size: 18px;
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .calendar-metrics-divider {
+      grid-column: 1 / -1;
+      margin-block: var(--spacing-3);
+      border-top: var(--border-subtle);
     }
 
     .calendar-record-section {
@@ -3988,7 +4031,7 @@
 
     @media (max-width: 350px) {
       .calendar-page.ds-page-container {
-        gap: var(--spacing-4);
+        gap: var(--spacing-3);
       }
 
       .calendar-month-navigation {
@@ -4019,8 +4062,15 @@
         gap: var(--spacing-3);
       }
 
-      .calendar-metric strong,
       .calendar-month-summary-item strong {
+        font-size: 18px;
+      }
+
+      .calendar-metric--primary strong {
+        font-size: 20px;
+      }
+
+      .calendar-metric--secondary strong {
         font-size: 18px;
       }
     }
@@ -6632,10 +6682,16 @@
 
     function calendarRecordHeader() {
       const outOfMonth = monthKeyFromDate(calendarState.selectedDate) !== calendarState.displayedMonth;
+      const fullDate = formatCalendarFullDate(calendarState.selectedDate);
+      const weekday = calendarWeekdayLabel(calendarState.selectedDate);
       return `
         <header class="calendar-record-header">
           <div class="calendar-record-heading">
-            <h3 class="ds-card-title">${escapeHtml(formatCalendarFullDate(calendarState.selectedDate))}・${escapeHtml(calendarWeekdayLabel(calendarState.selectedDate))}</h3>
+            <h3 class="ds-card-title" aria-label="${escapeHtml(fullDate)}・${escapeHtml(weekday)}">
+              <span class="calendar-record-date" aria-hidden="true">${escapeHtml(fullDate)}</span>
+              <span class="calendar-record-separator" aria-hidden="true">・</span>
+              <span class="calendar-record-weekday" aria-hidden="true">${escapeHtml(weekday)}</span>
+            </h3>
             ${outOfMonth ? `<span class="calendar-record-context">所選日期不在目前月份</span>` : ""}
           </div>
           <span data-calendar-editor-slot hidden></span>
@@ -6689,10 +6745,11 @@
       els.calendarRecordContent.innerHTML = `
         ${calendarRecordHeader()}
         <div class="calendar-metrics">
-          <div class="calendar-metric"><span>總收入</span><strong>${money(total)}</strong></div>
-          <div class="calendar-metric"><span>淨收入</span><strong>${money(net)}</strong></div>
-          <div class="calendar-metric"><span>工作時間</span><strong>${formatHours(duration.hours)}</strong></div>
-          <div class="calendar-metric"><span>時薪</span><strong>${money(hourlyRate(net, duration.durationMs))}</strong></div>
+          <div class="calendar-metric calendar-metric--primary"><span>總收入</span><strong>${money(total)}</strong></div>
+          <div class="calendar-metric calendar-metric--primary"><span>淨收入</span><strong>${money(net)}</strong></div>
+          <div class="calendar-metrics-divider" aria-hidden="true"></div>
+          <div class="calendar-metric calendar-metric--secondary"><span>工作時間</span><strong>${formatHours(duration.hours)}</strong></div>
+          <div class="calendar-metric calendar-metric--secondary"><span>時薪</span><strong>${money(hourlyRate(net, duration.durationMs))}</strong></div>
         </div>
         ${platformRows.length || tips > 0 ? `
           <section class="calendar-record-section" aria-label="平台收入">

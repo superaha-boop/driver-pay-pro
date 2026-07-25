@@ -294,6 +294,17 @@ test("Work Record Card 重用 canonical calculations 且不顯示平台 Logo", (
   assert.match(renderer, /money\(item\.recognized\)/);
 });
 
+test("Calendar Visual Polish 保留操作結構並建立清楚視覺層級", () => {
+  assert.match(html, /\.calendar-page\.ds-page-container[\s\S]*?gap: var\(--spacing-3\)/);
+  assert.match(html, /\.calendar-today-button[\s\S]*?min-width: 56px[\s\S]*?padding-inline: var\(--spacing-3\)/);
+  assert.match(html, /\.calendar-weekdays[\s\S]*?font-weight: var\(--font-weight-bold\)/);
+  assert.match(html, /\.calendar-date[\s\S]*?min-height: 58px[\s\S]*?grid-template-rows: auto auto 1fr/);
+  assert.match(html, /\.calendar-date__amount[\s\S]*?white-space: nowrap/);
+  assert.match(html, /calendar-record-date[\s\S]*?calendar-record-weekday/);
+  assert.match(html, /calendar-metrics-divider" aria-hidden="true"/);
+  assert.match(html, /calendar-metric--primary[\s\S]*?calendar-metric--secondary/);
+});
+
 test("鍵盤、ARIA、手勢與 reduced motion 契約存在", () => {
   assert.match(html, /role="gridcell"/);
   assert.match(html, /aria-selected="\$\{String\(isSelected\)\}"/);
@@ -320,8 +331,8 @@ test("Calendar session state 不寫入 durable storage 並支援 lifecycle refre
   assert.match(html, /scheduleCalendarMidnightRefresh/);
 });
 
-test("PWA App Shell 更新為簡短 v8 cache 且保留必要資源", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v8"/);
+test("PWA App Shell 更新為簡短 v9 cache 且保留必要資源", () => {
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v9"/);
   assert.match(serviceWorker, /"\.\/index\.html"/);
   assert.match(serviceWorker, /"\.\/styles\/design-system\.css"/);
   assert.match(serviceWorker, /keys\.filter\(key => key !== CACHE_NAME\)/);

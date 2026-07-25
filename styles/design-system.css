@@ -55,10 +55,10 @@
   --color-brand-subtle: #f1f8f5;
 
   /* Calendar income heat — relative positive net income only */
-  --color-calendar-heat-1: #f1f8f5;
-  --color-calendar-heat-2: #e3f5ed;
-  --color-calendar-heat-3: #ccebdd;
-  --color-calendar-heat-4: #addfcf;
+  --color-calendar-heat-1: #eef7f3;
+  --color-calendar-heat-2: #dff2e9;
+  --color-calendar-heat-3: #c3e7d7;
+  --color-calendar-heat-4: #9fd8c5;
 
   /* Surfaces */
   --color-background: #f3f5f4;
