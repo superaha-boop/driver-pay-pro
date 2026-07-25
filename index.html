@@ -4968,7 +4968,8 @@
       draft: null,
       dirty: false,
       saving: false,
-      returnFocus: null
+      returnFocus: null,
+      returnFocusSelector: ""
     };
     let recordEditorConfirmAction = null;
 
@@ -5136,11 +5137,15 @@
     function persistStatePayload(nextState, options) {
       options ||= {};
       const { updateMemory = false } = options;
-      let previousSerialized = null;
+      let previousSerialized;
+      let previousLastValidSerialized;
+      let storageSnapshotsCaptured = false;
       try {
+        previousSerialized = localStorage.getItem(storageKey);
+        previousLastValidSerialized = localStorage.getItem(lastValidStorageKey);
+        storageSnapshotsCaptured = true;
         const normalized = normalizeStatePayload(cloneStatePayload(nextState));
         const serialized = JSON.stringify(normalized);
-        previousSerialized = localStorage.getItem(storageKey);
         localStorage.setItem(storageKey, serialized);
         const readBack = localStorage.getItem(storageKey);
         if (readBack !== serialized) throw new Error("儲存後讀回內容不一致");
@@ -5151,11 +5156,19 @@
         stateRecoveryNotice = "";
         return true;
       } catch (error) {
-        try {
-          if (previousSerialized === null) localStorage.removeItem(storageKey);
-          else localStorage.setItem(storageKey, previousSerialized);
-        } catch (restoreError) {
-          console.error("資料回復失敗；原始快照仍保留於記憶體。", restoreError);
+        if (storageSnapshotsCaptured) {
+          try {
+            if (previousSerialized === null) localStorage.removeItem(storageKey);
+            else localStorage.setItem(storageKey, previousSerialized);
+          } catch (restoreError) {
+            console.error("主資料回復失敗；原始快照仍保留於記憶體。", restoreError);
+          }
+          try {
+            if (previousLastValidSerialized === null) localStorage.removeItem(lastValidStorageKey);
+            else localStorage.setItem(lastValidStorageKey, previousLastValidSerialized);
+          } catch (restoreError) {
+            console.error("安全快照回復失敗；原始主資料仍優先保留。", restoreError);
+          }
         }
         console.error("無法安全儲存資料。", error);
         return false;
@@ -7889,6 +7902,16 @@
     function setRecordEditorStatus(message = "", type = "") {
       els.recordEditorStatus.textContent = message;
       els.recordEditorStatus.dataset.status = type || (message ? "pending" : "idle");
+      const isError = type === "error";
+      els.recordEditorStatus.setAttribute("role", isError ? "alert" : "status");
+      els.recordEditorStatus.setAttribute("aria-live", isError ? "assertive" : "polite");
+      els.recordEditorStatus.setAttribute("aria-atomic", "true");
+      [els.entryForm, els.detailForm].forEach(form => {
+        if (!recordEditorState.open) return;
+        form.setAttribute("aria-describedby", "recordEditorStatus");
+        if (isError) form.setAttribute("aria-invalid", "true");
+        else form.removeAttribute("aria-invalid");
+      });
     }
 
     function markRecordEditorDirty() {
@@ -7934,6 +7957,13 @@
       els.sharedDetailPanelAnchor.after(els.sharedDetailPanel);
     }
 
+    function calendarEditorReturnSelector(trigger) {
+      if (!(trigger instanceof HTMLElement)) return "";
+      if (trigger.hasAttribute("data-calendar-add")) return "[data-calendar-add]";
+      if (trigger.hasAttribute("data-calendar-edit")) return "[data-calendar-edit]";
+      return "";
+    }
+
     function openCalendarRecordEditor(date, trigger = document.activeElement) {
       const normalizedDate = normalizeDateKey(date);
       if (!normalizedDate || normalizedDate >= todayString() || stateLoadError) return;
@@ -7946,7 +7976,8 @@
         draft: existing ? cloneStatePayload(existing) : blankEntry(normalizedDate),
         dirty: false,
         saving: false,
-        returnFocus: trigger instanceof HTMLElement ? trigger : null
+        returnFocus: trigger instanceof HTMLElement ? trigger : null,
+        returnFocusSelector: calendarEditorReturnSelector(trigger)
       };
       moveSharedEditorToDialog();
       fillEntryFields(recordEditorState.draft);
@@ -7971,9 +8002,15 @@
 
     function finishRecordEditorClose() {
       const returnFocus = recordEditorState.returnFocus;
+      const returnFocusSelector = recordEditorState.returnFocusSelector;
+      const returnDate = recordEditorState.date;
       recordEditorState.open = false;
       restoreSharedEditorToToday();
       document.getElementById("date").disabled = false;
+      [els.entryForm, els.detailForm].forEach(form => {
+        form.removeAttribute("aria-describedby");
+        form.removeAttribute("aria-invalid");
+      });
       els.detailForm.querySelector(".save-button").textContent = "儲存詳細紀錄";
       els.detailForm.querySelector(".save-button").disabled = false;
       els.recordEditorDialog.close();
@@ -7981,7 +8018,14 @@
       els.calendarExpenseList.innerHTML = "";
       resetForm();
       renderCalendar();
-      window.requestAnimationFrame(() => returnFocus?.focus());
+      window.requestAnimationFrame(() => {
+        const replacement = returnFocusSelector
+          ? document.querySelector(returnFocusSelector)
+          : null;
+        const selectedDateCell = els.calendarGrid.querySelector(`[data-calendar-date="${returnDate}"]`);
+        const focusTarget = returnFocus?.isConnected ? returnFocus : replacement || selectedDateCell;
+        focusTarget?.focus();
+      });
     }
 
     function requestRecordEditorClose() {
