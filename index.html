@@ -4072,6 +4072,11 @@
       total: "直接輸入總額",
       incremental: "每筆收入累加"
     };
+    const workTimeUnits = Object.freeze({
+      minuteMs: 60000,
+      hourMs: 3600000,
+      dayMs: 86400000
+    });
     const maxPlatformIncome = 99999999;
     const defaultExpenses = ["油錢/電費", "洗車", "停車費", "保養", "車租/車貸", "保險", "平台抽成", "罰單", "其他"];
     const expenseCategoryGroups = [
@@ -4351,11 +4356,28 @@
     }
 
     function todayString() {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, "0");
-      const day = String(now.getDate()).padStart(2, "0");
+      return localDateString(new Date());
+    }
+
+    function localDateString(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
       return `${year}-${month}-${day}`;
+    }
+
+    function localDate(dateString) {
+      const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateString || ""));
+      if (!match) return null;
+      const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+      return localDateString(date) === dateString ? date : null;
+    }
+
+    function addLocalDays(dateString, days) {
+      const date = localDate(dateString);
+      if (!date) return "";
+      date.setDate(date.getDate() + Number(days || 0));
+      return localDateString(date);
     }
 
     function currentTimeString() {
@@ -4437,25 +4459,85 @@
       return entryTotal(entry) - entryExpenses(entry);
     }
 
-    function calcHours(entry) {
-      if (Number(entry.manualHours) > 0) return Number(entry.manualHours);
-      if (entry.workSession) {
-        const session = entry.workSession;
-        let activeMs = Number(session.accumulatedActiveMs || 0);
-        if (session.status === "running" && session.segmentStartedAt) {
-          activeMs += Math.max(0, Date.now() - new Date(session.segmentStartedAt).getTime());
-        }
-        return Math.max(0, activeMs / 3600000);
-      }
-      if (!entry.startTime || !entry.endTime) return 0;
+    function timeValueMs(value) {
+      const timestamp = new Date(value).getTime();
+      return Number.isFinite(timestamp) ? timestamp : null;
+    }
+
+    function clockWorkDurationMs(entry) {
+      if (!entry?.startTime || !entry?.endTime) return 0;
       const start = minutes(entry.startTime);
       let end = minutes(entry.endTime);
+      if (!Number.isFinite(start) || !Number.isFinite(end)) return 0;
       if (end < start) end += 24 * 60;
-      return Math.max(0, (end - start - Number(entry.breakMinutes || 0)) / 60);
+      const elapsedMinutes = end - start;
+      const breakMinutes = nonNegativeNumber(entry.breakMinutes);
+      return Math.max(0, elapsedMinutes - breakMinutes) * workTimeUnits.minuteMs;
+    }
+
+    function sessionWorkDurationMs(entry, nowMs, currentDate) {
+      const session = entry?.workSession;
+      if (!session || typeof session !== "object") return null;
+
+      const accumulatedActiveMs = nonNegativeNumber(session.accumulatedActiveMs);
+      const accumulatedBreakMs = nonNegativeNumber(session.accumulatedBreakMs);
+      const startedAtMs = timeValueMs(session.startedAt);
+      const endedAtMs = timeValueMs(session.endedAt);
+      const pausedAtMs = timeValueMs(session.pausedAt);
+      const segmentStartedAtMs = timeValueMs(session.segmentStartedAt);
+      const startedOnEntryDate = startedAtMs !== null
+        && localDateString(new Date(startedAtMs)) === entry.date;
+      const isLiveToday = entry.date === currentDate && startedOnEntryDate;
+
+      let sessionEndMs = null;
+      let liveBreakMs = accumulatedBreakMs;
+      if (session.status === "stopped" && endedAtMs !== null) {
+        sessionEndMs = endedAtMs;
+      } else if (isLiveToday && ["running", "paused"].includes(session.status)) {
+        sessionEndMs = nowMs;
+        if (session.status === "paused" && pausedAtMs !== null) {
+          liveBreakMs += Math.max(0, nowMs - pausedAtMs);
+        }
+      }
+
+      if (startedAtMs !== null && sessionEndMs !== null && sessionEndMs >= startedAtMs) {
+        return Math.max(0, sessionEndMs - startedAtMs - liveBreakMs);
+      }
+
+      if (isLiveToday && session.status === "running" && segmentStartedAtMs !== null) {
+        return accumulatedActiveMs + Math.max(0, nowMs - segmentStartedAtMs);
+      }
+
+      if (accumulatedActiveMs > 0) return accumulatedActiveMs;
+      const clockDurationMs = clockWorkDurationMs(entry);
+      return clockDurationMs > 0 ? clockDurationMs : 0;
+    }
+
+    function workMetrics(entry, nowMs = Date.now(), currentDate = todayString()) {
+      const manualHours = nonNegativeNumber(entry?.manualHours);
+      let durationMs = manualHours > 0
+        ? manualHours * workTimeUnits.hourMs
+        : sessionWorkDurationMs(entry, nowMs, currentDate);
+      if (durationMs === null) durationMs = clockWorkDurationMs(entry);
+      durationMs = nonNegativeNumber(durationMs);
+      return {
+        durationMs,
+        hours: durationMs / workTimeUnits.hourMs
+      };
+    }
+
+    function hourlyRate(netIncome, durationMs) {
+      const safeDurationMs = nonNegativeNumber(durationMs);
+      if (safeDurationMs < workTimeUnits.minuteMs) return 0;
+      return finiteNumber(netIncome) / (safeDurationMs / workTimeUnits.hourMs);
     }
 
     function minutes(time) {
-      const [h, m] = time.split(":").map(Number);
+      const match = /^(\d{1,2}):(\d{2})$/.exec(String(time || ""));
+      if (!match) return Number.NaN;
+      const h = Number(match[1]);
+      const m = Number(match[2]);
+      if (h > 23 || m > 59) return Number.NaN;
       return h * 60 + m;
     }
 
@@ -4537,10 +4619,15 @@
       const total = entries.reduce((sum, entry) => sum + entryTotal(entry), 0);
       const tips = entries.reduce((sum, entry) => sum + Number(entry.tips || 0), 0);
       const expenses = entries.reduce((sum, entry) => sum + entryExpenses(entry), 0);
-      const hours = entries.reduce((sum, entry) => sum + calcHours(entry), 0);
+      const nowMs = Date.now();
+      const currentDate = todayString();
+      const durationMs = entries.reduce((sum, entry) => {
+        return sum + workMetrics(entry, nowMs, currentDate).durationMs;
+      }, 0);
+      const hours = durationMs / workTimeUnits.hourMs;
       const orders = entries.reduce((sum, entry) => sum + Number(entry.orders || 0), 0);
       const net = total - expenses;
-      return { total, tips, expenses, hours, orders, net, hourly: hours ? net / hours : 0 };
+      return { total, tips, expenses, durationMs, hours, orders, net, hourly: hourlyRate(net, durationMs) };
     }
 
     function finiteNumber(value) {
@@ -4571,22 +4658,17 @@
       return Object.values(entry.expenses).reduce((sum, value) => sum + nonNegativeNumber(value), 0);
     }
 
-    function analysisEntryHours(entry) {
-      if (!entry) return 0;
-      try {
-        const hours = nonNegativeNumber(calcHours(entry));
-        return hours >= 1 / 60 ? hours : 0;
-      } catch (error) {
-        return 0;
-      }
-    }
-
     function analysisSummary(entries) {
       const total = entries.reduce((sum, entry) => sum + analysisEntryTotal(entry), 0);
       const expenses = entries.reduce((sum, entry) => sum + analysisEntryExpenses(entry), 0);
-      const hours = entries.reduce((sum, entry) => sum + analysisEntryHours(entry), 0);
+      const nowMs = Date.now();
+      const currentDate = todayString();
+      const durationMs = entries.reduce((sum, entry) => {
+        return sum + workMetrics(entry, nowMs, currentDate).durationMs;
+      }, 0);
+      const hours = durationMs / workTimeUnits.hourMs;
       const net = total - expenses;
-      return { total, expenses, hours, net, hourly: hours > 0 ? net / hours : 0 };
+      return { total, expenses, durationMs, hours, net, hourly: hourlyRate(net, durationMs) };
     }
 
     function analysisPlatformRows(entries) {
@@ -4687,8 +4769,9 @@
       const add = message => {
         if (message && !items.includes(message)) items.push(message);
       };
-      const todayHours = analysisEntryHours(todayEntry);
-      const todayHourly = todayHours > 0 ? (todaySummary.net / todayHours) : 0;
+      const todayWork = workMetrics(todayEntry);
+      const todayHours = todayWork.hours;
+      const todayHourly = hourlyRate(todaySummary.net, todayWork.durationMs);
       const topPlatform = analysisPlatformRows([todayEntry])[0];
       const dailyGoal = nonNegativeNumber(state.settings.dailyGoal);
 
@@ -4727,15 +4810,19 @@
 
       if (monthSummary.hourly > 0) {
         const lowDay = monthEntries.map(entry => {
-          const hours = analysisEntryHours(entry);
-          const hourly = hours > 0 ? (analysisEntryTotal(entry) - analysisEntryExpenses(entry)) / hours : 0;
+          const work = workMetrics(entry);
+          const hours = work.hours;
+          const hourly = hourlyRate(
+            analysisEntryTotal(entry) - analysisEntryExpenses(entry),
+            work.durationMs
+          );
           return { entry, hours, hourly };
         }).filter(item => item.hours > 0 && item.hourly < monthSummary.hourly * .7)
           .sort((a, b) => a.hourly - b.hourly)[0];
         if (lowDay) add(`${compactDailyDate(lowDay.entry.date)} 時薪 ${money(lowDay.hourly)}，明顯低於本月平均。`);
       }
 
-      const longDay = monthEntries.map(entry => ({ entry, hours: analysisEntryHours(entry) }))
+      const longDay = monthEntries.map(entry => ({ entry, hours: workMetrics(entry).hours }))
         .filter(item => item.hours >= 12).sort((a, b) => b.hours - a.hours)[0];
       if (longDay) add(`${compactDailyDate(longDay.entry.date)} 工作 ${number(longDay.hours)} 小時，單日工時偏長。`);
 
@@ -4744,7 +4831,7 @@
         const previousDate = new Date(`${ordered[index - 1].date}T00:00:00`);
         const currentDate = new Date(`${ordered[index].date}T00:00:00`);
         const consecutive = currentDate.getTime() - previousDate.getTime() === 86400000;
-        if (consecutive && analysisEntryHours(ordered[index - 1]) >= 10 && analysisEntryHours(ordered[index]) >= 10) {
+        if (consecutive && workMetrics(ordered[index - 1]).hours >= 10 && workMetrics(ordered[index]).hours >= 10) {
           add(`${compactDailyDate(ordered[index - 1].date)} 至 ${compactDailyDate(ordered[index].date)} 連續兩天工時偏長。`);
           break;
         }
@@ -5483,7 +5570,7 @@
       if (!els.workCollapsedPrimary || !els.workCollapsedSecondary || !els.workLiveValue) return;
       const start = entry.startTime;
       const end = entry.endTime;
-      const hours = calcHours(entry);
+      const hours = workMetrics(entry).hours;
 
       if (!start) {
         els.workCollapsedPrimary.textContent = "尚未設定";
@@ -5515,7 +5602,8 @@
       const expenses = entryExpenses(entry);
       const total = entryTotal(entry);
       const net = entryNet(entry);
-      const hours = calcHours(entry);
+      const work = workMetrics(entry);
+      const hours = work.hours;
       updateWorkTimeUi(entry);
       updateRateHints();
       updateDailyGoal();
@@ -5538,7 +5626,7 @@
         </div>
         <div class="wide">
           <span>扣支出後</span>
-          <strong>${money(net)}${hours ? ` · ${money(net / hours)}/時` : ""}</strong>
+          <strong>${money(net)}${hours ? ` · ${money(hourlyRate(net, work.durationMs))}/時` : ""}</strong>
         </div>
       `;
     }
@@ -5676,17 +5764,19 @@
     }
 
     function weekStart(dateString) {
-      const date = new Date(`${dateString}T00:00:00`);
-      const day = date.getDay() || 7;
-      date.setDate(date.getDate() - day + 1);
-      return date.toISOString().slice(0, 10);
+      const date = localDate(dateString);
+      if (!date) return "";
+      date.setDate(date.getDate() - date.getDay());
+      return localDateString(date);
     }
 
     function renderWeeks() {
       const month = selectedMonth(els.weekMonthFilter);
+      const visibleWeekStarts = new Set(entriesForMonth(month).map(entry => weekStart(entry.date)).filter(Boolean));
       const groups = new Map();
-      entriesForMonth(month).forEach(entry => {
+      state.entries.forEach(entry => {
         const key = weekStart(entry.date);
+        if (!visibleWeekStarts.has(key)) return;
         if (!groups.has(key)) groups.set(key, []);
         groups.get(key).push(entry);
       });
@@ -5698,9 +5788,7 @@
 
       els.weekList.innerHTML = [...groups.entries()].sort((a, b) => b[0].localeCompare(a[0])).map(([start, entries]) => {
         const summary = summarize(entries);
-        const endDate = new Date(`${start}T00:00:00`);
-        endDate.setDate(endDate.getDate() + 6);
-        const end = endDate.toISOString().slice(0, 10);
+        const end = addLocalDays(start, 6);
         return `
           <div class="week-item">
             <div class="week-item-period"><span>週期</span><strong>${compactWeekRange(start, end)}</strong></div>
@@ -5889,13 +5977,13 @@
     }
 
     function sessionDetails(entry = entryForDate()) {
-      const hours = calcHours(entry || {});
+      const work = workMetrics(entry || {});
       const session = entry?.workSession;
       let breakMs = Number(session?.accumulatedBreakMs || 0);
       if (session?.status === "paused" && session.pausedAt) {
         breakMs += Math.max(0, Date.now() - new Date(session.pausedAt).getTime());
       }
-      if (!session) breakMs = Number(entry?.breakMinutes || 0) * 60000;
+      if (!session) breakMs = Number(entry?.breakMinutes || 0) * workTimeUnits.minuteMs;
       let elapsedMs = 0;
       if (session?.startedAt) {
         const end = session.endedAt ? new Date(session.endedAt).getTime() : Date.now();
@@ -5903,9 +5991,9 @@
       } else if (entry?.startTime) {
         const start = new Date(`${entry.date || todayString()}T${entry.startTime}:00`).getTime();
         const end = entry.endTime ? new Date(`${entry.date || todayString()}T${entry.endTime}:00`).getTime() : Date.now();
-        elapsedMs = Math.max(0, end < start ? end + 86400000 - start : end - start);
+        elapsedMs = Math.max(0, end < start ? end + workTimeUnits.dayMs - start : end - start);
       }
-      return { hours, breakMs, elapsedMs };
+      return { ...work, breakMs, elapsedMs };
     }
 
     function clockDuration(ms) {
@@ -5930,7 +6018,7 @@
       els.workStatusText.dataset.status = status;
       els.workTotal.textContent = clockDuration(details.elapsedMs);
       els.workBreak.textContent = clockDuration(details.breakMs);
-      els.workActual.textContent = clockDuration(details.hours * 3600000);
+      els.workActual.textContent = clockDuration(details.durationMs);
       els.workMetrics.classList.remove("hidden");
       els.startRun.classList.toggle("hidden", !["idle", "stopped"].includes(status));
       els.startRun.textContent = status === "stopped" ? "再次開始工作" : "開始工作";
@@ -6138,7 +6226,8 @@
         .slice()
         .sort((a, b) => a.date.localeCompare(b.date))
         .map(entry => {
-          const hours = calcHours(entry);
+          const work = workMetrics(entry);
+          const hours = work.hours;
           return [
             entry.date,
             entry.shift,
@@ -6148,7 +6237,7 @@
             entryExpenses(entry),
             entryNet(entry),
             hours,
-            hours ? entryNet(entry) / hours : 0,
+            hourlyRate(entryNet(entry), work.durationMs),
             entry.orders,
             entry.km,
             entry.weather,
@@ -6176,7 +6265,9 @@
     function startRunNow() {
       const entry = ensureEntryForDate();
       const now = new Date();
-      const priorHours = entry.workSession?.status === "stopped" ? calcHours(entry) : 0;
+      const priorDurationMs = entry.workSession?.status === "stopped"
+        ? workMetrics(entry).durationMs
+        : 0;
       const stoppedGapMs = entry.workSession?.status === "stopped" && entry.workSession.endedAt
         ? Math.max(0, now.getTime() - new Date(entry.workSession.endedAt).getTime())
         : 0;
@@ -6190,7 +6281,7 @@
         status: "running",
         startedAt: entry.workSession?.startedAt || now.toISOString(),
         segmentStartedAt: now.toISOString(),
-        accumulatedActiveMs: priorHours * 3600000,
+        accumulatedActiveMs: priorDurationMs,
         accumulatedBreakMs: priorBreakMs,
         pausedAt: null,
         endedAt: null

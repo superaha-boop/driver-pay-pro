@@ -1,6 +1,6 @@
 # Driver Pay Pro 開發交接摘要
 
-更新日期：2026-07-24
+更新日期：2026-07-25
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
@@ -14,16 +14,19 @@ Driver Pay Pro 目前是單頁式網頁 App，主要介面、樣式與邏輯集�
 
 ### Git 現況
 
-- 目前整合分支：`main`
+- 目前工作分支：`codex/add-brand-attribution-20260724`
+- 分支基準：`main@a6c9776`
+- 本次作者資訊、About 精簡與工時／週期修正將依 Product Owner 的持續發布授權合併至 `main` 並確認 Production Deployment。
 - 本次 Main 整合提交：`ab7b2cb merge: sync latest Driver Pay Pro`
 - 合併來源：`codex/home-restore-ui-20260717`
 - 最新功能提交：`4d4637b feat: add configurable platform input modes`
 - Git 流程文件提交：`53aa540 docs: update sprint git workflow`
+- 作者資訊與 About 基礎提交：`42f9f31 feat: add brand attribution and about page`
 - `main` 已用標準 merge commit 保留雙方歷史；本次不需要 rebase、reset 或 force push。
-- 工作分支仍保留並設定 upstream：`origin/codex/home-restore-ui-20260717`。
+- 目前工作分支已設定 upstream：`origin/codex/add-brand-attribution-20260724`。
 - 操作前仍應 Fetch 並確認遠端目前 Branch 是否出現其他提交，不沿用舊交接資訊推測同步狀態。
 - `.backups/` 只留本機並由 `.gitignore` 排除；不要刪除或部署。
-- 本次檔案清理沒有刪除任何 Git 追蹤檔案：未發現可安全判定為多餘的內容；官方圖示、PWA 資源與專案文件全部保留。
+- Product Owner 已確認 `assets/driver-pay-icon-512.png` 是錯誤且不需要的舊圖，本次可安全刪除；目前 manifest、Service Worker、favicon 與 Apple Touch Icon 均未引用此檔案。
 - Vercel 專案 `driver-pay-pro` 已連結 GitHub；推送 `main` 會自動建立 Production Deployment。
 - 最新遠端與 Production 狀態仍應以 `git status -sb`、Vercel deployment commit SHA 及本次完成回報為準。
 
@@ -37,7 +40,7 @@ Sprint 完成且通過適用驗證後，Codex 可以直接：
 4. 更新本文件與必要開發文件。
 5. 回報 Branch、Commit Hash、修改檔案與驗證結果。
 
-不需要為 Commit 或 Push 目前工作 Branch 重複詢問。Merge Pull Request、Production Deploy、Push 到 `main`、Reset、Rebase、Force Push、Schema／Migration、刪除資料、架構修改與大規模 UI 重構仍必須先取得使用者確認。
+自 2026-07-25 起，完成且通過適用驗證的 Sprint 預設會 Commit、Push 工作 Branch、以一般 Git 合併至 `main`、Push `main` 並確認 Vercel Production Deployment，不需逐次再次詢問。若當次使用者明確要求不部署、驗證失敗、遠端衝突無法安全判定或有資料遺失風險，必須停止發布並回報。Reset、Rebase、Force Push、Schema／Migration、刪除正式資料、架構修改與大規模 UI 重構仍須另行明確確認。
 
 ### 本機提交順序
 
@@ -213,6 +216,70 @@ Sprint 完成且通過適用驗證後，Codex 可以直接：
 
 本機驗收截圖位於 Codex visualizations 資料夾，未納入 repository。
 
+### F. 作者資訊與 About
+
+工作分支：`codex/add-brand-attribution-20260724`
+
+已完成：
+
+- Driver Space 設定頁新增「關於 Driver Pay Pro」入口。
+- About 頁顯示 App 名稱、Version 1.0.0、Designed & Developed by、Mark Hu、產品理念與著作權。
+- About 下方只保留 disabled 的 Send Feedback「即將推出」設定列；GitHub 與 LinkedIn 已依最新需求移除，沒有殘留空白列或分隔線。
+- 自訂啟動作者過場及 Built by／Mark Hu 已完整移除；啟動時不再顯示作者資訊，也沒有增加其他品牌過場或延遲。
+- Runtime 作者資訊集中在 `brandAttribution`，用於 About 的產品、版本、作者、理念與著作權。
+- README 已新增 Author 章節。
+- 首頁沒有新增可見作者資訊。
+- 沒有修改 `driverPayApp.v2`、資料模型、收入、支出、工時、報表或 PWA 資源。
+
+本機驗證：
+
+- Inline JavaScript、Service Worker 與 manifest 語法通過。
+- About 開啟、返回設定、作者資訊保留及 Send Feedback disabled 狀態通過。
+- DOM、CSS 與 JavaScript 均不再包含自訂 Splash、Built by 或啟動作者名稱。
+- 320、390、393、430、1024px 均無水平 overflow。
+- 瀏覽器 Console 無 error 或 warning。
+- 開始／結束跑車時間欄位仍完整位於父容器內。
+
+實機狀態：
+
+- iPhone Safari 與安裝式 PWA 仍需由 Product Owner 進行實機啟動驗收；內建響應式瀏覽器不能取代真機。
+
+### G. 週報工時與完整週期修正
+
+工作分支：`codex/add-brand-attribution-20260724`
+
+根本原因：
+
+- 原 `calcHours()` 對所有 `workSession.status === "running"` 的紀錄都使用 `Date.now()` 加上目前區段；歷史日期只要未正常收工，就會在週報與月度統計中持續累加到今天，產生 617.4 小時等異常值。
+- 原 `weekStart()` 用本地時間計算後再以 UTC `toISOString()` 轉回日期。台北時區會讓週起始與週結束各退一天，因此畫面出現 `7/12－7/17`、`7/19－7/24` 的六天區間。
+
+已完成：
+
+- `workMetrics()` 成為唯一工時來源，內部統一使用毫秒；支援手動小時、開始／結束時間、跨午夜、休息分鐘及既有 `workSession`。
+- `hourlyRate()` 成為唯一平均時薪來源；工時小於 1 分鐘時回傳 0，不會出現 NaN 或 Infinity。
+- 已停止歷史未收工 session 跟著現在時間繼續增長；只讀取既有 `accumulatedActiveMs` 或可信的開始／結束時間，不改寫舊紀錄。
+- 首頁、週報、月度摘要、CSV、AI 本月平均時薪及工時提醒均引用同一套工時／時薪邏輯。
+- 週報固定為星期日至星期六；使用本地日期加減天數，不再使用 UTC 日期切片。
+- 跨月週會納入同一完整週中位於相鄰月份的既有紀錄，不因月份篩選遺漏週內資料。
+
+本機驗證：
+
+- 案例 A：08:00－17:00、休息 60 分鐘＝8 小時；收入 4,000，平均時薪 500。
+- 案例 B：10:00－15:30、無休息＝5.5 小時；收入 2,750，平均時薪 500。
+- 案例 C：22:00－翌日 02:00、休息 30 分鐘＝3.5 小時。
+- 案例 D：收入 2,340、工時 0＝平均時薪 0，且為有限數字。
+- 案例 E：`7/19－7/25`、`7/12－7/18` 均為完整 7 天；跨月與跨年格式正確。
+- 同型歷史 running session 舊算法為 617.4 小時，新讀取層為 0 小時且不修改原始資料。
+- 現有本機 2026-07 紀錄：週報 `7/12－7/18` 顯示 8 小時，月度摘要顯示 8 小時；月度與 AI 平均時薪一致。
+- 320、390、393、430、1024px 均無水平 overflow，Console 無 error 或 warning。
+- Inline JavaScript、Service Worker、manifest 與 `git diff --check` 通過。
+
+資料與實機狀態：
+
+- 沒有修改 `driverPayApp.v2`、資料欄位、Supabase Schema、正式資料或 PWA 資源。
+- 無法從 repository 判定使用者裝置上是哪一筆歷史紀錄未收工；本次確認異常值是讀取時計算持續增長，不是已儲存 617.4 小時，也不需要批量修復。
+- iPhone Safari 與安裝式 PWA 仍需 Product Owner 實機驗收。
+
 ---
 
 ## 4. 最新設計決定
@@ -283,7 +350,7 @@ Sprint 完成且通過適用驗證後，Codex 可以直接：
 - 遠端 `main` push 後由既有 Vercel Git Integration 自動建立 Production Deployment。
 - 未刪除 GitHub 追蹤檔案；無法確認為多餘的官方圖示、PWA 資源、文件與備份保護規則全部保留。
 - 每次開始工作仍需以 `git status -sb` 與遠端 Fetch 結果確認是否同步。
-- 未來新的 Merge、Push 到 `main` 與 Production Deploy 仍需再次取得使用者明確確認；本次單次授權不得延用。
+- 未來每個驗證通過的 Sprint 均依持續發布授權合併、Push `main` 並確認 Production；當次使用者可明確要求不要部署。
 - GitHub CLI 目前未登入；若後續要建立或管理 Pull Request，需先完成 `gh auth login`，但一般 Git push 可使用既有 Git／GitHub Desktop 認證。
 - 正式部署仍需核對 deployment commit SHA、`manifest.webmanifest`、`sw.js`、圖示資源路徑與 Service Worker 快取更新。
 
@@ -337,6 +404,9 @@ SHA-256：
 - 月份明細渲染：`renderEntries()`，約 `index.html:2756`
 - 週摘要渲染：`renderWeeks()`，約 `index.html:2841`
 - 工作控制狀態：`updateWorkControls()`，約 `index.html:3027`
+- 共用工時計算：`workMetrics()`，請以函式名稱搜尋
+- 共用平均時薪：`hourlyRate()`，請以函式名稱搜尋
+- 週起始日：`weekStart()`，請以函式名稱搜尋
 - 天氣狀態：`updateCurrentWeather()`，約 `index.html:3054`
 - 平台收入提交：`commitInlineIncome()`，約 `index.html:3351`
 - Yoxi 單筆新增：`startYoxiAdd()`，約 `index.html:3403`
@@ -386,8 +456,8 @@ SHA-256：
 
 1. 先取得目前工作 Branch 與 `main` 的最新遠端紀錄。
 2. 確認本次要發布的提交與檔案範圍。
-3. 再次向使用者取得 Merge、Push `main` 或 Production Deploy 的明確授權。
-4. 經確認後再檢查 Vercel、PWA 資源、Service Worker 與正式站完整流程。
+3. 確認適用驗證全部通過，且沒有無法安全判定的遠端衝突或資料風險。
+4. 依持續發布授權合併、Push `main`，再檢查 Vercel、PWA 資源、Service Worker 與正式站完整流程。
 5. 最後安排 iPhone Safari／PWA 實機驗收。
 
 ---

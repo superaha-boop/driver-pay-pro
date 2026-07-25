@@ -99,3 +99,17 @@
 - Decision: D-008 的「只有 Yoxi 累加」固定規則已由可設定平台輸入模式取代。
 - Reason: 不同車隊的實際記錄方式不同，使用者需要讓每個平台獨立選擇直接輸入總額或每筆收入累加。
 - Impact: 預設仍只有 Yoxi 使用累加；其他平台與自訂平台預設直接輸入總額。切換模式不得清除既有收入，所有模式仍輸出同一個當日平台總額供既有報表使用。
+
+## D-015
+
+- Date: 2026-07-25
+- Decision: 工時內部統一使用毫秒，週報週期固定為星期日至星期六的完整 7 天。
+- Reason: 歷史未結束 session 使用目前時間持續累加會產生數百小時，且本地日期經 UTC 序列化會讓週期兩端各退一天。
+- Impact: 首頁、週報、月度摘要、CSV 與 AI 統一使用 `workMetrics()` 與 `hourlyRate()`；歷史未結束 session 只讀取已累積的可信工時，不改寫原始資料。週期使用本地日期運算，不以 `toISOString()` 產生日曆日期。
+
+## D-016
+
+- Date: 2026-07-25
+- Decision: Sprint 完成並通過適用驗證後，Codex 預設將工作 Branch 以一般 Git 合併整合至 `main`，Push `main` 並確認 Vercel Production Deployment，不需逐次再次取得發布確認。
+- Reason: Product Owner 希望每次完成修改後，手機正式版可直接取得最新版，不再需要額外手動合併或部署。
+- Impact: 發布仍必須保留可追溯 Git 歷史並核對 Production commit；當次明確要求不部署、驗證未通過、遠端衝突無法安全判定或可能造成資料遺失時必須停止。Reset、Rebase、Force Push、Schema／Migration、正式資料刪除與架構級變更仍需另行明確確認。
