@@ -2470,28 +2470,27 @@
     }
 
     .report-switcher {
-      margin-bottom: 12px;
-      padding: 4px;
+      padding: var(--spacing-1);
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 4px;
-      border-radius: 14px;
-      background: #e8edeb;
+      gap: var(--spacing-1);
+      border-radius: var(--radius-md);
+      background: var(--color-surface-secondary);
     }
 
     .report-switcher button {
-      min-height: 40px;
-      border-radius: 10px;
-      color: var(--muted);
+      min-width: 0;
+      min-height: var(--touch-target-min);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-secondary);
       background: transparent;
-      font-size: 14px;
-      font-weight: 700;
+      font: var(--font-weight-semibold) var(--font-size-secondary)/1 var(--font-family-sans);
     }
 
     .report-switcher button.active {
-      color: var(--text);
-      background: #fff;
-      box-shadow: 0 2px 8px rgba(26, 48, 38, .08);
+      color: var(--color-text-primary);
+      background: var(--color-surface);
+      box-shadow: var(--shadow-soft);
     }
 
     .report-panel-head {
@@ -2538,6 +2537,308 @@
 
     .report-content {
       min-width: 0;
+    }
+
+    .reports-page.ds-page-container {
+      width: 100%;
+      padding: var(--spacing-1) 0 var(--spacing-6);
+      display: grid;
+      gap: var(--spacing-3);
+    }
+
+    .reports-period-header {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: var(--touch-target-min) minmax(0, 1fr) var(--touch-target-min) auto;
+      align-items: center;
+      gap: var(--spacing-1);
+    }
+
+    .reports-period-title {
+      min-width: 0;
+      text-align: center;
+    }
+
+    .reports-period-title span {
+      display: block;
+      color: var(--color-text-tertiary);
+      font: var(--font-weight-medium) var(--font-size-caption)/var(--line-height-caption) var(--font-family-sans);
+    }
+
+    .reports-period-title h3 {
+      margin: 1px 0 0;
+      overflow: hidden;
+      color: var(--color-text-primary);
+      font: var(--font-weight-bold) var(--font-size-card-title)/var(--line-height-title) var(--font-family-sans);
+      font-variant-numeric: tabular-nums;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .reports-current-button {
+      min-width: 64px;
+      padding-inline: var(--spacing-3);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-secondary);
+    }
+
+    .reports-core {
+      min-width: 0;
+      display: grid;
+      gap: var(--spacing-3);
+    }
+
+    .reports-primary-kpis {
+      min-width: 0;
+      padding: var(--spacing-4);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-4);
+      border: var(--border-default);
+      border-radius: var(--radius-card);
+      background: var(--color-surface);
+    }
+
+    .reports-primary-kpi {
+      min-width: 0;
+      display: grid;
+      gap: var(--spacing-1);
+    }
+
+    .reports-primary-kpi + .reports-primary-kpi {
+      padding-left: var(--spacing-4);
+      border-left: var(--border-subtle);
+    }
+
+    .reports-kpi-label,
+    .reports-secondary-kpi span {
+      color: var(--color-text-secondary);
+      font: var(--font-weight-regular) var(--font-size-caption)/var(--line-height-caption) var(--font-family-sans);
+    }
+
+    .reports-primary-kpi strong {
+      overflow-wrap: anywhere;
+      color: var(--color-text-primary);
+      font: var(--font-weight-bold) clamp(21px, 6vw, 28px)/var(--line-height-title) var(--font-family-sans);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: var(--letter-spacing-tight);
+    }
+
+    .reports-secondary-kpis {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border: var(--border-default);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      background: var(--color-surface);
+    }
+
+    .reports-secondary-kpi {
+      min-width: 0;
+      padding: var(--spacing-3) var(--spacing-4);
+      display: grid;
+      gap: var(--spacing-1);
+    }
+
+    .reports-secondary-kpi:nth-child(even) {
+      border-left: var(--border-subtle);
+    }
+
+    .reports-secondary-kpi:nth-child(n + 3) {
+      border-top: var(--border-subtle);
+    }
+
+    .reports-secondary-kpi strong {
+      overflow-wrap: anywhere;
+      color: var(--color-text-primary);
+      font: var(--font-weight-semibold) var(--font-size-body)/var(--line-height-title) var(--font-family-sans);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .reports-section {
+      min-width: 0;
+      padding: var(--spacing-4);
+      border: var(--border-default);
+      border-radius: var(--radius-card);
+      background: var(--color-surface);
+    }
+
+    .reports-section h4 {
+      margin: 0 0 var(--spacing-3);
+      color: var(--color-text-primary);
+      font: var(--font-weight-semibold) var(--font-size-card-title)/var(--line-height-title) var(--font-family-sans);
+    }
+
+    .reports-comparison-list,
+    .reports-trend-list,
+    .reports-important-list {
+      margin: 0;
+      padding: 0;
+      display: grid;
+      list-style: none;
+    }
+
+    .reports-comparison-list li,
+    .reports-important-list li {
+      min-width: 0;
+      padding-block: var(--spacing-2);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--spacing-3);
+      border-top: var(--border-subtle);
+    }
+
+    .reports-comparison-list li:first-child,
+    .reports-important-list li:first-child {
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .reports-comparison-list li:last-child,
+    .reports-important-list li:last-child {
+      padding-bottom: 0;
+    }
+
+    .reports-comparison-list span,
+    .reports-important-list span {
+      min-width: 0;
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-secondary);
+    }
+
+    .reports-comparison-list strong,
+    .reports-important-list strong {
+      flex: 0 0 auto;
+      color: var(--color-text-primary);
+      font-size: var(--font-size-secondary);
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .reports-comparison-list [data-direction="positive"] {
+      color: var(--color-success);
+    }
+
+    .reports-comparison-list [data-direction="negative"] {
+      color: var(--color-danger);
+    }
+
+    .reports-trend-list {
+      gap: var(--spacing-3);
+    }
+
+    .reports-trend-row {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--spacing-2);
+    }
+
+    .reports-trend-label,
+    .reports-trend-value {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-caption);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .reports-trend-value {
+      min-width: 72px;
+      text-align: right;
+    }
+
+    .reports-trend-visual {
+      position: relative;
+      height: 10px;
+      border-radius: var(--radius-pill);
+      background: var(--color-surface-secondary);
+    }
+
+    .reports-trend-visual::after {
+      position: absolute;
+      top: -2px;
+      bottom: -2px;
+      left: 50%;
+      width: 1px;
+      content: "";
+      background: var(--color-border-strong);
+    }
+
+    .reports-trend-bar {
+      position: absolute;
+      top: 1px;
+      height: 8px;
+      border-radius: var(--radius-pill);
+      background: var(--color-brand);
+    }
+
+    .reports-trend-row[data-status="positive"] .reports-trend-bar {
+      left: 50%;
+      width: var(--trend-width);
+    }
+
+    .reports-trend-row[data-status="negative"] .reports-trend-bar {
+      right: 50%;
+      width: var(--trend-width);
+      border-radius: 2px;
+      background: var(--color-danger);
+    }
+
+    .reports-trend-row[data-status="zero"] .reports-trend-bar {
+      top: 2px;
+      left: calc(50% - 3px);
+      width: 6px;
+      height: 6px;
+      background: var(--color-text-tertiary);
+    }
+
+    .reports-trend-row[data-status="no-record"] .reports-trend-visual {
+      opacity: .55;
+    }
+
+    .reports-offline-note,
+    .reports-recovery-note {
+      margin: 0;
+      padding: var(--spacing-2) var(--spacing-3);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-secondary);
+      background: var(--color-surface-secondary);
+      font-size: var(--font-size-caption);
+      line-height: var(--line-height-caption);
+    }
+
+    .reports-goal-progress {
+      display: grid;
+      gap: var(--spacing-2);
+    }
+
+    .reports-goal-meta {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--spacing-3);
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-secondary);
+    }
+
+    .reports-goal-meta strong {
+      color: var(--color-text-primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .reports-goal-track {
+      height: 8px;
+      overflow: hidden;
+      border-radius: var(--radius-pill);
+      background: var(--color-surface-secondary);
+    }
+
+    .reports-goal-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: var(--color-brand);
     }
 
     .month-summary-grid {
@@ -4583,72 +4884,71 @@
       </section>
 
       <section id="view-reports" class="view hidden">
-        <div class="report-switcher" aria-label="報表切換">
-          <button class="active" data-report-view="week">週報</button>
-          <button data-report-view="month">月報</button>
-          <button data-report-view="platform">平台</button>
-        </div>
-        <div class="report-content" data-report-panel="week">
-          <div class="panel">
-            <div class="panel-head report-panel-head">
-              <h3>每週總額</h3>
-              <select id="weekMonthFilter" aria-label="週報月份篩選"></select>
-            </div>
-            <div class="panel-body">
-              <div class="week-list" id="weekList"></div>
-            </div>
+        <div class="reports-page ds-page-container">
+          <div class="report-switcher" role="tablist" aria-label="報表切換">
+            <button class="active" id="reportTabWeek" type="button" role="tab" aria-selected="true"
+              aria-controls="reportPanelWeek" tabindex="0" data-report-view="week">週報</button>
+            <button id="reportTabMonth" type="button" role="tab" aria-selected="false"
+              aria-controls="reportPanelMonth" tabindex="-1" data-report-view="month">月報</button>
+            <button id="reportTabPlatform" type="button" role="tab" aria-selected="false"
+              aria-controls="reportPanelPlatform" tabindex="-1" data-report-view="platform">平台</button>
           </div>
-        </div>
+          <p class="sr-only" id="reportsAnnouncement" role="status" aria-live="polite"></p>
 
-        <div class="report-content hidden" data-report-panel="month">
-          <div class="layout">
-            <div class="panel">
-              <div class="panel-head">
-                <h3>月份選擇</h3>
+          <section class="report-content" id="reportPanelWeek" role="tabpanel"
+            aria-labelledby="reportTabWeek" data-report-panel="week">
+            <header class="reports-period-header">
+              <button class="ds-icon-button" type="button" data-report-period="previous"
+                aria-label="查看上一週"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button>
+              <div class="reports-period-title">
+                <span>週報</span>
+                <h3 id="weekPeriodLabel"></h3>
               </div>
-              <div class="panel-body">
-                <label>查看月份
-                  <select id="monthReportFilter"></select>
-                </label>
-                <div style="height: 16px"></div>
-                <div class="bars" id="goalProgress"></div>
-              </div>
-            </div>
-            <div class="panel">
-              <div class="panel-head">
-                <h3>月份總覽</h3>
-              </div>
-              <div class="panel-body" id="monthSummaryMetrics"></div>
-            </div>
-            <div class="panel" id="dailyTrendPanel">
-              <div class="panel-head">
-                <h3>每日收入走勢</h3>
-              </div>
-              <div class="panel-body">
-                <div class="bars" id="dailyBars"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+              <button class="ds-icon-button" type="button" data-report-period="next"
+                aria-label="查看下一週"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+              <button class="ds-button ds-button--secondary reports-current-button" type="button"
+                data-report-period="current">本週</button>
+            </header>
+            <div class="reports-core" id="weeklyReportContent"></div>
+          </section>
 
-        <div class="report-content hidden" data-report-panel="platform">
-          <div class="layout">
-            <div class="panel">
-              <div class="panel-head report-panel-head">
-                <h3>平台收入占比</h3>
-                <select id="platformMonthFilter" aria-label="平台報表月份篩選"></select>
+          <section class="report-content hidden" id="reportPanelMonth" role="tabpanel"
+            aria-labelledby="reportTabMonth" data-report-panel="month">
+            <header class="reports-period-header">
+              <button class="ds-icon-button" type="button" data-report-period="previous"
+                aria-label="查看上個月"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button>
+              <div class="reports-period-title">
+                <span>月報</span>
+                <h3 id="monthPeriodLabel"></h3>
               </div>
-              <div class="panel-body">
-                <div class="bars" id="platformBars"></div>
+              <button class="ds-icon-button" type="button" data-report-period="next"
+                aria-label="查看下個月"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+              <button class="ds-button ds-button--secondary reports-current-button" type="button"
+                data-report-period="current">本月</button>
+            </header>
+            <div class="reports-core" id="monthlyReportContent"></div>
+          </section>
+
+          <section class="report-content hidden" id="reportPanelPlatform" role="tabpanel"
+            aria-labelledby="reportTabPlatform" data-report-panel="platform">
+            <div class="layout">
+              <div class="panel">
+                <div class="panel-head report-panel-head">
+                  <h3>平台收入占比</h3>
+                  <select id="platformMonthFilter" aria-label="平台報表月份篩選"></select>
+                </div>
+                <div class="panel-body">
+                  <div class="bars" id="platformBars"></div>
+                </div>
+              </div>
+              <div class="panel" id="platformRankingPanel">
+                <div class="panel-head">
+                  <h3>平台收入排行</h3>
+                </div>
+                <div class="table-wrap" id="platformTable"></div>
               </div>
             </div>
-            <div class="panel" id="platformRankingPanel">
-              <div class="panel-head">
-                <h3>平台收入排行</h3>
-              </div>
-              <div class="table-wrap" id="platformTable"></div>
-            </div>
-          </div>
+          </section>
         </div>
       </section>
 
@@ -4950,7 +5250,8 @@
     let stateRecoveryNotice = "";
     const state = loadState();
     let activeView = "today";
-    let activeReportView = state.settings.lastReportView;
+    let reportsState = createReportsState(todayString());
+    let activeReportView = reportsState.activeReportTab;
     let overviewVisible = false;
     let expenseDraft = createExpenseDraft();
     let expenseToastTimer = 0;
@@ -5030,16 +5331,14 @@
       calendarMonthSummary: document.getElementById("calendarMonthSummary"),
       calendarMonthSummaryContent: document.getElementById("calendarMonthSummaryContent"),
       calendarAnnouncement: document.getElementById("calendarAnnouncement"),
-      weekMonthFilter: document.getElementById("weekMonthFilter"),
-      monthReportFilter: document.getElementById("monthReportFilter"),
       platformMonthFilter: document.getElementById("platformMonthFilter"),
       reportButtons: document.querySelectorAll("[data-report-view]"),
       reportPanels: document.querySelectorAll("[data-report-panel]"),
-      weekList: document.getElementById("weekList"),
-      dailyBars: document.getElementById("dailyBars"),
-      goalProgress: document.getElementById("goalProgress"),
-      monthSummaryMetrics: document.getElementById("monthSummaryMetrics"),
-      dailyTrendPanel: document.getElementById("dailyTrendPanel"),
+      reportsAnnouncement: document.getElementById("reportsAnnouncement"),
+      weekPeriodLabel: document.getElementById("weekPeriodLabel"),
+      monthPeriodLabel: document.getElementById("monthPeriodLabel"),
+      weeklyReportContent: document.getElementById("weeklyReportContent"),
+      monthlyReportContent: document.getElementById("monthlyReportContent"),
       platformBars: document.getElementById("platformBars"),
       platformTable: document.getElementById("platformTable"),
       platformRankingPanel: document.getElementById("platformRankingPanel"),
@@ -6737,18 +7036,15 @@
       const reportMonth = availableMonths.includes(state.settings.reportMonth)
         ? state.settings.reportMonth
         : currentMonth();
-      [els.weekMonthFilter, els.monthReportFilter, els.platformMonthFilter].forEach(select => {
-        select.innerHTML = options;
-        select.value = reportMonth;
-      });
+      if (!els.platformMonthFilter) return;
+      els.platformMonthFilter.innerHTML = options;
+      els.platformMonthFilter.value = reportMonth;
     }
 
     function updateReportMonth(month) {
       state.settings.reportMonth = normalizeMonthKey(month);
       saveState();
       fillSelects();
-      renderWeeks();
-      renderMonthReport();
       renderPlatformReport();
     }
 
@@ -7324,6 +7620,18 @@
 
     window.openCalendar = openCalendar;
 
+    function createReportsState(today = todayString()) {
+      const safeToday = normalizeDateKey(today, todayString());
+      return {
+        activeReportTab: "week",
+        selectedWeekAnchor: weekStart(safeToday),
+        selectedMonth: monthKeyFromDate(safeToday),
+        loading: false,
+        error: null,
+        offline: typeof navigator !== "undefined" ? !navigator.onLine : false
+      };
+    }
+
     function weekStart(dateString) {
       const parts = dateOnlyParts(dateString);
       if (!parts) return "";
@@ -7337,79 +7645,496 @@
       return start ? addLocalDays(start, 6) : "";
     }
 
-    function renderWeeks() {
-      const month = selectedMonth(els.weekMonthFilter);
-      const visibleWeekStarts = new Set(entriesForMonth(month).map(entry => weekStart(entry.date)).filter(Boolean));
-      const groups = new Map();
-      state.entries.forEach(entry => {
-        const key = weekStart(entry.date);
-        if (!visibleWeekStarts.has(key)) return;
-        if (!groups.has(key)) groups.set(key, []);
-        groups.get(key).push(entry);
-      });
+    function getLocalWeekRange(dateKey) {
+      const start = weekStart(dateKey);
+      return start ? {
+        start,
+        end: addLocalDays(start, 6),
+        endExclusive: addLocalDays(start, 7)
+      } : null;
+    }
 
-      if (!groups.size) {
-        els.weekList.innerHTML = `<div class="empty">這個月份尚無週報資料</div>`;
+    function getPreviousWeekRange(rangeOrDate) {
+      const anchor = typeof rangeOrDate === "string" ? rangeOrDate : rangeOrDate?.start;
+      return getLocalWeekRange(addLocalDays(anchor, -7));
+    }
+
+    function getLocalMonthRange(monthOrDate) {
+      const raw = String(monthOrDate || "");
+      const month = daysInCalendarMonth(raw) ? raw : monthKeyFromDate(raw);
+      const days = daysInCalendarMonth(month);
+      if (!days) return null;
+      const start = `${month}-01`;
+      return {
+        start,
+        end: `${month}-${String(days).padStart(2, "0")}`,
+        endExclusive: `${addCalendarMonths(month, 1)}-01`
+      };
+    }
+
+    function getPreviousMonthRange(rangeOrMonth) {
+      const anchor = typeof rangeOrMonth === "string"
+        ? rangeOrMonth
+        : monthKeyFromDate(rangeOrMonth?.start);
+      return getLocalMonthRange(addCalendarMonths(anchor, -1));
+    }
+
+    function getWeekLabel(range) {
+      return range ? compactWeekRange(range.start, range.end) : "—";
+    }
+
+    function getMonthLabel(rangeOrMonth) {
+      const month = typeof rangeOrMonth === "string" && daysInCalendarMonth(rangeOrMonth)
+        ? rangeOrMonth
+        : monthKeyFromDate(rangeOrMonth?.start);
+      if (!daysInCalendarMonth(month)) return "—";
+      const [year, monthNumber] = month.split("-").map(Number);
+      return `${year}年${monthNumber}月`;
+    }
+
+    function isDateKeyInRange(dateKey, range) {
+      const date = normalizeDateKey(dateKey);
+      return Boolean(date && range?.start && range?.endExclusive
+        && date >= range.start && date < range.endExclusive);
+    }
+
+    function getRecordsInRange(records, range) {
+      return (Array.isArray(records) ? records : [])
+        .filter(record => isDateKeyInRange(record?.date, range))
+        .slice()
+        .sort((a, b) => a.date.localeCompare(b.date));
+    }
+
+    function getWeeksForMonth(rangeOrMonth) {
+      const monthRange = typeof rangeOrMonth === "string"
+        ? getLocalMonthRange(rangeOrMonth)
+        : rangeOrMonth;
+      if (!monthRange) return [];
+      const firstWeekStart = weekStart(monthRange.start);
+      const weeks = [];
+      for (let start = firstWeekStart; start < monthRange.endExclusive; start = addLocalDays(start, 7)) {
+        const weekRange = getLocalWeekRange(start);
+        weeks.push({
+          ...weekRange,
+          clipStart: weekRange.start < monthRange.start ? monthRange.start : weekRange.start,
+          clipEndExclusive: weekRange.endExclusive > monthRange.endExclusive
+            ? monthRange.endExclusive
+            : weekRange.endExclusive
+        });
+      }
+      return weeks;
+    }
+
+    function aggregateReport(records, range) {
+      const periodRecords = getRecordsInRange(records, range);
+      const summary = summarize(periodRecords);
+      const recordsByDate = new Map();
+      const platformTotals = {};
+      periodRecords.forEach(record => {
+        if (!recordsByDate.has(record.date)) recordsByDate.set(record.date, []);
+        recordsByDate.get(record.date).push(record);
+        Object.entries(record.incomes || {}).forEach(([name, value]) => {
+          platformTotals[name] = (platformTotals[name] || 0) + platformNetAmount(name, value);
+        });
+      });
+      const workDays = new Set(
+        periodRecords.filter(record => isWorkDayRecord(record)).map(record => record.date)
+      ).size;
+      return {
+        range,
+        records: periodRecords,
+        recordsByDate,
+        recordCount: periodRecords.length,
+        hasRecords: periodRecords.length > 0,
+        totalIncome: summary.total,
+        totalExpenses: summary.expenses,
+        netIncome: summary.net,
+        workDays,
+        totalWorkDuration: summary.durationMs,
+        validWorkDuration: summary.durationMs > 0,
+        averageHourlyIncome: summary.durationMs > 0 ? summary.hourly : null,
+        platformTotals
+      };
+    }
+
+    function compareReportMetric(currentValue, previousValue, options = null) {
+      options ||= {};
+      const currentHasData = options.currentHasData !== false;
+      const previousHasData = options.previousHasData !== false;
+      const current = currentValue === null || currentValue === undefined ? null : finiteNumber(currentValue);
+      const previous = previousValue === null || previousValue === undefined ? null : finiteNumber(previousValue);
+      if (!currentHasData && !previousHasData) {
+        return { status: "no-data", current, previous, delta: null, percentage: null, direction: "neutral" };
+      }
+      if (!currentHasData || current === null) {
+        return { status: "no-current-data", current, previous, delta: null, percentage: null, direction: "neutral" };
+      }
+      if (!previousHasData || previous === null) {
+        return { status: "no-previous-data", current, previous, delta: null, percentage: null, direction: "neutral" };
+      }
+      const delta = current - previous;
+      const rawDirection = delta === 0 ? "neutral" : delta > 0 ? "positive" : "negative";
+      const direction = options.lowerIsBetter && rawDirection !== "neutral"
+        ? rawDirection === "positive" ? "negative" : "positive"
+        : rawDirection;
+      if (previous === 0) {
+        return { status: "previous-zero", current, previous, delta, percentage: null, direction };
+      }
+      if (previous < 0 || current < 0) {
+        return { status: "amount-only", current, previous, delta, percentage: null, direction };
+      }
+      return {
+        status: "comparable",
+        current,
+        previous,
+        delta,
+        percentage: delta / Math.abs(previous) * 100,
+        direction
+      };
+    }
+
+    function compareReportPeriods(current, previous, mode = "week") {
+      const common = {
+        totalIncome: compareReportMetric(current.totalIncome, previous.totalIncome, {
+          currentHasData: current.hasRecords,
+          previousHasData: previous.hasRecords
+        }),
+        netIncome: compareReportMetric(current.netIncome, previous.netIncome, {
+          currentHasData: current.hasRecords,
+          previousHasData: previous.hasRecords
+        }),
+        averageHourlyIncome: compareReportMetric(current.averageHourlyIncome, previous.averageHourlyIncome, {
+          currentHasData: current.validWorkDuration,
+          previousHasData: previous.validWorkDuration
+        })
+      };
+      if (mode === "month") {
+        common.workDays = compareReportMetric(current.workDays, previous.workDays, {
+          currentHasData: current.hasRecords,
+          previousHasData: previous.hasRecords
+        });
+      } else {
+        common.totalWorkDuration = compareReportMetric(current.totalWorkDuration, previous.totalWorkDuration, {
+          currentHasData: current.hasRecords,
+          previousHasData: previous.hasRecords
+        });
+      }
+      return common;
+    }
+
+    function summarizeRecordsByDate(records) {
+      const groups = new Map();
+      (Array.isArray(records) ? records : []).forEach(record => {
+        const date = normalizeDateKey(record?.date);
+        if (!date) return;
+        if (!groups.has(date)) groups.set(date, []);
+        groups.get(date).push(record);
+      });
+      return new Map([...groups.entries()].map(([date, entries]) => [date, {
+        date,
+        entries,
+        aggregate: aggregateReport(entries, {
+          start: date,
+          end: date,
+          endExclusive: addLocalDays(date, 1)
+        })
+      }]));
+    }
+
+    function reportWeekdayLabel(dateKey) {
+      const parts = dateOnlyParts(dateKey);
+      if (!parts) return "";
+      return ["日", "一", "二", "三", "四", "五", "六"][
+        new Date(Date.UTC(parts.year, parts.month - 1, parts.day)).getUTCDay()
+      ];
+    }
+
+    function buildWeeklyNetTrend(records, range) {
+      const byDate = summarizeRecordsByDate(getRecordsInRange(records, range));
+      return Array.from({ length: 7 }, (_, index) => {
+        const dateKey = addLocalDays(range.start, index);
+        const day = byDate.get(dateKey);
+        const hasRecord = Boolean(day);
+        const value = day?.aggregate.netIncome || 0;
+        return {
+          dateKey,
+          label: reportWeekdayLabel(dateKey),
+          hasRecord,
+          value,
+          status: !hasRecord ? "no-record" : value > 0 ? "positive" : value < 0 ? "negative" : "zero"
+        };
+      });
+    }
+
+    function buildMonthlyWeeklyNetTrend(records, monthRange) {
+      return getWeeksForMonth(monthRange).map(week => {
+        const clippedRange = {
+          start: week.clipStart,
+          end: addLocalDays(week.clipEndExclusive, -1),
+          endExclusive: week.clipEndExclusive
+        };
+        const aggregate = aggregateReport(records, clippedRange);
+        const value = aggregate.netIncome;
+        return {
+          dateKey: week.start,
+          label: getWeekLabel(week),
+          hasRecord: aggregate.hasRecords,
+          value,
+          status: !aggregate.hasRecords ? "no-record" : value > 0 ? "positive" : value < 0 ? "negative" : "zero"
+        };
+      });
+    }
+
+    function findImportantReportDates(records, mode = "week") {
+      const days = [...summarizeRecordsByDate(records).values()]
+        .filter(day => day.entries.some(entry => isWorkDayRecord(entry)))
+        .sort((a, b) => a.date.localeCompare(b.date));
+      const pick = (selector, direction = "max", filter = () => true) => {
+        const eligible = days.filter(filter);
+        if (!eligible.length) return null;
+        return eligible.reduce((best, day) => {
+          const value = selector(day);
+          const bestValue = selector(best);
+          return direction === "max" ? value > bestValue ? day : best : value < bestValue ? day : best;
+        });
+      };
+      const result = {
+        highestNet: pick(day => day.aggregate.netIncome, "max"),
+        lowestNet: pick(day => day.aggregate.netIncome, "min")
+      };
+      if (mode === "month") {
+        result.longestWork = pick(day => day.aggregate.totalWorkDuration, "max", day => day.aggregate.totalWorkDuration > 0);
+        result.highestHourly = pick(
+          day => day.aggregate.averageHourlyIncome,
+          "max",
+          day => day.aggregate.validWorkDuration
+        );
+      }
+      return result;
+    }
+
+    function reportComparisonText(result, formatValue = money) {
+      if (["no-data", "no-previous-data"].includes(result.status)) return "暫無上期資料";
+      if (result.status === "no-current-data") return "本期暫無資料";
+      const deltaText = `${result.delta > 0 ? "+" : ""}${formatValue(result.delta)}`;
+      if (result.status !== "comparable") return deltaText;
+      const percent = `${result.percentage > 0 ? "+" : ""}${number(result.percentage)}%`;
+      return `${deltaText}（${percent}）`;
+    }
+
+    function reportDateLabel(dateKey) {
+      const parts = dateOnlyParts(dateKey);
+      return parts ? `${parts.month}/${parts.day}（${reportWeekdayLabel(dateKey)}）` : "—";
+    }
+
+    function formatReportDuration(durationMs) {
+      const totalMinutes = Math.round(nonNegativeNumber(durationMs) / workTimeUnits.minuteMs);
+      const hours = Math.floor(totalMinutes / 60);
+      const minutesPart = totalMinutes % 60;
+      if (!hours) return `${minutesPart} 分`;
+      return minutesPart ? `${hours} 小時 ${minutesPart} 分` : `${hours} 小時`;
+    }
+
+    function reportsLoadingMarkup() {
+      return `
+        <div class="ds-card" aria-label="報表載入中">
+          <div class="ds-skeleton ds-skeleton--metric"></div>
+          <div class="ds-skeleton ds-skeleton--row"></div>
+          <div class="ds-skeleton ds-skeleton--row"></div>
+        </div>
+      `;
+    }
+
+    function reportsErrorMarkup() {
+      return `
+        <div class="ds-card ds-empty-state" role="alert">
+          <strong class="ds-card-title">無法讀取報表資料</strong>
+          <span class="ds-secondary">${escapeHtml(stateRecoveryNotice || "原始資料仍保留在此瀏覽器中，請重試讀取。")}</span>
+          <button class="ds-button ds-button--secondary" type="button" data-reports-retry>重試</button>
+        </div>
+      `;
+    }
+
+    function reportsEmptyMarkup(periodLabel) {
+      return `
+        <div class="ds-card ds-empty-state">
+          <strong class="ds-card-title">${escapeHtml(periodLabel)}尚無工作紀錄</strong>
+          <span class="ds-secondary">你仍可切換其他期間查看已儲存的資料。</span>
+        </div>
+      `;
+    }
+
+    function renderReportComparison(comparison, mode) {
+      const rows = mode === "month"
+        ? [
+          ["總收入", comparison.totalIncome, money],
+          ["淨收入", comparison.netIncome, money],
+          ["工作天數", comparison.workDays, value => `${number(value, 0)} 天`],
+          ["平均時薪", comparison.averageHourlyIncome, money]
+        ]
+        : [
+          ["總收入", comparison.totalIncome, money],
+          ["淨收入", comparison.netIncome, money],
+          ["工作時間", comparison.totalWorkDuration, formatReportDuration],
+          ["平均時薪", comparison.averageHourlyIncome, money]
+        ];
+      return `
+        <section class="reports-section" aria-labelledby="${mode}ComparisonTitle">
+          <h4 id="${mode}ComparisonTitle">與上期比較</h4>
+          <ul class="reports-comparison-list">
+            ${rows.map(([label, result, formatter]) => `
+              <li><span>${label}</span><strong data-direction="${result.direction}">${reportComparisonText(result, formatter)}</strong></li>
+            `).join("")}
+          </ul>
+        </section>
+      `;
+    }
+
+    function renderReportTrend(points, title, id) {
+      const maxAbsolute = Math.max(...points.map(point => Math.abs(point.value)), 1);
+      const summary = points.map(point => `${point.label}${point.hasRecord ? money(point.value) : "無紀錄"}`).join("、");
+      return `
+        <section class="reports-section" aria-labelledby="${id}">
+          <h4 id="${id}">${title}</h4>
+          <p class="sr-only">${escapeHtml(summary)}</p>
+          <ul class="reports-trend-list" aria-hidden="true">
+            ${points.map(point => {
+              const width = Math.min(50, Math.round(Math.abs(point.value) / maxAbsolute * 50));
+              return `
+                <li class="reports-trend-row" data-status="${point.status}" style="--trend-width:${width}%">
+                  <span class="reports-trend-label">${escapeHtml(point.label)}</span>
+                  <span class="reports-trend-visual"><span class="reports-trend-bar"></span></span>
+                  <span class="reports-trend-value">${point.hasRecord ? money(point.value) : "無紀錄"}</span>
+                </li>
+              `;
+            }).join("")}
+          </ul>
+        </section>
+      `;
+    }
+
+    function renderImportantDates(important, mode) {
+      const rows = [
+        ["最高淨收入", important.highestNet, day => money(day.aggregate.netIncome)],
+        ["最低淨收入", important.lowestNet, day => money(day.aggregate.netIncome)]
+      ];
+      if (mode === "month") {
+        rows.push(
+          ["最長工作日", important.longestWork, day => formatReportDuration(day.aggregate.totalWorkDuration)],
+          ["最高時薪日", important.highestHourly, day => money(day.aggregate.averageHourlyIncome)]
+        );
+      }
+      return `
+        <section class="reports-section" aria-labelledby="${mode}ImportantTitle">
+          <h4 id="${mode}ImportantTitle">重要日期</h4>
+          <ul class="reports-important-list">
+            ${rows.map(([label, day, formatter]) => `
+              <li><span>${label}</span><strong>${day ? `${reportDateLabel(day.date)} · ${formatter(day)}` : "—"}</strong></li>
+            `).join("")}
+          </ul>
+        </section>
+      `;
+    }
+
+    function reportsStatusMarkup() {
+      const notes = [];
+      if (reportsState.offline) notes.push(`<p class="reports-offline-note">離線中，顯示此裝置已儲存的資料。</p>`);
+      if (stateRecoveryNotice) notes.push(`<p class="reports-recovery-note">${escapeHtml(stateRecoveryNotice)}</p>`);
+      return notes.join("");
+    }
+
+    function renderWeeks() {
+      if (!els.weeklyReportContent) return;
+      const range = getLocalWeekRange(reportsState.selectedWeekAnchor);
+      els.weekPeriodLabel.textContent = getWeekLabel(range);
+      reportsState.offline = !navigator.onLine;
+      if (reportsState.loading) {
+        els.weeklyReportContent.innerHTML = reportsLoadingMarkup();
         return;
       }
-
-      els.weekList.innerHTML = [...groups.entries()].sort((a, b) => b[0].localeCompare(a[0])).map(([start, entries]) => {
-        const summary = summarize(entries);
-        const end = weekEnd(start);
-        return `
-          <div class="week-item">
-            <div class="week-item-period"><span>週期</span><strong>${compactWeekRange(start, end)}</strong></div>
-            <div><span>總收入</span><strong>${money(summary.total)}</strong></div>
-            <div><span>支出</span><strong>${money(summary.expenses)}</strong></div>
-            <div><span>淨收入</span><strong>${money(summary.net)}</strong></div>
-            <div><span>工時</span><strong>${number(summary.hours)} 小時</strong></div>
-            <div><span>平均時薪</span><strong>${money(summary.hourly)}</strong></div>
-          </div>
-        `;
-      }).join("");
+      if ((stateLoadError && !stateRecoveryNotice) || reportsState.error) {
+        els.weeklyReportContent.innerHTML = reportsErrorMarkup();
+        return;
+      }
+      const current = aggregateReport(state.entries, range);
+      if (!current.hasRecords) {
+        els.weeklyReportContent.innerHTML = `${reportsStatusMarkup()}${reportsEmptyMarkup("這一週")}`;
+        return;
+      }
+      const previous = aggregateReport(state.entries, getPreviousWeekRange(range));
+      const comparison = compareReportPeriods(current, previous, "week");
+      const trend = buildWeeklyNetTrend(state.entries, range);
+      const important = findImportantReportDates(current.records, "week");
+      els.weeklyReportContent.innerHTML = `
+        ${reportsStatusMarkup()}
+        <section class="reports-primary-kpis" aria-label="週報主要指標">
+          <div class="reports-primary-kpi"><span class="reports-kpi-label">總收入</span><strong>${money(current.totalIncome)}</strong></div>
+          <div class="reports-primary-kpi"><span class="reports-kpi-label">淨收入</span><strong>${money(current.netIncome)}</strong></div>
+        </section>
+        <section class="reports-secondary-kpis" aria-label="週報其他指標">
+          <div class="reports-secondary-kpi"><span>支出</span><strong>${money(current.totalExpenses)}</strong></div>
+          <div class="reports-secondary-kpi"><span>工作天數</span><strong>${current.workDays} 天</strong></div>
+          <div class="reports-secondary-kpi"><span>工作時間</span><strong>${formatReportDuration(current.totalWorkDuration)}</strong></div>
+          <div class="reports-secondary-kpi"><span>平均時薪</span><strong>${current.averageHourlyIncome === null ? "—" : money(current.averageHourlyIncome)}</strong></div>
+        </section>
+        ${renderReportComparison(comparison, "week")}
+        ${renderReportTrend(trend, "每日淨收入", "weekTrendTitle")}
+        ${renderImportantDates(important, "week")}
+      `;
     }
 
     function renderMonthReport() {
-      const entries = entriesForMonth(selectedMonth(els.monthReportFilter)).sort((a, b) => a.date.localeCompare(b.date));
-      const summary = summarize(entries);
-      const goal = Number(state.settings.monthlyGoal || 0);
-      const percent = goal ? Math.min(100, Math.round(summary.net / goal * 100)) : 0;
-
-      els.monthSummaryMetrics.innerHTML = entries.length ? `
-        <div class="month-summary-grid">
-          <div><span>月總收入</span><strong>${money(summary.total)}</strong></div>
-          <div><span>月支出</span><strong>${money(summary.expenses)}</strong></div>
-          <div><span>月淨收入</span><strong>${money(summary.net)}</strong></div>
-          <div><span>月實際工時</span><strong>${formatCompactWorkHours(summary.hours)}</strong></div>
-          <div><span>月平均時薪</span><strong>${money(summary.hourly)}</strong></div>
-        </div>
-      ` : `<div class="empty">這個月份尚無收入紀錄</div>`;
-
-      els.goalProgress.innerHTML = goal ? `
-        <div class="bar-row">
-          <div class="bar-top"><strong>目標進度</strong><span>${percent}%</span></div>
-          <div class="bar-track"><div class="bar-fill" style="width:${percent}%"></div></div>
-          <div class="bar-top"><span>目前 ${money(summary.net)}</span><span>目標 ${money(goal)}</span></div>
-        </div>
-      ` : `<div class="empty">到設定頁輸入每月目標，就能看到進度。</div>`;
-
-      if (!entries.length) {
-        els.dailyBars.innerHTML = "";
-        els.dailyTrendPanel.classList.add("hidden");
+      if (!els.monthlyReportContent) return;
+      const range = getLocalMonthRange(reportsState.selectedMonth);
+      els.monthPeriodLabel.textContent = getMonthLabel(range);
+      reportsState.offline = !navigator.onLine;
+      if (reportsState.loading) {
+        els.monthlyReportContent.innerHTML = reportsLoadingMarkup();
         return;
       }
-
-      els.dailyTrendPanel.classList.remove("hidden");
-      const max = Math.max(...entries.map(entry => entryTotal(entry)), 1);
-      els.dailyBars.innerHTML = entries.map(entry => {
-        const width = Math.round(entryTotal(entry) / max * 100);
-        return `
-          <div class="bar-row">
-            <div class="bar-top"><strong>${entry.date}</strong><span>${money(entryTotal(entry))}</span></div>
-            <div class="bar-track"><div class="bar-fill" style="width:${width}%"></div></div>
+      if ((stateLoadError && !stateRecoveryNotice) || reportsState.error) {
+        els.monthlyReportContent.innerHTML = reportsErrorMarkup();
+        return;
+      }
+      const current = aggregateReport(state.entries, range);
+      if (!current.hasRecords) {
+        els.monthlyReportContent.innerHTML = `${reportsStatusMarkup()}${reportsEmptyMarkup("這個月")}`;
+        return;
+      }
+      const previous = aggregateReport(state.entries, getPreviousMonthRange(range));
+      const comparison = compareReportPeriods(current, previous, "month");
+      const trend = buildMonthlyWeeklyNetTrend(state.entries, range);
+      const important = findImportantReportDates(current.records, "month");
+      const goal = nonNegativeNumber(state.settings.monthlyGoal);
+      const goalPercent = goal ? Math.max(0, Math.min(100, Math.round(current.netIncome / goal * 100))) : 0;
+      const goalMarkup = goal ? `
+        <section class="reports-section" aria-labelledby="monthGoalTitle">
+          <h4 id="monthGoalTitle">本月目標</h4>
+          <div class="reports-goal-progress">
+            <div class="reports-goal-meta"><span>目前 ${money(current.netIncome)}</span><strong>${goalPercent}%</strong></div>
+            <div class="reports-goal-track" role="progressbar" aria-label="本月目標進度" aria-valuemin="0"
+              aria-valuemax="100" aria-valuenow="${goalPercent}"><div class="reports-goal-fill" style="width:${goalPercent}%"></div></div>
+            <span class="ds-caption">目標 ${money(goal)}</span>
           </div>
-        `;
-      }).join("");
+        </section>
+      ` : "";
+      els.monthlyReportContent.innerHTML = `
+        ${reportsStatusMarkup()}
+        <section class="reports-primary-kpis" aria-label="月報主要指標">
+          <div class="reports-primary-kpi"><span class="reports-kpi-label">總收入</span><strong>${money(current.totalIncome)}</strong></div>
+          <div class="reports-primary-kpi"><span class="reports-kpi-label">淨收入</span><strong>${money(current.netIncome)}</strong></div>
+        </section>
+        <section class="reports-secondary-kpis" aria-label="月報其他指標">
+          <div class="reports-secondary-kpi"><span>支出</span><strong>${money(current.totalExpenses)}</strong></div>
+          <div class="reports-secondary-kpi"><span>工作天數</span><strong>${current.workDays} 天</strong></div>
+          <div class="reports-secondary-kpi"><span>工作時間</span><strong>${formatReportDuration(current.totalWorkDuration)}</strong></div>
+          <div class="reports-secondary-kpi"><span>平均時薪</span><strong>${current.averageHourlyIncome === null ? "—" : money(current.averageHourlyIncome)}</strong></div>
+        </section>
+        ${renderReportComparison(comparison, "month")}
+        ${renderReportTrend(trend, "每週淨收入", "monthTrendTitle")}
+        ${renderImportantDates(important, "month")}
+        ${goalMarkup}
+      `;
     }
 
     function renderPlatformReport() {
@@ -7704,21 +8429,82 @@
       updateQuickPreview();
     }
 
-    function setReportView(view, persist = true) {
+    function announceReports(message) {
+      if (!els.reportsAnnouncement) return;
+      els.reportsAnnouncement.textContent = "";
+      window.requestAnimationFrame(() => {
+        els.reportsAnnouncement.textContent = message;
+      });
+    }
+
+    function changeReportPeriod(action) {
+      if (activeReportView === "week") {
+        if (action === "current") {
+          reportsState.selectedWeekAnchor = weekStart(todayString());
+        } else {
+          const offset = action === "previous" ? -7 : 7;
+          reportsState.selectedWeekAnchor = addLocalDays(reportsState.selectedWeekAnchor, offset);
+        }
+        renderWeeks();
+        announceReports(`已顯示 ${els.weekPeriodLabel.textContent}`);
+        return;
+      }
+      if (activeReportView === "month") {
+        if (action === "current") {
+          reportsState.selectedMonth = currentMonth();
+        } else {
+          reportsState.selectedMonth = addCalendarMonths(
+            reportsState.selectedMonth,
+            action === "previous" ? -1 : 1
+          );
+        }
+        renderMonthReport();
+        announceReports(`已顯示 ${els.monthPeriodLabel.textContent}`);
+      }
+    }
+
+    function retryReportsRead() {
+      const recoveredState = loadState();
+      if (stateLoadError && !stateRecoveryNotice) {
+        reportsState.error = stateLoadError;
+        if (activeReportView === "week") renderWeeks();
+        if (activeReportView === "month") renderMonthReport();
+        announceReports("仍然無法讀取報表資料");
+        return;
+      }
+      replaceStateContents(recoveredState);
+      reportsState.error = null;
+      renderAll();
+      announceReports("報表資料已重新讀取");
+    }
+
+    function handleReportTabKeydown(event) {
+      const tabs = [...els.reportButtons];
+      const currentIndex = tabs.indexOf(event.currentTarget);
+      if (currentIndex < 0) return;
+      const offset = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
+      if (!offset) return;
+      event.preventDefault();
+      const next = tabs[(currentIndex + offset + tabs.length) % tabs.length];
+      navigateTo("reports", next.dataset.reportView);
+      next.focus();
+    }
+
+    function setReportView(view) {
       const nextView = normalizeReportView(view);
       activeReportView = nextView;
+      reportsState.activeReportTab = nextView;
       els.reportButtons.forEach(button => {
         const active = button.dataset.reportView === nextView;
         button.classList.toggle("active", active);
-        button.setAttribute("aria-pressed", String(active));
+        button.setAttribute("aria-selected", String(active));
+        button.tabIndex = active ? 0 : -1;
       });
       els.reportPanels.forEach(panel => {
-        panel.classList.toggle("hidden", panel.dataset.reportPanel !== nextView);
+        const active = panel.dataset.reportPanel === nextView;
+        panel.classList.toggle("hidden", !active);
+        panel.hidden = !active;
       });
-      if (persist && state.settings.lastReportView !== nextView) {
-        state.settings.lastReportView = nextView;
-        saveState();
-      }
       if (nextView === "week") renderWeeks();
       if (nextView === "month") renderMonthReport();
       if (nextView === "platform") renderPlatformReport();
@@ -7739,7 +8525,7 @@
       els.viewSubtitle.textContent = titles[view][1];
       document.body.dataset.activeView = view;
       document.getElementById("newEntry").classList.toggle("hidden", view === "today" || view === "about");
-      if (view === "reports") setReportView(activeReportView, false);
+      if (view === "reports") setReportView(activeReportView);
       updateOverviewVisibility();
     }
 
@@ -7769,7 +8555,7 @@
     }
 
     function appRouteHash(view, reportView = activeReportView) {
-      if (view === "reports") return `#reports/${normalizeReportView(reportView)}`;
+      if (view === "reports") return "#reports";
       if (view === "settings") return "#driver";
       return `#${["today", "calendar", "ai", "about"].includes(view) ? view : "today"}`;
     }
@@ -7778,7 +8564,7 @@
       const view = ["today", "calendar", "reports", "ai", "settings", "about"].includes(route?.view)
         ? route.view
         : "today";
-      if (view === "reports") setReportView(route.reportView, true);
+      if (view === "reports") setReportView(route.reportView);
       if (view === "calendar" && route.calendarDate !== null && route.calendarDate !== undefined) {
         openCalendar({ selectedDate: route.calendarDate, source: "route" });
       }
@@ -8643,9 +9429,13 @@
       renderCalendarExpenseList();
       markRecordEditorDirty();
     });
-    [els.weekMonthFilter, els.monthReportFilter, els.platformMonthFilter].forEach(select => {
-      select.addEventListener("change", () => updateReportMonth(select.value));
+    els.platformMonthFilter.addEventListener("change", () => updateReportMonth(els.platformMonthFilter.value));
+    document.getElementById("view-reports").addEventListener("click", event => {
+      const periodButton = event.target.closest("[data-report-period]");
+      if (periodButton) changeReportPeriod(periodButton.dataset.reportPeriod);
+      if (event.target.closest("[data-reports-retry]")) retryReportsRead();
     });
+    els.reportButtons.forEach(button => button.addEventListener("keydown", handleReportTabKeydown));
 
     els.entryForm.addEventListener("submit", event => event.preventDefault());
     els.detailForm.addEventListener("submit", event => {
