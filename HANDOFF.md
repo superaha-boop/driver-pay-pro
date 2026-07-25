@@ -10,11 +10,11 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 Driver Pay Pro 目前是單頁式網頁 App，主要介面、樣式與邏輯集中在 `index.html`。首頁、平台收入、週報手機版、月份明細、目標進度條與規則式 AI 營運助理已有本機成果；平台輸入模式功能已建立獨立功能提交，Git 工作流程文件於本次 Sprint 更新。
 
-目前首頁視為已完成並凍結。除非使用者明確提出新的首頁需求，後續不要順手調整首頁、平台收入輸入流程、工作計時或任何統計邏輯。
+目前首頁視為已完成並凍結。除非使用者明確提出新的首頁需求，後續不要順手調整首頁、平台收入輸入流程、工作計時或任何統計邏輯。本次資訊架構 Sprint 將月曆、報表與底部導覽重新分工，尚待完成最終發布紀錄。
 
 ### Git 現況
 
-- 目前分支：`codex/fix-monday-week-worktime-20260725`
+- 目前分支：`codex/restructure-calendar-reports-nav-20260725`
 - 上一次發布工作分支：`codex/add-brand-attribution-20260724`
 - 本次作者資訊、About 精簡與工時／週期修正已合併至 `main`。
 - 正式發布整合提交：`823bfdf merge: release latest Driver Pay Pro updates`
@@ -27,12 +27,25 @@ Driver Pay Pro 目前是單頁式網頁 App，主要介面、樣式與邏輯集�
 - Git 流程文件提交：`53aa540 docs: update sprint git workflow`
 - 作者資訊與 About 基礎提交：`42f9f31 feat: add brand attribution and about page`
 - `main` 已用標準 merge commit 保留雙方歷史；本次不需要 rebase、reset 或 force push。
-- 目前工作分支已設定 upstream：`origin/codex/add-brand-attribution-20260724`。
+- 本次工作分支尚未建立遠端 upstream；發布時應使用 `git push -u origin HEAD`，實際狀態以即時 Git 檢查為準。
 - 操作前仍應 Fetch 並確認遠端目前 Branch 是否出現其他提交，不沿用舊交接資訊推測同步狀態。
 - `.backups/` 只留本機並由 `.gitignore` 排除；不要刪除或部署。
 - Product Owner 已確認 `assets/driver-pay-icon-512.png` 是錯誤且不需要的舊圖，本次可安全刪除；目前 manifest、Service Worker、favicon 與 Apple Touch Icon 均未引用此檔案。
 - Vercel 專案 `driver-pay-pro` 已連結 GitHub；推送 `main` 會自動建立 Production Deployment。
 - 最新遠端與 Production 狀態仍應以 `git status -sb`、Vercel deployment commit SHA 及本次完成回報為準。
+
+### 本次資訊架構 Sprint（待發布）
+
+- 底部導覽改為「今天｜月曆｜報表｜AI｜Driver」，圖示統一為 24px、2px stroke 的 Lucide inline SVG。
+- 月曆只保留月份明細與每日歷史紀錄；週報、月報與平台分析移入固定主標題「報表」的三個內部分頁。
+- 月曆與報表月份互相獨立；報表三個分頁共用月份並記住最後查看分頁。
+- 每日歷史紀錄補齊總收入、平台收入、支出、淨收入與實際工時；編輯／刪除至少 44px，刪除仍有確認。
+- 新增 hash 導覽與舊 `#week`、`#month`、`#platform`、`#analysis` 相容；瀏覽器返回可回到原本月曆或報表狀態。
+- Service Worker cache 更新為 `driver-pay-pro-v06-calendar-report-navigation`。
+- 沒有改變收入、支出、工時或報表計算公式；`driverPayApp.v2` key 不變，只在既有 `settings` 增加相容性的月曆／報表 UI 狀態。
+- 自動測試 15/15 通過，並在 `Asia/Taipei` 與 `UTC` 各重跑一次；Inline JavaScript、Service Worker、manifest 與 `git diff --check` 通過。
+- 375、390、393、430px 的頁面寬度均等於 viewport，五個導覽圖示為 24px、按鈕 56px、文字 14px 且不換行；1024px 桌面版仍顯示月份表格。
+- 本機瀏覽器已驗證舊連結、返回、編輯、刪除確認、空白狀態、報表分頁記憶及月份獨立狀態；真實 iPhone Safari 與已安裝 PWA 仍需 Product Owner 實機驗收。
 
 ### 新 Git 工作流程
 

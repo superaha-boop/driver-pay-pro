@@ -1,4 +1,4 @@
-const CACHE_NAME = "driver-pay-pro-v05-monday-week-worktime-fix";
+const CACHE_NAME = "driver-pay-pro-v06-calendar-report-navigation";
 const APP_SHELL = [
   "./",
   "./index.html",
