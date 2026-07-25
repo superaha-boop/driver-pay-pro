@@ -284,9 +284,11 @@ Driver Pay Pro 是手機優先 App，所以主要驗收環境為：
 4. 檢查 `git diff`、`git diff --check` 與 `git status`。
 5. 只 stage 本 Sprint 核准的檔案，不混入不相關 dirty changes。
 6. 依 Commit Message 規範建立 commit。
-7. push 到目前工作 Branch；不得自行改推 `main` 或其他分支。
-8. 更新 `HANDOFF.md`，記錄本次修改、驗證、branch、commit 與 push 狀態。
-9. 回報 Branch、Commit Hash、修改檔案、驗證結果、已知問題與人工 QA。
+7. push 到目前工作 Branch。
+8. 使用一般 Git 合併整合最新 `main` 與目前工作 Branch；不得使用 reset、rebase 或 force push 改寫歷史。
+9. push `main`，由既有 Vercel Git Integration 自動建立 Production Deployment，並核對正式部署 commit。
+10. 更新 `HANDOFF.md`，記錄本次修改、驗證、branch、commit、merge、push 與 Production 狀態。
+11. 回報 Branch、Commit Hash、`main` Merge Commit、Production 狀態、修改檔案、驗證結果、已知問題與人工 QA。
 
 Commit Message 使用以下前綴：
 
@@ -298,9 +300,9 @@ Commit Message 使用以下前綴：
 - `test:` 測試
 - `chore:` 維護工作
 
-Codex 無需為每次 commit 或 push 目前工作 Branch 重複詢問。若工作目錄包含其他未提交變更，必須先確認範圍並採明確檔案 staging；不可使用會混入不相關內容的方式。
+Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `main` 或 Production Deploy 重複詢問。此持續授權由 Product Owner 於 2026-07-25 明確提供，目的是讓每次完成且驗證通過的 Sprint 可直接更新手機正式版。若當次使用者明確要求不部署、驗證失敗、遠端衝突無法安全判定或可能造成資料遺失，必須停止發布並回報。若工作目錄包含其他未提交變更，必須先確認範圍並採明確檔案 staging；不可使用會混入不相關內容的方式。
 
-建立或修改 Pull Request、切換分支及 Preview 流程仍依當次 Sprint 指令處理。不得因 push 自動 merge 或 deploy。
+建立或修改 Pull Request、切換分支及 Preview 流程仍依當次 Sprint 指令處理。Production 只能由已驗證的 `main` 透過既有部署整合產生，不可繞過 Git 直接修改正式站。
 
 ---
 
@@ -308,8 +310,6 @@ Codex 無需為每次 commit 或 push 目前工作 Branch 重複詢問。若工�
 
 以下操作必須先說明原因、影響與風險，並等待使用者明確確認：
 
-- 合併 PR
-- 部署至正式環境
 - 修改 Supabase Schema
 - 建立或執行 Migration
 - 刪除正式資料
@@ -321,7 +321,7 @@ Codex 無需為每次 commit 或 push 目前工作 Branch 重複詢問。若工�
 - 大規模 UI 重構
 - 任何可能造成資料遺失的操作
 
-Codex 不得把「完成 Sprint」解讀為自動 merge、正式 deploy 或改寫 Git 歷史。
+完成且驗證通過的 Sprint 預設會依第 14 節合併及正式部署；這不包含改寫 Git 歷史、資料庫變更或任何資料破壞操作。
 
 ---
 

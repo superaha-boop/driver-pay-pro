@@ -1,6 +1,6 @@
 # Driver Pay Pro — Codex Instructions
 
-Version: 1.1
+Version: 1.2
 
 ## Project Documentation
 
@@ -105,16 +105,18 @@ Version: 1.1
 - 只 stage 本 Sprint 核准的檔案。
 - 依 `feat:`、`fix:`、`refactor:`、`docs:`、`style:`、`test:` 或 `chore:` 規範建立 Commit。
 - Push 到目前工作 Branch。
+- 使用一般 Git 合併將目前工作 Branch 整合至最新 `main`。
+- Push `main`，觸發既有 Vercel Git Integration 的 Production Deployment。
+- 核對 Production Deployment 對應的 commit，並完成正式站與 PWA 的適用驗證。
 - 更新 `HANDOFF.md` 與必要的開發文件。
-- 回報 Branch、Commit Hash、修改檔案與驗證結果。
+- 回報工作 Branch、Commit Hash、`main` Merge Commit、Production 狀態、修改檔案與驗證結果。
+
+以上為 Product Owner 自 2026-07-25 起授予的持續發布授權，目的是讓每次已驗證修改可直接出現在手機正式版，不需逐次再次詢問 Merge、Push `main` 或 Production Deploy。若當次使用者明確要求「不要部署」、驗證未通過、遠端出現無法安全判定的衝突，或發布可能造成資料遺失，必須停止發布並回報。
 
 若工作目錄包含其他未提交變更，不得使用會混入不相關內容的 staging；必須先辨識來源並採明確檔案範圍。
 
 以下操作仍必須先說明並等待使用者明確確認：
 
-- Merge Pull Request。
-- Deploy 至正式環境。
-- Push 到 `main` 或非目前工作 Branch。
 - Git Reset。
 - Git Rebase。
 - Force Push。
@@ -130,7 +132,7 @@ Version: 1.1
 永遠：
 
 - 不刪除 `backup-old-version` 或 `.backups/`。
-- 不直接修改正式 Production。
+- 不繞過 Git 歷史直接修改正式 Production；正式版只由已驗證的 `main` 觸發部署。
 
 ## Required Validation
 

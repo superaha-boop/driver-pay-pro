@@ -1,8 +1,8 @@
 # Driver Pay Pro Development Handbook
 
-Version: 1.1
+Version: 1.2
 
-更新日期：2026-07-24
+更新日期：2026-07-25
 
 ## 文件定位
 
@@ -180,7 +180,7 @@ Codex Implementation Complete
 → Done
 ```
 
-未經預覽與授權，不直接覆蓋正式站。
+Sprint 驗證通過後，依本文件的持續發布授權更新正式站；若驗證失敗、衝突無法安全判定或可能造成資料遺失，停止發布並回報。
 
 ## Driver Feedback Format
 
@@ -218,8 +218,13 @@ Sprint 完成並通過適用驗證後，Codex 可以直接：
 2. 只 stage 本 Sprint 核准的檔案。
 3. 建立符合規範的 Commit。
 4. Push 到目前工作 Branch。
-5. 更新 `HANDOFF.md` 及必要開發文件。
-6. 回報 Branch、Commit Hash、修改檔案、驗證結果、已知問題與人工 QA。
+5. 使用一般 Git 合併整合最新 `main` 與目前工作 Branch。
+6. Push `main`，由既有 Vercel Git Integration 觸發 Production Deployment。
+7. 核對 Production Deployment 的 commit，完成正式站與 PWA 的適用驗證。
+8. 更新 `HANDOFF.md` 及必要開發文件。
+9. 回報工作 Branch、Commit Hash、`main` Merge Commit、Production 狀態、修改檔案、驗證結果、已知問題與人工 QA。
+
+Product Owner 已於 2026-07-25 提供持續發布授權，因此上述 Merge、Push `main` 與 Production Deploy 不需逐次再次詢問。當次使用者明確要求不部署時，以該次指令為準。
 
 Commit Message 前綴：
 
@@ -235,9 +240,6 @@ Commit Message 前綴：
 
 以下操作必須先取得 Product Owner／使用者明確確認：
 
-- Merge Pull Request。
-- Production Deploy。
-- Push 到 `main` 或非目前工作 Branch。
 - Git Reset、Git Rebase 或 Force Push。
 - 刪除分支或改寫既有 Commit 歷史。
 - 修改 Supabase Schema 或建立／執行 Migration。
@@ -245,7 +247,7 @@ Commit Message 前綴：
 - 修改主要架構或大規模重構已凍結 UI。
 - 任何可能造成資料遺失的操作。
 
-建立 Pull Request、Draft PR、Vercel Preview 與 iPhone 實機驗收仍依當次 Sprint 指令進行；push 工作 Branch 不代表可以自動 merge 或 deploy。
+建立 Pull Request、Draft PR、Vercel Preview 與 iPhone 實機驗收仍依當次 Sprint 指令進行。正式發布必須保留可追溯 Git 歷史，且不得在驗證失敗、衝突不明或有資料遺失風險時執行。
 
 ## Documentation Maintenance
 

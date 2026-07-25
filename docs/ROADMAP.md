@@ -57,8 +57,8 @@
 - [ ] 重新取得遠端狀態並比較本機分支、遠端 main 與平行週報分支。
 - [ ] 確認 GitHub 登入與推送權限。
 - [ ] 選擇 merge、cherry-pick 或其他非破壞性整合方式。
-- [ ] 推送與部署只能在使用者明確授權後執行。
-- [ ] TODO：確認目前正式部署服務與專案連結；程式庫內沒有部署設定。
+- [ ] 驗證通過後依持續發布授權 Push 工作 Branch、合併 `main` 並確認 Production Deployment；當次明確要求不部署時除外。
+- [ ] 發布前重新確認 Vercel Git Integration、遠端版本與 Production commit；程式庫內沒有獨立部署設定。
 
 ## 下一階段：Driver Space 與維護性
 

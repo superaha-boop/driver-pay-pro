@@ -225,7 +225,7 @@ state
 ## 目前 TODO
 
 - TODO：iPhone Safari 與 standalone PWA 實機驗收。
-- TODO：確認目前正式部署平台、遠端版本與發布流程。
+- TODO：每次發布前重新確認 Vercel Production、遠端版本與 deployment commit；驗證通過後依持續發布授權執行。
 - TODO：Driver Space 詳細功能。
 - TODO：是否建立測試、lint、type check 與 build 工具鏈。
 - TODO：資料匯入、雲端同步與真正 AI 的產品決策。
