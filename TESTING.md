@@ -10,6 +10,22 @@
 - 所有功能變更都必須確認 `driverPayApp.v2` 未被更名或清除。
 - PWA 資源變更必須同步檢查 `sw.js` cache version 與 App Shell。
 
+## Calendar Sprint 4A validation record
+
+Date: 2026-07-25
+
+- Automated Node tests: 40/40 passed.
+- Inline JavaScript syntax: passed.
+- Service Worker syntax, manifest JSON, and App Shell resource checks: passed.
+- Browser Console: no errors or warnings after Calendar interaction and reporting regression checks.
+- Responsive browser checks: 320, 375, 390, 393, 430, 768, and 1024px passed without horizontal overflow.
+- Verified: fresh/reload Today selection, same-session selection retention, valid/invalid date deep links, month-only navigation, Today action, adjacent-month selection, future/past empty states, keyboard selection, four-level heat, canonical Work Record Card, month summary, Reports fixture consistency, Bottom Navigation clearance, and time-input borders.
+- TypeScript: Not available.
+- ESLint: Not available.
+- Production build: Not available.
+- Physical iPhone Safari and installed PWA: pending Product Owner human QA.
+- Needs UX Validation: month navigation preserves an out-of-month selected date and keeps that date's card visible with a quiet context label.
+
 ## Cross-page product contract checklist
 
 Use this checklist for every feature that affects navigation, records, calculations, or more than one primary page.
@@ -57,7 +73,7 @@ Use this checklist for every feature that affects navigation, records, calculati
 
 ## Calendar implementation checklist
 
-This checklist applies to the future Calendar Implementation Sprints. Full expected behavior is defined in `docs/CALENDAR_SPEC.md`.
+This checklist applies across Calendar Implementation Sprints. Sprint 4A read/navigation results are recorded above; mutation items remain for Sprint 4B. Full expected behavior is defined in `docs/CALENDAR_SPEC.md`.
 
 ### Month grid and dates
 

@@ -100,6 +100,12 @@ Version: 1.6
 
 ## Calendar Execution Rules
 
+- Navigation Never Loses Context：外部指定 Calendar 日期必須保留精確日期；有效日期覆蓋 session selection，無效日期安全回到台北今天，且不得建立資料。
+- One Motion = One Meaning：水平位移只代表日期或月份改變，短淡入只代表內容更新；Calendar 動畫不得混用為裝飾。
+- Calendar Read and Navigate 階段完全唯讀；render、日期點擊、月份切換、手勢、空狀態與格式化都不得建立、修改或刪除工作紀錄。
+- Calendar 的 `selectedDate` 與 `displayedMonth` 是分離的 session UI state；都不得寫入 `driverPayApp.v2` 或其他 durable storage。
+- 日期格式化只產生顯示值，不得回寫原始紀錄；日期運算必須使用驗證後的本地 date-only 語意，不得用 UTC ISO 序列化台灣日曆日期。
+- Calendar 不得為空白日期自動建立 WorkRecord，也不得選取最近工作日代替精確日期。
 - Calendar 以星期一為每週第一天，欄位固定為一、二、三、四、五、六、日。
 - 一般新啟動預設選取台北當地今天；不得自動選最近工作日。
 - 同一次 App session 返回 Calendar 時保留 `selectedDate` 與 `displayedMonth`；新 session 重設今天，不把選取日期永久寫入 localStorage。

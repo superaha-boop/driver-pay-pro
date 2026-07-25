@@ -24,9 +24,9 @@
 - `styles/design-system.css` 的 CSS custom properties 是 spacing、radius、typography、語意色彩、shadow、border、motion、touch target 與 safe area 的單一視覺來源。
 - Design System 採 Apple-inspired、mobile-first、one-hand、calm interface；後續頁面逐步遷移，不進行一次性全站重寫。
 - 全 App 遵循三秒原則、兩層原則、免思考原則、單手操作原則與 Apple 美學原則；完整永久規則以 `AGENTS.md` 為準。
-- 未來月曆改版採 `Overview → Detail`：先定位日期與辨識工作狀況，再開啟當日工作紀錄。
+- 月曆採 `Overview → Detail`：先定位日期與辨識工作狀況，再開啟當日工作紀錄。
 - 月曆點選日期後顯示的正式區域名稱為「工作紀錄卡片」，採核心資訊雙欄、延伸資訊單欄的混合式布局。
-- 工作紀錄卡片規劃支援精簡、標準、完整及自訂四種顯示模式；目前仍是核准規格，尚未實作。
+- Sprint 4A 已實作唯讀標準工作紀錄卡片；精簡、完整、自訂模式及紀錄寫入仍是後續核准規格。
 
 ### 正式產品架構摘要
 
@@ -36,7 +36,7 @@
 - 每個可寫入功能只能有一個 Primary owner。跨頁需要修正紀錄時，必須連到負責頁面，不在報表或 AI 複製表單。
 - 收入、支出、淨收入、實際工時、平均時薪及週／月彙總必須共用單一計算來源。
 - 月曆正式定義為星期一至星期日；新啟動選今天，同一 App session 保留選取日期，未來日期不可建立紀錄。
-- Calendar 目前仍是月份明細清單；日期格、session selected date 與工作紀錄卡片尚未實作。
+- Calendar Sprint 4A 已完成 Monday-first 月份格、session-only selected date、日期 deep link、收入熱度、唯讀工作紀錄卡片與月份摘要。
 - 現況差距與技術限制集中記錄於 `docs/TECH_DEBT.md`，不因文件建立而自動授權實作。
 
 ### Calendar Specification 摘要
@@ -45,8 +45,9 @@
 - Calendar 採 Monday-first；一般新 session 選今天，同 session 保留 selectedDate／displayedMonth，不自動選最近工作日。
 - 單純切換月份不改 selectedDate；點日期或滑動日期才更新工作紀錄卡片，跨月時同步 displayedMonth。
 - 日期格只顯示淨收入簡寫與柔和相對熱度；Today 與 Selected 分開，未來日期可查看但不可新增。
-- 工作紀錄卡片第一版固定標準模式，使用 canonical calculations、Design System primitives 與同一套 Record Editor。
-- 下一步為 Calendar Implementation，建議分成 Read and Navigate 與 Record Mutation and Hardening 兩個可控 Sprint。
+- 工作紀錄卡片第一版固定標準模式，唯讀數值已使用 canonical calculations 與 Design System primitives；同一套 Record Editor 尚待 Sprint 4B。
+- Calendar Implementation — Sprint 4A: Read and Navigate 已完成程式與自動驗證；下一步是 Sprint 4B: Record Mutation and Hardening。
+- 單純月份切換保留原 `selectedDate`，若選取日不在顯示月份，卡片保留該日並提示；此行為標記為 Needs UX Validation。
 
 # Development Principles
 
@@ -454,14 +455,14 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 - 週報週期已改用不受 UTC 轉換影響的 date-only 曆法計算星期一至星期日；星期日仍歸屬前一個星期一開始的週。
 - 底部導覽已重整為今天、月曆、報表、AI、Driver；月曆與報表資料責任、月份狀態及 hash 路由已分離。
 - 月份明細已完整移入月曆；報表固定包含週報、月報與平台收入排行，並記住最後查看分頁。
-- PWA Service Worker 使用 `driver-pay-pro-v06-calendar-report-navigation`、略過 HTTP cache 檢查更新並在新 worker 接管後安全重載。
+- PWA Service Worker 使用短版 cache `driver-pay-pro-v8`、略過 HTTP cache 檢查更新並在新 worker 接管後安全重載。
 - 目前程式主要修改集中在 `index.html`；專案沒有 package.json、TypeScript、ESLint 或 build pipeline。
-- 目前已發布至 `main`；本次正式發布整合提交為 `823bfdf`，最新功能提交為 `d58d0a1`，持續發布規則於 2026-07-25 更新。實際 push 與 Production 狀態仍以即時 Git／Vercel 檢查為準。
+- Calendar Sprint 4A 位於功能分支 `codex/calendar-read-navigate-20260725`；依本次 PRD 不合併 `main`、不部署。實際 push 狀態仍以即時 Git／GitHub 檢查為準。
 
 ## 6. 下一步工作
 
-1. 執行 Calendar Implementation — Sprint A: Read and Navigate。
-2. 之後執行 Calendar Implementation — Sprint B: Record Mutation and Hardening。
+1. 使用 iPhone Safari 與 installed PWA 完成 Calendar Sprint 4A 人工 UX／手勢／safe-area 驗收。
+2. 經 Product Owner 驗收後執行 Calendar Implementation — Sprint B: Record Mutation and Hardening。
 3. 使用 iPhone Safari 與加入主畫面的 PWA 驗收五欄底部導覽、月曆、報表切換及返回行為。
 4. 確認 Service Worker 沒有持續提供舊快取。
 5. 確認 375、390、393、430px 下沒有水平 overflow，底部導覽不遮住最後一筆紀錄。

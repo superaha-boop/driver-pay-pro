@@ -6,6 +6,56 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
+## Calendar Sprint 4A — Read and Navigate Implementation
+
+### 本次分支與範圍
+
+- Base：`codex/calendar-specification-20260725`，包含 Sprint 2／3 ancestry。
+- 工作分支：`codex/calendar-read-navigate-20260725`。
+- 純函式第一階段 commit：`337ac2c feat: add calendar date utilities and tests`。
+- Calendar UI／互動／回歸 commit：`f701af3 feat: implement calendar read and navigation`。
+- 本 Sprint 只實作 Calendar 唯讀瀏覽與導覽；沒有啟用新增、編輯、刪除或 Record Editor。
+- 依本次 PRD 只 push 功能分支，不 merge、不 deploy。
+
+### 已完成
+
+- 以 Monday-first Month Grid 取代 legacy 月份下拉與每日清單，支援 5／6 列、相鄰月份日期、Today、Selected、Focus 與 Future 狀態。
+- 新增 session-only `CalendarState`；新 session 使用台北今天，同 session 返回保留 `selectedDate`／`displayedMonth`，月份瀏覽不改 selected date。
+- 新增 `#calendar/YYYY-MM-DD` deep link 與 `window.openCalendar({ selectedDate, source })`；無效日期安全回到今天且不建立資料。
+- 新增日期／月份純函式、緊湊淨收入格式、四級語意 heat、每月 record map 與月份摘要。
+- 新增唯讀標準工作紀錄卡片，重用 `entryTotal()`、`entryExpenses()`、`entryNet()`、`workMetrics()`、`hourlyRate()`、`platformNetAmount()` 與 `summarize()`。
+- 日期格與卡片支援 Arrow／Enter／Space、roving focus、ARIA、polite live region、月份／日期水平手勢、iOS edge guard 與 reduced motion。
+- 今天空狀態只提供回 Today；過去與未來空狀態不提供寫入入口。Calendar 沒有接回 legacy `editEntry()`／`deleteEntry()`。
+- Calendar 讀取錯誤提供提示與重試，不清除損壞的原始 localStorage；資料品質問題使用非阻斷式提示。
+- Design System 新增 Calendar heat semantic tokens；Service Worker cache 更新為 `driver-pay-pro-v8`。
+
+### 資料與相容性
+
+- `driverPayApp.v2` key、WorkRecord schema、收入／支出／工時計算與 durable settings 均未變更。
+- `settings.calendarMonth` 保留舊資料相容性，但新 Calendar 不讀寫它。
+- Calendar 的格式化、heat、selected/focus/gesture/transition 全為顯示或 session state，不回寫 record。
+- 專案仍只有瀏覽器 localStorage，沒有 Supabase、後端或跨裝置同步。
+
+### 驗證摘要
+
+- Node 自動測試：40/40 通過。
+- Inline JavaScript、Service Worker 語法、manifest JSON、App Shell、`git diff --check` 通過。
+- 瀏覽器驗證涵蓋 deep link、同 session 返回、reload 重設今天、月份／日期導覽、鍵盤、未來／過去空狀態、四級 heat、canonical card／summary、Reports 回歸及 Console。
+- 320、375、390、393、430、768、1024px 均無水平 overflow；Bottom Navigation 未遮住內容；既有 time input 右側框線未回歸。
+- TypeScript、ESLint、production build：專案未配置，Not available。
+- 實體 iPhone Safari 與 installed PWA 尚需 Product Owner 人工驗收。
+
+### Needs UX Validation
+
+- 使用月份箭頭或月份 swipe 時保留原 `selectedDate`；若該日不在目前月份，卡片仍顯示原日期並提示「所選日期不在目前月份」。此行為遵循 D-022／D-023，但需在真機確認是否符合直覺。
+- 真機需特別驗證 grid swipe、card day swipe、iOS 系統返回手勢、VoiceOver、safe area、PWA 重新開啟與 Service Worker 更新。
+
+### 下一步
+
+Calendar Sprint 4B — Record Mutation and Hardening：建立單一 Record Editor、past-only backfill/edit/delete、transaction rollback、SaveStatus、dirty state、離線寫入與完整實機回歸。不得在 4A 分支順手啟用 legacy 寫入流程。
+
+---
+
 ## Calendar Interaction and Implementation Specification Sprint
 
 ### 本次分支與範圍

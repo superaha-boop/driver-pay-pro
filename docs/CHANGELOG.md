@@ -19,6 +19,9 @@
 
 ### Added
 
+- Calendar Sprint 4A：Monday-first Month Grid、session-only 日期選取、精確日期 deep link、相鄰月份日期、Today／Selected／Focus／Future 狀態。
+- Calendar 唯讀標準工作紀錄卡片、四級收入熱度、月份摘要、鍵盤操作、ARIA、水平手勢與 reduced-motion 支援。
+- `tests/calendar.test.js` 純函式與 Calendar contract 測試，並擴充導航、Design System、Reporting 與 PWA 回歸測試。
 - 新增正式 `docs/CALENDAR_SPEC.md`，定義 Calendar 狀態、月份／日期互動、日期格矩陣、熱度、工作紀錄卡片、Editor、錯誤／離線、實作架構與完整驗收契約。
 - 新增 Calendar Implementation 未來測試清單，涵蓋月份格、日期狀態、熱度、手勢、Accessibility、紀錄寫入、localStorage 錯誤與 PWA。
 - 新增 D-022 Calendar 正式產品決策。
@@ -38,6 +41,8 @@
 
 ### Changed
 
+- Calendar 由 legacy 月份下拉／每日清單改為唯讀 Overview → Locate → Open 體驗；新增、編輯、刪除保留至 Sprint 4B。
+- Service Worker cache 使用短版 `driver-pay-pro-v8`，並快取本 Sprint 使用的 App Shell。
 - Calendar 下一步由規格階段更新為兩個可控 Implementation Sprint：Read and Navigate、Record Mutation and Hardening；本次未修改產品程式。
 - `AGENTS.md`、專案背景、決策紀錄與交接文件改以正式 Product Specification 約束功能 owner、canonical calculations 與下一個 Calendar 規格 Sprint。
 - 現有 legacy variables 改由 Design System tokens 提供相同視覺值；Service Worker 更新為 v07 並快取共用樣式。

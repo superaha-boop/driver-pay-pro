@@ -135,3 +135,30 @@ Driver Pay Pro 需要讓後續頁面不再各自猜測色彩、間距、圓角�
 - 改變 session 選取、月份導覽、熱度、未來日期或 Record Editor 規則，需要新的 Product Owner 核准。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-022](docs/DECISION_LOG.md#d-022)。
+
+## D-023 — Calendar Read and Navigate Implementation
+
+- Date: 2026-07-25
+
+### 決策
+
+1. Sprint 4A 只實作 Calendar 唯讀瀏覽；新增、編輯與刪除延後至 Sprint 4B。
+2. Navigation Never Loses Context：有效外部日期精確開啟該日，無效日期安全回到台北今天，且不建立資料。
+3. One Motion = One Meaning：水平位移只代表日期／月份改變，短淡入只代表內容更新。
+4. `selectedDate` 與 `displayedMonth` 維持 session-only 分離狀態；月份瀏覽保留選取日期。
+5. 日期格式、緊湊金額與熱度只存在顯示層，不回寫工作紀錄。
+6. 月份格、唯讀工作紀錄卡片與月份摘要只使用 canonical calculations 與 Design System primitives。
+7. `settings.calendarMonth` 保留相容性但不再控制新 Calendar session，也不由 Calendar 瀏覽更新。
+8. 切換月份但保留舊月份 selectedDate 的行為，維持 D-022 並標記 Needs UX Validation。
+
+### 原因
+
+將月份格與資料寫入拆開，可先驗證日期、時區、狀態、熱度、計算與手機版互動，再於 Sprint 4B 處理同一 Record Editor、交易式寫入與錯誤回復，降低資料風險。
+
+### 影響範圍
+
+- Calendar 已提供真正 Month Grid、Monday-first、日期選取、相鄰月份、Today／Selected、四級熱度、唯讀標準工作紀錄卡片、空狀態、月份摘要、手勢與鍵盤操作。
+- Calendar render、月份切換、日期選取與手勢不呼叫 `saveState()`，不建立空白紀錄。
+- 本決策不授權新增、編輯、刪除、Record Editor、schema、migration 或其他頁面重構。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-023](docs/DECISION_LOG.md#d-023)。

@@ -240,3 +240,28 @@
   - 不讓月份瀏覽偷偷改變使用者正在查看的紀錄。
   - 不在 Calendar 複製 Today 表單或 Reports 計算。
   - 不在規格 Sprint 修改 production UI、資料模型、PWA cache、導航或商業邏輯。
+
+## D-023
+
+- Date: 2026-07-25
+- Decision:
+  1. Calendar Sprint 4A 僅提供 Read and Navigate；create、edit、delete 與 Record Editor 延後至 Sprint 4B。
+  2. Navigation Never Loses Context：外部有效日期覆蓋 session selection 並同步月份；無效日期回到台北今天，不建立紀錄。
+  3. One Motion = One Meaning：水平位移只表達月份或日期改變；短淡入只表達卡片內容更新。
+  4. `selectedDate`、`displayedMonth`、focus、gesture 與 transition 都是 session-only UI state，不寫入 `driverPayApp.v2`。
+  5. 月份切換只改 `displayedMonth`；選取日期不在該月時不製造假 Selected，卡片保留原日期並顯示低干擾提示。
+  6. 日期格式化、金額簡寫與熱度是 display-only，不回寫原始資料。
+  7. Calendar 月份格、標準工作紀錄卡片與摘要重用 `entryTotal`、`entryExpenses`、`entryNet`、`workMetrics`、`hourlyRate`、`platformNetAmount` 與 `summarize`。
+  8. `settings.calendarMonth` 保留舊資料相容性但不再驅動或保存新 Calendar session。
+  9. Month switch preserving selectedDate 保留為正式規則，但標記 Needs UX Validation，真機 QA 前不得自行改成選月初或同日。
+- Reason: 先將 Calendar 的日期與唯讀資料展示驗證完成，再於 Sprint 4B 引入單一 Record Editor 與交易式資料寫入，可避免同一 Sprint 同時承擔 UI 置換與資料遺失風險。
+- Impact:
+  - Calendar 已取代 legacy 月份下拉／每日表格，成為 Monday-first Month Grid。
+  - 今天、過去與未來空狀態在 Sprint 4A 都不建立工作紀錄；只有今天空狀態可導向 Today。
+  - Calendar 瀏覽不呼叫資料寫入函式，也不修改 localStorage schema 或 key。
+  - 後續 Sprint 4B 必須遵守單一 Record Editor、past-only mutation、transaction rollback 與 SaveStatus 契約。
+- Rejected alternatives:
+  - 不在 Sprint 4A 暫接回舊 `editEntry()` 或 `deleteEntry()`。
+  - 不把 selectedDate 寫入 localStorage 或 sessionStorage。
+  - 不讓月份切換自動選最近工作日、同日或月初。
+  - 不在 renderer 重新計算收入、淨收入、工時或時薪。
