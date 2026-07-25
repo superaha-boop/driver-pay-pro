@@ -3984,6 +3984,178 @@
       justify-content: center;
     }
 
+    .calendar-record-actions {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-2);
+    }
+
+    .record-editor-dialog {
+      width: min(100%, 720px);
+      max-width: 100%;
+      height: 100dvh;
+      max-height: 100dvh;
+      margin: 0 0 0 auto;
+      padding: 0;
+      border: 0;
+      background: var(--color-background);
+      color: var(--color-text-primary);
+    }
+
+    .record-editor-dialog::backdrop {
+      background: rgb(14 27 23 / 28%);
+    }
+
+    body.record-editor-open {
+      overflow: hidden;
+    }
+
+    .record-editor-shell {
+      min-width: 0;
+      min-height: 100%;
+      padding:
+        max(var(--spacing-3), env(safe-area-inset-top))
+        var(--page-padding)
+        max(calc(var(--spacing-8) + env(safe-area-inset-bottom)), var(--spacing-8));
+      display: grid;
+      align-content: start;
+      gap: var(--spacing-4);
+    }
+
+    .record-editor-header {
+      position: sticky;
+      z-index: 5;
+      top: 0;
+      min-width: 0;
+      padding-block: var(--spacing-2);
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) 44px;
+      align-items: center;
+      gap: var(--spacing-2);
+      background: color-mix(in srgb, var(--color-background) 94%, transparent);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .record-editor-heading {
+      min-width: 0;
+      text-align: center;
+    }
+
+    .record-editor-heading h2,
+    .record-editor-heading p {
+      margin: 0;
+    }
+
+    .record-editor-heading h2 {
+      overflow: hidden;
+      font-size: var(--font-size-section-title);
+      line-height: var(--line-height-title);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .record-editor-heading p {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-caption);
+      line-height: var(--line-height-caption);
+    }
+
+    .record-editor-close {
+      grid-column: 1;
+    }
+
+    .record-editor-header-spacer {
+      grid-column: 3;
+      width: 44px;
+      height: 44px;
+    }
+
+    .record-editor-status {
+      min-height: 20px;
+      text-align: center;
+    }
+
+    .record-editor-content {
+      min-width: 0;
+      display: grid;
+      gap: var(--spacing-4);
+    }
+
+    .record-editor-content > .panel {
+      margin: 0;
+    }
+
+    .record-editor-dialog .details-panel .panel-head {
+      display: none;
+    }
+
+    .record-editor-dialog #entryDateCard input {
+      pointer-events: none;
+    }
+
+    .record-editor-delete {
+      width: 100%;
+    }
+
+    .record-editor-confirm {
+      width: min(calc(100% - 32px), 420px);
+      max-width: 420px;
+      padding: 0;
+      border: 0;
+      border-radius: var(--radius-lg);
+      background: var(--color-surface);
+      color: var(--color-text-primary);
+      box-shadow: var(--shadow-overlay);
+    }
+
+    .record-editor-confirm::backdrop {
+      background: rgb(14 27 23 / 34%);
+    }
+
+    .record-editor-confirm__body {
+      padding: var(--spacing-6);
+      display: grid;
+      gap: var(--spacing-4);
+    }
+
+    .record-editor-confirm__body h2,
+    .record-editor-confirm__body p {
+      margin: 0;
+    }
+
+    .record-editor-confirm__actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-3);
+    }
+
+    .calendar-expense-list {
+      display: grid;
+      gap: var(--spacing-2);
+    }
+
+    .calendar-expense-row {
+      min-width: 0;
+      min-height: 44px;
+      padding-block: var(--spacing-2);
+      border-bottom: var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-3);
+    }
+
+    .calendar-expense-row:last-child {
+      border-bottom: 0;
+    }
+
+    .calendar-expense-row span {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
     .calendar-month-summary {
       min-width: 0;
       padding-top: var(--spacing-4);
@@ -4213,7 +4385,8 @@
           </div>
         </section>
 
-        <div class="panel">
+        <span id="sharedIncomePanelAnchor" hidden></span>
+        <div class="panel" id="sharedIncomePanel">
           <div class="panel-head income-panel-head">
             <h3 class="section-heading">
               <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -4234,7 +4407,8 @@
           </div>
         </div>
 
-        <div class="panel details-panel">
+        <span id="sharedDetailPanelAnchor" hidden></span>
+        <div class="panel details-panel" id="sharedDetailPanel">
           <div class="panel-head">
             <h3 id="formTitle">更新今日紀錄</h3>
             <button class="button secondary hidden" id="cancelEdit" type="button">取消編輯</button>
@@ -4652,6 +4826,36 @@
 
   <div class="app-toast" id="appToast" role="status" aria-live="polite"></div>
 
+  <dialog class="record-editor-dialog" id="recordEditorDialog" aria-labelledby="recordEditorTitle">
+    <div class="record-editor-shell">
+      <header class="record-editor-header">
+        <button class="ds-icon-button record-editor-close" id="recordEditorClose" type="button" aria-label="關閉工作紀錄編輯器">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+        </button>
+        <div class="record-editor-heading">
+          <h2 id="recordEditorTitle">工作紀錄</h2>
+          <p class="ds-numeric" id="recordEditorDate"></p>
+        </div>
+        <span class="record-editor-header-spacer" aria-hidden="true"></span>
+      </header>
+      <p class="ds-save-status record-editor-status" id="recordEditorStatus" role="status" aria-live="polite"></p>
+      <div class="record-editor-content" id="recordEditorContent"></div>
+      <div class="calendar-expense-list" id="calendarExpenseList" aria-label="已記錄支出"></div>
+      <button class="ds-button ds-button--danger record-editor-delete hidden" id="recordEditorDelete" type="button">刪除這天的工作紀錄</button>
+    </div>
+  </dialog>
+
+  <dialog class="record-editor-confirm" id="recordEditorConfirm" aria-labelledby="recordEditorConfirmTitle">
+    <div class="record-editor-confirm__body">
+      <h2 class="ds-card-title" id="recordEditorConfirmTitle"></h2>
+      <p class="ds-secondary" id="recordEditorConfirmMessage"></p>
+      <div class="record-editor-confirm__actions">
+        <button class="ds-button ds-button--secondary" id="recordEditorConfirmCancel" type="button">取消</button>
+        <button class="ds-button ds-button--primary" id="recordEditorConfirmAccept" type="button">確認</button>
+      </div>
+    </div>
+  </dialog>
+
   <script>
     const brandAttribution = Object.freeze({
       productName: "Driver Pay Pro",
@@ -4662,6 +4866,7 @@
       copyrightYear: "2026"
     });
     const storageKey = "driverPayApp.v2";
+    const lastValidStorageKey = `${storageKey}.lastValid`;
     const defaultPlatforms = ["Uber", "LINE GO", "Yoxi", "55688", "大都會", "台灣大車隊", "路邊客", "自訂"];
     const defaultPlatformIds = {
       "Uber": "platform-uber",
@@ -4742,6 +4947,7 @@
     };
 
     let stateLoadError = null;
+    let stateRecoveryNotice = "";
     const state = loadState();
     let activeView = "today";
     let activeReportView = state.settings.lastReportView;
@@ -4754,6 +4960,17 @@
     let calendarState = createCalendarState(todayString());
     let calendarTodayTimer = 0;
     let calendarGesture = null;
+    let recordEditorState = {
+      open: false,
+      mode: "create",
+      date: "",
+      initialRecord: null,
+      draft: null,
+      dirty: false,
+      saving: false,
+      returnFocus: null
+    };
+    let recordEditorConfirmAction = null;
 
     const titles = {
       today: ["今日輸入", "每天花一分鐘記錄收入、工時與支出。"],
@@ -4778,6 +4995,23 @@
       appToast: document.getElementById("appToast"),
       entryForm: document.getElementById("entryForm"),
       detailForm: document.getElementById("detailForm"),
+      sharedIncomePanel: document.getElementById("sharedIncomePanel"),
+      sharedIncomePanelAnchor: document.getElementById("sharedIncomePanelAnchor"),
+      sharedDetailPanel: document.getElementById("sharedDetailPanel"),
+      sharedDetailPanelAnchor: document.getElementById("sharedDetailPanelAnchor"),
+      recordEditorDialog: document.getElementById("recordEditorDialog"),
+      recordEditorContent: document.getElementById("recordEditorContent"),
+      recordEditorTitle: document.getElementById("recordEditorTitle"),
+      recordEditorDate: document.getElementById("recordEditorDate"),
+      recordEditorStatus: document.getElementById("recordEditorStatus"),
+      recordEditorClose: document.getElementById("recordEditorClose"),
+      recordEditorDelete: document.getElementById("recordEditorDelete"),
+      recordEditorConfirm: document.getElementById("recordEditorConfirm"),
+      recordEditorConfirmTitle: document.getElementById("recordEditorConfirmTitle"),
+      recordEditorConfirmMessage: document.getElementById("recordEditorConfirmMessage"),
+      recordEditorConfirmCancel: document.getElementById("recordEditorConfirmCancel"),
+      recordEditorConfirmAccept: document.getElementById("recordEditorConfirmAccept"),
+      calendarExpenseList: document.getElementById("calendarExpenseList"),
       workTimeSection: document.getElementById("workTimeSection"),
       workCollapsedPrimary: document.getElementById("workCollapsedPrimary"),
       workCollapsedSecondary: document.getElementById("workCollapsedSecondary"),
@@ -4838,6 +5072,7 @@
 
     function loadState() {
       stateLoadError = null;
+      stateRecoveryNotice = "";
       let saved = null;
       try {
         saved = localStorage.getItem(storageKey);
@@ -4847,26 +5082,84 @@
       }
       if (saved) {
         try {
-          const parsed = JSON.parse(saved);
-          const platforms = parsed.platforms?.length ? parsed.platforms.slice() : defaultPlatforms.slice();
-          return {
-            ...parsed,
-            platforms,
-            expenses: parsed.expenses?.length ? parsed.expenses.slice() : defaultExpenses.slice(),
-            entries: Array.isArray(parsed.entries) ? parsed.entries : [],
-            settings: normalizeSettings(parsed.settings, platforms)
-          };
+          return normalizeStatePayload(JSON.parse(saved));
         } catch (error) {
           stateLoadError = error;
           console.error("無法讀取既有資料，將保留原始 localStorage 內容。", error);
+          try {
+            const backup = localStorage.getItem(lastValidStorageKey);
+            if (backup) {
+              stateRecoveryNotice = "目前顯示最近一次可安全讀取的本機資料；原始資料仍完整保留。";
+              return normalizeStatePayload(JSON.parse(backup));
+            }
+          } catch (backupError) {
+            console.error("最近一次有效備份也無法讀取。", backupError);
+          }
         }
       }
-      return {
+      return normalizeStatePayload({
         platforms: defaultPlatforms.slice(),
         expenses: defaultExpenses.slice(),
         entries: [],
         settings: normalizeSettings({ monthlyGoal: 0 }, defaultPlatforms)
+      });
+    }
+
+    function normalizeStatePayload(payload = {}) {
+      if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+        throw new TypeError("儲存資料格式無效");
+      }
+      const platforms = Array.isArray(payload.platforms) && payload.platforms.length
+        ? payload.platforms.filter(name => typeof name === "string" && name.trim()).slice()
+        : defaultPlatforms.slice();
+      const entries = Array.isArray(payload.entries) ? payload.entries.slice() : [];
+      return {
+        ...payload,
+        platforms,
+        expenses: Array.isArray(payload.expenses) && payload.expenses.length
+          ? payload.expenses.filter(name => typeof name === "string" && name.trim()).slice()
+          : defaultExpenses.slice(),
+        entries,
+        settings: normalizeSettings(payload.settings, platforms)
       };
+    }
+
+    function cloneStatePayload(payload) {
+      return JSON.parse(JSON.stringify(payload));
+    }
+
+    function replaceStateContents(nextState) {
+      Object.keys(state).forEach(key => delete state[key]);
+      Object.assign(state, nextState);
+    }
+
+    function persistStatePayload(nextState, options) {
+      options ||= {};
+      const { updateMemory = false } = options;
+      let previousSerialized = null;
+      try {
+        const normalized = normalizeStatePayload(cloneStatePayload(nextState));
+        const serialized = JSON.stringify(normalized);
+        previousSerialized = localStorage.getItem(storageKey);
+        localStorage.setItem(storageKey, serialized);
+        const readBack = localStorage.getItem(storageKey);
+        if (readBack !== serialized) throw new Error("儲存後讀回內容不一致");
+        normalizeStatePayload(JSON.parse(readBack));
+        localStorage.setItem(lastValidStorageKey, serialized);
+        if (updateMemory) replaceStateContents(normalized);
+        stateLoadError = null;
+        stateRecoveryNotice = "";
+        return true;
+      } catch (error) {
+        try {
+          if (previousSerialized === null) localStorage.removeItem(storageKey);
+          else localStorage.setItem(storageKey, previousSerialized);
+        } catch (restoreError) {
+          console.error("資料回復失敗；原始快照仍保留於記憶體。", restoreError);
+        }
+        console.error("無法安全儲存資料。", error);
+        return false;
+      }
     }
 
     function normalizeSettings(settings = {}, platforms = defaultPlatforms) {
@@ -4982,13 +5275,7 @@
     }
 
     function saveState() {
-      try {
-        localStorage.setItem(storageKey, JSON.stringify(state));
-        return true;
-      } catch (error) {
-        console.error("無法儲存資料。", error);
-        return false;
-      }
+      return persistStatePayload(state);
     }
 
     function money(value) {
@@ -5970,12 +6257,18 @@
 
     function existingExpenseAmount(category = expenseDraft.category, date = expenseDraft.paymentDate) {
       if (!category || !date) return 0;
-      return Math.max(0, Number(entryForDate(date)?.expenses?.[category] || 0));
+      const entry = recordEditorState.open && recordEditorState.date === date
+        ? recordEditorState.draft
+        : entryForDate(date);
+      return Math.max(0, Number(entry?.expenses?.[category] || 0));
     }
 
     function existingExpenseNote(category = expenseDraft.category, date = expenseDraft.paymentDate) {
       if (!category || !date) return "";
-      return String(entryForDate(date)?.expenseNotes?.[category] || "").slice(0, 160);
+      const entry = recordEditorState.open && recordEditorState.date === date
+        ? recordEditorState.draft
+        : entryForDate(date);
+      return String(entry?.expenseNotes?.[category] || "").slice(0, 160);
     }
 
     function recentExpenseAmounts(category = expenseDraft.category) {
@@ -6340,6 +6633,28 @@
         return;
       }
 
+      if (recordEditorState.open) {
+        if (paymentDate !== recordEditorState.date) {
+          expenseDraft.status = "付款日期必須與目前編輯日期相同。";
+          expenseDraft.statusType = "error";
+          renderExpenseForm();
+          return;
+        }
+        const draft = recordEditorState.draft;
+        draft.expenses ||= {};
+        draft.expenseNotes ||= {};
+        draft.expenses[category] = Math.round(amount);
+        const note = String(expenseDraft.note || "").trim().slice(0, 160);
+        if (note) draft.expenseNotes[category] = note;
+        else delete draft.expenseNotes[category];
+        expenseDraft = createExpenseDraft(paymentDate);
+        renderExpenseForm();
+        renderCalendarExpenseList();
+        markRecordEditorDirty();
+        showToast(`已加入草稿：${category} ${money(amount)}`);
+        return;
+      }
+
       const entry = ensureEntryForDate(paymentDate);
       entry.expenses[category] = Math.round(amount);
       entry.expenseNotes ||= {};
@@ -6358,7 +6673,9 @@
     }
 
     function renderIncomeInputs(date = selectedIncomeDate()) {
-      const entry = entryForDate(date);
+      const entry = recordEditorState.open && recordEditorState.date === date
+        ? recordEditorState.draft
+        : entryForDate(date);
       els.incomeInputs.innerHTML = orderedHomePlatforms().map(name => {
         const amount = Number(entry?.incomes?.[name] || 0);
         const profile = platformProfileByName(name);
@@ -6369,7 +6686,7 @@
             <div class="inline-income-wrap">
               <input class="inline-income-input" type="text" inputmode="numeric" pattern="[0-9]*" value="${amount ? formatIncomeInput(amount) : ""}" placeholder="輸入收入" aria-label="${escapeAttr(name)} 當日收入" data-inline-income="${escapeAttr(name)}" data-platform-id="${escapeAttr(profile?.id || "")}" data-income-date="${escapeAttr(date)}" data-income-mode="total" autocomplete="off">
             </div>
-            ${inputMode === "incremental"
+            ${!recordEditorState.open && inputMode === "incremental"
               ? `<button class="income-add-button" type="button" aria-label="新增一筆 ${escapeAttr(name)} 收入" data-income-add="${escapeAttr(profile?.id || "")}">＋</button>`
               : `<span aria-hidden="true"></span>`}
             <input type="hidden" value="${amount}" data-income="${escapeAttr(name)}">
@@ -6680,7 +6997,7 @@
       }
     }
 
-    function calendarRecordHeader() {
+    function calendarRecordHeader(actionMarkup = "") {
       const outOfMonth = monthKeyFromDate(calendarState.selectedDate) !== calendarState.displayedMonth;
       const fullDate = formatCalendarFullDate(calendarState.selectedDate);
       const weekday = calendarWeekdayLabel(calendarState.selectedDate);
@@ -6694,7 +7011,7 @@
             </h3>
             ${outOfMonth ? `<span class="calendar-record-context">所選日期不在目前月份</span>` : ""}
           </div>
-          <span data-calendar-editor-slot hidden></span>
+          <div class="calendar-record-actions">${actionMarkup}</div>
         </header>
       `;
     }
@@ -6718,13 +7035,18 @@
           ? "你可以查看日期，但未來日期不能建立工作紀錄。"
           : isToday
             ? "回到今天即可開始工作或更新今日紀錄。"
-            : "本 Sprint 為唯讀瀏覽，新增紀錄會在下一階段提供。";
+            : "新增後會儲存在此裝置，並立即更新月曆與報表。";
+        const action = isToday
+          ? `<button class="ds-button ds-button--primary" type="button" data-calendar-go-today>前往今天</button>`
+          : !isFuture
+            ? `<button class="ds-button ds-button--primary" type="button" data-calendar-add>新增紀錄</button>`
+            : "";
         els.calendarRecordContent.innerHTML = `
           ${calendarRecordHeader()}
           <div class="ds-empty-state ds-empty-state--compact">
             <strong class="ds-card-title">${title}</strong>
             <span class="ds-secondary">${description}</span>
-            ${isToday ? `<button class="ds-button ds-button--primary" type="button" data-calendar-go-today>前往今天</button>` : ""}
+            ${action}
           </div>
         `;
         return;
@@ -6743,7 +7065,9 @@
       const note = String(entry.note || "").trim();
 
       els.calendarRecordContent.innerHTML = `
-        ${calendarRecordHeader()}
+        ${calendarRecordHeader(selectedDate < calendarState.today
+          ? `<button class="ds-button ds-button--text" type="button" data-calendar-edit>編輯</button>`
+          : `<button class="ds-button ds-button--text" type="button" data-calendar-go-today>前往今天</button>`)}
         <div class="calendar-metrics">
           <div class="calendar-metric calendar-metric--primary"><span>總收入</span><strong>${money(total)}</strong></div>
           <div class="calendar-metric calendar-metric--primary"><span>淨收入</span><strong>${money(net)}</strong></div>
@@ -6815,7 +7139,7 @@
           ${calendarRecordHeader()}
           <div class="ds-empty-state ds-empty-state--compact" role="alert">
             <strong class="ds-card-title">無法讀取工作紀錄</strong>
-            <span class="ds-secondary">原始資料仍保留在此瀏覽器中，請重試讀取。</span>
+            <span class="ds-secondary">${escapeHtml(stateRecoveryNotice || "原始資料仍保留在此瀏覽器中，請重試讀取。")}</span>
             <button class="ds-button ds-button--secondary" type="button" data-calendar-retry>重試</button>
           </div>
         `;
@@ -7274,6 +7598,13 @@
 
     function updateCurrentWeather(weather) {
       if (!weather) return;
+      if (recordEditorState.open) {
+        recordEditorState.draft.weather = weather;
+        document.getElementById("weather").value = weather;
+        syncDetailChoiceButtons();
+        markRecordEditorDirty();
+        return;
+      }
       const date = document.getElementById("date").value || todayString();
       const entry = ensureEntryForDate(date);
       const previous = entry.weather || "";
@@ -7299,6 +7630,13 @@
 
     function updateCurrentShift(shift) {
       if (!shift) return;
+      if (recordEditorState.open) {
+        recordEditorState.draft.shift = shift;
+        document.getElementById("shift").value = shift;
+        syncDetailChoiceButtons();
+        markRecordEditorDirty();
+        return;
+      }
       const date = document.getElementById("date").value || todayString();
       const entry = ensureEntryForDate(date);
       entry.shift = shift;
@@ -7525,9 +7863,12 @@
       document.querySelectorAll("[data-income]").forEach(input => incomes[input.dataset.income] = Number(input.value || 0));
       const id = els.entryId.value || makeId();
       const date = document.getElementById("date").value;
-      const existingEntry = state.entries.find(item => item.id === id) || state.entries.find(item => item.date === date);
+      const existingEntry = recordEditorState.open
+        ? recordEditorState.draft
+        : state.entries.find(item => item.id === id) || state.entries.find(item => item.date === date);
       const expenses = { ...(existingEntry?.expenses || {}) };
       return {
+        ...(existingEntry || {}),
         id,
         date,
         shift: document.getElementById("shift").value,
@@ -7543,6 +7884,229 @@
         incomes,
         expenses
       };
+    }
+
+    function setRecordEditorStatus(message = "", type = "") {
+      els.recordEditorStatus.textContent = message;
+      els.recordEditorStatus.dataset.status = type || (message ? "pending" : "idle");
+    }
+
+    function markRecordEditorDirty() {
+      if (!recordEditorState.open) return;
+      recordEditorState.dirty = true;
+      setRecordEditorStatus(navigator.onLine ? "尚未儲存" : "離線，尚未儲存", "pending");
+    }
+
+    function renderCalendarExpenseList() {
+      if (!recordEditorState.open) {
+        els.calendarExpenseList.innerHTML = "";
+        return;
+      }
+      const expenses = Object.entries(recordEditorState.draft?.expenses || {})
+        .filter(([, amount]) => Number(amount) !== 0);
+      els.calendarExpenseList.innerHTML = expenses.length ? `
+        <h3 class="ds-card-title">這天已記錄的支出</h3>
+        ${expenses.map(([category, amount]) => `
+          <div class="calendar-expense-row">
+            <span>${escapeHtml(category)}　<strong class="ds-numeric">${money(amount)}</strong></span>
+            <button class="ds-button ds-button--text" type="button" data-calendar-remove-expense="${escapeAttr(category)}" aria-label="移除 ${escapeAttr(category)} 支出">移除</button>
+          </div>
+        `).join("")}
+      ` : "";
+    }
+
+    function showRecordEditorConfirm({ title, message, acceptLabel = "確認", destructive = false, onAccept }) {
+      recordEditorConfirmAction = onAccept;
+      els.recordEditorConfirmTitle.textContent = title;
+      els.recordEditorConfirmMessage.textContent = message;
+      els.recordEditorConfirmAccept.textContent = acceptLabel;
+      els.recordEditorConfirmAccept.className = `ds-button ${destructive ? "ds-button--danger" : "ds-button--primary"}`;
+      els.recordEditorConfirm.showModal();
+      window.requestAnimationFrame(() => els.recordEditorConfirmCancel.focus());
+    }
+
+    function moveSharedEditorToDialog() {
+      els.recordEditorContent.append(els.sharedIncomePanel, els.sharedDetailPanel);
+    }
+
+    function restoreSharedEditorToToday() {
+      els.sharedIncomePanelAnchor.after(els.sharedIncomePanel);
+      els.sharedDetailPanelAnchor.after(els.sharedDetailPanel);
+    }
+
+    function openCalendarRecordEditor(date, trigger = document.activeElement) {
+      const normalizedDate = normalizeDateKey(date);
+      if (!normalizedDate || normalizedDate >= todayString() || stateLoadError) return;
+      const existing = entryForDate(normalizedDate);
+      recordEditorState = {
+        open: true,
+        mode: existing ? "edit" : "create",
+        date: normalizedDate,
+        initialRecord: existing ? cloneStatePayload(existing) : null,
+        draft: existing ? cloneStatePayload(existing) : blankEntry(normalizedDate),
+        dirty: false,
+        saving: false,
+        returnFocus: trigger instanceof HTMLElement ? trigger : null
+      };
+      moveSharedEditorToDialog();
+      fillEntryFields(recordEditorState.draft);
+      const dateInput = document.getElementById("date");
+      dateInput.value = normalizedDate;
+      dateInput.disabled = true;
+      syncDateCardDisplay(dateInput);
+      els.formTitle.textContent = existing ? "編輯工作紀錄" : "新增工作紀錄";
+      els.detailForm.querySelector(".save-button").textContent = "完成";
+      els.recordEditorTitle.textContent = existing ? "編輯工作紀錄" : "新增工作紀錄";
+      els.recordEditorDate.textContent = `${formatCalendarFullDate(normalizedDate)}・${calendarWeekdayLabel(normalizedDate)}`;
+      els.recordEditorDelete.classList.toggle("hidden", !existing);
+      renderCalendarExpenseList();
+      setRecordEditorStatus(
+        navigator.onLine ? "" : "離線，可儲存在此裝置",
+        navigator.onLine ? "idle" : "offline"
+      );
+      els.recordEditorDialog.showModal();
+      document.body.classList.add("record-editor-open");
+      window.requestAnimationFrame(() => els.recordEditorClose.focus());
+    }
+
+    function finishRecordEditorClose() {
+      const returnFocus = recordEditorState.returnFocus;
+      recordEditorState.open = false;
+      restoreSharedEditorToToday();
+      document.getElementById("date").disabled = false;
+      els.detailForm.querySelector(".save-button").textContent = "儲存詳細紀錄";
+      els.detailForm.querySelector(".save-button").disabled = false;
+      els.recordEditorDialog.close();
+      document.body.classList.remove("record-editor-open");
+      els.calendarExpenseList.innerHTML = "";
+      resetForm();
+      renderCalendar();
+      window.requestAnimationFrame(() => returnFocus?.focus());
+    }
+
+    function requestRecordEditorClose() {
+      if (!recordEditorState.open || recordEditorState.saving) return;
+      if (!recordEditorState.dirty) {
+        finishRecordEditorClose();
+        return;
+      }
+      showRecordEditorConfirm({
+        title: "放棄尚未儲存的修改？",
+        message: `${formatCalendarFullDate(recordEditorState.date)}的變更尚未儲存。`,
+        acceptLabel: "放棄修改",
+        destructive: true,
+        onAccept: finishRecordEditorClose
+      });
+    }
+
+    function recordHasMeaningfulContent(entry) {
+      const hasIncome = Object.values(entry.incomes || {}).some(value => Number(value) > 0);
+      const hasExpense = Object.values(entry.expenses || {}).some(value => Number(value) > 0);
+      const hasOtherNumber = ["tips", "orders", "km"].some(key => Number(entry[key]) > 0);
+      return hasIncome
+        || hasExpense
+        || workMetrics(entry).durationMs > 0
+        || hasOtherNumber
+        || Boolean(String(entry.weather || "").trim())
+        || Boolean(String(entry.note || "").trim());
+    }
+
+    function validateCalendarRecord(entry) {
+      if (!normalizeDateKey(entry.date) || entry.date !== recordEditorState.date || entry.date >= todayString()) {
+        return "Calendar 只能儲存已過去的所選日期。";
+      }
+      const numberFields = [
+        ["休息時間", entry.breakMinutes, 1440],
+        ["手動工時", entry.manualHours, 24],
+        ["小費", entry.tips, maxPlatformIncome],
+        ["訂單數", entry.orders, 10000],
+        ["公里數", entry.km, 10000]
+      ];
+      const invalidNumber = numberFields.find(([, value, max]) => !Number.isFinite(Number(value)) || Number(value) < 0 || Number(value) > max);
+      if (invalidNumber) return `${invalidNumber[0]}的數值無效。`;
+      const invalidIncome = Object.values(entry.incomes || {}).some(value =>
+        !Number.isSafeInteger(Number(value)) || Number(value) < 0 || Number(value) > maxPlatformIncome
+      );
+      if (invalidIncome) return "平台收入必須是 0 至 99,999,999 的整數。";
+      const invalidExpense = Object.values(entry.expenses || {}).some(value =>
+        !Number.isFinite(Number(value)) || Number(value) < 0 || Number(value) > maxPlatformIncome
+      );
+      if (invalidExpense) return "支出金額必須是有效的非負數。";
+      if (Boolean(entry.startTime) !== Boolean(entry.endTime)) return "開始與結束時間必須同時填寫。";
+      if (entry.startTime && entry.endTime && !Number(entry.manualHours)) {
+        const start = minutes(entry.startTime);
+        let end = minutes(entry.endTime);
+        if (end < start) end += 1440;
+        if (Number(entry.breakMinutes) > end - start) return "休息時間不可超過總經過時間。";
+      }
+      if (!recordHasMeaningfulContent(entry)) return "請至少輸入收入、支出、工時或其他工作紀錄。";
+      return "";
+    }
+
+    function buildCalendarRecordFromForm() {
+      const next = { ...recordEditorState.draft, ...formData(), date: recordEditorState.date };
+      const original = recordEditorState.initialRecord;
+      const timeChanged = original && ["startTime", "endTime", "breakMinutes", "manualHours"]
+        .some(key => String(original[key] ?? "") !== String(next[key] ?? ""));
+      if (timeChanged) delete next.workSession;
+      next.incomes ||= {};
+      next.expenses ||= {};
+      next.expenseNotes ||= {};
+      return next;
+    }
+
+    function commitCalendarRecord() {
+      if (!recordEditorState.open || recordEditorState.saving) return;
+      const nextRecord = buildCalendarRecordFromForm();
+      const validationError = validateCalendarRecord(nextRecord);
+      if (validationError) {
+        setRecordEditorStatus(validationError, "error");
+        return;
+      }
+      recordEditorState.saving = true;
+      els.detailForm.querySelector(".save-button").disabled = true;
+      setRecordEditorStatus("儲存中…", "saving");
+      const nextState = cloneStatePayload(state);
+      const sameDateIndex = nextState.entries.findIndex(entry => entry.date === recordEditorState.date);
+      if (sameDateIndex >= 0) nextState.entries[sameDateIndex] = nextRecord;
+      else nextState.entries.push(nextRecord);
+      Object.keys(nextRecord.expenses || {}).forEach(category => {
+        if (!nextState.expenses.includes(category)) nextState.expenses.push(category);
+      });
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        recordEditorState.saving = false;
+        els.detailForm.querySelector(".save-button").disabled = false;
+        setRecordEditorStatus("儲存失敗，修改尚未寫入；請再試一次。", "error");
+        return;
+      }
+      recordEditorState.dirty = false;
+      setRecordEditorStatus(
+        navigator.onLine ? "已儲存在此裝置" : "已離線儲存在此裝置",
+        navigator.onLine ? "saved" : "offline"
+      );
+      renderAll();
+      window.setTimeout(finishRecordEditorClose, 350);
+    }
+
+    function deleteCalendarRecord() {
+      if (!recordEditorState.open || !recordEditorState.initialRecord) return;
+      showRecordEditorConfirm({
+        title: "刪除這天的工作紀錄？",
+        message: `${formatCalendarFullDate(recordEditorState.date)}的收入、支出與工時將一併刪除。此操作無法復原。`,
+        acceptLabel: "刪除紀錄",
+        destructive: true,
+        onAccept: () => {
+          const nextState = cloneStatePayload(state);
+          nextState.entries = nextState.entries.filter(entry => entry.date !== recordEditorState.date);
+          if (!persistStatePayload(nextState, { updateMemory: true })) {
+            setRecordEditorStatus("刪除失敗，原紀錄仍完整保留。", "error");
+            return;
+          }
+          recordEditorState.dirty = false;
+          finishRecordEditorClose();
+          announceCalendar("工作紀錄已刪除");
+        }
+      });
     }
 
     function exportCsv() {
@@ -7774,6 +8338,27 @@
       const mode = input.dataset.incomeMode || "total";
       const raw = String(input.value || "").trim().replaceAll(",", "");
       const amount = raw === "" ? 0 : Number(raw);
+      if (recordEditorState.open) {
+        const invalid = !profile
+          || !platform
+          || date !== recordEditorState.date
+          || mode !== "total"
+          || input.dataset.invalidAmount === "negative"
+          || !Number.isSafeInteger(amount)
+          || amount < 0
+          || amount > maxPlatformIncome;
+        const previousDraftAmount = Number(recordEditorState.draft?.incomes?.[platform] || 0);
+        if (invalid) {
+          restoreIncomeInput(input, platform || input.dataset.inlineIncome || "平台", previousDraftAmount);
+          setRecordEditorStatus("平台收入必須是 0 至 99,999,999 的整數。", "error");
+          return;
+        }
+        recordEditorState.draft.incomes ||= {};
+        recordEditorState.draft.incomes[platform] = amount;
+        restoreIncomeInput(input, platform, amount);
+        markRecordEditorDirty();
+        return;
+      }
       const existingEntry = entryForDate(date);
       const entry = existingEntry || ensureEntryForDate(date);
       const hadIncome = Boolean(platform && Object.prototype.hasOwnProperty.call(entry.incomes, platform));
@@ -7974,6 +8559,8 @@
         resetForm();
         navigateTo("today");
       }
+      const editorTrigger = event.target.closest("[data-calendar-add], [data-calendar-edit]");
+      if (editorTrigger) openCalendarRecordEditor(calendarState.selectedDate, editorTrigger);
       if (event.target.closest("[data-calendar-retry]")) retryCalendarRead();
     });
     els.calendarGrid.addEventListener("pointerdown", event => beginCalendarGesture("month", event));
@@ -7982,6 +8569,36 @@
     els.calendarRecordCard.addEventListener("pointerdown", event => beginCalendarGesture("day", event));
     els.calendarRecordCard.addEventListener("pointerup", event => finishCalendarGesture(event));
     els.calendarRecordCard.addEventListener("pointercancel", event => finishCalendarGesture(event, true));
+    els.recordEditorClose.addEventListener("click", requestRecordEditorClose);
+    els.recordEditorDelete.addEventListener("click", deleteCalendarRecord);
+    els.recordEditorDialog.addEventListener("cancel", event => {
+      event.preventDefault();
+      requestRecordEditorClose();
+    });
+    els.recordEditorConfirm.addEventListener("cancel", event => {
+      event.preventDefault();
+      recordEditorConfirmAction = null;
+      els.recordEditorConfirm.close();
+    });
+    els.recordEditorConfirmCancel.addEventListener("click", () => {
+      recordEditorConfirmAction = null;
+      els.recordEditorConfirm.close();
+    });
+    els.recordEditorConfirmAccept.addEventListener("click", () => {
+      const action = recordEditorConfirmAction;
+      recordEditorConfirmAction = null;
+      els.recordEditorConfirm.close();
+      action?.();
+    });
+    els.calendarExpenseList.addEventListener("click", event => {
+      const remove = event.target.closest("[data-calendar-remove-expense]");
+      if (!remove || !recordEditorState.open) return;
+      const category = remove.dataset.calendarRemoveExpense;
+      delete recordEditorState.draft.expenses?.[category];
+      delete recordEditorState.draft.expenseNotes?.[category];
+      renderCalendarExpenseList();
+      markRecordEditorDirty();
+    });
     [els.weekMonthFilter, els.monthReportFilter, els.platformMonthFilter].forEach(select => {
       select.addEventListener("change", () => updateReportMonth(select.value));
     });
@@ -7989,6 +8606,10 @@
     els.entryForm.addEventListener("submit", event => event.preventDefault());
     els.detailForm.addEventListener("submit", event => {
       event.preventDefault();
+      if (recordEditorState.open) {
+        commitCalendarRecord();
+        return;
+      }
       const entry = formData();
       const index = state.entries.findIndex(item => item.id === entry.id);
       if (index >= 0) state.entries[index] = { ...state.entries[index], ...entry };
@@ -8008,6 +8629,7 @@
 
     els.detailForm.addEventListener("input", event => {
       if (event.target.id === "date") syncDateCardDisplay(event.target);
+      if (recordEditorState.open && event.target.id !== "date") markRecordEditorDirty();
       updateQuickPreview();
     });
     els.detailForm.addEventListener("change", event => {
@@ -8021,6 +8643,7 @@
     els.workTimeSection.addEventListener("toggle", event => {
       updateQuickPreview();
       if (!event.isTrusted) return;
+      if (recordEditorState.open) return;
       state.settings.timeDetailsOpen = event.currentTarget.open;
       saveState();
     });
