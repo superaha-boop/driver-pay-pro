@@ -1,6 +1,6 @@
 # Driver Pay Pro 開發交接摘要
 
-更新日期：2026-07-24
+更新日期：2026-07-25
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
@@ -244,6 +244,42 @@ Sprint 完成且通過適用驗證後，Codex 可以直接：
 
 - iPhone Safari 與安裝式 PWA 仍需由 Product Owner 進行實機啟動驗收；內建響應式瀏覽器不能取代真機。
 
+### G. 週報工時與完整週期修正
+
+工作分支：`codex/add-brand-attribution-20260724`
+
+根本原因：
+
+- 原 `calcHours()` 對所有 `workSession.status === "running"` 的紀錄都使用 `Date.now()` 加上目前區段；歷史日期只要未正常收工，就會在週報與月度統計中持續累加到今天，產生 617.4 小時等異常值。
+- 原 `weekStart()` 用本地時間計算後再以 UTC `toISOString()` 轉回日期。台北時區會讓週起始與週結束各退一天，因此畫面出現 `7/12－7/17`、`7/19－7/24` 的六天區間。
+
+已完成：
+
+- `workMetrics()` 成為唯一工時來源，內部統一使用毫秒；支援手動小時、開始／結束時間、跨午夜、休息分鐘及既有 `workSession`。
+- `hourlyRate()` 成為唯一平均時薪來源；工時小於 1 分鐘時回傳 0，不會出現 NaN 或 Infinity。
+- 已停止歷史未收工 session 跟著現在時間繼續增長；只讀取既有 `accumulatedActiveMs` 或可信的開始／結束時間，不改寫舊紀錄。
+- 首頁、週報、月度摘要、CSV、AI 本月平均時薪及工時提醒均引用同一套工時／時薪邏輯。
+- 週報固定為星期日至星期六；使用本地日期加減天數，不再使用 UTC 日期切片。
+- 跨月週會納入同一完整週中位於相鄰月份的既有紀錄，不因月份篩選遺漏週內資料。
+
+本機驗證：
+
+- 案例 A：08:00－17:00、休息 60 分鐘＝8 小時；收入 4,000，平均時薪 500。
+- 案例 B：10:00－15:30、無休息＝5.5 小時；收入 2,750，平均時薪 500。
+- 案例 C：22:00－翌日 02:00、休息 30 分鐘＝3.5 小時。
+- 案例 D：收入 2,340、工時 0＝平均時薪 0，且為有限數字。
+- 案例 E：`7/19－7/25`、`7/12－7/18` 均為完整 7 天；跨月與跨年格式正確。
+- 同型歷史 running session 舊算法為 617.4 小時，新讀取層為 0 小時且不修改原始資料。
+- 現有本機 2026-07 紀錄：週報 `7/12－7/18` 顯示 8 小時，月度摘要顯示 8 小時；月度與 AI 平均時薪一致。
+- 320、390、393、430、1024px 均無水平 overflow，Console 無 error 或 warning。
+- Inline JavaScript、Service Worker、manifest 與 `git diff --check` 通過。
+
+資料與實機狀態：
+
+- 沒有修改 `driverPayApp.v2`、資料欄位、Supabase Schema、正式資料或 PWA 資源。
+- 無法從 repository 判定使用者裝置上是哪一筆歷史紀錄未收工；本次確認異常值是讀取時計算持續增長，不是已儲存 617.4 小時，也不需要批量修復。
+- iPhone Safari 與安裝式 PWA 仍需 Product Owner 實機驗收。
+
 ---
 
 ## 4. 最新設計決定
@@ -368,6 +404,9 @@ SHA-256：
 - 月份明細渲染：`renderEntries()`，約 `index.html:2756`
 - 週摘要渲染：`renderWeeks()`，約 `index.html:2841`
 - 工作控制狀態：`updateWorkControls()`，約 `index.html:3027`
+- 共用工時計算：`workMetrics()`，請以函式名稱搜尋
+- 共用平均時薪：`hourlyRate()`，請以函式名稱搜尋
+- 週起始日：`weekStart()`，請以函式名稱搜尋
 - 天氣狀態：`updateCurrentWeather()`，約 `index.html:3054`
 - 平台收入提交：`commitInlineIncome()`，約 `index.html:3351`
 - Yoxi 單筆新增：`startYoxiAdd()`，約 `index.html:3403`
