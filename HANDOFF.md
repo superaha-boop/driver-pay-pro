@@ -14,8 +14,8 @@ Driver Pay Pro 目前是單頁式網頁 App，主要介面、樣式與邏輯集�
 
 ### Git 現況
 
-- 目前分支：`main`
-- 本次發布工作分支：`codex/add-brand-attribution-20260724`
+- 目前分支：`codex/fix-monday-week-worktime-20260725`
+- 上一次發布工作分支：`codex/add-brand-attribution-20260724`
 - 本次作者資訊、About 精簡與工時／週期修正已合併至 `main`。
 - 正式發布整合提交：`823bfdf merge: release latest Driver Pay Pro updates`
 - Vercel Production Deployment：`dpl_Fgh8JyF9FQsB5k7nFb5Adr4zE44G`，狀態 `READY`，穩定網址 `https://driver-pay-app.vercel.app/`
@@ -263,7 +263,7 @@ Sprint 完成且通過適用驗證後，Codex 可以直接：
 - `hourlyRate()` 成為唯一平均時薪來源；工時小於 1 分鐘時回傳 0，不會出現 NaN 或 Infinity。
 - 已停止歷史未收工 session 跟著現在時間繼續增長；只讀取既有 `accumulatedActiveMs` 或可信的開始／結束時間，不改寫舊紀錄。
 - 首頁、週報、月度摘要、CSV、AI 本月平均時薪及工時提醒均引用同一套工時／時薪邏輯。
-- 週報固定為星期日至星期六；使用本地日期加減天數，不再使用 UTC 日期切片。
+- 前一版週報曾固定為星期日至星期六；本規則已由本文件 H 節的星期一至星期日正式定義取代。
 - 跨月週會納入同一完整週中位於相鄰月份的既有紀錄，不因月份篩選遺漏週內資料。
 
 本機驗證：
@@ -272,7 +272,7 @@ Sprint 完成且通過適用驗證後，Codex 可以直接：
 - 案例 B：10:00－15:30、無休息＝5.5 小時；收入 2,750，平均時薪 500。
 - 案例 C：22:00－翌日 02:00、休息 30 分鐘＝3.5 小時。
 - 案例 D：收入 2,340、工時 0＝平均時薪 0，且為有限數字。
-- 案例 E：`7/19－7/25`、`7/12－7/18` 均為完整 7 天；跨月與跨年格式正確。
+- 前一版案例 E 使用星期日至星期六；現行驗收案例請以本文件 H 節為準。
 - 同型歷史 running session 舊算法為 617.4 小時，新讀取層為 0 小時且不修改原始資料。
 - 現有本機 2026-07 紀錄：週報 `7/12－7/18` 顯示 8 小時，月度摘要顯示 8 小時；月度與 AI 平均時薪一致。
 - 320、390、393、430、1024px 均無水平 overflow，Console 無 error 或 warning。
@@ -283,6 +283,29 @@ Sprint 完成且通過適用驗證後，Codex 可以直接：
 - 沒有修改 `driverPayApp.v2`、資料欄位、Supabase Schema、正式資料或 PWA 資源。
 - 無法從 repository 判定使用者裝置上是哪一筆歷史紀錄未收工；本次確認異常值是讀取時計算持續增長，不是已儲存 617.4 小時，也不需要批量修復。
 - iPhone Safari 與安裝式 PWA 仍需 Product Owner 實機驗收。
+
+### H. 星期一週期、619 小時與 PWA 更新修正
+
+工作分支：`codex/fix-monday-week-worktime-20260725`
+
+根本原因：
+
+- 舊版 `weekStart()` 先以台灣本地時間算出星期一，再使用 `toISOString().slice(0, 10)` 轉回日期字串，導致星期一顯示成前一天星期日；週末也因同一 UTC 轉換從星期日退成星期六，因此出現 `7/12－7/17`、`7/19－7/24`。
+- 舊版 `calcHours()` 對任何 `workSession.status === "running"` 的紀錄加入 `Date.now() - segmentStartedAt`。歷史未收工紀錄會隨真實時間持續成長；固定測試中從 `2026-06-29 20:00` 到 `2026-07-25 15:00` 正好是 619 小時。
+- 工時與週期程式雖已在 `d58d0a1` 修正，但 `sw.js` 從初始版本到該發布的內容雜湊與 cache 名稱完全未變，已安裝 PWA 沒有取得新的 worker 版本；舊 App Shell 在離線回退或未真正重載時仍可能繼續執行舊演算法。
+
+本次修正：
+
+- `weekStart()` 改為星期一，`weekEnd()` 固定為開始日加 6 天；date-only 曆法運算不再把日期字串轉成台灣午夜後再序列化成 UTC。
+- `todayString()` 與 session 日期比對明確使用 `Asia/Taipei`。
+- 保留毫秒制 `workMetrics()` 與 `hourlyRate()` 唯一來源；歷史 running session 不會隨目前時間增加。
+- Service Worker cache 更新為 `driver-pay-pro-v05-monday-week-worktime-fix`，navigation 強制走 network-first 並略過 HTTP cache；註冊使用 `updateViaCache: "none"`，新 worker 接管舊 PWA 後安全重載一次。
+- 新增 `tests/reporting.test.js`，直接擷取並測試 `index.html` 的正式函式，涵蓋星期一、星期日、跨月、跨年、619 小時重現、33.5 小時週總和、時薪與 PWA 更新契約。
+
+資料限制：
+
+- Repository 與桌面瀏覽器無法讀取使用者 iPhone 的 `driverPayApp.v2`，因此不能列出手機上該筆紀錄的 ID 或未提供的原始 JSON。
+- 619 小時的運算來源已由舊函式與持續增長現象確認；本次不清除、不改寫或批量修復任何手機資料。若更新後仍顯示固定的異常值，需由使用者提供該裝置的原始資料匯出後再判定是否已有異常 `accumulatedActiveMs` 被持久化。
 
 ---
 
