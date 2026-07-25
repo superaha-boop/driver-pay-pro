@@ -103,7 +103,8 @@ Driver Pay Pro 採穩重、清楚、低干擾的深綠與灰綠系統。主要�
 - 對應：Sun、CloudSun、Cloud、CloudRain、CloudLightning、CloudFog。
 - 無天氣資料或未對應文字不顯示占位 icon。
 - SVG 必須保留 `role="img"`、`aria-label` 與 `<title>`。
-- 底部導覽目前使用文字符號作為 icon；TODO：是否統一改為同一套 SVG icon 尚未決定。
+- 底部導覽固定使用 Lucide inline SVG：CircleDollarSign、CalendarDays、ChartNoAxesColumnIncreasing、Sparkles、UserRound。
+- 五個圖示固定 24px、2px stroke；文字 14px，一般 500、選中 600，選中狀態不放大。
 
 ## Card Style
 

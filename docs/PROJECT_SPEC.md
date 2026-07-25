@@ -88,7 +88,7 @@ driverPayApp.v2
 | `platforms` | 平台名稱陣列，可由 Driver Space 新增或移除 |
 | `expenses` | 支出類別陣列，可新增或移除 |
 | `entries` | 每日營運紀錄陣列 |
-| `settings` | 每日／每月目標、平台實拿比例及相容性設定 |
+| `settings` | 每日／每月目標、平台實拿比例、月曆／報表 UI 狀態及相容性設定 |
 
 每日 `entry` 目前可能包含：
 
@@ -100,6 +100,12 @@ driverPayApp.v2
 - `workSession`：計時狀態、分段開始時間、累積工作／休息毫秒數與結束時間
 - `incomeRecords`：Yoxi 單筆收入紀錄
 - `weatherHistory`：為舊資料相容保留；目前主要顯示使用 `weather`
+
+`settings` 的導覽狀態：
+
+- `calendarMonth`：月曆最後選擇月份。
+- `reportMonth`：週報、月報、平台共用月份。
+- `lastReportView`：最後查看的 `week`、`month` 或 `platform`；無效值回復 `week`。
 
 相容性規則：
 
@@ -142,10 +148,12 @@ driverPayApp.v2
 底部主導覽目前有五個入口：
 
 1. `今天`：Home 與每日輸入。
-2. `月曆`：週報，並可切換月報與平台報表；同頁下方顯示月份明細。
-3. `分析`：直接進入平台分析，也可切換週報與月報。
+2. `月曆`：月份明細、歷史每日紀錄、編輯與刪除。
+3. `報表`：同頁切換週報、月報與平台。
 4. `AI`：規則式 AI 營運助理。
 5. `Driver`：平台、支出、比例、目標與匯出設定。
+
+底部圖示依序使用 Lucide `CircleDollarSign`、`CalendarDays`、`ChartNoAxesColumnIncreasing`、`Sparkles`、`UserRound` inline SVG；固定 24px、`stroke-width: 2`。文字 14px，選中只改品牌綠與 600 字重。
 
 ## Dashboard
 
@@ -174,17 +182,20 @@ driverPayApp.v2
 
 ## Calendar 與報表
 
-月曆入口預設顯示週報：
+月曆只顯示月份明細：
 
-- 月份篩選器。
-- 以週一至週日分組。
-- 週期、總額、淨收入、工時與平均時薪。
+- 月曆月份獨立保存。
+- 每日列顯示日期、星期、班別、天氣、平台收入、總收入、支出、淨收入、實際工時、編輯與刪除。
+- 編輯與刪除可點擊區域至少 44px，刪除保留確認。
+
+報表使用固定主標題「報表」與三個內部分頁：
+
+- 週報：以週一至週日分組，顯示週期、總收入、支出、淨收入、工時與平均時薪。
+- 月報：每月淨收入目標、月總收入、月支出、月淨收入、實際工時、平均時薪與每日收入走勢。
+- 平台：本月平台實拿收入、占比與平台收入排行。
 - 週期同年不重複年份，跨年才在兩端顯示年份。
-
-報表切換器另提供：
-
-- 月報：每月淨收入目標進度與每日收入相對走勢。
-- 平台：本月平台實拿收入、占比與日均。
+- 三個分頁共用 `reportMonth`，底部始終選中「報表」；離開再回來使用 `lastReportView`。
+- hash 路由支援 `#reports/week`、`#reports/month`、`#reports/platform`，並相容舊 `#week`、`#month`、`#platform`、`#analysis`。
 
 ## 月份明細
 
@@ -255,7 +266,7 @@ driverPayApp.v2
 ## PWA 與離線行為
 
 - Manifest 使用 standalone、直向優先與繁體中文。
-- Service Worker cache 名稱為 `driver-pay-pro-v05-monday-week-worktime-fix`。
+- Service Worker cache 名稱為 `driver-pay-pro-v06-calendar-report-navigation`。
 - App Shell 包含首頁、manifest、主要 icon 與 hero 圖。
 - navigation 採略過 HTTP cache 的 network-first：成功時更新 `index.html` 快取，離線時才 fallback；其他同源 GET 資源成功時更新各自快取。
 - activate 會刪除非目前名稱的舊快取並 claim clients。

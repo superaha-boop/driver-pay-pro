@@ -678,6 +678,21 @@
       border: 1px solid var(--line);
     }
 
+    .entry-action-button {
+      width: auto;
+      min-width: 64px;
+      min-height: 44px;
+      padding: 0 12px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .entry-action-button.danger {
+      color: var(--danger);
+      background: #fff8f7;
+      border-color: rgba(200, 66, 59, .24);
+    }
+
     .empty {
       padding: 34px;
       text-align: center;
@@ -1264,32 +1279,50 @@
     .nav button,
     .nav button:hover {
       min-width: 0;
-      min-height: 52px;
+      min-height: 56px;
       padding: 4px 2px;
       display: grid;
       place-items: center;
       align-content: center;
-      gap: 3px;
+      gap: 4px;
       border-radius: 12px;
       background: transparent;
       color: var(--muted);
-      font-size: 11px;
+      font-size: 14px;
+      font-weight: 500;
       line-height: 1.1;
+      white-space: nowrap;
     }
 
     .nav button.active {
       background: transparent;
       color: var(--brand-strong);
-      font-weight: 700;
+      font-weight: 600;
     }
 
     .nav .nav-icon {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 24px;
+    }
+
+    .nav .nav-icon svg {
+      width: 24px;
+      height: 24px;
       display: block;
-      width: 25px;
-      height: 25px;
-      font-size: 18px;
-      line-height: 25px;
-      text-align: center;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .nav-label {
+      min-width: 0;
+      display: block;
+      white-space: nowrap;
     }
 
     .side-summary,
@@ -2503,16 +2536,54 @@
       min-width: 0;
     }
 
-    .history-panel {
-      display: none;
+    .report-content {
+      min-width: 0;
     }
 
-    body[data-active-view="week"] .history-panel {
-      display: block;
+    .month-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .month-summary-grid > div {
+      min-width: 0;
+      padding: 12px;
+      display: grid;
+      gap: 4px;
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+
+    .month-summary-grid span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .month-summary-grid strong {
+      color: var(--text);
+      font-size: 18px;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+
+    .empty-state {
+      display: grid;
+      gap: 6px;
+    }
+
+    .empty-state strong {
+      color: var(--text);
+      font-size: 16px;
+    }
+
+    .empty-state span {
+      color: var(--muted);
+      font-size: 14px;
     }
 
     @media (max-width: 699px) {
-      #view-week .panel-body {
+      [data-report-panel="week"] .panel-body {
         padding: 12px;
       }
 
@@ -2627,6 +2698,18 @@
         text-align: right;
       }
 
+      .daily-entry-total-wrap {
+        display: grid;
+        justify-items: end;
+        gap: 1px;
+      }
+
+      .daily-entry-total-wrap span {
+        color: #7e8982;
+        font-size: 12px;
+        font-weight: 500;
+      }
+
       .daily-entry-meta {
         min-width: 0;
         color: #7e8982;
@@ -2661,10 +2744,8 @@
       .daily-entry-bottom {
         min-width: 0;
         margin-top: 7px;
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 6px;
+        display: grid;
+        gap: 8px;
       }
 
       .daily-income-items {
@@ -2699,19 +2780,50 @@
         font-size: 13px;
       }
 
+      .daily-entry-summary {
+        min-width: 0;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .daily-entry-summary span {
+        min-width: 0;
+        display: grid;
+        gap: 2px;
+        color: #7e8982;
+        font-size: 12px;
+      }
+
+      .daily-entry-summary strong {
+        color: #203128;
+        font-size: 13px;
+        font-weight: 650;
+        overflow-wrap: anywhere;
+      }
+
       .daily-entry-actions {
         margin: 0;
         padding: 0;
         display: flex;
-        flex: 0 0 auto;
-        gap: 4px;
+        justify-content: flex-end;
+        gap: 8px;
         border: 0;
       }
 
       .daily-entry-actions .icon-button {
-        width: 28px;
-        height: 28px;
-        font-size: 11px;
+        width: auto;
+        min-width: 64px;
+        height: 44px;
+        padding: 0 14px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .daily-entry-actions .icon-button.danger {
+        color: var(--danger);
+        background: #fff8f7;
+        border-color: rgba(200, 66, 59, .24);
       }
 
       .history-panel {
@@ -3563,11 +3675,36 @@
       </div>
 
       <nav class="nav" aria-label="主選單">
-        <button class="active" data-view="today"><span class="nav-icon">●</span>今天</button>
-        <button data-view="week"><span class="nav-icon">▦</span>月曆</button>
-        <button data-view="platform"><span class="nav-icon">▥</span>分析</button>
-        <button data-view="ai"><span class="nav-icon">✦</span>AI</button>
-        <button data-view="settings"><span class="nav-icon">♙</span>Driver</button>
+        <button class="active" data-view="today" data-icon="CircleDollarSign">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+          </span>
+          <span class="nav-label">今天</span>
+        </button>
+        <button data-view="calendar" data-icon="CalendarDays">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M8 2v4M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"></path></svg>
+          </span>
+          <span class="nav-label">月曆</span>
+        </button>
+        <button data-view="reports" data-icon="ChartNoAxesColumnIncreasing">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M6 20v-4M12 20V10M18 20V4"></path></svg>
+          </span>
+          <span class="nav-label">報表</span>
+        </button>
+        <button data-view="ai" data-icon="Sparkles">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="m12 3-1.7 4.6a4 4 0 0 1-2.4 2.4L3 12l4.9 2a4 4 0 0 1 2.4 2.4L12 21l1.7-4.6a4 4 0 0 1 2.4-2.4l4.9-2-4.9-2a4 4 0 0 1-2.4-2.4Z"></path><path d="M5 3v4M7 5H3M19 17v4M21 19h-4"></path></svg>
+          </span>
+          <span class="nav-label">AI</span>
+        </button>
+        <button data-view="settings" data-icon="UserRound">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"></path><circle cx="12" cy="8" r="5"></circle></svg>
+          </span>
+          <span class="nav-label">Driver</span>
+        </button>
       </nav>
 
       <div class="side-summary">
@@ -3797,74 +3934,82 @@
         </div>
       </section>
 
-      <section id="view-week" class="view hidden">
+      <section id="view-calendar" class="view hidden">
+        <div class="panel history-panel calendar-history-panel">
+          <div class="panel-head report-panel-head">
+            <h3>月份明細</h3>
+            <select id="monthFilter" aria-label="月曆月份篩選"></select>
+          </div>
+          <div class="table-wrap" id="entriesTable"></div>
+        </div>
+      </section>
+
+      <section id="view-reports" class="view hidden">
         <div class="report-switcher" aria-label="報表切換">
           <button class="active" data-report-view="week">週報</button>
           <button data-report-view="month">月報</button>
           <button data-report-view="platform">平台</button>
         </div>
-        <div class="panel">
-          <div class="panel-head report-panel-head">
-            <h3>每週總額</h3>
-            <select id="weekMonthFilter" aria-label="週報月份篩選"></select>
-          </div>
-          <div class="panel-body">
-            <div class="week-list" id="weekList"></div>
+        <div class="report-content" data-report-panel="week">
+          <div class="panel">
+            <div class="panel-head report-panel-head">
+              <h3>每週總額</h3>
+              <select id="weekMonthFilter" aria-label="週報月份篩選"></select>
+            </div>
+            <div class="panel-body">
+              <div class="week-list" id="weekList"></div>
+            </div>
           </div>
         </div>
-      </section>
 
-      <section id="view-month" class="view hidden">
-        <div class="report-switcher" aria-label="報表切換">
-          <button data-report-view="week">週報</button>
-          <button class="active" data-report-view="month">月報</button>
-          <button data-report-view="platform">平台</button>
-        </div>
-        <div class="layout">
-          <div class="panel">
-            <div class="panel-head">
-              <h3>月份選擇</h3>
+        <div class="report-content hidden" data-report-panel="month">
+          <div class="layout">
+            <div class="panel">
+              <div class="panel-head">
+                <h3>月份選擇</h3>
+              </div>
+              <div class="panel-body">
+                <label>查看月份
+                  <select id="monthReportFilter"></select>
+                </label>
+                <div style="height: 16px"></div>
+                <div class="bars" id="goalProgress"></div>
+              </div>
             </div>
-            <div class="panel-body">
-              <label>查看月份
-                <select id="monthReportFilter"></select>
-              </label>
-              <div style="height: 16px"></div>
-              <div class="bars" id="goalProgress"></div>
+            <div class="panel">
+              <div class="panel-head">
+                <h3>月份總覽</h3>
+              </div>
+              <div class="panel-body" id="monthSummaryMetrics"></div>
+            </div>
+            <div class="panel" id="dailyTrendPanel">
+              <div class="panel-head">
+                <h3>每日收入走勢</h3>
+              </div>
+              <div class="panel-body">
+                <div class="bars" id="dailyBars"></div>
+              </div>
             </div>
           </div>
-          <div class="panel">
-            <div class="panel-head">
-              <h3>每日收入走勢</h3>
-            </div>
-            <div class="panel-body">
-              <div class="bars" id="dailyBars"></div>
-            </div>
-          </div>
         </div>
-      </section>
 
-      <section id="view-platform" class="view hidden">
-        <div class="report-switcher" aria-label="報表切換">
-          <button data-report-view="week">週報</button>
-          <button data-report-view="month">月報</button>
-          <button class="active" data-report-view="platform">平台</button>
-        </div>
-        <div class="layout">
-          <div class="panel">
-            <div class="panel-head">
-              <h3>平台收入占比</h3>
-              <select id="platformMonthFilter"></select>
+        <div class="report-content hidden" data-report-panel="platform">
+          <div class="layout">
+            <div class="panel">
+              <div class="panel-head report-panel-head">
+                <h3>平台收入占比</h3>
+                <select id="platformMonthFilter" aria-label="平台報表月份篩選"></select>
+              </div>
+              <div class="panel-body">
+                <div class="bars" id="platformBars"></div>
+              </div>
             </div>
-            <div class="panel-body">
-              <div class="bars" id="platformBars"></div>
+            <div class="panel" id="platformRankingPanel">
+              <div class="panel-head">
+                <h3>平台收入排行</h3>
+              </div>
+              <div class="table-wrap" id="platformTable"></div>
             </div>
-          </div>
-          <div class="panel">
-            <div class="panel-head">
-              <h3>平台效率</h3>
-            </div>
-            <div class="table-wrap" id="platformTable"></div>
           </div>
         </div>
       </section>
@@ -4038,10 +4183,6 @@
         </p>
       </section>
 
-      <section class="panel history-panel">
-        <div class="panel-head report-panel-head"><h3>月份明細</h3><select id="monthFilter" aria-label="月份篩選"></select></div>
-        <div class="table-wrap" id="entriesTable"></div>
-      </section>
     </main>
   </div>
 
@@ -4138,6 +4279,7 @@
 
     const state = loadState();
     let activeView = "today";
+    let activeReportView = state.settings.lastReportView;
     let overviewVisible = false;
     let expenseDraft = createExpenseDraft();
     let expenseToastTimer = 0;
@@ -4147,9 +4289,8 @@
 
     const titles = {
       today: ["今日輸入", "每天花一分鐘記錄收入、工時與支出。"],
-      week: ["週報表", "比較每一週總額、工時、時薪與淨收入。"],
-      month: ["月報表", "追蹤整個月份收入、成本與目標進度。"],
-      platform: ["平台分析", "看出 Uber、LINE GO、Yoxi、55688 與其他來源的表現。"],
+      calendar: ["月曆", "查看、編輯與管理每日歷史紀錄。"],
+      reports: ["報表", "查看週報、月報與平台收入統計。"],
       ai: ["AI 營運助理", "根據你的收入與工時紀錄提供分析"],
       settings: ["Driver Space", "調整平台、支出類別與收入目標。"],
       about: ["關於 Driver Pay Pro", "產品、版本與作者資訊。"]
@@ -4181,11 +4322,16 @@
       weekMonthFilter: document.getElementById("weekMonthFilter"),
       monthReportFilter: document.getElementById("monthReportFilter"),
       platformMonthFilter: document.getElementById("platformMonthFilter"),
+      reportButtons: document.querySelectorAll("[data-report-view]"),
+      reportPanels: document.querySelectorAll("[data-report-panel]"),
       weekList: document.getElementById("weekList"),
       dailyBars: document.getElementById("dailyBars"),
       goalProgress: document.getElementById("goalProgress"),
+      monthSummaryMetrics: document.getElementById("monthSummaryMetrics"),
+      dailyTrendPanel: document.getElementById("dailyTrendPanel"),
       platformBars: document.getElementById("platformBars"),
       platformTable: document.getElementById("platformTable"),
+      platformRankingPanel: document.getElementById("platformRankingPanel"),
       aiTodayAdvice: document.getElementById("aiTodayAdvice"),
       aiMonthInsights: document.getElementById("aiMonthInsights"),
       aiPlatformInsights: document.getElementById("aiPlatformInsights"),
@@ -4249,10 +4395,24 @@
         monthlyGoal: Number(settings.monthlyGoal || 0),
         dailyGoal: Number(settings.dailyGoal || 0),
         timeDetailsOpen: Boolean(settings.timeDetailsOpen),
+        calendarMonth: normalizeMonthKey(settings.calendarMonth),
+        reportMonth: normalizeMonthKey(settings.reportMonth),
+        lastReportView: normalizeReportView(settings.lastReportView),
         expenseShortcuts: normalizeExpenseShortcuts(settings.expenseShortcuts),
         platformProfiles: normalizePlatformProfiles(settings, platforms),
         platformRates
       };
+    }
+
+    function normalizeMonthKey(value, fallback = currentMonth()) {
+      const match = /^(\d{4})-(\d{2})$/.exec(String(value || ""));
+      if (!match) return fallback;
+      const month = Number(match[2]);
+      return month >= 1 && month <= 12 ? `${match[1]}-${match[2]}` : fallback;
+    }
+
+    function normalizeReportView(value) {
+      return ["week", "month", "platform"].includes(value) ? value : "week";
     }
 
     function normalizePlatformProfiles(settings = {}, platforms = defaultPlatforms) {
@@ -4634,6 +4794,8 @@
     function months() {
       const set = new Set(state.entries.map(entry => entry.date.slice(0, 7)));
       set.add(currentMonth());
+      set.add(normalizeMonthKey(state.settings.calendarMonth));
+      set.add(normalizeMonthKey(state.settings.reportMonth));
       return [...set].sort().reverse();
     }
 
@@ -5528,12 +5690,36 @@
     }
 
     function fillSelects() {
-      const options = months().map(month => `<option value="${month}">${month}</option>`).join("");
-      [els.monthFilter, els.weekMonthFilter, els.monthReportFilter, els.platformMonthFilter].forEach(select => {
-        const previous = select.value || currentMonth();
+      const availableMonths = months();
+      const options = availableMonths.map(month => `<option value="${month}">${month}</option>`).join("");
+      const calendarMonth = availableMonths.includes(state.settings.calendarMonth)
+        ? state.settings.calendarMonth
+        : currentMonth();
+      const reportMonth = availableMonths.includes(state.settings.reportMonth)
+        ? state.settings.reportMonth
+        : currentMonth();
+      els.monthFilter.innerHTML = options;
+      els.monthFilter.value = calendarMonth;
+      [els.weekMonthFilter, els.monthReportFilter, els.platformMonthFilter].forEach(select => {
         select.innerHTML = options;
-        select.value = months().includes(previous) ? previous : currentMonth();
+        select.value = reportMonth;
       });
+    }
+
+    function updateCalendarMonth(month) {
+      state.settings.calendarMonth = normalizeMonthKey(month);
+      saveState();
+      fillSelects();
+      renderEntries();
+    }
+
+    function updateReportMonth(month) {
+      state.settings.reportMonth = normalizeMonthKey(month);
+      saveState();
+      fillSelects();
+      renderWeeks();
+      renderMonthReport();
+      renderPlatformReport();
     }
 
     function renderStats() {
@@ -5713,7 +5899,12 @@
     function renderEntries() {
       const entries = entriesForMonth(selectedMonth(els.monthFilter));
       if (!entries.length) {
-        els.entriesTable.innerHTML = `<div class="empty">這個月份還沒有紀錄。</div>`;
+        els.entriesTable.innerHTML = `
+          <div class="empty empty-state">
+            <strong>這個月份尚無工作紀錄</strong>
+            <span>完成一天工作後，紀錄會顯示在這裡。</span>
+          </div>
+        `;
         return;
       }
 
@@ -5722,24 +5913,31 @@
           <thead>
             <tr>
               <th>日期</th>
-              ${state.platforms.map(name => `<th>${name}</th>`).join("")}
+              ${state.platforms.map(name => `<th>${escapeHtml(name)}</th>`).join("")}
               <th>Tips</th>
-              <th>合計</th>
+              <th>總收入</th>
+              <th>支出</th>
+              <th>淨收入</th>
+              <th>實際工時</th>
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
             ${entries.map(entry => {
+              const work = workMetrics(entry);
               return `
                 <tr>
-                  <td>${entry.date}<div class="muted">${entry.shift || ""} ${entry.weather || ""}</div></td>
+                  <td>${escapeHtml(entry.date)}<div class="muted">${escapeHtml(entry.shift || "")} ${escapeHtml(entry.weather || "")}</div></td>
                   ${state.platforms.map(name => `<td>${Number(entry.incomes?.[name] || 0) ? money(entry.incomes[name]) : ""}</td>`).join("")}
                   <td>${money(entry.tips)}</td>
-                  <td>${money(entryTotal(entry))}<div class="muted">淨 ${money(entryNet(entry))}</div></td>
+                  <td>${money(entryTotal(entry))}</td>
+                  <td>${money(entryExpenses(entry))}</td>
+                  <td>${money(entryNet(entry))}</td>
+                  <td>${formatCompactWorkHours(work.hours)}</td>
                   <td>
                     <div class="row-actions">
-                      <button class="icon-button" title="編輯" data-edit="${entry.id}">編</button>
-                      <button class="icon-button" title="刪除" data-delete="${entry.id}">刪</button>
+                      <button class="icon-button entry-action-button" type="button" title="編輯" data-edit="${escapeAttr(entry.id)}">編輯</button>
+                      <button class="icon-button entry-action-button danger" type="button" title="刪除" data-delete="${escapeAttr(entry.id)}">刪除</button>
                     </div>
                   </td>
                 </tr>
@@ -5755,6 +5953,9 @@
               }).join("")}
               <th>${money(entries.reduce((total, entry) => total + Number(entry.tips || 0), 0))}</th>
               <th>${money(entries.reduce((total, entry) => total + entryTotal(entry), 0))}</th>
+              <th>${money(entries.reduce((total, entry) => total + entryExpenses(entry), 0))}</th>
+              <th>${money(entries.reduce((total, entry) => total + entryNet(entry), 0))}</th>
+              <th>${formatCompactWorkHours(summarize(entries).hours)}</th>
               <th></th>
             </tr>
           </tfoot>
@@ -5763,6 +5964,9 @@
           ${entries.map(entry => {
             const shift = String(entry.shift || "").trim();
             const weatherIcon = weatherIconSvg(entry.weather);
+            const expenses = entryExpenses(entry);
+            const net = entryNet(entry);
+            const work = workMetrics(entry);
             const activePlatforms = state.platforms
               .map(name => [name, Number(entry.incomes?.[name] || 0)])
               .filter(([, amount]) => amount > 0);
@@ -5774,7 +5978,10 @@
                     ${shift ? `<span class="daily-entry-meta">・${escapeHtml(shift)}</span>` : ""}
                     ${weatherIcon ? `<span class="daily-entry-meta">・</span>${weatherIcon}` : ""}
                   </div>
-                  <strong class="daily-entry-total">${money(entryTotal(entry))}</strong>
+                  <div class="daily-entry-total-wrap">
+                    <span>總收入</span>
+                    <strong class="daily-entry-total">${money(entryTotal(entry))}</strong>
+                  </div>
                 </div>
                 <div class="daily-entry-bottom">
                   <div class="daily-income-items">
@@ -5784,9 +5991,14 @@
                         `).join("")
                       : `<span class="daily-income-empty">尚無收入紀錄</span>`}
                   </div>
+                  <div class="daily-entry-summary">
+                    <span>支出<strong>${money(expenses)}</strong></span>
+                    <span>淨收入<strong>${money(net)}</strong></span>
+                    <span>實際工時<strong>${formatCompactWorkHours(work.hours)}</strong></span>
+                  </div>
                   <div class="daily-entry-actions" aria-label="${escapeAttr(entry.date)} 紀錄操作">
-                    <button class="icon-button" type="button" title="編輯" aria-label="編輯 ${escapeAttr(entry.date)} 紀錄" data-edit="${escapeAttr(entry.id)}">編</button>
-                    <button class="icon-button" type="button" title="刪除" aria-label="刪除 ${escapeAttr(entry.date)} 紀錄" data-delete="${escapeAttr(entry.id)}">刪</button>
+                    <button class="icon-button entry-action-button" type="button" title="編輯" aria-label="編輯 ${escapeAttr(entry.date)} 紀錄" data-edit="${escapeAttr(entry.id)}">編輯</button>
+                    <button class="icon-button entry-action-button danger" type="button" title="刪除" aria-label="刪除 ${escapeAttr(entry.date)} 紀錄" data-delete="${escapeAttr(entry.id)}">刪除</button>
                   </div>
                 </div>
               </article>
@@ -5821,7 +6033,7 @@
       });
 
       if (!groups.size) {
-        els.weekList.innerHTML = `<div class="empty">這個月份還沒有週資料。</div>`;
+        els.weekList.innerHTML = `<div class="empty">這個月份尚無週報資料</div>`;
         return;
       }
 
@@ -5831,7 +6043,8 @@
         return `
           <div class="week-item">
             <div class="week-item-period"><span>週期</span><strong>${compactWeekRange(start, end)}</strong></div>
-            <div><span>總額</span><strong>${money(summary.total)}</strong></div>
+            <div><span>總收入</span><strong>${money(summary.total)}</strong></div>
+            <div><span>支出</span><strong>${money(summary.expenses)}</strong></div>
             <div><span>淨收入</span><strong>${money(summary.net)}</strong></div>
             <div><span>工時</span><strong>${number(summary.hours)} 小時</strong></div>
             <div><span>平均時薪</span><strong>${money(summary.hourly)}</strong></div>
@@ -5846,6 +6059,16 @@
       const goal = Number(state.settings.monthlyGoal || 0);
       const percent = goal ? Math.min(100, Math.round(summary.net / goal * 100)) : 0;
 
+      els.monthSummaryMetrics.innerHTML = entries.length ? `
+        <div class="month-summary-grid">
+          <div><span>月總收入</span><strong>${money(summary.total)}</strong></div>
+          <div><span>月支出</span><strong>${money(summary.expenses)}</strong></div>
+          <div><span>月淨收入</span><strong>${money(summary.net)}</strong></div>
+          <div><span>月實際工時</span><strong>${formatCompactWorkHours(summary.hours)}</strong></div>
+          <div><span>月平均時薪</span><strong>${money(summary.hourly)}</strong></div>
+        </div>
+      ` : `<div class="empty">這個月份尚無收入紀錄</div>`;
+
       els.goalProgress.innerHTML = goal ? `
         <div class="bar-row">
           <div class="bar-top"><strong>目標進度</strong><span>${percent}%</span></div>
@@ -5855,10 +6078,12 @@
       ` : `<div class="empty">到設定頁輸入每月目標，就能看到進度。</div>`;
 
       if (!entries.length) {
-        els.dailyBars.innerHTML = `<div class="empty">這個月份還沒有紀錄。</div>`;
+        els.dailyBars.innerHTML = "";
+        els.dailyTrendPanel.classList.add("hidden");
         return;
       }
 
+      els.dailyTrendPanel.classList.remove("hidden");
       const max = Math.max(...entries.map(entry => entryTotal(entry)), 1);
       els.dailyBars.innerHTML = entries.map(entry => {
         const width = Math.round(entryTotal(entry) / max * 100);
@@ -5884,11 +6109,13 @@
       const total = rows.reduce((sum, [, value]) => sum + value, 0);
 
       if (!rows.length) {
-        els.platformBars.innerHTML = `<div class="empty">這個月份還沒有平台收入。</div>`;
-        els.platformTable.innerHTML = `<div class="empty">尚無資料可分析。</div>`;
+        els.platformBars.innerHTML = `<div class="empty">這個月份尚無平台收入</div>`;
+        els.platformTable.innerHTML = "";
+        els.platformRankingPanel.classList.add("hidden");
         return;
       }
 
+      els.platformRankingPanel.classList.remove("hidden");
       els.platformBars.innerHTML = rows.map(([name, value]) => {
         const percent = total ? Math.round(value / total * 100) : 0;
         return `
@@ -6147,18 +6374,86 @@
       updateQuickPreview();
     }
 
+    function setReportView(view, persist = true) {
+      const nextView = normalizeReportView(view);
+      activeReportView = nextView;
+      els.reportButtons.forEach(button => {
+        const active = button.dataset.reportView === nextView;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+      els.reportPanels.forEach(panel => {
+        panel.classList.toggle("hidden", panel.dataset.reportPanel !== nextView);
+      });
+      if (persist && state.settings.lastReportView !== nextView) {
+        state.settings.lastReportView = nextView;
+        saveState();
+      }
+      if (nextView === "week") renderWeeks();
+      if (nextView === "month") renderMonthReport();
+      if (nextView === "platform") renderPlatformReport();
+    }
+
     function setView(view) {
       activeView = view;
       if (view === "ai") renderAiAnalysis();
       document.querySelectorAll(".view").forEach(section => section.classList.add("hidden"));
-      document.getElementById(`view-${view}`).classList.remove("hidden");
-      const navView = view === "month" ? "platform" : view === "about" ? "settings" : view;
+      document.getElementById(`view-${view}`)?.classList.remove("hidden");
+      const navView = view === "about" ? "settings" : view;
       els.navButtons.forEach(button => button.classList.toggle("active", button.dataset.view === navView));
       els.viewTitle.textContent = titles[view][0];
       els.viewSubtitle.textContent = titles[view][1];
       document.body.dataset.activeView = view;
       document.getElementById("newEntry").classList.toggle("hidden", view === "today" || view === "about");
+      if (view === "reports") setReportView(activeReportView, false);
       updateOverviewVisibility();
+    }
+
+    function parseAppRoute(hash = "", search = "") {
+      const query = new URLSearchParams(String(search || "").replace(/^\?/, ""));
+      const raw = decodeURIComponent(String(hash || "").replace(/^#\/?/, "")).trim().toLowerCase()
+        || String(query.get("view") || query.get("page") || "").trim().toLowerCase();
+      const [first = "", second = ""] = raw.split("/").filter(Boolean);
+      if (["week", "month", "platform"].includes(first)) {
+        return { view: "reports", reportView: first };
+      }
+      if (["reports", "report", "analysis"].includes(first)) {
+        const queryReport = query.get("report");
+        return { view: "reports", reportView: normalizeReportView(second || queryReport || (first === "analysis" ? "platform" : "")) };
+      }
+      if (first === "calendar") return { view: "calendar", reportView: activeReportView };
+      if (first === "ai") return { view: "ai", reportView: activeReportView };
+      if (["driver", "settings"].includes(first)) return { view: "settings", reportView: activeReportView };
+      if (first === "about") return { view: "about", reportView: activeReportView };
+      return { view: "today", reportView: activeReportView };
+    }
+
+    function appRouteHash(view, reportView = activeReportView) {
+      if (view === "reports") return `#reports/${normalizeReportView(reportView)}`;
+      if (view === "settings") return "#driver";
+      return `#${["today", "calendar", "ai", "about"].includes(view) ? view : "today"}`;
+    }
+
+    function applyRoute(route) {
+      const view = ["today", "calendar", "reports", "ai", "settings", "about"].includes(route?.view)
+        ? route.view
+        : "today";
+      if (view === "reports") setReportView(route.reportView, true);
+      setView(view);
+    }
+
+    function navigateTo(view, reportView = activeReportView, replace = false) {
+      const route = {
+        view: ["today", "calendar", "reports", "ai", "settings", "about"].includes(view) ? view : "today",
+        reportView: normalizeReportView(reportView)
+      };
+      const hash = appRouteHash(route.view, route.reportView);
+      if (replace) {
+        history.replaceState({}, "", `${location.pathname}${location.search}${hash}`);
+      } else if (location.hash !== hash) {
+        history.pushState({}, "", `${location.pathname}${location.search}${hash}`);
+      }
+      applyRoute(route);
     }
 
     function resetForm() {
@@ -6213,7 +6508,7 @@
     function editEntry(id) {
       const entry = state.entries.find(item => item.id === id);
       if (!entry) return;
-      setView("today");
+      navigateTo("today");
       fillEntryFields(entry);
       const detailSections = document.querySelectorAll("#detailForm details");
       detailSections.forEach(details => details.open = false);
@@ -6653,8 +6948,8 @@
       }
     }
 
-    els.navButtons.forEach(button => button.addEventListener("click", () => setView(button.dataset.view)));
-    document.getElementById("newEntry").addEventListener("click", () => { resetForm(); setView("today"); });
+    els.navButtons.forEach(button => button.addEventListener("click", () => navigateTo(button.dataset.view)));
+    document.getElementById("newEntry").addEventListener("click", () => { resetForm(); navigateTo("today"); });
     els.cancelEdit.addEventListener("click", resetForm);
     document.getElementById("exportCsv").addEventListener("click", exportCsv);
     els.startRun.addEventListener("click", startRunNow);
@@ -6666,13 +6961,9 @@
       updateOverviewVisibility();
     });
 
-    [els.monthFilter, els.weekMonthFilter, els.monthReportFilter, els.platformMonthFilter].forEach(select => {
-      select.addEventListener("change", () => {
-        renderEntries();
-        renderWeeks();
-        renderMonthReport();
-        renderPlatformReport();
-      });
+    els.monthFilter.addEventListener("change", () => updateCalendarMonth(els.monthFilter.value));
+    [els.weekMonthFilter, els.monthReportFilter, els.platformMonthFilter].forEach(select => {
+      select.addEventListener("change", () => updateReportMonth(select.value));
     });
 
     els.entryForm.addEventListener("submit", event => event.preventDefault());
@@ -6910,12 +7201,12 @@
     });
 
     document.querySelectorAll("[data-report-view]").forEach(button => {
-      button.addEventListener("click", () => setView(button.dataset.reportView));
+      button.addEventListener("click", () => navigateTo("reports", button.dataset.reportView));
     });
 
-    document.getElementById("driverSpaceLogo").addEventListener("click", () => setView("settings"));
-    document.getElementById("openAbout").addEventListener("click", () => setView("about"));
-    document.getElementById("closeAbout").addEventListener("click", () => setView("settings"));
+    document.getElementById("driverSpaceLogo").addEventListener("click", () => navigateTo("settings"));
+    document.getElementById("openAbout").addEventListener("click", () => navigateTo("about"));
+    document.getElementById("closeAbout").addEventListener("click", () => navigateTo("settings"));
 
     els.entriesTable.addEventListener("click", event => {
       const editButton = event.target.closest("[data-edit]");
@@ -7051,9 +7342,11 @@
     renderEntryDateCard(todayString());
     renderAll();
     resetForm();
-    setView("today");
+    navigateTo(parseAppRoute(location.hash, location.search).view, parseAppRoute(location.hash, location.search).reportView, true);
     updateOverviewVisibility();
     setupPwa();
+    window.addEventListener("popstate", () => applyRoute(parseAppRoute(location.hash, location.search)));
+    window.addEventListener("hashchange", () => applyRoute(parseAppRoute(location.hash, location.search)));
     window.setInterval(() => {
       if (activeView !== "today") return;
       renderStats();

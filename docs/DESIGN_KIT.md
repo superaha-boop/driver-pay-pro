@@ -198,11 +198,21 @@ Version: 1.0
 ## Calendar and Detail Rules
 
 - 手機月份明細第一行顯示日期／星期、班別、天氣 icon與當日總收入。
-- 第二行顯示收入大於 0 的平台及編輯／刪除操作。
+- 後續顯示收入大於 0 的平台、支出、淨收入、實際工時及編輯／刪除操作。
 - 沒有平台收入時顯示「尚無收入紀錄」，當日總額 `$0` 仍保留。
 - 每日之間使用 1px 細水平分隔線。
 - 不使用每日獨立卡片、展開／收合或水平捲動。
 - 700px 以下顯示手機清單；700px 以上保留桌面表格；不可同時顯示兩套內容。
+- 編輯與刪除按鈕的可點擊高度至少 44px，刪除保留二次確認。
+
+## Bottom Navigation Rules
+
+- 固定為「今天｜月曆｜報表｜AI｜Driver」五欄平均分配。
+- 圖示依序使用 Lucide `CircleDollarSign`、`CalendarDays`、`ChartNoAxesColumnIncreasing`、`Sparkles`、`UserRound`。
+- 所有圖示固定 24px、`stroke-width: 2`；選中狀態不放大，只改品牌綠與文字字重。
+- 文字固定 14px；一般 500、選中 600，Driver 不換行。
+- 每項內容高度至少 56px，整個圖示與文字區都可點。
+- 必須納入 `env(safe-area-inset-bottom)`，且主內容底部留白不得被導覽遮住。
 
 ## Responsive Rules
 
