@@ -631,6 +631,26 @@ Driver 的設定入口順序：
 
 修改 Service Worker 時，必須檢查快取版本與所有資源路徑。
 
+## Calendar UX Freeze — Version 1
+
+Calendar V1 的 Header、Month Navigation、Weekday Header、Month Grid、
+Today／Selected、Heatmap、Work Record Card、Empty States、新增／編輯／刪除流程、
+手勢、Accessibility、Responsive 與 SaveStatus 已正式凍結。
+
+凍結後原則上只接受：
+
+- 可重現的 Bug 修正。
+- Accessibility 修正。
+- Data Integrity 修正。
+- 會阻礙主要任務完成的重大使用障礙修正。
+
+一般視覺偏好與新功能想法必須放入 Backlog，不得直接修改凍結介面。任何突破
+Freeze 的修改都必須先說明使用者問題與影響範圍、取得正式產品決策、補充
+Regression，並同步更新 `DECISIONS.md` 與正式決策紀錄。
+
+所有主要模組（Calendar、Reports、AI、Driver）完成前，都必須依
+`docs/FEATURE_FREEZE_CHECKLIST.md` 執行同一套 Feature Freeze Gate。
+
 ## Git and Deployment Safety
 
 完成一個 Sprint 並通過適用驗證後，Codex 可以直接：

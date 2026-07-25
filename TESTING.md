@@ -10,6 +10,51 @@
 - 所有功能變更都必須確認 `driverPayApp.v2` 未被更名或清除。
 - PWA 資源變更必須同步檢查 `sw.js` cache version 與 App Shell。
 
+## Calendar Final Regression Matrix
+
+Date: 2026-07-25
+
+- Fixed fixture: `tests/fixtures/calendar-regression.json`。
+- Automated suite: `tests/calendar-regression.test.js` 與所有既有 `tests/*.test.js`。
+- Result: 52/52 passed。
+- Read／Navigate: fresh session Today、same-session selection、relaunch reset、
+  Monday-first、month arrows、Today、swipe、adjacent month、Today／Selected／Heat、
+  out-of-month selection、5／6-week months、future／empty／zero／negative passed。
+- Create: past empty date、blank rejection、future guard、Today routing、grid／heat／
+  card／summary refresh、selected-date retention、reload persistence passed。
+- Edit: income、expense、work time、weather、note、cancel／discard、duplicate-date
+  prevention、immediate derived values and selected-date retention passed。
+- Delete: cancel／confirm、single-date scope、grid／heat／summary／empty-state refresh、
+  rollback and reopen passed。
+- Cross-page: Today、Calendar、Reports share canonical total、net、expense、work time、
+  hourly rate、work days and monthly aggregation.
+- Error／Data Integrity: corrupt JSON preservation, write／serialization／quota
+  failures, create／edit／delete rollback, original data preservation and stable
+  `driverPayApp.v2` passed。
+- Accessibility: date ARIA, Editor title and labels, assertive validation alert,
+  SaveStatus live region, confirmation dialog, focus return, keyboard, reduced
+  motion and 44×44 targets passed。
+- Responsive: 320、375、390、393、430、768、1024px passed without horizontal
+  overflow；Final Regression only changed JavaScript behavior and documentation,
+  not responsive CSS。
+- Browser verification: validation error exposes `role="alert"`,
+  `aria-live="assertive"`, `aria-atomic="true"`; forms point to
+  `recordEditorStatus`; closing returns focus to the rerendered add button。
+- PWA／Offline: Product Owner previously confirmed physical iPhone Safari,
+  installed PWA, Preview and offline Human QA; App Shell remains
+  `driver-pay-pro-v10` with no resource change in this Sprint。
+- TypeScript: Not available。
+- ESLint: Not available。
+- Production build: Not available。
+- Inline JavaScript、Service Worker syntax、manifest JSON、fixture JSON、
+  App Shell and `git diff --check`: passed。
+
+### Feature Freeze
+
+正式共用 Gate 位於 `docs/FEATURE_FREEZE_CHECKLIST.md`。Calendar V1 已提供完整
+Evidence 並宣告 UX Freeze — Version 1；Reports、AI 與 Driver 必須建立各自證據，
+不得沿用 Calendar 的通過狀態。
+
 ## Calendar Sprint 4A validation record
 
 Date: 2026-07-25

@@ -4,6 +4,15 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
+## Calendar V1 完成狀態
+
+- Calendar V1 的 Read、Navigate、Create、Edit、Delete 與 transactional rollback 已完成。
+- Calendar Final Regression 固定 fixture 與 52 項自動測試通過；Today、Calendar、Reports 共用 canonical calculations。
+- Product Owner 已完成並確認 iPhone Safari、installed PWA、Preview 與 Offline Human QA。
+- Calendar UX Freeze — Version 1 已生效；後續只接受 Bug、Accessibility、Data Integrity 與重大使用障礙修正。
+- `driverPayApp.v2`、WorkRecord schema、Heatmap 演算法與計算公式均未因封板改變。
+- 下一個產品 Sprint 為 Reports Product and Implementation Sprint；不得因此回頭改造 Calendar。
+
 ## 1. App 的核心設計原則
 
 - Driver Pay Pro 是給多元計程車司機使用的收入與工時管理 App。
@@ -26,7 +35,7 @@
 - 全 App 遵循三秒原則、兩層原則、免思考原則、單手操作原則與 Apple 美學原則；完整永久規則以 `AGENTS.md` 為準。
 - 月曆採 `Overview → Detail`：先定位日期與辨識工作狀況，再開啟當日工作紀錄。
 - 月曆點選日期後顯示的正式區域名稱為「工作紀錄卡片」，採核心資訊雙欄、延伸資訊單欄的混合式布局。
-- Sprint 4A 已實作唯讀標準工作紀錄卡片；精簡、完整、自訂模式及紀錄寫入仍是後續核准規格。
+- Calendar V1 已實作標準工作紀錄卡片與過去日期新增／編輯／刪除；精簡、完整、自訂顯示模式仍屬後續核准規格。
 
 ### 正式產品架構摘要
 
@@ -36,7 +45,7 @@
 - 每個可寫入功能只能有一個 Primary owner。跨頁需要修正紀錄時，必須連到負責頁面，不在報表或 AI 複製表單。
 - 收入、支出、淨收入、實際工時、平均時薪及週／月彙總必須共用單一計算來源。
 - 月曆正式定義為星期一至星期日；新啟動選今天，同一 App session 保留選取日期，未來日期不可建立紀錄。
-- Calendar Sprint 4A 已完成 Monday-first 月份格、session-only selected date、日期 deep link、收入熱度、唯讀工作紀錄卡片與月份摘要。
+- Calendar V1 已完成 Monday-first 月份格、session-only selected date、日期 deep link、收入熱度、標準工作紀錄卡片、月份摘要與過去日期安全 mutation。
 - Calendar Sprint 4A.5 已完成低風險 Visual Polish：壓縮頁內垂直節奏、強化月份導覽／星期標題、拉近日期與收入、微調 heat tokens，並以字重、間距與淡分隔線強化工作紀錄卡片層級。
 - Sprint 4A.5 沒有改變 Calendar state、日期／手勢／鍵盤／ARIA、heat 演算法、canonical calculation 或資料；Calendar 仍完全 read-only。
 - 現況差距與技術限制集中記錄於 `docs/TECH_DEBT.md`，不因文件建立而自動授權實作。
@@ -47,9 +56,9 @@
 - Calendar 採 Monday-first；一般新 session 選今天，同 session 保留 selectedDate／displayedMonth，不自動選最近工作日。
 - 單純切換月份不改 selectedDate；點日期或滑動日期才更新工作紀錄卡片，跨月時同步 displayedMonth。
 - 日期格只顯示淨收入簡寫與柔和相對熱度；Today 與 Selected 分開，未來日期可查看但不可新增。
-- 工作紀錄卡片第一版固定標準模式，唯讀數值已使用 canonical calculations 與 Design System primitives；同一套 Record Editor 尚待 Sprint 4B。
-- Calendar Implementation — Sprint 4A Read and Navigate 與 Sprint 4A.5 Visual Polish 已完成程式與自動驗證；下一步先通過 Human QA Gate，再進入 Sprint 4B: Record Mutation and Hardening。
-- 單純月份切換保留原 `selectedDate`，若選取日不在顯示月份，卡片保留該日並提示；此行為標記為 Needs UX Validation。
+- 工作紀錄卡片第一版固定標準模式，數值使用 canonical calculations 與 Design System primitives；Calendar 與 Today 共用同一套 Record Editor。
+- Calendar Read／Navigate／Create／Edit／Delete、Final Regression 與 Human QA Gate 已完成；Calendar UX Freeze — Version 1 已生效。
+- 單純月份切換保留原 `selectedDate`，若選取日不在顯示月份，卡片保留該日並提示；此行為已在 Human QA Gate 驗收。
 
 # Development Principles
 
@@ -457,16 +466,15 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 - 週報週期已改用不受 UTC 轉換影響的 date-only 曆法計算星期一至星期日；星期日仍歸屬前一個星期一開始的週。
 - 底部導覽已重整為今天、月曆、報表、AI、Driver；月曆與報表資料責任、月份狀態及 hash 路由已分離。
 - 月份明細已完整移入月曆；報表固定包含週報、月報與平台收入排行，並記住最後查看分頁。
-- PWA Service Worker 使用短版 cache `driver-pay-pro-v9`、略過 HTTP cache 檢查更新並在新 worker 接管後安全重載。
+- PWA Service Worker 使用短版 cache `driver-pay-pro-v10`、略過 HTTP cache 檢查更新並在新 worker 接管後安全重載。
 - 目前程式主要修改集中在 `index.html`；專案沒有 package.json、TypeScript、ESLint 或 build pipeline。
-- Calendar Sprint 4A.5 位於功能分支 `codex/calendar-visual-polish-20260725`，base 為 `codex/calendar-read-navigate-20260725`；依本次 PRD 不合併 `main`、不部署。實際 push 狀態仍以即時 Git／GitHub 檢查為準。
+- Calendar Final Regression 位於功能分支 `codex/calendar-final-regression-20260725`，base 為 `codex/calendar-record-mutation-20260725`；依本次 PRD 不合併 `main`、不 Production deploy。實際 push 狀態仍以即時 Git／GitHub 檢查為準。
 
 ## 6. 下一步工作
 
-1. 使用 iPhone Safari 與 installed PWA 完成 Calendar Sprint 4A／4A.5 Human QA Gate，包含視覺、手勢、VoiceOver、safe-area、Service Worker 更新及關閉重開驗收。
-2. 經 Product Owner 驗收後執行 Calendar Implementation — Sprint B: Record Mutation and Hardening。
-3. 使用 iPhone Safari 與加入主畫面的 PWA 驗收五欄底部導覽、月曆、報表切換及返回行為。
-4. 確認 Service Worker 沒有持續提供舊快取。
-5. 確認 375、390、393、430px 下沒有水平 overflow，底部導覽不遮住最後一筆紀錄。
-6. 未經使用者確認，不修改已凍結首頁或重新設計週報。
-7. 若要讓每月固定或分月計算真正影響未來月報，需另立資料 migration 與報表規格，不可直接複製未來月份資料。
+1. 執行 Reports Product and Implementation Sprint，先核對正式 Reports 責任與規格。
+2. Reports 必須重用既有日期、Monday-first、canonical calculations 與 aggregation，不建立第二套公式。
+3. Calendar 已 UX Freeze；一般視覺偏好與新想法加入 Backlog，不直接修改。
+4. 每次 Calendar、PWA 或原生 input 相關發布仍需實體 iPhone Safari 與 installed PWA 回歸。
+5. 未經使用者確認，不修改已凍結首頁或重新設計週報。
+6. 若要讓每月固定或分月計算真正影響未來月報，需另立資料 migration 與報表規格，不可直接複製未來月份資料。

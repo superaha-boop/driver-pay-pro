@@ -214,3 +214,27 @@ validation、資料模型與 canonical calculations 分裂。
 - 實體 iPhone Safari／installed PWA Human QA 仍是完成 Gate。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-025](docs/DECISION_LOG.md#d-025)。
+
+## D-026 — Calendar UX Freeze Version 1
+
+- Date: 2026-07-25
+
+### 決策
+
+1. Calendar Read、Navigate、Create、Edit、Delete、Rollback 與 Human QA 驗收完成。
+2. Calendar UX Freeze — Version 1 正式生效。
+3. Freeze 範圍包含 Header、Month Navigation、Weekday Header、Month Grid、
+   Today／Selected、Heatmap、Work Record Card、Empty States、新增／編輯／刪除、
+   手勢、Accessibility、Responsive 與 SaveStatus。
+4. 凍結後只接受 Bug、Accessibility、Data Integrity 與重大使用障礙修正。
+5. 所有主要模組使用 `docs/FEATURE_FREEZE_CHECKLIST.md` 作為共同封板 Gate。
+6. Reports 可重用 Calendar 的日期工具、Monday-first 週期、canonical
+   calculations、月份彙總、工作天判斷、persistence read API 與 Design System
+   primitives，但不得因此重設 Calendar UX。
+
+### 變更管制
+
+任何突破 Calendar Freeze 的修改必須先說明使用者問題與影響範圍、取得正式
+決策、提供 Regression，並同步更新本文件與正式決策紀錄。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-026](docs/DECISION_LOG.md#d-026)。

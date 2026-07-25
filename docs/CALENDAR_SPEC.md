@@ -6,7 +6,7 @@ Status: Approved implementation specification
 
 Updated: 2026-07-25
 
-Implementation status: Not implemented
+Implementation status: Calendar V1 implemented and UX frozen
 
 > This document is the primary implementation source for the Calendar redesign. It defines target behavior and records current repository constraints. It does not authorize changes outside an approved Calendar Implementation Sprint.
 
@@ -931,12 +931,11 @@ Do not subdivide further unless implementation discovers a new data-loss or arch
 
 Audit base: `cc6b678` on `codex/product-specification-20260725`.
 
-Implementation status (2026-07-25): Sprint 4A Read and Navigate is implemented on
-`codex/calendar-read-navigate-20260725`; Sprint 4A.5 Visual Polish is implemented on
-`codex/calendar-visual-polish-20260725`; Sprint 4B Record Mutation and Hardening is
-implemented on `codex/calendar-record-mutation-20260725`. The table below remains the
-pre-implementation audit evidence used to scope the implementation Sprints. Physical
-iPhone Safari and installed-PWA Human QA remains pending.
+Implementation status (2026-07-25): Sprint 4A Read and Navigate, Sprint 4A.5 Visual
+Polish, Sprint 4B Record Mutation and Hardening, Final Regression and the Product
+Owner Human QA Gate are complete. Calendar UX Freeze — Version 1 is active. The
+table below remains the pre-implementation audit evidence used to scope the
+implementation Sprints; it is historical evidence rather than current status.
 
 | Question | Status | Repository evidence |
 | --- | --- | --- |
@@ -973,5 +972,6 @@ Calendar implementation may start only when:
 
 Next step:
 
-**Calendar Implementation — Sprint B: Record Mutation and Hardening**, after Sprint 4A
-physical iPhone Safari and installed-PWA human QA.
+**Reports Product and Implementation Sprint**. Reports may reuse the stable Calendar
+date utilities, Monday-first week logic, canonical calculations, aggregation,
+persistence read API and Design System primitives without redesigning Calendar.

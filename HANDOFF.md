@@ -6,6 +6,68 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
+## Calendar Final Regression and UX Freeze — Version 1
+
+### 分支與範圍
+
+- Base branch：`codex/calendar-record-mutation-20260725`，base commit `f89f970888cd5b1d085da16a2914d8dfe059cb80`。
+- 工作分支：`codex/calendar-final-regression-20260725`。
+- 本 Sprint 只做 Calendar final regression、三項阻擋性修正、固定 fixture、文件與 UX Freeze；沒有新增功能或 redesign。
+- 依本次 PRD：只 push 功能分支，不 merge `main`、不 Production deploy。
+
+### Regression 結果
+
+- 52/52 Node tests 通過，涵蓋 Product／Calendar／Ownership contract、read、
+  navigate、create、edit、delete、persistence、rollback、report consistency、
+  navigation、Design System、PWA 與 fixed regression fixture。
+- 固定 fixture：無紀錄、正／零／負淨收入、有收入無工時、有工時無收入、
+  多平台、支出、天氣與備註、跨午夜、超大金額及不完整舊資料。
+- Today、Calendar、Reports 仍直接重用 `entryTotal()`、`entryExpenses()`、
+  `entryNet()`、`workMetrics()`、`hourlyRate()` 與 `summarize()`。
+- Product Owner 已確認 Sprint 4B 的 iPhone Safari、installed PWA、Preview 與
+  Offline Human QA 通過；Final Regression 沒有改 UI、App Shell 或 Service Worker。
+
+### Final Regression 修正
+
+1. `persistStatePayload()` 在 clone／serialization 之前先保存主 key 與 last-valid
+   快照；序列化、quota 或安全快照寫入失敗時，兩份原值都會回復，不再可能因
+   early failure 誤刪 `driverPayApp.v2`。
+2. 共用 Record Editor 關閉後不再嘗試聚焦已被 `renderCalendar()` 替換的舊
+   button；改以穩定 selector 找回重新渲染後的新增／編輯按鈕，並以日期格為
+   fallback。
+3. Validation error 改為 assertive `role="alert"`，兩個共用 form 以
+   `aria-describedby`／`aria-invalid` 關聯錯誤；非錯誤 SaveStatus 維持 polite。
+
+### Calendar UX Freeze
+
+Calendar UX Freeze — Version 1 已生效。凍結範圍：Header、Month Navigation、
+Weekday Header、Month Grid、Today／Selected、Heatmap、Work Record Card、
+Empty States、新增／編輯／刪除、手勢、Accessibility、Responsive 與
+SaveStatus。後續只接受 Bug、Accessibility、Data Integrity 與重大使用障礙修正。
+
+### 仍開放的技術債
+
+- 真正跨裝置同步、server backup、Supabase conflict resolution。
+- WorkRecord record metadata 與多段工作明細模型。
+- AI 重複彙總。
+- TypeScript、lint 與 production build pipeline。
+- Design System showcase automation。
+- iPhone time input 與 PWA 實機 QA 仍需在每次相關 release 持續執行。
+- 非 Calendar 頁面的損壞資料錯誤呈現與 legacy Today write rollback。
+
+### Reports 可重用的穩定基礎
+
+- Date utilities、Monday-first week logic、date-key handling。
+- Canonical income／expense／net／work time／hourly rate calculations。
+- Monthly aggregation、work-day selector、platform totals。
+- Persistence adapter read API、record change notification。
+- Amount formatting、Design System primitives、Empty／Error／Loading states。
+
+下一步是 Reports Product and Implementation Sprint；不得在該 Sprint 回頭
+重設 Calendar 或複製計算公式。
+
+---
+
 ## Calendar Sprint 4B — Record Mutation and Hardening
 
 ### 分支與範圍

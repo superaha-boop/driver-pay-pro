@@ -307,3 +307,24 @@
   - 不讓歷史欄位變更立即自動寫入。
   - 不用 `overflow: hidden`、數字截斷或無條件歸零掩蓋資料／版面問題。
   - 不在沒有 migration 的情況新增 record metadata 或收入／支出明細 schema。
+
+## D-026
+
+- Date: 2026-07-25
+- Decision:
+  1. Calendar V1 的 Read、Navigate、Create、Edit、Delete、transactional rollback 與 Human QA Gate 驗收完成。
+  2. Calendar UX Freeze — Version 1 正式生效，範圍包括 Header、Month Navigation、Weekday Header、Month Grid、Today／Selected、Heatmap、Work Record Card、Empty States、新增／編輯／刪除、手勢、Accessibility、Responsive 與 SaveStatus。
+  3. 凍結後只接受可重現 Bug、Accessibility、Data Integrity 與重大使用障礙修正；一般視覺偏好與新功能進入 Backlog。
+  4. 突破 Freeze 必須先說明使用者問題與影響範圍、取得正式產品決策、提供 Regression，並更新決策文件。
+  5. `docs/FEATURE_FREEZE_CHECKLIST.md` 成為 Calendar、Reports、AI 與 Driver 的共同 Feature Freeze Gate。
+  6. Reports 可安全重用 Calendar 日期工具、Monday-first 週期、date-key handling、canonical calculations、月份彙總、工作天判斷、平台總額、persistence read API、record change notification、金額格式與 Design System states。
+- Reason: Calendar 的讀取、導覽與完整 record lifecycle 已通過固定資料基準、自動 regression、瀏覽器回歸及 Product Owner iPhone／PWA Human QA。正式凍結可避免 Reports 開發重新設計 Calendar 或複製資料公式。
+- Impact:
+  - Calendar 後續只接受有限類型修正。
+  - 新增 `docs/FEATURE_FREEZE_CHECKLIST.md`，後續主要模組必須提供自己的可追溯證據。
+  - Reports Product and Implementation Sprint 成為下一個產品 Sprint。
+  - `driverPayApp.v2`、WorkRecord schema、Heatmap algorithm、canonical calculations、Supabase 與 dependency 均不變。
+- Rejected alternatives:
+  - 不以封板名義隱藏或刪除仍存在的技術債。
+  - 不在 Final Regression 新增 Calendar 功能或重設視覺。
+  - 不讓 Reports 建立另一套日期、收入、工時或彙總公式。

@@ -410,8 +410,9 @@ Calendar implementation status (2026-07-25):
 
 - Sprint 4A Read and Navigate implemented.
 - Sprint 4A.5 Visual Polish implemented.
-- Sprint 4B Record Mutation and Hardening implemented on its feature branch.
-- Physical iPhone Safari and installed-PWA Human QA remains required before Product Owner acceptance.
+- Sprint 4B Record Mutation and Hardening and Calendar Final Regression implemented on their feature branches.
+- Product Owner confirmed physical iPhone Safari, installed-PWA, Preview and offline Human QA on 2026-07-25.
+- Calendar UX Freeze — Version 1 is active; the next product Sprint is Reports.
 
 ## 14. Change Control
 

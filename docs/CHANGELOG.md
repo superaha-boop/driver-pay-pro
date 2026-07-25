@@ -19,6 +19,8 @@
 
 ### Added
 
+- Calendar Final Regression：新增固定 12 情境 fixture、跨頁 canonical calculation、月份摘要、heatmap、serialization rollback、validation accessibility 與 focus-return contract tests；全部自動測試增為 52 項。
+- 新增共用 `docs/FEATURE_FREEZE_CHECKLIST.md` 與 D-026，正式宣告 Calendar UX Freeze — Version 1。
 - Calendar Sprint 4B：過去日期新增／編輯／刪除、共用 Record Editor、UI draft、dirty close confirmation、日期明確刪除確認與 SaveStatus。
 - 新增本機交易式 persistence adapter：主 key 寫入後讀回驗證、最近有效快照、失敗回復與損壞資料 fallback；主 key 仍為 `driverPayApp.v2`。
 - Calendar mutation／validation／rollback／共享表單／future guard contract tests；自動測試由 41 項增為 45 項。
@@ -47,6 +49,8 @@
 
 ### Changed
 
+- Calendar persistence 在任何 clone／serialization 前保存主 key 與 last-valid 快照，失敗時完整回復；Record Editor validation error 與關閉後 focus return 完成無障礙 hardening。
+- Calendar V1 Read／Navigate／Create／Edit／Delete、Product Owner iPhone Safari／installed PWA／Offline Human QA 與 Final Regression 完成；下一個產品 Sprint 為 Reports。
 - Calendar 由唯讀 Read and Navigate 進入 past-only mutation；Today 仍擁有今日紀錄，未來日期仍不可建立。
 - Service Worker cache 更新為 `driver-pay-pro-v10`。
 - Calendar 由 legacy 月份下拉／每日清單改為唯讀 Overview → Locate → Open 體驗；新增、編輯、刪除保留至 Sprint 4B。
