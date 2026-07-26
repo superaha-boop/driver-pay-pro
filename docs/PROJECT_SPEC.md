@@ -101,11 +101,11 @@ driverPayApp.v2
 - `incomeRecords`：Yoxi 單筆收入紀錄
 - `weatherHistory`：為舊資料相容保留；目前主要顯示使用 `weather`
 
-`settings` 的導覽狀態：
+`settings` 的 legacy 導覽狀態（保留相容，不代表新 Reports 應繼續寫入）：
 
 - `calendarMonth`：月曆最後選擇月份。
-- `reportMonth`：週報、月報、平台共用月份。
-- `lastReportView`：最後查看的 `week`、`month` 或 `platform`；無效值回復 `week`。
+- `reportMonth`：舊版週報、月報、平台共用月份。
+- `lastReportView`：舊版最後查看的 `week`、`month` 或 `platform`；新 Reports state 以 `REPORTS_SPEC.md` 的 session-only contract 為準。
 
 相容性規則：
 
@@ -194,7 +194,8 @@ driverPayApp.v2
 - 月報：每月淨收入目標、月總收入、月支出、月淨收入、實際工時、平均時薪與每日收入走勢。
 - 平台：本月平台實拿收入、占比與平台收入排行。
 - 週期同年不重複年份，跨年才在兩端顯示年份。
-- 三個分頁共用 `reportMonth`，底部始終選中「報表」；離開再回來使用 `lastReportView`。
+- 現況仍共用 durable `reportMonth`／`lastReportView`；Sprint 5B1 必須依
+  `REPORTS_SPEC.md` 改為 session-only，保留 legacy 欄位但不得 migration 或清除。
 - hash 路由支援 `#reports/week`、`#reports/month`、`#reports/platform`，並相容舊 `#week`、`#month`、`#platform`、`#analysis`。
 
 ## 月份明細

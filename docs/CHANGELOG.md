@@ -19,6 +19,52 @@
 
 ### Added
 
+- Foundation Cleanup Version 1：新增最小 `package.json`、ESLint、HTML／Manifest／
+  Service Worker／App Shell Production validation 與單一 `release:check`；
+  Node tests 增為 94 項。
+- Design System 內部展示頁補齊 segmented control、KPI、Empty／Loading／Error、
+  list row、44px touch target、focus-visible 與 reduced-motion evidence，並維持
+  正式導覽與 PWA App Shell 隔離。
+- Reports Final Regression 與 UX Freeze Version 1：新增 28 情境固定 fixture、
+  9 項 Final Regression tests、一次性 L3 Human QA 清單及 Reports Feature
+  Freeze evidence；全部 Node tests 增為 88 項。Product Owner L3 Human QA
+  已通過，Feature Freeze Checklist 14/14 Passed，Reports V1 正式凍結。
+- Reports Sprint 5B2：新增本週／本月平台收入總額、排行、占比、安全前期比較、
+  內建 alias 讀取層正規化、未知平台 fallback、未歸因／不一致資料狀態。
+- 建立 L1 自動驗證、L2 Preview Smoke、L3 Module Human QA 與
+  L4 Production Release QA 分級；Sprint 5B2 完成短版 Smoke，完整 Reports
+  Human QA 延後至 Final Regression。
+- 報表重要日期新增 Calendar exact-date drill-down、同 session return context、
+  來源焦點復原及單一 committed-record refresh notification。
+- 新增 8 項 Reports Platform contract tests；全套自動測試增為 79 項。
+- Reports Sprint 5B1：新增共用台北週／月 period utilities、單一 report
+  aggregator、comparison calculator、session-only Reports state、週／月 KPI、
+  前期比較、七日／月份週淨收入趨勢、重要日期及 Empty／Loading／Error／Offline
+  presentation。
+- 新增 10 項 Reports Core 自動測試，涵蓋 Monday-first 期間、月份邊界、
+  canonical aggregation、零工時、比較 edge cases、無紀錄／stored zero、
+  月週彙總、重要日期、唯讀 session state 與 PWA v11；全部測試增為 68 項。
+- Reports Sprint 5A：新增正式 `docs/REPORTS_SPEC.md`，定義週／月／平台 state、台北期間、canonical KPI、前期比較、淨收入趨勢、平台貢獻、Calendar drill-down、資料狀態、35 個 edge cases、實作架構與完整驗收契約。
+- 新增 20 題 Reports Current-State Audit、D-027、Reports 永久執行規則及 `tests/reports-spec.test.js` 文件契約測試；全部自動測試增為 58 項。
+- Calendar Final Regression：新增固定 12 情境 fixture、跨頁 canonical calculation、月份摘要、heatmap、serialization rollback、validation accessibility 與 focus-return contract tests；全部自動測試增為 52 項。
+- 新增共用 `docs/FEATURE_FREEZE_CHECKLIST.md` 與 D-026，正式宣告 Calendar UX Freeze — Version 1。
+- Calendar Sprint 4B：過去日期新增／編輯／刪除、共用 Record Editor、UI draft、dirty close confirmation、日期明確刪除確認與 SaveStatus。
+- 新增本機交易式 persistence adapter：主 key 寫入後讀回驗證、最近有效快照、失敗回復與損壞資料 fallback；主 key 仍為 `driverPayApp.v2`。
+- Calendar mutation／validation／rollback／共享表單／future guard contract tests；自動測試由 41 項增為 45 項。
+- Calendar Sprint 4A.5 Visual Polish：壓縮頁內垂直節奏、強化月份導覽與星期辨識、拉近日期／收入、改善工作紀錄卡片 Primary／Secondary metrics 層級。
+- Calendar heat semantic tokens 增加柔和的級距差異，演算法、Selected／Today 語意與資料保持不變；PWA cache 更新為 `driver-pay-pro-v9`。
+- 新增 D-024 Calendar Visual Polish 決策與非脆弱的視覺結構 contract test。
+- Calendar Sprint 4A：Monday-first Month Grid、session-only 日期選取、精確日期 deep link、相鄰月份日期、Today／Selected／Focus／Future 狀態。
+- Calendar 唯讀標準工作紀錄卡片、四級收入熱度、月份摘要、鍵盤操作、ARIA、水平手勢與 reduced-motion 支援。
+- `tests/calendar.test.js` 純函式與 Calendar contract 測試，並擴充導航、Design System、Reporting 與 PWA 回歸測試。
+- 新增正式 `docs/CALENDAR_SPEC.md`，定義 Calendar 狀態、月份／日期互動、日期格矩陣、熱度、工作紀錄卡片、Editor、錯誤／離線、實作架構與完整驗收契約。
+- 新增 Calendar Implementation 未來測試清單，涵蓋月份格、日期狀態、熱度、手勢、Accessibility、紀錄寫入、localStorage 錯誤與 PWA。
+- 新增 D-022 Calendar 正式產品決策。
+- 新增正式 `docs/PRODUCT_SPEC.md`，固定產品願景、五頁責任、Feature Ownership Matrix、跨頁紀錄契約、單一資料來源、產品術語、Calendar 決策、Current State Audit 與 Roadmap。
+- 新增 `docs/TECH_DEBT.md`，集中記錄計算重複、legacy primitives、工具鏈、PWA／iPhone 實機 QA、Calendar 責任差距與資料限制。
+- 新增跨頁產品契約測試清單，供後續 Calendar、Reports、AI 與 Driver Sprint 做責任與資料回歸檢查。
+- 新增正式 Design System：CSS custom property tokens、共用 UI primitives、獨立開發展示頁、永久規格與測試清單。
+- 新增 `tests/design-system.test.js`，驗證 token、primitive、無障礙、PWA 接線、showcase 隔離與 time input 安全 wrapper。
 - 新增 hash 導覽與舊報表連結相容、報表分頁記憶、月曆／報表獨立月份及三分頁共用報表月份。
 - 新增導覽架構自動測試，涵蓋 Lucide 圖示、路由、空白狀態、44px 操作與月份狀態。
 - 新增無套件的 `node:test` 報表測試，涵蓋星期一週期、跨月／跨年、工時標準化、619 小時舊算法重現與 PWA 更新。
@@ -30,6 +76,25 @@
 
 ### Changed
 
+- Foundation Cleanup 建立可重現的 lockfile 與三個最小開發相依套件：
+  ESLint、`globals`、`parse5`；未加入 bundler、framework 或 TypeScript。
+- Release 前驗證改為 `npm run release:check`；Service Worker 維持
+  `driver-pay-pro-v12`，正式產品 App Shell 未修改。
+- Reports 平台頁移除 legacy 月份下拉與日均語意，改為收入貢獻視圖；
+  Service Worker cache 更新為 `driver-pay-pro-v12`。
+- Reports 週報／月報由 renderer 內各自選期與彙總，改為共用純 selector 流程；
+  tab 與週／月選擇不再寫入 `driverPayApp.v2`，App Shell cache 更新為
+  `driver-pay-pro-v11`。
+- 下一個產品實作增量定為 Reports Sprint 5B1 — Weekly and Monthly Core；Sprint 5A 沒有修改 Production 程式、PWA 或資料。
+- Calendar persistence 在任何 clone／serialization 前保存主 key 與 last-valid 快照，失敗時完整回復；Record Editor validation error 與關閉後 focus return 完成無障礙 hardening。
+- Calendar V1 Read／Navigate／Create／Edit／Delete、Product Owner iPhone Safari／installed PWA／Offline Human QA 與 Final Regression 完成；下一個產品 Sprint 為 Reports。
+- Calendar 由唯讀 Read and Navigate 進入 past-only mutation；Today 仍擁有今日紀錄，未來日期仍不可建立。
+- Service Worker cache 更新為 `driver-pay-pro-v10`。
+- Calendar 由 legacy 月份下拉／每日清單改為唯讀 Overview → Locate → Open 體驗；新增、編輯、刪除保留至 Sprint 4B。
+- Service Worker cache 使用短版 `driver-pay-pro-v8`，並快取本 Sprint 使用的 App Shell。
+- Calendar 下一步由規格階段更新為兩個可控 Implementation Sprint：Read and Navigate、Record Mutation and Hardening；本次未修改產品程式。
+- `AGENTS.md`、專案背景、決策紀錄與交接文件改以正式 Product Specification 約束功能 owner、canonical calculations 與下一個 Calendar 規格 Sprint。
+- 現有 legacy variables 改由 Design System tokens 提供相同視覺值；Service Worker 更新為 v07 並快取共用樣式。
 - 底部導覽重整為「今天｜月曆｜報表｜AI｜Driver」，統一 24px Lucide 圖示與 14px 文字。
 - 月份明細完整移入月曆；週報、月報、平台統一移入固定標題「報表」。
 - 月曆每日列補齊總收入、支出、淨收入、實際工時與 44px 編輯／刪除操作；平台效率改名平台收入排行。

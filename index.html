@@ -12,23 +12,23 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/driver-pay-pro-icon-512.png" type="image/png">
   <link rel="apple-touch-icon" sizes="192x192" href="assets/driver-pay-pro-icon-192.png">
+  <link rel="stylesheet" href="styles/design-system.css">
   <title>Driver Pay Pro</title>
   <style>
     :root {
-      color-scheme: light;
-      --bg: #f6f8fb;
-      --panel: #ffffff;
-      --panel-2: #eef5f7;
-      --text: #14202b;
-      --muted: #677482;
-      --line: #dce5ec;
-      --brand: #12a77b;
-      --brand-2: #1677d2;
-      --accent: #f2a51f;
-      --coral: #f06f5d;
-      --danger: #c84640;
-      --shadow: 0 16px 36px rgba(20, 32, 43, .09);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+      --bg: var(--color-background);
+      --panel: var(--color-surface);
+      --panel-2: var(--color-surface-secondary);
+      --text: var(--color-text-primary);
+      --muted: var(--color-text-secondary);
+      --line: var(--color-border-default);
+      --brand: var(--color-brand);
+      --brand-2: var(--color-legacy-brand-secondary);
+      --accent: var(--color-legacy-accent);
+      --coral: var(--color-legacy-coral);
+      --danger: var(--color-danger);
+      --shadow: var(--shadow-card);
+      font-family: var(--font-family-sans);
     }
 
     * { box-sizing: border-box; }
@@ -1156,17 +1156,17 @@
 
     /* v0.4 Home — mobile-first driver console */
     :root {
-      --bg: #f3f5f4;
-      --panel: #ffffff;
-      --panel-2: #f0f4f2;
-      --text: #17211d;
-      --muted: #68736e;
-      --line: #dde4e0;
-      --brand: #15966f;
-      --brand-strong: #087653;
-      --brand-soft: #e3f5ed;
-      --danger: #c8423b;
-      --shadow: 0 4px 18px rgba(26, 48, 38, .06);
+      --bg: var(--color-background);
+      --panel: var(--color-surface);
+      --panel-2: var(--color-surface-secondary);
+      --text: var(--color-text-primary);
+      --muted: var(--color-text-secondary);
+      --line: var(--color-border-default);
+      --brand: var(--color-brand);
+      --brand-strong: var(--color-brand-pressed);
+      --brand-soft: var(--color-brand-soft);
+      --danger: var(--color-danger);
+      --shadow: var(--shadow-card);
     }
 
     html {
@@ -2470,28 +2470,27 @@
     }
 
     .report-switcher {
-      margin-bottom: 12px;
-      padding: 4px;
+      padding: var(--spacing-1);
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 4px;
-      border-radius: 14px;
-      background: #e8edeb;
+      gap: var(--spacing-1);
+      border-radius: var(--radius-md);
+      background: var(--color-surface-secondary);
     }
 
     .report-switcher button {
-      min-height: 40px;
-      border-radius: 10px;
-      color: var(--muted);
+      min-width: 0;
+      min-height: var(--touch-target-min);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-secondary);
       background: transparent;
-      font-size: 14px;
-      font-weight: 700;
+      font: var(--font-weight-semibold) var(--font-size-secondary)/1 var(--font-family-sans);
     }
 
     .report-switcher button.active {
-      color: var(--text);
-      background: #fff;
-      box-shadow: 0 2px 8px rgba(26, 48, 38, .08);
+      color: var(--color-text-primary);
+      background: var(--color-surface);
+      box-shadow: var(--shadow-soft);
     }
 
     .report-panel-head {
@@ -2538,6 +2537,484 @@
 
     .report-content {
       min-width: 0;
+    }
+
+    .reports-page.ds-page-container {
+      width: 100%;
+      padding: var(--spacing-1) 0 var(--spacing-6);
+      display: grid;
+      gap: var(--spacing-3);
+    }
+
+    .reports-period-header {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: var(--touch-target-min) minmax(0, 1fr) var(--touch-target-min) auto;
+      align-items: center;
+      gap: var(--spacing-1);
+    }
+
+    .reports-period-title {
+      min-width: 0;
+      text-align: center;
+    }
+
+    .reports-period-title span {
+      display: block;
+      color: var(--color-text-tertiary);
+      font: var(--font-weight-medium) var(--font-size-caption)/var(--line-height-caption) var(--font-family-sans);
+    }
+
+    .reports-period-title h3 {
+      margin: 1px 0 0;
+      overflow: hidden;
+      color: var(--color-text-primary);
+      font: var(--font-weight-bold) var(--font-size-card-title)/var(--line-height-title) var(--font-family-sans);
+      font-variant-numeric: tabular-nums;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .reports-current-button {
+      min-width: 64px;
+      padding-inline: var(--spacing-3);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-secondary);
+    }
+
+    .reports-core {
+      min-width: 0;
+      display: grid;
+      gap: var(--spacing-3);
+    }
+
+    .reports-primary-kpis {
+      min-width: 0;
+      padding: var(--spacing-4);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-4);
+      border: var(--border-default);
+      border-radius: var(--radius-card);
+      background: var(--color-surface);
+    }
+
+    .reports-primary-kpi {
+      min-width: 0;
+      display: grid;
+      gap: var(--spacing-1);
+    }
+
+    .reports-primary-kpi + .reports-primary-kpi {
+      padding-left: var(--spacing-4);
+      border-left: var(--border-subtle);
+    }
+
+    .reports-kpi-label,
+    .reports-secondary-kpi span {
+      color: var(--color-text-secondary);
+      font: var(--font-weight-regular) var(--font-size-caption)/var(--line-height-caption) var(--font-family-sans);
+    }
+
+    .reports-primary-kpi strong {
+      overflow-wrap: anywhere;
+      color: var(--color-text-primary);
+      font: var(--font-weight-bold) clamp(21px, 6vw, 28px)/var(--line-height-title) var(--font-family-sans);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: var(--letter-spacing-tight);
+    }
+
+    .reports-secondary-kpis {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border: var(--border-default);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      background: var(--color-surface);
+    }
+
+    .reports-secondary-kpi {
+      min-width: 0;
+      padding: var(--spacing-3) var(--spacing-4);
+      display: grid;
+      gap: var(--spacing-1);
+    }
+
+    .reports-secondary-kpi:nth-child(even) {
+      border-left: var(--border-subtle);
+    }
+
+    .reports-secondary-kpi:nth-child(n + 3) {
+      border-top: var(--border-subtle);
+    }
+
+    .reports-secondary-kpi strong {
+      overflow-wrap: anywhere;
+      color: var(--color-text-primary);
+      font: var(--font-weight-semibold) var(--font-size-body)/var(--line-height-title) var(--font-family-sans);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .reports-section {
+      min-width: 0;
+      padding: var(--spacing-4);
+      border: var(--border-default);
+      border-radius: var(--radius-card);
+      background: var(--color-surface);
+    }
+
+    .reports-section h4 {
+      margin: 0 0 var(--spacing-3);
+      color: var(--color-text-primary);
+      font: var(--font-weight-semibold) var(--font-size-card-title)/var(--line-height-title) var(--font-family-sans);
+    }
+
+    .reports-comparison-list,
+    .reports-trend-list,
+    .reports-important-list {
+      margin: 0;
+      padding: 0;
+      display: grid;
+      list-style: none;
+    }
+
+    .reports-comparison-list li,
+    .reports-important-list li {
+      min-width: 0;
+      padding-block: var(--spacing-2);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--spacing-3);
+      border-top: var(--border-subtle);
+    }
+
+    .reports-comparison-list li:first-child,
+    .reports-important-list li:first-child {
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .reports-comparison-list li:last-child,
+    .reports-important-list li:last-child {
+      padding-bottom: 0;
+    }
+
+    .reports-comparison-list span,
+    .reports-important-list span {
+      min-width: 0;
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-secondary);
+    }
+
+    .reports-comparison-list strong,
+    .reports-important-list strong {
+      flex: 0 0 auto;
+      color: var(--color-text-primary);
+      font-size: var(--font-size-secondary);
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .reports-comparison-list [data-direction="positive"] {
+      color: var(--color-success);
+    }
+
+    .reports-comparison-list [data-direction="negative"] {
+      color: var(--color-danger);
+    }
+
+    .reports-trend-list {
+      gap: var(--spacing-3);
+    }
+
+    .reports-trend-row {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--spacing-2);
+    }
+
+    .reports-trend-label,
+    .reports-trend-value {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-caption);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .reports-trend-value {
+      min-width: 72px;
+      text-align: right;
+    }
+
+    .reports-trend-visual {
+      position: relative;
+      height: 10px;
+      border-radius: var(--radius-pill);
+      background: var(--color-surface-secondary);
+    }
+
+    .reports-trend-visual::after {
+      position: absolute;
+      top: -2px;
+      bottom: -2px;
+      left: 50%;
+      width: 1px;
+      content: "";
+      background: var(--color-border-strong);
+    }
+
+    .reports-trend-bar {
+      position: absolute;
+      top: 1px;
+      height: 8px;
+      border-radius: var(--radius-pill);
+      background: var(--color-brand);
+    }
+
+    .reports-trend-row[data-status="positive"] .reports-trend-bar {
+      left: 50%;
+      width: var(--trend-width);
+    }
+
+    .reports-trend-row[data-status="negative"] .reports-trend-bar {
+      right: 50%;
+      width: var(--trend-width);
+      border-radius: 2px;
+      background: var(--color-danger);
+    }
+
+    .reports-trend-row[data-status="zero"] .reports-trend-bar {
+      top: 2px;
+      left: calc(50% - 3px);
+      width: 6px;
+      height: 6px;
+      background: var(--color-text-tertiary);
+    }
+
+    .reports-trend-row[data-status="no-record"] .reports-trend-visual {
+      opacity: .55;
+    }
+
+    .reports-offline-note,
+    .reports-recovery-note {
+      margin: 0;
+      padding: var(--spacing-2) var(--spacing-3);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-secondary);
+      background: var(--color-surface-secondary);
+      font-size: var(--font-size-caption);
+      line-height: var(--line-height-caption);
+    }
+
+    .reports-goal-progress {
+      display: grid;
+      gap: var(--spacing-2);
+    }
+
+    .reports-goal-meta {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--spacing-3);
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-secondary);
+    }
+
+    .reports-goal-meta strong {
+      color: var(--color-text-primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .reports-goal-track {
+      height: 8px;
+      overflow: hidden;
+      border-radius: var(--radius-pill);
+      background: var(--color-surface-secondary);
+    }
+
+    .reports-goal-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: var(--color-brand);
+    }
+
+    .reports-platform-period {
+      min-width: 0;
+      padding: var(--spacing-1);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-1);
+      border-radius: var(--radius-md);
+      background: var(--color-surface-secondary);
+    }
+
+    .reports-platform-period button {
+      min-width: 0;
+      min-height: var(--touch-target-min);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-secondary);
+      background: transparent;
+      font: var(--font-weight-semibold) var(--font-size-secondary)/1 var(--font-family-sans);
+    }
+
+    .reports-platform-period button.active {
+      color: var(--color-text-primary);
+      background: var(--color-surface);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .reports-platform-total {
+      min-width: 0;
+      padding: var(--spacing-4);
+      display: grid;
+      gap: var(--spacing-1);
+      border: var(--border-default);
+      border-radius: var(--radius-card);
+      background: var(--color-surface);
+    }
+
+    .reports-platform-total span {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-caption);
+    }
+
+    .reports-platform-total strong {
+      color: var(--color-text-primary);
+      font: var(--font-weight-bold) clamp(24px, 7vw, 32px)/var(--line-height-title) var(--font-family-sans);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: var(--letter-spacing-tight);
+    }
+
+    .reports-platform-list {
+      margin: 0;
+      padding: 0;
+      display: grid;
+      list-style: none;
+    }
+
+    .reports-platform-row {
+      min-width: 0;
+      padding-block: var(--spacing-3);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--spacing-2) var(--spacing-3);
+      border-top: var(--border-subtle);
+    }
+
+    .reports-platform-row:first-child {
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .reports-platform-row:last-child {
+      padding-bottom: 0;
+    }
+
+    .reports-platform-identity {
+      min-width: 0;
+      display: flex;
+      align-items: baseline;
+      gap: var(--spacing-2);
+    }
+
+    .reports-platform-rank {
+      flex: 0 0 auto;
+      width: 24px;
+      color: var(--color-text-tertiary);
+      font-size: var(--font-size-caption);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .reports-platform-name {
+      min-width: 0;
+      overflow: hidden;
+      color: var(--color-text-primary);
+      font-size: var(--font-size-secondary);
+      font-weight: var(--font-weight-semibold);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .reports-platform-values {
+      display: flex;
+      align-items: baseline;
+      justify-content: flex-end;
+      gap: var(--spacing-2);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .reports-platform-values strong {
+      color: var(--color-text-primary);
+      font-size: var(--font-size-secondary);
+    }
+
+    .reports-platform-values span {
+      min-width: 42px;
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-caption);
+      text-align: right;
+    }
+
+    .reports-platform-track {
+      grid-column: 1 / -1;
+      height: 6px;
+      overflow: hidden;
+      border-radius: var(--radius-pill);
+      background: var(--color-surface-secondary);
+    }
+
+    .reports-platform-fill {
+      width: var(--platform-share);
+      height: 100%;
+      border-radius: inherit;
+      background: var(--color-brand);
+    }
+
+    .reports-platform-row[data-share="unavailable"] .reports-platform-fill {
+      width: 0;
+    }
+
+    .reports-platform-note {
+      margin: 0;
+      padding: var(--spacing-3);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-secondary);
+      background: var(--color-surface-secondary);
+      font-size: var(--font-size-caption);
+      line-height: var(--line-height-caption);
+    }
+
+    .reports-important-action {
+      width: 100%;
+      min-width: 0;
+      min-height: var(--touch-target-min);
+      padding: var(--spacing-2) 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-3);
+      border-radius: var(--radius-sm);
+      color: inherit;
+      background: transparent;
+      text-align: left;
+    }
+
+    .reports-important-action:hover {
+      background: var(--color-surface-secondary);
+    }
+
+    .reports-important-action:focus-visible {
+      outline: var(--focus-ring);
+      outline-offset: 2px;
+    }
+
+    .reports-important-action strong {
+      flex: 0 0 auto;
+      text-align: right;
     }
 
     .month-summary-grid {
@@ -3649,6 +4126,604 @@
       }
     }
 
+    .calendar-page.ds-page-container {
+      width: 100%;
+      padding: var(--spacing-1) 0 var(--spacing-6);
+      display: grid;
+      gap: var(--spacing-3);
+    }
+
+    .calendar-month-navigation {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: var(--touch-target-min) minmax(0, 1fr) var(--touch-target-min) auto;
+      align-items: center;
+      gap: var(--spacing-1);
+    }
+
+    .calendar-month-navigation .ds-icon-button svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .calendar-month-title {
+      min-width: 0;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .calendar-today-button {
+      min-width: 56px;
+      padding-inline: var(--spacing-3);
+      border-radius: var(--radius-sm);
+    }
+
+    .calendar-today-button:hover {
+      background: var(--color-surface-muted);
+    }
+
+    .calendar-today-button:active {
+      background: var(--color-brand-subtle);
+    }
+
+    .calendar-weekdays,
+    .calendar-grid-row {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .calendar-weekdays {
+      margin-bottom: calc(var(--spacing-1) * -1);
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-caption);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-caption);
+      text-align: center;
+    }
+
+    .calendar-weekdays span {
+      min-width: 0;
+      padding-block: 2px;
+    }
+
+    .calendar-grid {
+      min-width: 0;
+      overflow: clip;
+      border-block: var(--border-subtle);
+      touch-action: pan-y;
+      transition:
+        opacity var(--motion-normal) var(--ease-standard),
+        transform var(--motion-normal) var(--ease-standard);
+    }
+
+    .calendar-grid[data-transition="previous"] {
+      animation: calendar-month-from-left var(--motion-normal) var(--ease-enter);
+    }
+
+    .calendar-grid[data-transition="next"] {
+      animation: calendar-month-from-right var(--motion-normal) var(--ease-enter);
+    }
+
+    @keyframes calendar-month-from-left {
+      from { opacity: .72; transform: translateX(-8px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes calendar-month-from-right {
+      from { opacity: .72; transform: translateX(8px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .calendar-date {
+      position: relative;
+      min-width: 0;
+      min-height: 58px;
+      padding: 6px 2px 5px;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      align-items: start;
+      justify-items: center;
+      gap: 1px;
+      box-sizing: border-box;
+      color: var(--color-text-primary);
+      background: transparent;
+      font: inherit;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition:
+        color var(--motion-fast) var(--ease-standard),
+        background-color var(--motion-fast) var(--ease-standard),
+        border-color var(--motion-fast) var(--ease-standard);
+    }
+
+    .calendar-date:hover {
+      background: var(--color-surface-muted);
+    }
+
+    .calendar-date:focus-visible {
+      outline: 3px solid var(--color-focus-ring);
+      outline-offset: -3px;
+      z-index: 2;
+    }
+
+    .calendar-date[data-adjacent="true"] {
+      color: var(--color-text-tertiary);
+    }
+
+    .calendar-date[data-future="true"] {
+      color: var(--color-text-disabled);
+    }
+
+    .calendar-date[data-heat="1"] { background: var(--color-calendar-heat-1); }
+    .calendar-date[data-heat="2"] { background: var(--color-calendar-heat-2); }
+    .calendar-date[data-heat="3"] { background: var(--color-calendar-heat-3); }
+    .calendar-date[data-heat="4"] { background: var(--color-calendar-heat-4); }
+
+    .calendar-date[aria-selected="true"] {
+      color: var(--color-text-primary);
+      background: var(--color-brand-soft);
+      border-color: var(--color-brand);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .calendar-date__day,
+    .calendar-date__amount {
+      max-width: 100%;
+      overflow: hidden;
+      font-variant-numeric: tabular-nums;
+      text-overflow: clip;
+      white-space: nowrap;
+    }
+
+    .calendar-date__day {
+      font-size: var(--font-size-body);
+      line-height: 1.15;
+    }
+
+    .calendar-date__amount {
+      color: var(--color-text-secondary);
+      font-size: 11px;
+      font-weight: var(--font-weight-semibold);
+      line-height: 1.1;
+    }
+
+    .calendar-date[aria-selected="true"] .calendar-date__amount {
+      color: var(--color-brand-pressed);
+    }
+
+    .calendar-date__today-dot {
+      position: absolute;
+      left: 50%;
+      bottom: 3px;
+      width: 4px;
+      height: 4px;
+      border-radius: var(--radius-pill);
+      background: var(--color-brand-pressed);
+      transform: translateX(-50%);
+    }
+
+    .calendar-record-card {
+      min-width: 0;
+      min-height: 178px;
+      padding: var(--spacing-4) var(--spacing-5);
+      touch-action: pan-y;
+    }
+
+    .calendar-record-card.is-updating #calendarRecordContent {
+      animation: calendar-card-update var(--motion-normal) var(--ease-enter);
+    }
+
+    @keyframes calendar-card-update {
+      from { opacity: .58; }
+      to { opacity: 1; }
+    }
+
+    .calendar-record-header {
+      min-width: 0;
+      margin-bottom: var(--spacing-3);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--spacing-3);
+    }
+
+    .calendar-record-heading {
+      min-width: 0;
+      display: grid;
+      gap: var(--spacing-1);
+    }
+
+    .calendar-record-heading .ds-card-title {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .calendar-record-date {
+      color: var(--color-text-primary);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .calendar-record-separator {
+      margin-inline: var(--spacing-1);
+      color: var(--color-text-tertiary);
+      font-weight: var(--font-weight-regular);
+    }
+
+    .calendar-record-weekday {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-secondary);
+      font-weight: var(--font-weight-medium);
+    }
+
+    .calendar-record-context {
+      color: var(--color-text-tertiary);
+      font-size: var(--font-size-caption);
+      line-height: var(--line-height-caption);
+    }
+
+    .calendar-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0 var(--spacing-5);
+    }
+
+    .calendar-metric {
+      min-width: 0;
+      display: grid;
+      gap: var(--spacing-1);
+    }
+
+    .calendar-metric span,
+    .calendar-support-row span,
+    .calendar-platform-row span {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-secondary);
+      line-height: var(--line-height-caption);
+    }
+
+    .calendar-metric strong {
+      min-width: 0;
+      color: var(--color-text-primary);
+      line-height: var(--line-height-title);
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+    }
+
+    .calendar-metric--primary strong {
+      font-size: var(--font-size-section-title);
+    }
+
+    .calendar-metric--secondary strong {
+      font-size: 18px;
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .calendar-metrics-divider {
+      grid-column: 1 / -1;
+      margin-block: var(--spacing-3);
+      border-top: var(--border-subtle);
+    }
+
+    .calendar-record-section {
+      margin-top: var(--spacing-5);
+      padding-top: var(--spacing-4);
+      border-top: var(--border-subtle);
+      display: grid;
+      gap: var(--spacing-3);
+    }
+
+    .calendar-platform-row,
+    .calendar-support-row {
+      min-width: 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--spacing-4);
+    }
+
+    .calendar-platform-row span,
+    .calendar-support-row span {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .calendar-platform-row strong,
+    .calendar-support-row strong {
+      flex: 0 0 auto;
+      color: var(--color-text-primary);
+      font-size: var(--font-size-body);
+      line-height: var(--line-height-caption);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .calendar-note {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-secondary);
+      line-height: var(--line-height-body);
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .calendar-record-card .ds-empty-state {
+      min-height: 136px;
+      padding: var(--spacing-4) 0;
+      justify-content: center;
+    }
+
+    .calendar-record-actions {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-2);
+    }
+
+    .record-editor-dialog {
+      width: min(100%, 720px);
+      max-width: 100%;
+      height: 100dvh;
+      max-height: 100dvh;
+      margin: 0 0 0 auto;
+      padding: 0;
+      border: 0;
+      background: var(--color-background);
+      color: var(--color-text-primary);
+    }
+
+    .record-editor-dialog::backdrop {
+      background: rgb(14 27 23 / 28%);
+    }
+
+    body.record-editor-open {
+      overflow: hidden;
+    }
+
+    .record-editor-shell {
+      min-width: 0;
+      min-height: 100%;
+      padding:
+        max(var(--spacing-3), env(safe-area-inset-top))
+        var(--page-padding)
+        max(calc(var(--spacing-8) + env(safe-area-inset-bottom)), var(--spacing-8));
+      display: grid;
+      align-content: start;
+      gap: var(--spacing-4);
+    }
+
+    .record-editor-header {
+      position: sticky;
+      z-index: 5;
+      top: 0;
+      min-width: 0;
+      padding-block: var(--spacing-2);
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) 44px;
+      align-items: center;
+      gap: var(--spacing-2);
+      background: color-mix(in srgb, var(--color-background) 94%, transparent);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .record-editor-heading {
+      min-width: 0;
+      text-align: center;
+    }
+
+    .record-editor-heading h2,
+    .record-editor-heading p {
+      margin: 0;
+    }
+
+    .record-editor-heading h2 {
+      overflow: hidden;
+      font-size: var(--font-size-section-title);
+      line-height: var(--line-height-title);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .record-editor-heading p {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-caption);
+      line-height: var(--line-height-caption);
+    }
+
+    .record-editor-close {
+      grid-column: 1;
+    }
+
+    .record-editor-header-spacer {
+      grid-column: 3;
+      width: 44px;
+      height: 44px;
+    }
+
+    .record-editor-status {
+      min-height: 20px;
+      text-align: center;
+    }
+
+    .record-editor-content {
+      min-width: 0;
+      display: grid;
+      gap: var(--spacing-4);
+    }
+
+    .record-editor-content > .panel {
+      margin: 0;
+    }
+
+    .record-editor-dialog .details-panel .panel-head {
+      display: none;
+    }
+
+    .record-editor-dialog #entryDateCard input {
+      pointer-events: none;
+    }
+
+    .record-editor-delete {
+      width: 100%;
+    }
+
+    .record-editor-confirm {
+      width: min(calc(100% - 32px), 420px);
+      max-width: 420px;
+      padding: 0;
+      border: 0;
+      border-radius: var(--radius-lg);
+      background: var(--color-surface);
+      color: var(--color-text-primary);
+      box-shadow: var(--shadow-overlay);
+    }
+
+    .record-editor-confirm::backdrop {
+      background: rgb(14 27 23 / 34%);
+    }
+
+    .record-editor-confirm__body {
+      padding: var(--spacing-6);
+      display: grid;
+      gap: var(--spacing-4);
+    }
+
+    .record-editor-confirm__body h2,
+    .record-editor-confirm__body p {
+      margin: 0;
+    }
+
+    .record-editor-confirm__actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-3);
+    }
+
+    .calendar-expense-list {
+      display: grid;
+      gap: var(--spacing-2);
+    }
+
+    .calendar-expense-row {
+      min-width: 0;
+      min-height: 44px;
+      padding-block: var(--spacing-2);
+      border-bottom: var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-3);
+    }
+
+    .calendar-expense-row:last-child {
+      border-bottom: 0;
+    }
+
+    .calendar-expense-row span {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .calendar-month-summary {
+      min-width: 0;
+      padding-top: var(--spacing-4);
+      border-top: var(--border-subtle);
+      display: grid;
+      gap: var(--spacing-3);
+    }
+
+    .calendar-month-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-4);
+    }
+
+    .calendar-month-summary-item {
+      min-width: 0;
+      display: grid;
+      gap: var(--spacing-1);
+    }
+
+    .calendar-month-summary-item span {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-secondary);
+    }
+
+    .calendar-month-summary-item strong {
+      color: var(--color-text-primary);
+      font-size: 20px;
+      line-height: var(--line-height-title);
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+    }
+
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    @media (max-width: 350px) {
+      .calendar-page.ds-page-container {
+        gap: var(--spacing-3);
+      }
+
+      .calendar-month-navigation {
+        gap: 0;
+      }
+
+      .calendar-month-title {
+        font-size: 18px;
+      }
+
+      .calendar-date {
+        min-height: 54px;
+      }
+
+      .calendar-date__day {
+        font-size: 15px;
+      }
+
+      .calendar-date__amount {
+        font-size: 10px;
+      }
+
+      .calendar-record-card {
+        padding: var(--spacing-4);
+      }
+
+      .calendar-metrics {
+        gap: var(--spacing-3);
+      }
+
+      .calendar-month-summary-item strong {
+        font-size: 18px;
+      }
+
+      .calendar-metric--primary strong {
+        font-size: 20px;
+      }
+
+      .calendar-metric--secondary strong {
+        font-size: 18px;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         scroll-behavior: auto !important;
@@ -3657,6 +4732,13 @@
 
       .detail-section::details-content {
         transition-duration: .01ms !important;
+      }
+
+      .calendar-grid,
+      .calendar-record-card #calendarRecordContent {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
       }
     }
   </style>
@@ -3780,7 +4862,8 @@
           </div>
         </section>
 
-        <div class="panel">
+        <span id="sharedIncomePanelAnchor" hidden></span>
+        <div class="panel" id="sharedIncomePanel">
           <div class="panel-head income-panel-head">
             <h3 class="section-heading">
               <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -3801,7 +4884,8 @@
           </div>
         </div>
 
-        <div class="panel details-panel">
+        <span id="sharedDetailPanelAnchor" hidden></span>
+        <div class="panel details-panel" id="sharedDetailPanel">
           <div class="panel-head">
             <h3 id="formTitle">更新今日紀錄</h3>
             <button class="button secondary hidden" id="cancelEdit" type="button">取消編輯</button>
@@ -3935,82 +5019,102 @@
       </section>
 
       <section id="view-calendar" class="view hidden">
-        <div class="panel history-panel calendar-history-panel">
-          <div class="panel-head report-panel-head">
-            <h3>月份明細</h3>
-            <select id="monthFilter" aria-label="月曆月份篩選"></select>
+        <div class="calendar-page ds-page-container">
+          <div class="calendar-month-navigation" aria-label="月份導覽">
+            <button class="ds-icon-button" id="calendarPreviousMonth" type="button" aria-label="上一個月">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m15 18-6-6 6-6"></path>
+              </svg>
+            </button>
+            <h3 class="calendar-month-title ds-section-title ds-numeric" id="calendarMonthTitle"></h3>
+            <button class="ds-icon-button" id="calendarNextMonth" type="button" aria-label="下一個月">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m9 18 6-6-6-6"></path>
+              </svg>
+            </button>
+            <button class="ds-button ds-button--text calendar-today-button" id="calendarTodayButton" type="button">今天</button>
           </div>
-          <div class="table-wrap" id="entriesTable"></div>
+
+          <div class="calendar-weekdays" role="row" aria-hidden="true">
+            <span role="columnheader">一</span>
+            <span role="columnheader">二</span>
+            <span role="columnheader">三</span>
+            <span role="columnheader">四</span>
+            <span role="columnheader">五</span>
+            <span role="columnheader">六</span>
+            <span role="columnheader">日</span>
+          </div>
+          <div class="calendar-grid" id="calendarGrid" role="grid" aria-labelledby="calendarMonthTitle"></div>
+
+          <article class="ds-card calendar-record-card" id="calendarRecordCard" aria-live="polite">
+            <div id="calendarRecordContent"></div>
+          </article>
+
+          <section class="calendar-month-summary" id="calendarMonthSummary" aria-labelledby="calendarMonthSummaryTitle">
+            <h3 class="ds-card-title" id="calendarMonthSummaryTitle">月份摘要</h3>
+            <div id="calendarMonthSummaryContent"></div>
+          </section>
+
+          <p class="sr-only" id="calendarAnnouncement" role="status" aria-live="polite"></p>
         </div>
       </section>
 
       <section id="view-reports" class="view hidden">
-        <div class="report-switcher" aria-label="報表切換">
-          <button class="active" data-report-view="week">週報</button>
-          <button data-report-view="month">月報</button>
-          <button data-report-view="platform">平台</button>
-        </div>
-        <div class="report-content" data-report-panel="week">
-          <div class="panel">
-            <div class="panel-head report-panel-head">
-              <h3>每週總額</h3>
-              <select id="weekMonthFilter" aria-label="週報月份篩選"></select>
-            </div>
-            <div class="panel-body">
-              <div class="week-list" id="weekList"></div>
-            </div>
+        <div class="reports-page ds-page-container">
+          <div class="report-switcher" role="tablist" aria-label="報表切換">
+            <button class="active" id="reportTabWeek" type="button" role="tab" aria-selected="true"
+              aria-controls="reportPanelWeek" tabindex="0" data-report-view="week">週報</button>
+            <button id="reportTabMonth" type="button" role="tab" aria-selected="false"
+              aria-controls="reportPanelMonth" tabindex="-1" data-report-view="month">月報</button>
+            <button id="reportTabPlatform" type="button" role="tab" aria-selected="false"
+              aria-controls="reportPanelPlatform" tabindex="-1" data-report-view="platform">平台</button>
           </div>
-        </div>
+          <p class="sr-only" id="reportsAnnouncement" role="status" aria-live="polite"></p>
 
-        <div class="report-content hidden" data-report-panel="month">
-          <div class="layout">
-            <div class="panel">
-              <div class="panel-head">
-                <h3>月份選擇</h3>
+          <section class="report-content" id="reportPanelWeek" role="tabpanel"
+            aria-labelledby="reportTabWeek" data-report-panel="week">
+            <header class="reports-period-header">
+              <button class="ds-icon-button" type="button" data-report-period="previous"
+                aria-label="查看上一週"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button>
+              <div class="reports-period-title">
+                <span>週報</span>
+                <h3 id="weekPeriodLabel"></h3>
               </div>
-              <div class="panel-body">
-                <label>查看月份
-                  <select id="monthReportFilter"></select>
-                </label>
-                <div style="height: 16px"></div>
-                <div class="bars" id="goalProgress"></div>
-              </div>
-            </div>
-            <div class="panel">
-              <div class="panel-head">
-                <h3>月份總覽</h3>
-              </div>
-              <div class="panel-body" id="monthSummaryMetrics"></div>
-            </div>
-            <div class="panel" id="dailyTrendPanel">
-              <div class="panel-head">
-                <h3>每日收入走勢</h3>
-              </div>
-              <div class="panel-body">
-                <div class="bars" id="dailyBars"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+              <button class="ds-icon-button" type="button" data-report-period="next"
+                aria-label="查看下一週"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+              <button class="ds-button ds-button--secondary reports-current-button" type="button"
+                data-report-period="current">本週</button>
+            </header>
+            <div class="reports-core" id="weeklyReportContent"></div>
+          </section>
 
-        <div class="report-content hidden" data-report-panel="platform">
-          <div class="layout">
-            <div class="panel">
-              <div class="panel-head report-panel-head">
-                <h3>平台收入占比</h3>
-                <select id="platformMonthFilter" aria-label="平台報表月份篩選"></select>
+          <section class="report-content hidden" id="reportPanelMonth" role="tabpanel"
+            aria-labelledby="reportTabMonth" data-report-panel="month">
+            <header class="reports-period-header">
+              <button class="ds-icon-button" type="button" data-report-period="previous"
+                aria-label="查看上個月"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button>
+              <div class="reports-period-title">
+                <span>月報</span>
+                <h3 id="monthPeriodLabel"></h3>
               </div>
-              <div class="panel-body">
-                <div class="bars" id="platformBars"></div>
-              </div>
+              <button class="ds-icon-button" type="button" data-report-period="next"
+                aria-label="查看下個月"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+              <button class="ds-button ds-button--secondary reports-current-button" type="button"
+                data-report-period="current">本月</button>
+            </header>
+            <div class="reports-core" id="monthlyReportContent"></div>
+          </section>
+
+          <section class="report-content hidden" id="reportPanelPlatform" role="tabpanel"
+            aria-labelledby="reportTabPlatform" data-report-panel="platform">
+            <div class="reports-platform-period" role="tablist" aria-label="平台報表期間">
+              <button class="active" type="button" role="tab" aria-selected="true" tabindex="0"
+                data-platform-period="week">本週</button>
+              <button type="button" role="tab" aria-selected="false" tabindex="-1"
+                data-platform-period="month">本月</button>
             </div>
-            <div class="panel" id="platformRankingPanel">
-              <div class="panel-head">
-                <h3>平台收入排行</h3>
-              </div>
-              <div class="table-wrap" id="platformTable"></div>
-            </div>
-          </div>
+            <div class="reports-core" id="platformReportContent"></div>
+          </section>
         </div>
       </section>
 
@@ -4188,6 +5292,36 @@
 
   <div class="app-toast" id="appToast" role="status" aria-live="polite"></div>
 
+  <dialog class="record-editor-dialog" id="recordEditorDialog" aria-labelledby="recordEditorTitle">
+    <div class="record-editor-shell">
+      <header class="record-editor-header">
+        <button class="ds-icon-button record-editor-close" id="recordEditorClose" type="button" aria-label="關閉工作紀錄編輯器">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+        </button>
+        <div class="record-editor-heading">
+          <h2 id="recordEditorTitle">工作紀錄</h2>
+          <p class="ds-numeric" id="recordEditorDate"></p>
+        </div>
+        <span class="record-editor-header-spacer" aria-hidden="true"></span>
+      </header>
+      <p class="ds-save-status record-editor-status" id="recordEditorStatus" role="status" aria-live="polite"></p>
+      <div class="record-editor-content" id="recordEditorContent"></div>
+      <div class="calendar-expense-list" id="calendarExpenseList" aria-label="已記錄支出"></div>
+      <button class="ds-button ds-button--danger record-editor-delete hidden" id="recordEditorDelete" type="button">刪除這天的工作紀錄</button>
+    </div>
+  </dialog>
+
+  <dialog class="record-editor-confirm" id="recordEditorConfirm" aria-labelledby="recordEditorConfirmTitle">
+    <div class="record-editor-confirm__body">
+      <h2 class="ds-card-title" id="recordEditorConfirmTitle"></h2>
+      <p class="ds-secondary" id="recordEditorConfirmMessage"></p>
+      <div class="record-editor-confirm__actions">
+        <button class="ds-button ds-button--secondary" id="recordEditorConfirmCancel" type="button">取消</button>
+        <button class="ds-button ds-button--primary" id="recordEditorConfirmAccept" type="button">確認</button>
+      </div>
+    </div>
+  </dialog>
+
   <script>
     const brandAttribution = Object.freeze({
       productName: "Driver Pay Pro",
@@ -4198,6 +5332,7 @@
       copyrightYear: "2026"
     });
     const storageKey = "driverPayApp.v2";
+    const lastValidStorageKey = `${storageKey}.lastValid`;
     const defaultPlatforms = ["Uber", "LINE GO", "Yoxi", "55688", "大都會", "台灣大車隊", "路邊客", "自訂"];
     const defaultPlatformIds = {
       "Uber": "platform-uber",
@@ -4277,15 +5412,34 @@
       "自訂": 100
     };
 
+    let stateLoadError = null;
+    let stateRecoveryNotice = "";
     const state = loadState();
     let activeView = "today";
-    let activeReportView = state.settings.lastReportView;
+    let reportsState = createReportsState(todayString());
+    let reportsRefreshFrame = 0;
+    let activeReportView = reportsState.activeReportTab;
     let overviewVisible = false;
     let expenseDraft = createExpenseDraft();
     let expenseToastTimer = 0;
     let expenseShortcutStatus = "";
     let incomeUndoTimer = 0;
     let lastIncomeAddition = null;
+    let calendarState = createCalendarState(todayString());
+    let calendarTodayTimer = 0;
+    let calendarGesture = null;
+    let recordEditorState = {
+      open: false,
+      mode: "create",
+      date: "",
+      initialRecord: null,
+      draft: null,
+      dirty: false,
+      saving: false,
+      returnFocus: null,
+      returnFocusSelector: ""
+    };
+    let recordEditorConfirmAction = null;
 
     const titles = {
       today: ["今日輸入", "每天花一分鐘記錄收入、工時與支出。"],
@@ -4310,6 +5464,23 @@
       appToast: document.getElementById("appToast"),
       entryForm: document.getElementById("entryForm"),
       detailForm: document.getElementById("detailForm"),
+      sharedIncomePanel: document.getElementById("sharedIncomePanel"),
+      sharedIncomePanelAnchor: document.getElementById("sharedIncomePanelAnchor"),
+      sharedDetailPanel: document.getElementById("sharedDetailPanel"),
+      sharedDetailPanelAnchor: document.getElementById("sharedDetailPanelAnchor"),
+      recordEditorDialog: document.getElementById("recordEditorDialog"),
+      recordEditorContent: document.getElementById("recordEditorContent"),
+      recordEditorTitle: document.getElementById("recordEditorTitle"),
+      recordEditorDate: document.getElementById("recordEditorDate"),
+      recordEditorStatus: document.getElementById("recordEditorStatus"),
+      recordEditorClose: document.getElementById("recordEditorClose"),
+      recordEditorDelete: document.getElementById("recordEditorDelete"),
+      recordEditorConfirm: document.getElementById("recordEditorConfirm"),
+      recordEditorConfirmTitle: document.getElementById("recordEditorConfirmTitle"),
+      recordEditorConfirmMessage: document.getElementById("recordEditorConfirmMessage"),
+      recordEditorConfirmCancel: document.getElementById("recordEditorConfirmCancel"),
+      recordEditorConfirmAccept: document.getElementById("recordEditorConfirmAccept"),
+      calendarExpenseList: document.getElementById("calendarExpenseList"),
       workTimeSection: document.getElementById("workTimeSection"),
       workCollapsedPrimary: document.getElementById("workCollapsedPrimary"),
       workCollapsedSecondary: document.getElementById("workCollapsedSecondary"),
@@ -4317,21 +5488,25 @@
       entryId: document.getElementById("entryId"),
       formTitle: document.getElementById("formTitle"),
       cancelEdit: document.getElementById("cancelEdit"),
-      entriesTable: document.getElementById("entriesTable"),
-      monthFilter: document.getElementById("monthFilter"),
-      weekMonthFilter: document.getElementById("weekMonthFilter"),
-      monthReportFilter: document.getElementById("monthReportFilter"),
-      platformMonthFilter: document.getElementById("platformMonthFilter"),
+      calendarGrid: document.getElementById("calendarGrid"),
+      calendarMonthTitle: document.getElementById("calendarMonthTitle"),
+      calendarPreviousMonth: document.getElementById("calendarPreviousMonth"),
+      calendarNextMonth: document.getElementById("calendarNextMonth"),
+      calendarTodayButton: document.getElementById("calendarTodayButton"),
+      calendarRecordCard: document.getElementById("calendarRecordCard"),
+      calendarRecordContent: document.getElementById("calendarRecordContent"),
+      calendarMonthSummary: document.getElementById("calendarMonthSummary"),
+      calendarMonthSummaryContent: document.getElementById("calendarMonthSummaryContent"),
+      calendarAnnouncement: document.getElementById("calendarAnnouncement"),
       reportButtons: document.querySelectorAll("[data-report-view]"),
       reportPanels: document.querySelectorAll("[data-report-panel]"),
-      weekList: document.getElementById("weekList"),
-      dailyBars: document.getElementById("dailyBars"),
-      goalProgress: document.getElementById("goalProgress"),
-      monthSummaryMetrics: document.getElementById("monthSummaryMetrics"),
-      dailyTrendPanel: document.getElementById("dailyTrendPanel"),
-      platformBars: document.getElementById("platformBars"),
-      platformTable: document.getElementById("platformTable"),
-      platformRankingPanel: document.getElementById("platformRankingPanel"),
+      platformPeriodButtons: document.querySelectorAll("[data-platform-period]"),
+      reportsAnnouncement: document.getElementById("reportsAnnouncement"),
+      weekPeriodLabel: document.getElementById("weekPeriodLabel"),
+      monthPeriodLabel: document.getElementById("monthPeriodLabel"),
+      weeklyReportContent: document.getElementById("weeklyReportContent"),
+      monthlyReportContent: document.getElementById("monthlyReportContent"),
+      platformReportContent: document.getElementById("platformReportContent"),
       aiTodayAdvice: document.getElementById("aiTodayAdvice"),
       aiMonthInsights: document.getElementById("aiMonthInsights"),
       aiPlatformInsights: document.getElementById("aiPlatformInsights"),
@@ -4361,28 +5536,107 @@
     };
 
     function loadState() {
-      const saved = localStorage.getItem(storageKey);
+      stateLoadError = null;
+      stateRecoveryNotice = "";
+      let saved = null;
+      try {
+        saved = localStorage.getItem(storageKey);
+      } catch (error) {
+        stateLoadError = error;
+        console.error("無法讀取既有資料，將保留原始 localStorage 內容。", error);
+      }
       if (saved) {
         try {
-          const parsed = JSON.parse(saved);
-          const platforms = parsed.platforms?.length ? parsed.platforms.slice() : defaultPlatforms.slice();
-          return {
-            ...parsed,
-            platforms,
-            expenses: parsed.expenses?.length ? parsed.expenses.slice() : defaultExpenses.slice(),
-            entries: Array.isArray(parsed.entries) ? parsed.entries : [],
-            settings: normalizeSettings(parsed.settings, platforms)
-          };
+          return normalizeStatePayload(JSON.parse(saved));
         } catch (error) {
+          stateLoadError = error;
           console.error("無法讀取既有資料，將保留原始 localStorage 內容。", error);
+          try {
+            const backup = localStorage.getItem(lastValidStorageKey);
+            if (backup) {
+              stateRecoveryNotice = "目前顯示最近一次可安全讀取的本機資料；原始資料仍完整保留。";
+              return normalizeStatePayload(JSON.parse(backup));
+            }
+          } catch (backupError) {
+            console.error("最近一次有效備份也無法讀取。", backupError);
+          }
         }
       }
-      return {
+      return normalizeStatePayload({
         platforms: defaultPlatforms.slice(),
         expenses: defaultExpenses.slice(),
         entries: [],
         settings: normalizeSettings({ monthlyGoal: 0 }, defaultPlatforms)
+      });
+    }
+
+    function normalizeStatePayload(payload = {}) {
+      if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+        throw new TypeError("儲存資料格式無效");
+      }
+      const platforms = Array.isArray(payload.platforms) && payload.platforms.length
+        ? payload.platforms.filter(name => typeof name === "string" && name.trim()).slice()
+        : defaultPlatforms.slice();
+      const entries = Array.isArray(payload.entries) ? payload.entries.slice() : [];
+      return {
+        ...payload,
+        platforms,
+        expenses: Array.isArray(payload.expenses) && payload.expenses.length
+          ? payload.expenses.filter(name => typeof name === "string" && name.trim()).slice()
+          : defaultExpenses.slice(),
+        entries,
+        settings: normalizeSettings(payload.settings, platforms)
       };
+    }
+
+    function cloneStatePayload(payload) {
+      return JSON.parse(JSON.stringify(payload));
+    }
+
+    function replaceStateContents(nextState) {
+      Object.keys(state).forEach(key => delete state[key]);
+      Object.assign(state, nextState);
+    }
+
+    function persistStatePayload(nextState, options) {
+      options ||= {};
+      const { updateMemory = false } = options;
+      let previousSerialized;
+      let previousLastValidSerialized;
+      let storageSnapshotsCaptured = false;
+      try {
+        previousSerialized = localStorage.getItem(storageKey);
+        previousLastValidSerialized = localStorage.getItem(lastValidStorageKey);
+        storageSnapshotsCaptured = true;
+        const normalized = normalizeStatePayload(cloneStatePayload(nextState));
+        const serialized = JSON.stringify(normalized);
+        localStorage.setItem(storageKey, serialized);
+        const readBack = localStorage.getItem(storageKey);
+        if (readBack !== serialized) throw new Error("儲存後讀回內容不一致");
+        normalizeStatePayload(JSON.parse(readBack));
+        localStorage.setItem(lastValidStorageKey, serialized);
+        if (updateMemory) replaceStateContents(normalized);
+        stateLoadError = null;
+        stateRecoveryNotice = "";
+        return true;
+      } catch (error) {
+        if (storageSnapshotsCaptured) {
+          try {
+            if (previousSerialized === null) localStorage.removeItem(storageKey);
+            else localStorage.setItem(storageKey, previousSerialized);
+          } catch (restoreError) {
+            console.error("主資料回復失敗；原始快照仍保留於記憶體。", restoreError);
+          }
+          try {
+            if (previousLastValidSerialized === null) localStorage.removeItem(lastValidStorageKey);
+            else localStorage.setItem(lastValidStorageKey, previousLastValidSerialized);
+          } catch (restoreError) {
+            console.error("安全快照回復失敗；原始主資料仍優先保留。", restoreError);
+          }
+        }
+        console.error("無法安全儲存資料。", error);
+        return false;
+      }
     }
 
     function normalizeSettings(settings = {}, platforms = defaultPlatforms) {
@@ -4498,13 +5752,7 @@
     }
 
     function saveState() {
-      try {
-        localStorage.setItem(storageKey, JSON.stringify(state));
-        return true;
-      } catch (error) {
-        console.error("無法儲存資料。", error);
-        return false;
-      }
+      return persistStatePayload(state);
     }
 
     function money(value) {
@@ -4573,6 +5821,169 @@
       ].join("-");
     }
 
+    function normalizeDateKey(value, fallback = "") {
+      const candidate = String(value || "");
+      if (dateOnlyParts(candidate)) return candidate;
+      const safeFallback = String(fallback || "");
+      return dateOnlyParts(safeFallback) ? safeFallback : "";
+    }
+
+    function monthKeyFromDate(dateKey) {
+      const normalized = normalizeDateKey(dateKey);
+      return normalized ? normalized.slice(0, 7) : "";
+    }
+
+    function daysInCalendarMonth(monthKey) {
+      const match = /^(\d{4})-(\d{2})$/.exec(String(monthKey || ""));
+      if (!match) return 0;
+      const year = Number(match[1]);
+      const month = Number(match[2]);
+      if (month < 1 || month > 12) return 0;
+      return new Date(Date.UTC(year, month, 0)).getUTCDate();
+    }
+
+    function addCalendarMonths(monthKey, offset) {
+      if (!daysInCalendarMonth(monthKey)) return "";
+      const [year, month] = monthKey.split("-").map(Number);
+      const date = new Date(Date.UTC(year, month - 1, 1));
+      date.setUTCMonth(date.getUTCMonth() + Math.trunc(Number(offset || 0)));
+      return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
+    }
+
+    function mondayFirstWeekdayIndex(dateKey) {
+      const parts = dateOnlyParts(dateKey);
+      if (!parts) return -1;
+      const weekday = new Date(Date.UTC(parts.year, parts.month - 1, parts.day)).getUTCDay();
+      return (weekday + 6) % 7;
+    }
+
+    function generateCalendarMonthGrid(monthKey) {
+      const daysInMonth = daysInCalendarMonth(monthKey);
+      if (!daysInMonth) return [];
+      const firstDate = `${monthKey}-01`;
+      const leadingDays = mondayFirstWeekdayIndex(firstDate);
+      const requiredCells = leadingDays + daysInMonth;
+      const cellCount = requiredCells <= 35 ? 35 : 42;
+      const gridStart = addLocalDays(firstDate, -leadingDays);
+      return Array.from({ length: cellCount }, (_, index) => {
+        const date = addLocalDays(gridStart, index);
+        return {
+          date,
+          day: Number(date.slice(-2)),
+          month: monthKeyFromDate(date),
+          isCurrentMonth: monthKeyFromDate(date) === monthKey
+        };
+      });
+    }
+
+    function formatCalendarNetAmount(netIncome, hasRecord = true) {
+      if (!hasRecord) return "";
+      const value = Number(netIncome);
+      if (!Number.isFinite(value)) return "—";
+      if (value === 0) return "—";
+      const sign = value < 0 ? "-" : "";
+      const absolute = Math.abs(value);
+      if (absolute < 1000) return `${sign}${Math.round(absolute)}`;
+      if (absolute < 10000) {
+        const compact = (absolute / 1000).toFixed(1).replace(/\.0$/, "");
+        return `${sign}${compact}k`;
+      }
+      return `${sign}${Math.round(absolute / 1000)}k`;
+    }
+
+    function buildCalendarIncomeLevels(records, todayDate) {
+      const today = normalizeDateKey(todayDate);
+      const eligible = (Array.isArray(records) ? records : [])
+        .map(record => ({
+          date: normalizeDateKey(record?.date),
+          net: Number(record?.net)
+        }))
+        .filter(record => record.date && Number.isFinite(record.net) && record.net > 0 && (!today || record.date <= today));
+      const levels = new Map();
+      if (!eligible.length) return levels;
+      const uniqueValues = new Set(eligible.map(record => record.net));
+      if (eligible.length >= 2 && uniqueValues.size === 1) {
+        eligible.forEach(record => levels.set(record.date, 2));
+        return levels;
+      }
+      if (eligible.length < 4) {
+        const maximum = Math.max(...eligible.map(record => record.net));
+        eligible.forEach(record => {
+          const ratio = record.net / maximum;
+          const level = ratio <= 0.25 ? 1 : ratio <= 0.5 ? 2 : ratio <= 0.75 ? 3 : 4;
+          levels.set(record.date, level);
+        });
+        return levels;
+      }
+      const sortedValues = eligible.map(record => record.net).sort((a, b) => a - b);
+      const levelByValue = new Map();
+      uniqueValues.forEach(value => {
+        const firstRank = sortedValues.indexOf(value) + 1;
+        const lastRank = sortedValues.lastIndexOf(value) + 1;
+        const percentile = (firstRank + lastRank) / (2 * sortedValues.length);
+        const level = percentile <= 0.25 ? 1 : percentile <= 0.5 ? 2 : percentile <= 0.75 ? 3 : 4;
+        levelByValue.set(value, level);
+      });
+      eligible.forEach(record => levels.set(record.date, levelByValue.get(record.net)));
+      return levels;
+    }
+
+    function getCalendarIncomeLevel(levelMap, dateKey) {
+      const level = Number(levelMap?.get?.(dateKey) || 0);
+      return [1, 2, 3, 4].includes(level) ? level : 0;
+    }
+
+    function createCalendarState(todayDate, externalDate = "") {
+      const today = normalizeDateKey(todayDate);
+      const selectedDate = normalizeDateKey(externalDate, today);
+      return {
+        displayedMonth: monthKeyFromDate(selectedDate),
+        selectedDate,
+        today,
+        focusedDate: selectedDate,
+        recordsForDisplayedMonth: [],
+        selectedDateRecord: null,
+        loadStatus: "ready",
+        error: null,
+        offline: false,
+        gesture: "idle",
+        monthTransition: "idle"
+      };
+    }
+
+    function calendarStateWithDisplayedMonth(calendarState, monthKey) {
+      const displayedMonth = daysInCalendarMonth(monthKey) ? monthKey : calendarState.displayedMonth;
+      return { ...calendarState, displayedMonth, monthTransition: "idle" };
+    }
+
+    function calendarStateWithSelectedDate(calendarState, dateKey) {
+      const selectedDate = normalizeDateKey(dateKey, calendarState.today);
+      return {
+        ...calendarState,
+        selectedDate,
+        displayedMonth: monthKeyFromDate(selectedDate),
+        focusedDate: selectedDate,
+        monthTransition: "idle"
+      };
+    }
+
+    function calendarStateForToday(calendarState, todayDate) {
+      const today = normalizeDateKey(todayDate, calendarState.today);
+      return {
+        ...calendarState,
+        today,
+        selectedDate: today,
+        displayedMonth: monthKeyFromDate(today),
+        focusedDate: today,
+        monthTransition: "idle"
+      };
+    }
+
+    function calendarStateWithRefreshedToday(calendarState, todayDate) {
+      const today = normalizeDateKey(todayDate, calendarState.today);
+      return { ...calendarState, today };
+    }
+
     function currentTimeString() {
       const now = new Date();
       return `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
@@ -4596,6 +6007,48 @@
       const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
       const weekday = weekdays[new Date(year, month - 1, day).getDay()];
       return `${month}/${day}（${weekday}）`;
+    }
+
+    function calendarWeekdayLabel(dateKey) {
+      const index = mondayFirstWeekdayIndex(dateKey);
+      return index < 0 ? "" : ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"][index];
+    }
+
+    function formatCalendarFullDate(dateKey) {
+      const parts = dateOnlyParts(dateKey);
+      if (!parts) return "";
+      return `${parts.year}年${parts.month}月${parts.day}日`;
+    }
+
+    function formatCalendarMonthTitle(monthKey) {
+      if (!daysInCalendarMonth(monthKey)) return "";
+      const [year, month] = monthKey.split("-").map(Number);
+      return `${year} 年 ${month} 月`;
+    }
+
+    function calendarDateAriaLabel(options) {
+      const {
+        date,
+        today = "",
+        selected = false,
+        hasRecord = false,
+        net = 0,
+        future = false
+      } = options || {};
+      const normalized = normalizeDateKey(date);
+      if (!normalized) return "無效日期";
+      const labels = [formatCalendarFullDate(normalized), calendarWeekdayLabel(normalized)];
+      if (normalized === today) labels.push("今天");
+      if (selected) labels.push("已選取");
+      if (future) labels.push("未來日期");
+      if (hasRecord) {
+        const safeNet = Number(net);
+        labels.push("有工作紀錄");
+        labels.push(Number.isFinite(safeNet) ? `淨收入 ${money(safeNet)}` : "淨收入資料無效");
+      } else {
+        labels.push("尚無工作紀錄");
+      }
+      return labels.join("，");
     }
 
     function weatherIconSvg(weather) {
@@ -4823,6 +6276,29 @@
       const orders = entries.reduce((sum, entry) => sum + Number(entry.orders || 0), 0);
       const net = total - expenses;
       return { total, tips, expenses, durationMs, hours, orders, net, hourly: hourlyRate(net, durationMs) };
+    }
+
+    function isWorkDayRecord(entry, derived = null) {
+      if (!entry || !normalizeDateKey(entry.date)) return false;
+      const values = derived || {
+        durationMs: workMetrics(entry).durationMs,
+        total: entryTotal(entry),
+        expenses: entryExpenses(entry)
+      };
+      return nonNegativeNumber(values.durationMs) > 0
+        || Math.abs(finiteNumber(values.total)) > 0
+        || Math.abs(finiteNumber(values.expenses)) > 0
+        || nonNegativeNumber(entry.orders) > 0
+        || nonNegativeNumber(entry.km) > 0;
+    }
+
+    function summarizeCalendarMonth(entries) {
+      const validEntries = (Array.isArray(entries) ? entries : []).filter(entry => normalizeDateKey(entry?.date));
+      const summary = summarize(validEntries);
+      const workDays = new Set(
+        validEntries.filter(entry => isWorkDayRecord(entry)).map(entry => entry.date)
+      ).size;
+      return { ...summary, workDays };
     }
 
     function finiteNumber(value) {
@@ -5258,12 +6734,18 @@
 
     function existingExpenseAmount(category = expenseDraft.category, date = expenseDraft.paymentDate) {
       if (!category || !date) return 0;
-      return Math.max(0, Number(entryForDate(date)?.expenses?.[category] || 0));
+      const entry = recordEditorState.open && recordEditorState.date === date
+        ? recordEditorState.draft
+        : entryForDate(date);
+      return Math.max(0, Number(entry?.expenses?.[category] || 0));
     }
 
     function existingExpenseNote(category = expenseDraft.category, date = expenseDraft.paymentDate) {
       if (!category || !date) return "";
-      return String(entryForDate(date)?.expenseNotes?.[category] || "").slice(0, 160);
+      const entry = recordEditorState.open && recordEditorState.date === date
+        ? recordEditorState.draft
+        : entryForDate(date);
+      return String(entry?.expenseNotes?.[category] || "").slice(0, 160);
     }
 
     function recentExpenseAmounts(category = expenseDraft.category) {
@@ -5628,6 +7110,28 @@
         return;
       }
 
+      if (recordEditorState.open) {
+        if (paymentDate !== recordEditorState.date) {
+          expenseDraft.status = "付款日期必須與目前編輯日期相同。";
+          expenseDraft.statusType = "error";
+          renderExpenseForm();
+          return;
+        }
+        const draft = recordEditorState.draft;
+        draft.expenses ||= {};
+        draft.expenseNotes ||= {};
+        draft.expenses[category] = Math.round(amount);
+        const note = String(expenseDraft.note || "").trim().slice(0, 160);
+        if (note) draft.expenseNotes[category] = note;
+        else delete draft.expenseNotes[category];
+        expenseDraft = createExpenseDraft(paymentDate);
+        renderExpenseForm();
+        renderCalendarExpenseList();
+        markRecordEditorDirty();
+        showToast(`已加入草稿：${category} ${money(amount)}`);
+        return;
+      }
+
       const entry = ensureEntryForDate(paymentDate);
       entry.expenses[category] = Math.round(amount);
       entry.expenseNotes ||= {};
@@ -5635,7 +7139,8 @@
       if (note) entry.expenseNotes[category] = note;
       else delete entry.expenseNotes[category];
       if (!state.expenses.includes(category)) state.expenses.push(category);
-      saveState();
+      const saved = saveState();
+      if (saved) notifyRecordChanged(paymentDate, "expense");
 
       expenseDraft = createExpenseDraft(paymentDate);
       renderAll();
@@ -5646,7 +7151,9 @@
     }
 
     function renderIncomeInputs(date = selectedIncomeDate()) {
-      const entry = entryForDate(date);
+      const entry = recordEditorState.open && recordEditorState.date === date
+        ? recordEditorState.draft
+        : entryForDate(date);
       els.incomeInputs.innerHTML = orderedHomePlatforms().map(name => {
         const amount = Number(entry?.incomes?.[name] || 0);
         const profile = platformProfileByName(name);
@@ -5657,7 +7164,7 @@
             <div class="inline-income-wrap">
               <input class="inline-income-input" type="text" inputmode="numeric" pattern="[0-9]*" value="${amount ? formatIncomeInput(amount) : ""}" placeholder="輸入收入" aria-label="${escapeAttr(name)} 當日收入" data-inline-income="${escapeAttr(name)}" data-platform-id="${escapeAttr(profile?.id || "")}" data-income-date="${escapeAttr(date)}" data-income-mode="total" autocomplete="off">
             </div>
-            ${inputMode === "incremental"
+            ${!recordEditorState.open && inputMode === "incremental"
               ? `<button class="income-add-button" type="button" aria-label="新增一筆 ${escapeAttr(name)} 收入" data-income-add="${escapeAttr(profile?.id || "")}">＋</button>`
               : `<span aria-hidden="true"></span>`}
             <input type="hidden" value="${amount}" data-income="${escapeAttr(name)}">
@@ -5687,39 +7194,6 @@
 
     function escapeAttr(value) {
       return String(value).replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;");
-    }
-
-    function fillSelects() {
-      const availableMonths = months();
-      const options = availableMonths.map(month => `<option value="${month}">${month}</option>`).join("");
-      const calendarMonth = availableMonths.includes(state.settings.calendarMonth)
-        ? state.settings.calendarMonth
-        : currentMonth();
-      const reportMonth = availableMonths.includes(state.settings.reportMonth)
-        ? state.settings.reportMonth
-        : currentMonth();
-      els.monthFilter.innerHTML = options;
-      els.monthFilter.value = calendarMonth;
-      [els.weekMonthFilter, els.monthReportFilter, els.platformMonthFilter].forEach(select => {
-        select.innerHTML = options;
-        select.value = reportMonth;
-      });
-    }
-
-    function updateCalendarMonth(month) {
-      state.settings.calendarMonth = normalizeMonthKey(month);
-      saveState();
-      fillSelects();
-      renderEntries();
-    }
-
-    function updateReportMonth(month) {
-      state.settings.reportMonth = normalizeMonthKey(month);
-      saveState();
-      fillSelects();
-      renderWeeks();
-      renderMonthReport();
-      renderPlatformReport();
     }
 
     function renderStats() {
@@ -5896,116 +7370,418 @@
       return String(value).replaceAll("\\", "\\\\").replaceAll('"', '\\"');
     }
 
-    function renderEntries() {
-      const entries = entriesForMonth(selectedMonth(els.monthFilter));
-      if (!entries.length) {
-        els.entriesTable.innerHTML = `
-          <div class="empty empty-state">
-            <strong>這個月份尚無工作紀錄</strong>
-            <span>完成一天工作後，紀錄會顯示在這裡。</span>
+    function calendarEntriesForMonth(monthKey) {
+      return state.entries
+        .filter(entry => normalizeDateKey(entry?.date) && monthKeyFromDate(entry.date) === monthKey)
+        .sort((a, b) => a.date.localeCompare(b.date));
+    }
+
+    function calendarRecordMap() {
+      const records = new Map();
+      state.entries.forEach(entry => {
+        const date = normalizeDateKey(entry?.date);
+        if (date && !records.has(date)) records.set(date, entry);
+      });
+      return records;
+    }
+
+    function renderCalendarGrid(recordMap) {
+      const cells = generateCalendarMonthGrid(calendarState.displayedMonth);
+      const monthRecords = calendarEntriesForMonth(calendarState.displayedMonth);
+      const incomeLevels = buildCalendarIncomeLevels(
+        monthRecords.map(entry => ({ date: entry.date, net: entryNet(entry) })),
+        calendarState.today
+      );
+      const visibleDates = new Set(cells.map(cell => cell.date));
+      if (!visibleDates.has(calendarState.focusedDate)) {
+        calendarState.focusedDate = visibleDates.has(calendarState.selectedDate)
+          ? calendarState.selectedDate
+          : `${calendarState.displayedMonth}-01`;
+      }
+
+      els.calendarMonthTitle.textContent = formatCalendarMonthTitle(calendarState.displayedMonth);
+      els.calendarGrid.setAttribute("aria-label", `${formatCalendarMonthTitle(calendarState.displayedMonth)}，星期一至星期日`);
+      els.calendarGrid.dataset.transition = calendarState.monthTransition;
+      els.calendarGrid.innerHTML = Array.from({ length: cells.length / 7 }, (_, rowIndex) => {
+        const row = cells.slice(rowIndex * 7, rowIndex * 7 + 7);
+        return `
+          <div class="calendar-grid-row" role="row">
+            ${row.map(cell => {
+              const entry = recordMap.get(cell.date);
+              const net = entry ? entryNet(entry) : 0;
+              const isSelected = cell.date === calendarState.selectedDate;
+              const isToday = cell.date === calendarState.today;
+              const isFuture = cell.date > calendarState.today;
+              const heatLevel = cell.isCurrentMonth && !isFuture
+                ? getCalendarIncomeLevel(incomeLevels, cell.date)
+                : 0;
+              const amount = formatCalendarNetAmount(net, Boolean(entry));
+              return `
+                <button
+                  class="calendar-date"
+                  type="button"
+                  role="gridcell"
+                  data-calendar-date="${cell.date}"
+                  data-adjacent="${String(!cell.isCurrentMonth)}"
+                  data-future="${String(isFuture)}"
+                  data-heat="${heatLevel}"
+                  aria-label="${escapeAttr(calendarDateAriaLabel({
+                    date: cell.date,
+                    today: calendarState.today,
+                    selected: isSelected,
+                    hasRecord: Boolean(entry),
+                    net,
+                    future: isFuture
+                  }))}"
+                  aria-selected="${String(isSelected)}"
+                  ${isToday ? `aria-current="date"` : ""}
+                  tabindex="${cell.date === calendarState.focusedDate ? "0" : "-1"}"
+                >
+                  <span class="calendar-date__day">${cell.day}</span>
+                  <span class="calendar-date__amount">${escapeHtml(amount)}</span>
+                  ${isToday ? `<span class="calendar-date__today-dot" aria-hidden="true"></span>` : ""}
+                </button>
+              `;
+            }).join("")}
+          </div>
+        `;
+      }).join("");
+
+      if (calendarState.monthTransition !== "idle") {
+        window.setTimeout(() => {
+          if (els.calendarGrid) els.calendarGrid.dataset.transition = "idle";
+        }, 280);
+      }
+    }
+
+    function calendarRecordHeader(actionMarkup = "") {
+      const outOfMonth = monthKeyFromDate(calendarState.selectedDate) !== calendarState.displayedMonth;
+      const fullDate = formatCalendarFullDate(calendarState.selectedDate);
+      const weekday = calendarWeekdayLabel(calendarState.selectedDate);
+      return `
+        <header class="calendar-record-header">
+          <div class="calendar-record-heading">
+            <h3 class="ds-card-title" aria-label="${escapeHtml(fullDate)}・${escapeHtml(weekday)}">
+              <span class="calendar-record-date" aria-hidden="true">${escapeHtml(fullDate)}</span>
+              <span class="calendar-record-separator" aria-hidden="true">・</span>
+              <span class="calendar-record-weekday" aria-hidden="true">${escapeHtml(weekday)}</span>
+            </h3>
+            ${outOfMonth ? `<span class="calendar-record-context">所選日期不在目前月份</span>` : ""}
+          </div>
+          <div class="calendar-record-actions">${actionMarkup}</div>
+        </header>
+      `;
+    }
+
+    function renderCalendarRecordCard(recordMap) {
+      const selectedDate = normalizeDateKey(calendarState.selectedDate, calendarState.today);
+      const entry = recordMap.get(selectedDate);
+      const isFuture = selectedDate > calendarState.today;
+      els.calendarRecordCard.classList.remove("is-updating");
+      void els.calendarRecordCard.offsetWidth;
+      els.calendarRecordCard.classList.add("is-updating");
+
+      if (!entry) {
+        const isToday = selectedDate === calendarState.today;
+        const title = isFuture
+          ? "尚未到此日期"
+          : isToday
+            ? "今天尚無工作紀錄"
+            : "此日期尚無工作紀錄";
+        const description = isFuture
+          ? "你可以查看日期，但未來日期不能建立工作紀錄。"
+          : isToday
+            ? "回到今天即可開始工作或更新今日紀錄。"
+            : "新增後會儲存在此裝置，並立即更新月曆與報表。";
+        const action = isToday
+          ? `<button class="ds-button ds-button--primary" type="button" data-calendar-go-today>前往今天</button>`
+          : !isFuture
+            ? `<button class="ds-button ds-button--primary" type="button" data-calendar-add>新增紀錄</button>`
+            : "";
+        els.calendarRecordContent.innerHTML = `
+          ${calendarRecordHeader()}
+          <div class="ds-empty-state ds-empty-state--compact">
+            <strong class="ds-card-title">${title}</strong>
+            <span class="ds-secondary">${description}</span>
+            ${action}
           </div>
         `;
         return;
       }
 
-      els.entriesTable.innerHTML = `
-        <table class="entries-desktop-table">
-          <thead>
-            <tr>
-              <th>日期</th>
-              ${state.platforms.map(name => `<th>${escapeHtml(name)}</th>`).join("")}
-              <th>Tips</th>
-              <th>總收入</th>
-              <th>支出</th>
-              <th>淨收入</th>
-              <th>實際工時</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${entries.map(entry => {
-              const work = workMetrics(entry);
-              return `
-                <tr>
-                  <td>${escapeHtml(entry.date)}<div class="muted">${escapeHtml(entry.shift || "")} ${escapeHtml(entry.weather || "")}</div></td>
-                  ${state.platforms.map(name => `<td>${Number(entry.incomes?.[name] || 0) ? money(entry.incomes[name]) : ""}</td>`).join("")}
-                  <td>${money(entry.tips)}</td>
-                  <td>${money(entryTotal(entry))}</td>
-                  <td>${money(entryExpenses(entry))}</td>
-                  <td>${money(entryNet(entry))}</td>
-                  <td>${formatCompactWorkHours(work.hours)}</td>
-                  <td>
-                    <div class="row-actions">
-                      <button class="icon-button entry-action-button" type="button" title="編輯" data-edit="${escapeAttr(entry.id)}">編輯</button>
-                      <button class="icon-button entry-action-button danger" type="button" title="刪除" data-delete="${escapeAttr(entry.id)}">刪除</button>
-                    </div>
-                  </td>
-                </tr>
-              `;
-            }).join("")}
-          </tbody>
-          <tfoot>
-            <tr>
-              <th>TOTAL</th>
-              ${state.platforms.map(name => {
-                const sum = entries.reduce((total, entry) => total + Number(entry.incomes?.[name] || 0), 0);
-                return `<th>${sum ? money(sum) : ""}</th>`;
-              }).join("")}
-              <th>${money(entries.reduce((total, entry) => total + Number(entry.tips || 0), 0))}</th>
-              <th>${money(entries.reduce((total, entry) => total + entryTotal(entry), 0))}</th>
-              <th>${money(entries.reduce((total, entry) => total + entryExpenses(entry), 0))}</th>
-              <th>${money(entries.reduce((total, entry) => total + entryNet(entry), 0))}</th>
-              <th>${formatCompactWorkHours(summarize(entries).hours)}</th>
-              <th></th>
-            </tr>
-          </tfoot>
-        </table>
-        <div class="entries-mobile-list" aria-label="每日月份明細">
-          ${entries.map(entry => {
-            const shift = String(entry.shift || "").trim();
-            const weatherIcon = weatherIconSvg(entry.weather);
-            const expenses = entryExpenses(entry);
-            const net = entryNet(entry);
-            const work = workMetrics(entry);
-            const activePlatforms = state.platforms
-              .map(name => [name, Number(entry.incomes?.[name] || 0)])
-              .filter(([, amount]) => amount > 0);
-            return `
-              <article class="daily-entry-row">
-                <div class="daily-entry-head">
-                  <div class="daily-entry-title">
-                    <strong class="daily-entry-date">${escapeHtml(compactDailyDate(entry.date))}</strong>
-                    ${shift ? `<span class="daily-entry-meta">・${escapeHtml(shift)}</span>` : ""}
-                    ${weatherIcon ? `<span class="daily-entry-meta">・</span>${weatherIcon}` : ""}
-                  </div>
-                  <div class="daily-entry-total-wrap">
-                    <span>總收入</span>
-                    <strong class="daily-entry-total">${money(entryTotal(entry))}</strong>
-                  </div>
-                </div>
-                <div class="daily-entry-bottom">
-                  <div class="daily-income-items">
-                    ${activePlatforms.length
-                      ? activePlatforms.map(([name, amount]) => `
-                          <span class="daily-platform-income"><span class="daily-platform-name">${escapeHtml(name)}</span><strong>${money(amount)}</strong></span>
-                        `).join("")
-                      : `<span class="daily-income-empty">尚無收入紀錄</span>`}
-                  </div>
-                  <div class="daily-entry-summary">
-                    <span>支出<strong>${money(expenses)}</strong></span>
-                    <span>淨收入<strong>${money(net)}</strong></span>
-                    <span>實際工時<strong>${formatCompactWorkHours(work.hours)}</strong></span>
-                  </div>
-                  <div class="daily-entry-actions" aria-label="${escapeAttr(entry.date)} 紀錄操作">
-                    <button class="icon-button entry-action-button" type="button" title="編輯" aria-label="編輯 ${escapeAttr(entry.date)} 紀錄" data-edit="${escapeAttr(entry.id)}">編輯</button>
-                    <button class="icon-button entry-action-button danger" type="button" title="刪除" aria-label="刪除 ${escapeAttr(entry.date)} 紀錄" data-delete="${escapeAttr(entry.id)}">刪除</button>
-                  </div>
-                </div>
-              </article>
-            `;
-          }).join("")}
+      const duration = workMetrics(entry);
+      const total = entryTotal(entry);
+      const expenses = entryExpenses(entry);
+      const net = entryNet(entry);
+      const platformNames = [...new Set([...state.platforms, ...Object.keys(entry.incomes || {})])];
+      const platformRows = platformNames
+        .map(name => ({ name, raw: Number(entry.incomes?.[name]), recognized: platformNetAmount(name, entry.incomes?.[name]) }))
+        .filter(item => Number.isFinite(item.raw) && item.raw !== 0);
+      const tips = finiteNumber(entry.tips);
+      const weather = String(entry.weather || "").trim();
+      const note = String(entry.note || "").trim();
+
+      els.calendarRecordContent.innerHTML = `
+        ${calendarRecordHeader(selectedDate < calendarState.today
+          ? `<button class="ds-button ds-button--text" type="button" data-calendar-edit>編輯</button>`
+          : `<button class="ds-button ds-button--text" type="button" data-calendar-go-today>前往今天</button>`)}
+        <div class="calendar-metrics">
+          <div class="calendar-metric calendar-metric--primary"><span>總收入</span><strong>${money(total)}</strong></div>
+          <div class="calendar-metric calendar-metric--primary"><span>淨收入</span><strong>${money(net)}</strong></div>
+          <div class="calendar-metrics-divider" aria-hidden="true"></div>
+          <div class="calendar-metric calendar-metric--secondary"><span>工作時間</span><strong>${formatHours(duration.hours)}</strong></div>
+          <div class="calendar-metric calendar-metric--secondary"><span>時薪</span><strong>${money(hourlyRate(net, duration.durationMs))}</strong></div>
         </div>
+        ${platformRows.length || tips > 0 ? `
+          <section class="calendar-record-section" aria-label="平台收入">
+            <h4 class="ds-card-title">平台收入</h4>
+            ${platformRows.map(item => `
+              <div class="calendar-platform-row">
+                <span>${escapeHtml(item.name)}</span>
+                <strong>${money(item.recognized)}</strong>
+              </div>
+            `).join("")}
+            ${tips > 0 ? `<div class="calendar-platform-row"><span>小費</span><strong>${money(tips)}</strong></div>` : ""}
+          </section>
+        ` : ""}
+        ${expenses !== 0 || weather || note ? `
+          <section class="calendar-record-section" aria-label="其他紀錄">
+            ${expenses !== 0 ? `<div class="calendar-support-row"><span>總支出</span><strong>${money(expenses)}</strong></div>` : ""}
+            ${weather ? `<div class="calendar-support-row"><span>天氣</span><strong>${escapeHtml(weather)}</strong></div>` : ""}
+            ${note ? `<div><span class="ds-secondary">備註</span><p class="calendar-note">${escapeHtml(note)}</p></div>` : ""}
+          </section>
+        ` : ""}
       `;
+    }
+
+    function renderCalendarMonthSummary() {
+      const entries = calendarEntriesForMonth(calendarState.displayedMonth);
+      const title = `${formatCalendarMonthTitle(calendarState.displayedMonth)}摘要`;
+      const invalidRecordCount = state.entries.filter(entry => !normalizeDateKey(entry?.date)).length;
+      const dataQualityNotice = invalidRecordCount
+        ? `<p class="ds-caption">有 ${invalidRecordCount} 筆日期格式異常的舊資料未顯示；原始資料沒有被修改。</p>`
+        : "";
+      document.getElementById("calendarMonthSummaryTitle").textContent = title;
+      if (!entries.length) {
+        els.calendarMonthSummaryContent.innerHTML = `<p class="ds-secondary">本月尚無工作紀錄</p>${dataQualityNotice}`;
+        return;
+      }
+      const summary = summarizeCalendarMonth(entries);
+      els.calendarMonthSummaryContent.innerHTML = `
+        <div class="calendar-month-summary-grid">
+          <div class="calendar-month-summary-item">
+            <span>本月淨收入</span>
+            <strong>${money(summary.net)}</strong>
+          </div>
+          <div class="calendar-month-summary-item">
+            <span>工作天數</span>
+            <strong>${summary.workDays} 天</strong>
+          </div>
+        </div>
+        ${dataQualityNotice}
+      `;
+    }
+
+    function renderCalendar() {
+      if (!els.calendarGrid) return;
+      const records = calendarRecordMap();
+      calendarState.recordsForDisplayedMonth = calendarEntriesForMonth(calendarState.displayedMonth);
+      calendarState.selectedDateRecord = records.get(calendarState.selectedDate) || null;
+      calendarState.loadStatus = stateLoadError ? "error" : "ready";
+      calendarState.error = stateLoadError;
+      calendarState.offline = !navigator.onLine;
+      renderCalendarGrid(records);
+      if (stateLoadError) {
+        els.calendarRecordContent.innerHTML = `
+          ${calendarRecordHeader()}
+          <div class="ds-empty-state ds-empty-state--compact" role="alert">
+            <strong class="ds-card-title">無法讀取工作紀錄</strong>
+            <span class="ds-secondary">${escapeHtml(stateRecoveryNotice || "原始資料仍保留在此瀏覽器中，請重試讀取。")}</span>
+            <button class="ds-button ds-button--secondary" type="button" data-calendar-retry>重試</button>
+          </div>
+        `;
+        els.calendarMonthSummaryContent.innerHTML = `<p class="ds-secondary">暫時無法計算月份摘要</p>`;
+        return;
+      }
+      renderCalendarRecordCard(records);
+      renderCalendarMonthSummary();
+    }
+
+    function renderEntries() {
+      renderCalendar();
+    }
+
+    function announceCalendar(message) {
+      if (!els.calendarAnnouncement) return;
+      els.calendarAnnouncement.textContent = "";
+      window.requestAnimationFrame(() => {
+        els.calendarAnnouncement.textContent = message;
+      });
+    }
+
+    function changeCalendarDisplayedMonth(offset) {
+      const nextMonth = addCalendarMonths(calendarState.displayedMonth, offset);
+      if (!nextMonth) return;
+      calendarState = calendarStateWithDisplayedMonth(calendarState, nextMonth);
+      calendarState.focusedDate = `${nextMonth}-01`;
+      calendarState.monthTransition = offset < 0 ? "previous" : "next";
+      renderCalendar();
+      announceCalendar(`已顯示 ${formatCalendarMonthTitle(nextMonth)}`);
+    }
+
+    function revealCalendarRecordHeader() {
+      const header = els.calendarRecordCard?.querySelector(".calendar-record-header");
+      if (!header) return;
+      const rect = header.getBoundingClientRect();
+      const viewportTop = 0;
+      const viewportBottom = window.innerHeight;
+      const fullyOutside = rect.bottom <= viewportTop || rect.top >= viewportBottom;
+      if (!fullyOutside) return;
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      header.scrollIntoView({ block: "nearest", behavior: reducedMotion ? "auto" : "smooth" });
+    }
+
+    function selectCalendarDate(dateKey, options) {
+      options ||= {};
+      const selectedDate = normalizeDateKey(dateKey);
+      if (!selectedDate) return;
+      calendarState = calendarStateWithSelectedDate(calendarState, selectedDate);
+      renderCalendar();
+      announceCalendar(`已選取 ${formatCalendarFullDate(selectedDate)}，${calendarWeekdayLabel(selectedDate)}`);
+      if (options.revealCard) window.requestAnimationFrame(revealCalendarRecordHeader);
+    }
+
+    function goToCalendarToday() {
+      const today = todayString();
+      calendarState = calendarStateForToday(calendarState, today);
+      renderCalendar();
+      announceCalendar(`已回到今天，${formatCalendarFullDate(today)}`);
+    }
+
+    function openCalendar(options) {
+      options ||= {};
+      const hasExternalDate = Object.prototype.hasOwnProperty.call(options, "selectedDate");
+      if (hasExternalDate) {
+        const target = normalizeDateKey(options.selectedDate, todayString());
+        calendarState = calendarStateWithSelectedDate(calendarState, target);
+      }
+      renderCalendar();
+      return {
+        selectedDate: calendarState.selectedDate,
+        displayedMonth: calendarState.displayedMonth,
+        source: String(options.source || "")
+      };
+    }
+
+    function retryCalendarRead() {
+      const recoveredState = loadState();
+      if (stateLoadError) {
+        renderCalendar();
+        announceCalendar("仍然無法讀取工作紀錄");
+        return;
+      }
+      Object.keys(state).forEach(key => delete state[key]);
+      Object.assign(state, recoveredState);
+      renderAll();
+      announceCalendar("工作紀錄已重新讀取");
+    }
+
+    function refreshCalendarToday() {
+      const nextToday = todayString();
+      if (calendarState.today !== nextToday) {
+        calendarState = calendarStateWithRefreshedToday(calendarState, nextToday);
+        if (activeView === "calendar") renderCalendar();
+      }
+      scheduleCalendarMidnightRefresh();
+    }
+
+    function scheduleCalendarMidnightRefresh() {
+      window.clearTimeout(calendarTodayTimer);
+      const tomorrow = addLocalDays(todayString(), 1);
+      const parts = dateOnlyParts(tomorrow);
+      if (!parts) return;
+      const nextTaipeiMidnight = Date.UTC(parts.year, parts.month - 1, parts.day) - 8 * 60 * 60 * 1000;
+      const delay = Math.max(1000, nextTaipeiMidnight - Date.now() + 250);
+      calendarTodayTimer = window.setTimeout(refreshCalendarToday, delay);
+    }
+
+    function moveCalendarFocus(dateKey) {
+      const targetDate = normalizeDateKey(dateKey);
+      if (!targetDate) return;
+      const targetMonth = monthKeyFromDate(targetDate);
+      if (targetMonth !== calendarState.displayedMonth) {
+        calendarState = calendarStateWithDisplayedMonth(calendarState, targetMonth);
+      }
+      calendarState.focusedDate = targetDate;
+      renderCalendar();
+      window.requestAnimationFrame(() => {
+        els.calendarGrid.querySelector(`[data-calendar-date="${targetDate}"]`)?.focus();
+      });
+    }
+
+    function handleCalendarGridKeydown(event) {
+      const dateButton = event.target.closest("[data-calendar-date]");
+      if (!dateButton) return;
+      const date = dateButton.dataset.calendarDate;
+      const offset = {
+        ArrowLeft: -1,
+        ArrowRight: 1,
+        ArrowUp: -7,
+        ArrowDown: 7
+      }[event.key];
+      if (offset) {
+        event.preventDefault();
+        moveCalendarFocus(addLocalDays(date, offset));
+        return;
+      }
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        selectCalendarDate(date, { revealCard: true });
+      }
+    }
+
+    function beginCalendarGesture(type, event) {
+      if (!event.isPrimary || event.pointerType === "mouse") return;
+      if (event.clientX < 24 || event.clientX > window.innerWidth - 24) return;
+      calendarGesture = {
+        type,
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY
+      };
+    }
+
+    function finishCalendarGesture(event, cancelled = false) {
+      const gesture = calendarGesture;
+      calendarGesture = null;
+      if (!gesture || cancelled || gesture.pointerId !== event.pointerId) return;
+      const deltaX = event.clientX - gesture.startX;
+      const deltaY = event.clientY - gesture.startY;
+      if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY) * 1.25) return;
+      if (gesture.type === "month") {
+        changeCalendarDisplayedMonth(deltaX < 0 ? 1 : -1);
+        return;
+      }
+      const target = addLocalDays(calendarState.selectedDate, deltaX < 0 ? 1 : -1);
+      selectCalendarDate(target);
+    }
+
+    window.openCalendar = openCalendar;
+
+    function createReportsState(today = todayString()) {
+      const safeToday = normalizeDateKey(today, todayString());
+      return {
+        activeReportTab: "week",
+        selectedWeekAnchor: weekStart(safeToday),
+        selectedMonth: monthKeyFromDate(safeToday),
+        selectedPlatformPeriod: "week",
+        returnContext: null,
+        dataRevision: 0,
+        stale: true,
+        loading: false,
+        error: null,
+        offline: typeof navigator !== "undefined" ? !navigator.onLine : false
+      };
     }
 
     function weekStart(dateString) {
@@ -6021,125 +7797,713 @@
       return start ? addLocalDays(start, 6) : "";
     }
 
-    function renderWeeks() {
-      const month = selectedMonth(els.weekMonthFilter);
-      const visibleWeekStarts = new Set(entriesForMonth(month).map(entry => weekStart(entry.date)).filter(Boolean));
-      const groups = new Map();
-      state.entries.forEach(entry => {
-        const key = weekStart(entry.date);
-        if (!visibleWeekStarts.has(key)) return;
-        if (!groups.has(key)) groups.set(key, []);
-        groups.get(key).push(entry);
+    function getLocalWeekRange(dateKey) {
+      const start = weekStart(dateKey);
+      return start ? {
+        start,
+        end: addLocalDays(start, 6),
+        endExclusive: addLocalDays(start, 7)
+      } : null;
+    }
+
+    function getPreviousWeekRange(rangeOrDate) {
+      const anchor = typeof rangeOrDate === "string" ? rangeOrDate : rangeOrDate?.start;
+      return getLocalWeekRange(addLocalDays(anchor, -7));
+    }
+
+    function getLocalMonthRange(monthOrDate) {
+      const raw = String(monthOrDate || "");
+      const month = daysInCalendarMonth(raw) ? raw : monthKeyFromDate(raw);
+      const days = daysInCalendarMonth(month);
+      if (!days) return null;
+      const start = `${month}-01`;
+      return {
+        start,
+        end: `${month}-${String(days).padStart(2, "0")}`,
+        endExclusive: `${addCalendarMonths(month, 1)}-01`
+      };
+    }
+
+    function getPreviousMonthRange(rangeOrMonth) {
+      const anchor = typeof rangeOrMonth === "string"
+        ? rangeOrMonth
+        : monthKeyFromDate(rangeOrMonth?.start);
+      return getLocalMonthRange(addCalendarMonths(anchor, -1));
+    }
+
+    function getWeekLabel(range) {
+      return range ? compactWeekRange(range.start, range.end) : "—";
+    }
+
+    function getMonthLabel(rangeOrMonth) {
+      const month = typeof rangeOrMonth === "string" && daysInCalendarMonth(rangeOrMonth)
+        ? rangeOrMonth
+        : monthKeyFromDate(rangeOrMonth?.start);
+      if (!daysInCalendarMonth(month)) return "—";
+      const [year, monthNumber] = month.split("-").map(Number);
+      return `${year}年${monthNumber}月`;
+    }
+
+    function isDateKeyInRange(dateKey, range) {
+      const date = normalizeDateKey(dateKey);
+      return Boolean(date && range?.start && range?.endExclusive
+        && date >= range.start && date < range.endExclusive);
+    }
+
+    function getRecordsInRange(records, range) {
+      return (Array.isArray(records) ? records : [])
+        .filter(record => isDateKeyInRange(record?.date, range))
+        .slice()
+        .sort((a, b) => a.date.localeCompare(b.date));
+    }
+
+    function getWeeksForMonth(rangeOrMonth) {
+      const monthRange = typeof rangeOrMonth === "string"
+        ? getLocalMonthRange(rangeOrMonth)
+        : rangeOrMonth;
+      if (!monthRange) return [];
+      const firstWeekStart = weekStart(monthRange.start);
+      const weeks = [];
+      for (let start = firstWeekStart; start < monthRange.endExclusive; start = addLocalDays(start, 7)) {
+        const weekRange = getLocalWeekRange(start);
+        weeks.push({
+          ...weekRange,
+          clipStart: weekRange.start < monthRange.start ? monthRange.start : weekRange.start,
+          clipEndExclusive: weekRange.endExclusive > monthRange.endExclusive
+            ? monthRange.endExclusive
+            : weekRange.endExclusive
+        });
+      }
+      return weeks;
+    }
+
+    function aggregateReport(records, range) {
+      const periodRecords = getRecordsInRange(records, range);
+      const summary = summarize(periodRecords);
+      const recordsByDate = new Map();
+      const platformTotals = {};
+      periodRecords.forEach(record => {
+        if (!recordsByDate.has(record.date)) recordsByDate.set(record.date, []);
+        recordsByDate.get(record.date).push(record);
+        Object.entries(record.incomes || {}).forEach(([name, value]) => {
+          platformTotals[name] = (platformTotals[name] || 0) + platformNetAmount(name, value);
+        });
       });
-
-      if (!groups.size) {
-        els.weekList.innerHTML = `<div class="empty">這個月份尚無週報資料</div>`;
-        return;
-      }
-
-      els.weekList.innerHTML = [...groups.entries()].sort((a, b) => b[0].localeCompare(a[0])).map(([start, entries]) => {
-        const summary = summarize(entries);
-        const end = weekEnd(start);
-        return `
-          <div class="week-item">
-            <div class="week-item-period"><span>週期</span><strong>${compactWeekRange(start, end)}</strong></div>
-            <div><span>總收入</span><strong>${money(summary.total)}</strong></div>
-            <div><span>支出</span><strong>${money(summary.expenses)}</strong></div>
-            <div><span>淨收入</span><strong>${money(summary.net)}</strong></div>
-            <div><span>工時</span><strong>${number(summary.hours)} 小時</strong></div>
-            <div><span>平均時薪</span><strong>${money(summary.hourly)}</strong></div>
-          </div>
-        `;
-      }).join("");
+      const workDays = new Set(
+        periodRecords.filter(record => isWorkDayRecord(record)).map(record => record.date)
+      ).size;
+      return {
+        range,
+        records: periodRecords,
+        recordsByDate,
+        recordCount: periodRecords.length,
+        hasRecords: periodRecords.length > 0,
+        totalIncome: summary.total,
+        totalExpenses: summary.expenses,
+        netIncome: summary.net,
+        workDays,
+        totalWorkDuration: summary.durationMs,
+        validWorkDuration: summary.durationMs > 0,
+        averageHourlyIncome: summary.durationMs > 0 ? summary.hourly : null,
+        platformTotals
+      };
     }
 
-    function renderMonthReport() {
-      const entries = entriesForMonth(selectedMonth(els.monthReportFilter)).sort((a, b) => a.date.localeCompare(b.date));
-      const summary = summarize(entries);
-      const goal = Number(state.settings.monthlyGoal || 0);
-      const percent = goal ? Math.min(100, Math.round(summary.net / goal * 100)) : 0;
-
-      els.monthSummaryMetrics.innerHTML = entries.length ? `
-        <div class="month-summary-grid">
-          <div><span>月總收入</span><strong>${money(summary.total)}</strong></div>
-          <div><span>月支出</span><strong>${money(summary.expenses)}</strong></div>
-          <div><span>月淨收入</span><strong>${money(summary.net)}</strong></div>
-          <div><span>月實際工時</span><strong>${formatCompactWorkHours(summary.hours)}</strong></div>
-          <div><span>月平均時薪</span><strong>${money(summary.hourly)}</strong></div>
-        </div>
-      ` : `<div class="empty">這個月份尚無收入紀錄</div>`;
-
-      els.goalProgress.innerHTML = goal ? `
-        <div class="bar-row">
-          <div class="bar-top"><strong>目標進度</strong><span>${percent}%</span></div>
-          <div class="bar-track"><div class="bar-fill" style="width:${percent}%"></div></div>
-          <div class="bar-top"><span>目前 ${money(summary.net)}</span><span>目標 ${money(goal)}</span></div>
-        </div>
-      ` : `<div class="empty">到設定頁輸入每月目標，就能看到進度。</div>`;
-
-      if (!entries.length) {
-        els.dailyBars.innerHTML = "";
-        els.dailyTrendPanel.classList.add("hidden");
-        return;
-      }
-
-      els.dailyTrendPanel.classList.remove("hidden");
-      const max = Math.max(...entries.map(entry => entryTotal(entry)), 1);
-      els.dailyBars.innerHTML = entries.map(entry => {
-        const width = Math.round(entryTotal(entry) / max * 100);
-        return `
-          <div class="bar-row">
-            <div class="bar-top"><strong>${entry.date}</strong><span>${money(entryTotal(entry))}</span></div>
-            <div class="bar-track"><div class="bar-fill" style="width:${width}%"></div></div>
-          </div>
-        `;
-      }).join("");
+    function normalizePlatformKey(rawName) {
+      const normalized = String(rawName || "").normalize("NFKC").trim().replace(/\s+/g, " ");
+      if (!normalized) return "other";
+      const compact = normalized.toLocaleLowerCase("en").replace(/[\s._-]+/g, "");
+      if (compact === "uber") return "uber";
+      if (compact === "linego") return "lineGo";
+      if (compact === "yoxi") return "yoxi";
+      if (["55688", "台灣大車隊", "taiwantaxi"].includes(compact)) return "taiwanTaxi";
+      if (["其他", "其他平台", "other"].includes(compact)) return "other";
+      return `custom:${compact}`;
     }
 
-    function renderPlatformReport() {
-      const entries = entriesForMonth(selectedMonth(els.platformMonthFilter));
-      const totals = Object.fromEntries(state.platforms.map(name => [name, 0]));
-      entries.forEach(entry => {
-        Object.entries(entry.incomes || {}).forEach(([name, value]) => {
-          totals[name] = (totals[name] || 0) + platformNetAmount(name, value);
+    function platformDisplayName(platformKey, fallbackName = "") {
+      const canonicalNames = {
+        uber: "Uber",
+        lineGo: "LINE GO",
+        yoxi: "Yoxi",
+        taiwanTaxi: "55688",
+        other: "其他"
+      };
+      if (canonicalNames[platformKey]) return canonicalNames[platformKey];
+      const fallback = String(fallbackName || "").normalize("NFKC").trim().replace(/\s+/g, " ");
+      return fallback || "其他";
+    }
+
+    function platformCanonicalOrder(platformKey) {
+      const order = ["uber", "lineGo", "yoxi", "taiwanTaxi", "other"];
+      const index = order.indexOf(platformKey);
+      return index >= 0 ? index : order.length;
+    }
+
+    function aggregatePlatformIncome(records, range, configuredPlatforms = []) {
+      const periodRecords = getRecordsInRange(records, range);
+      const platforms = new Map();
+      const invalidPlatforms = [];
+      const ensurePlatform = rawName => {
+        const platformKey = normalizePlatformKey(rawName);
+        if (!platforms.has(platformKey)) {
+          platforms.set(platformKey, {
+            platformKey,
+            displayName: platformDisplayName(platformKey, rawName),
+            income: 0,
+            recordDates: new Set(),
+            invalid: false
+          });
+        }
+        return platforms.get(platformKey);
+      };
+
+      (Array.isArray(configuredPlatforms) ? configuredPlatforms : []).forEach(ensurePlatform);
+      periodRecords.forEach(record => {
+        Object.entries(record?.incomes || {}).forEach(([rawName, rawValue]) => {
+          const platform = ensurePlatform(rawName);
+          const amount = Number(rawValue);
+          if (!Number.isFinite(amount)) {
+            platform.invalid = true;
+            invalidPlatforms.push({ date: record.date, platformName: rawName, value: rawValue });
+            return;
+          }
+          const recognizedIncome = Number(platformNetAmount(rawName, amount));
+          if (!Number.isFinite(recognizedIncome)) {
+            platform.invalid = true;
+            invalidPlatforms.push({ date: record.date, platformName: rawName, value: rawValue });
+            return;
+          }
+          platform.income += recognizedIncome;
+          platform.recordDates.add(record.date);
         });
       });
 
-      const rows = Object.entries(totals).filter(([, value]) => value > 0).sort((a, b) => b[1] - a[1]);
-      const total = rows.reduce((sum, [, value]) => sum + value, 0);
+      const periodAggregate = aggregateReport(periodRecords, range);
+      const totalPlatformIncome = [...platforms.values()]
+        .reduce((sum, platform) => sum + platform.income, 0);
+      const positivePlatformIncome = [...platforms.values()]
+        .reduce((sum, platform) => sum + Math.max(0, platform.income), 0);
+      const rows = [...platforms.values()]
+        .filter(platform => platform.income !== 0)
+        .sort((a, b) => {
+          const incomeDifference = b.income - a.income;
+          if (incomeDifference) return incomeDifference;
+          const orderDifference = platformCanonicalOrder(a.platformKey) - platformCanonicalOrder(b.platformKey);
+          return orderDifference || a.displayName.localeCompare(b.displayName, "zh-Hant");
+        })
+        .map((platform, index) => ({
+          platformKey: platform.platformKey,
+          displayName: platform.displayName,
+          income: platform.income,
+          share: platform.income > 0 && positivePlatformIncome > 0
+            ? platform.income / positivePlatformIncome
+            : null,
+          rank: index + 1,
+          hasData: true,
+          recordCount: platform.recordDates.size,
+          invalid: platform.invalid
+        }));
+      const unattributedIncome = periodAggregate.totalIncome - totalPlatformIncome;
+      return {
+        rows,
+        hasRecords: periodAggregate.hasRecords,
+        hasData: rows.length > 0,
+        totalIncome: periodAggregate.totalIncome,
+        totalPlatformIncome,
+        positivePlatformIncome,
+        unattributedIncome,
+        inconsistent: totalPlatformIncome > periodAggregate.totalIncome,
+        recordCount: periodRecords.length,
+        invalidPlatforms
+      };
+    }
 
-      if (!rows.length) {
-        els.platformBars.innerHTML = `<div class="empty">這個月份尚無平台收入</div>`;
-        els.platformTable.innerHTML = "";
-        els.platformRankingPanel.classList.add("hidden");
+    function compareReportMetric(currentValue, previousValue, options = null) {
+      options ||= {};
+      const currentHasData = options.currentHasData !== false;
+      const previousHasData = options.previousHasData !== false;
+      const current = currentValue === null || currentValue === undefined ? null : finiteNumber(currentValue);
+      const previous = previousValue === null || previousValue === undefined ? null : finiteNumber(previousValue);
+      if (!currentHasData && !previousHasData) {
+        return { status: "no-data", current, previous, delta: null, percentage: null, direction: "neutral" };
+      }
+      if (!currentHasData || current === null) {
+        return { status: "no-current-data", current, previous, delta: null, percentage: null, direction: "neutral" };
+      }
+      if (!previousHasData || previous === null) {
+        return { status: "no-previous-data", current, previous, delta: null, percentage: null, direction: "neutral" };
+      }
+      const delta = current - previous;
+      const rawDirection = delta === 0 ? "neutral" : delta > 0 ? "positive" : "negative";
+      const direction = options.lowerIsBetter && rawDirection !== "neutral"
+        ? rawDirection === "positive" ? "negative" : "positive"
+        : rawDirection;
+      if (previous === 0) {
+        return { status: "previous-zero", current, previous, delta, percentage: null, direction };
+      }
+      if (previous < 0 || current < 0) {
+        return { status: "amount-only", current, previous, delta, percentage: null, direction };
+      }
+      return {
+        status: "comparable",
+        current,
+        previous,
+        delta,
+        percentage: delta / Math.abs(previous) * 100,
+        direction
+      };
+    }
+
+    function compareReportPeriods(current, previous, mode = "week") {
+      const common = {
+        totalIncome: compareReportMetric(current.totalIncome, previous.totalIncome, {
+          currentHasData: current.hasRecords,
+          previousHasData: previous.hasRecords
+        }),
+        netIncome: compareReportMetric(current.netIncome, previous.netIncome, {
+          currentHasData: current.hasRecords,
+          previousHasData: previous.hasRecords
+        }),
+        averageHourlyIncome: compareReportMetric(current.averageHourlyIncome, previous.averageHourlyIncome, {
+          currentHasData: current.validWorkDuration,
+          previousHasData: previous.validWorkDuration
+        })
+      };
+      if (mode === "month") {
+        common.workDays = compareReportMetric(current.workDays, previous.workDays, {
+          currentHasData: current.hasRecords,
+          previousHasData: previous.hasRecords
+        });
+      } else {
+        common.totalWorkDuration = compareReportMetric(current.totalWorkDuration, previous.totalWorkDuration, {
+          currentHasData: current.hasRecords,
+          previousHasData: previous.hasRecords
+        });
+      }
+      return common;
+    }
+
+    function summarizeRecordsByDate(records) {
+      const groups = new Map();
+      (Array.isArray(records) ? records : []).forEach(record => {
+        const date = normalizeDateKey(record?.date);
+        if (!date) return;
+        if (!groups.has(date)) groups.set(date, []);
+        groups.get(date).push(record);
+      });
+      return new Map([...groups.entries()].map(([date, entries]) => [date, {
+        date,
+        entries,
+        aggregate: aggregateReport(entries, {
+          start: date,
+          end: date,
+          endExclusive: addLocalDays(date, 1)
+        })
+      }]));
+    }
+
+    function reportWeekdayLabel(dateKey) {
+      const parts = dateOnlyParts(dateKey);
+      if (!parts) return "";
+      return ["日", "一", "二", "三", "四", "五", "六"][
+        new Date(Date.UTC(parts.year, parts.month - 1, parts.day)).getUTCDay()
+      ];
+    }
+
+    function buildWeeklyNetTrend(records, range) {
+      const byDate = summarizeRecordsByDate(getRecordsInRange(records, range));
+      return Array.from({ length: 7 }, (_, index) => {
+        const dateKey = addLocalDays(range.start, index);
+        const day = byDate.get(dateKey);
+        const hasRecord = Boolean(day);
+        const value = day?.aggregate.netIncome || 0;
+        return {
+          dateKey,
+          label: reportWeekdayLabel(dateKey),
+          hasRecord,
+          value,
+          status: !hasRecord ? "no-record" : value > 0 ? "positive" : value < 0 ? "negative" : "zero"
+        };
+      });
+    }
+
+    function buildMonthlyWeeklyNetTrend(records, monthRange) {
+      return getWeeksForMonth(monthRange).map(week => {
+        const clippedRange = {
+          start: week.clipStart,
+          end: addLocalDays(week.clipEndExclusive, -1),
+          endExclusive: week.clipEndExclusive
+        };
+        const aggregate = aggregateReport(records, clippedRange);
+        const value = aggregate.netIncome;
+        return {
+          dateKey: week.start,
+          label: getWeekLabel(week),
+          hasRecord: aggregate.hasRecords,
+          value,
+          status: !aggregate.hasRecords ? "no-record" : value > 0 ? "positive" : value < 0 ? "negative" : "zero"
+        };
+      });
+    }
+
+    function findImportantReportDates(records, mode = "week") {
+      const days = [...summarizeRecordsByDate(records).values()]
+        .filter(day => day.entries.some(entry => isWorkDayRecord(entry)))
+        .sort((a, b) => a.date.localeCompare(b.date));
+      const pick = (selector, direction = "max", filter = () => true) => {
+        const eligible = days.filter(filter);
+        if (!eligible.length) return null;
+        return eligible.reduce((best, day) => {
+          const value = selector(day);
+          const bestValue = selector(best);
+          return direction === "max" ? value > bestValue ? day : best : value < bestValue ? day : best;
+        });
+      };
+      const result = {
+        highestNet: pick(day => day.aggregate.netIncome, "max"),
+        lowestNet: pick(day => day.aggregate.netIncome, "min")
+      };
+      if (mode === "month") {
+        result.longestWork = pick(day => day.aggregate.totalWorkDuration, "max", day => day.aggregate.totalWorkDuration > 0);
+        result.highestHourly = pick(
+          day => day.aggregate.averageHourlyIncome,
+          "max",
+          day => day.aggregate.validWorkDuration
+        );
+      }
+      return result;
+    }
+
+    function reportComparisonText(result, formatValue = money) {
+      if (["no-data", "no-previous-data"].includes(result.status)) return "暫無上期資料";
+      if (result.status === "no-current-data") return "本期暫無資料";
+      const deltaText = `${result.delta > 0 ? "+" : ""}${formatValue(result.delta)}`;
+      if (result.status !== "comparable") return deltaText;
+      const percent = `${result.percentage > 0 ? "+" : ""}${number(result.percentage)}%`;
+      return `${deltaText}（${percent}）`;
+    }
+
+    function reportDateLabel(dateKey) {
+      const parts = dateOnlyParts(dateKey);
+      return parts ? `${parts.month}/${parts.day}（${reportWeekdayLabel(dateKey)}）` : "—";
+    }
+
+    function formatReportDuration(durationMs) {
+      const totalMinutes = Math.round(nonNegativeNumber(durationMs) / workTimeUnits.minuteMs);
+      const hours = Math.floor(totalMinutes / 60);
+      const minutesPart = totalMinutes % 60;
+      if (!hours) return `${minutesPart} 分`;
+      return minutesPart ? `${hours} 小時 ${minutesPart} 分` : `${hours} 小時`;
+    }
+
+    function reportsLoadingMarkup() {
+      return `
+        <div class="ds-card" aria-label="報表載入中">
+          <div class="ds-skeleton ds-skeleton--metric"></div>
+          <div class="ds-skeleton ds-skeleton--row"></div>
+          <div class="ds-skeleton ds-skeleton--row"></div>
+        </div>
+      `;
+    }
+
+    function reportsErrorMarkup() {
+      return `
+        <div class="ds-card ds-empty-state" role="alert">
+          <strong class="ds-card-title">無法讀取報表資料</strong>
+          <span class="ds-secondary">${escapeHtml(stateRecoveryNotice || "原始資料仍保留在此瀏覽器中，請重試讀取。")}</span>
+          <button class="ds-button ds-button--secondary" type="button" data-reports-retry>重試</button>
+        </div>
+      `;
+    }
+
+    function reportsEmptyMarkup(periodLabel) {
+      return `
+        <div class="ds-card ds-empty-state">
+          <strong class="ds-card-title">${escapeHtml(periodLabel)}尚無工作紀錄</strong>
+          <span class="ds-secondary">你仍可切換其他期間查看已儲存的資料。</span>
+        </div>
+      `;
+    }
+
+    function renderReportComparison(comparison, mode) {
+      const rows = mode === "month"
+        ? [
+          ["總收入", comparison.totalIncome, money],
+          ["淨收入", comparison.netIncome, money],
+          ["工作天數", comparison.workDays, value => `${number(value, 0)} 天`],
+          ["平均時薪", comparison.averageHourlyIncome, money]
+        ]
+        : [
+          ["總收入", comparison.totalIncome, money],
+          ["淨收入", comparison.netIncome, money],
+          ["工作時間", comparison.totalWorkDuration, formatReportDuration],
+          ["平均時薪", comparison.averageHourlyIncome, money]
+        ];
+      return `
+        <section class="reports-section" aria-labelledby="${mode}ComparisonTitle">
+          <h4 id="${mode}ComparisonTitle">與上期比較</h4>
+          <ul class="reports-comparison-list">
+            ${rows.map(([label, result, formatter]) => `
+              <li><span>${label}</span><strong data-direction="${result.direction}">${reportComparisonText(result, formatter)}</strong></li>
+            `).join("")}
+          </ul>
+        </section>
+      `;
+    }
+
+    function renderReportTrend(points, title, id) {
+      const maxAbsolute = Math.max(...points.map(point => Math.abs(point.value)), 1);
+      const summary = points.map(point => `${point.label}${point.hasRecord ? money(point.value) : "無紀錄"}`).join("、");
+      return `
+        <section class="reports-section" aria-labelledby="${id}">
+          <h4 id="${id}">${title}</h4>
+          <p class="sr-only">${escapeHtml(summary)}</p>
+          <ul class="reports-trend-list" aria-hidden="true">
+            ${points.map(point => {
+              const width = Math.min(50, Math.round(Math.abs(point.value) / maxAbsolute * 50));
+              return `
+                <li class="reports-trend-row" data-status="${point.status}" style="--trend-width:${width}%">
+                  <span class="reports-trend-label">${escapeHtml(point.label)}</span>
+                  <span class="reports-trend-visual"><span class="reports-trend-bar"></span></span>
+                  <span class="reports-trend-value">${point.hasRecord ? money(point.value) : "無紀錄"}</span>
+                </li>
+              `;
+            }).join("")}
+          </ul>
+        </section>
+      `;
+    }
+
+    function renderImportantDates(important, mode) {
+      const rows = [
+        ["最高淨收入", important.highestNet, day => money(day.aggregate.netIncome)],
+        ["最低淨收入", important.lowestNet, day => money(day.aggregate.netIncome)]
+      ];
+      if (mode === "month") {
+        rows.push(
+          ["最長工作日", important.longestWork, day => formatReportDuration(day.aggregate.totalWorkDuration)],
+          ["最高時薪日", important.highestHourly, day => money(day.aggregate.averageHourlyIncome)]
+        );
+      }
+      return `
+        <section class="reports-section" aria-labelledby="${mode}ImportantTitle">
+          <h4 id="${mode}ImportantTitle">重要日期</h4>
+          <ul class="reports-important-list">
+            ${rows.map(([label, day, formatter]) => `
+              <li>${day ? `
+                <button class="reports-important-action" type="button"
+                  data-report-date="${escapeAttr(day.date)}" data-report-source="${escapeAttr(`${mode}-${label}`)}"
+                  aria-label="查看 ${escapeAttr(formatCalendarFullDate(day.date))}的工作紀錄，${escapeAttr(label)} ${escapeAttr(formatter(day))}">
+                  <span>${label}</span><strong>${reportDateLabel(day.date)} · ${formatter(day)}</strong>
+                </button>
+              ` : `<span>${label}</span><strong>—</strong>`}</li>
+            `).join("")}
+          </ul>
+        </section>
+      `;
+    }
+
+    function reportsStatusMarkup() {
+      const notes = [];
+      if (reportsState.offline) notes.push(`<p class="reports-offline-note">離線中，顯示此裝置已儲存的資料。</p>`);
+      if (stateRecoveryNotice) notes.push(`<p class="reports-recovery-note">${escapeHtml(stateRecoveryNotice)}</p>`);
+      return notes.join("");
+    }
+
+    function renderWeeks() {
+      if (!els.weeklyReportContent) return;
+      const range = getLocalWeekRange(reportsState.selectedWeekAnchor);
+      els.weekPeriodLabel.textContent = getWeekLabel(range);
+      reportsState.offline = !navigator.onLine;
+      if (reportsState.loading) {
+        els.weeklyReportContent.innerHTML = reportsLoadingMarkup();
+        return;
+      }
+      if ((stateLoadError && !stateRecoveryNotice) || reportsState.error) {
+        els.weeklyReportContent.innerHTML = reportsErrorMarkup();
+        return;
+      }
+      const current = aggregateReport(state.entries, range);
+      if (!current.hasRecords) {
+        els.weeklyReportContent.innerHTML = `${reportsStatusMarkup()}${reportsEmptyMarkup("這一週")}`;
+        return;
+      }
+      const previous = aggregateReport(state.entries, getPreviousWeekRange(range));
+      const comparison = compareReportPeriods(current, previous, "week");
+      const trend = buildWeeklyNetTrend(state.entries, range);
+      const important = findImportantReportDates(current.records, "week");
+      els.weeklyReportContent.innerHTML = `
+        ${reportsStatusMarkup()}
+        <section class="reports-primary-kpis" aria-label="週報主要指標">
+          <div class="reports-primary-kpi"><span class="reports-kpi-label">總收入</span><strong>${money(current.totalIncome)}</strong></div>
+          <div class="reports-primary-kpi"><span class="reports-kpi-label">淨收入</span><strong>${money(current.netIncome)}</strong></div>
+        </section>
+        <section class="reports-secondary-kpis" aria-label="週報其他指標">
+          <div class="reports-secondary-kpi"><span>支出</span><strong>${money(current.totalExpenses)}</strong></div>
+          <div class="reports-secondary-kpi"><span>工作天數</span><strong>${current.workDays} 天</strong></div>
+          <div class="reports-secondary-kpi"><span>工作時間</span><strong>${formatReportDuration(current.totalWorkDuration)}</strong></div>
+          <div class="reports-secondary-kpi"><span>平均時薪</span><strong>${current.averageHourlyIncome === null ? "—" : money(current.averageHourlyIncome)}</strong></div>
+        </section>
+        ${renderReportComparison(comparison, "week")}
+        ${renderReportTrend(trend, "每日淨收入", "weekTrendTitle")}
+        ${renderImportantDates(important, "week")}
+      `;
+    }
+
+    function renderMonthReport() {
+      if (!els.monthlyReportContent) return;
+      const range = getLocalMonthRange(reportsState.selectedMonth);
+      els.monthPeriodLabel.textContent = getMonthLabel(range);
+      reportsState.offline = !navigator.onLine;
+      if (reportsState.loading) {
+        els.monthlyReportContent.innerHTML = reportsLoadingMarkup();
+        return;
+      }
+      if ((stateLoadError && !stateRecoveryNotice) || reportsState.error) {
+        els.monthlyReportContent.innerHTML = reportsErrorMarkup();
+        return;
+      }
+      const current = aggregateReport(state.entries, range);
+      if (!current.hasRecords) {
+        els.monthlyReportContent.innerHTML = `${reportsStatusMarkup()}${reportsEmptyMarkup("這個月")}`;
+        return;
+      }
+      const previous = aggregateReport(state.entries, getPreviousMonthRange(range));
+      const comparison = compareReportPeriods(current, previous, "month");
+      const trend = buildMonthlyWeeklyNetTrend(state.entries, range);
+      const important = findImportantReportDates(current.records, "month");
+      const goal = nonNegativeNumber(state.settings.monthlyGoal);
+      const goalPercent = goal ? Math.max(0, Math.min(100, Math.round(current.netIncome / goal * 100))) : 0;
+      const goalMarkup = goal ? `
+        <section class="reports-section" aria-labelledby="monthGoalTitle">
+          <h4 id="monthGoalTitle">本月目標</h4>
+          <div class="reports-goal-progress">
+            <div class="reports-goal-meta"><span>目前 ${money(current.netIncome)}</span><strong>${goalPercent}%</strong></div>
+            <div class="reports-goal-track" role="progressbar" aria-label="本月目標進度" aria-valuemin="0"
+              aria-valuemax="100" aria-valuenow="${goalPercent}"><div class="reports-goal-fill" style="width:${goalPercent}%"></div></div>
+            <span class="ds-caption">目標 ${money(goal)}</span>
+          </div>
+        </section>
+      ` : "";
+      els.monthlyReportContent.innerHTML = `
+        ${reportsStatusMarkup()}
+        <section class="reports-primary-kpis" aria-label="月報主要指標">
+          <div class="reports-primary-kpi"><span class="reports-kpi-label">總收入</span><strong>${money(current.totalIncome)}</strong></div>
+          <div class="reports-primary-kpi"><span class="reports-kpi-label">淨收入</span><strong>${money(current.netIncome)}</strong></div>
+        </section>
+        <section class="reports-secondary-kpis" aria-label="月報其他指標">
+          <div class="reports-secondary-kpi"><span>支出</span><strong>${money(current.totalExpenses)}</strong></div>
+          <div class="reports-secondary-kpi"><span>工作天數</span><strong>${current.workDays} 天</strong></div>
+          <div class="reports-secondary-kpi"><span>工作時間</span><strong>${formatReportDuration(current.totalWorkDuration)}</strong></div>
+          <div class="reports-secondary-kpi"><span>平均時薪</span><strong>${current.averageHourlyIncome === null ? "—" : money(current.averageHourlyIncome)}</strong></div>
+        </section>
+        ${renderReportComparison(comparison, "month")}
+        ${renderReportTrend(trend, "每週淨收入", "monthTrendTitle")}
+        ${renderImportantDates(important, "month")}
+        ${goalMarkup}
+      `;
+    }
+
+    function renderPlatformReport() {
+      if (!els.platformReportContent) return;
+      const period = reportsState.selectedPlatformPeriod === "month" ? "month" : "week";
+      reportsState.selectedPlatformPeriod = period;
+      els.platformPeriodButtons.forEach(button => {
+        const active = button.dataset.platformPeriod === period;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-selected", String(active));
+        button.tabIndex = active ? 0 : -1;
+      });
+      reportsState.offline = !navigator.onLine;
+      if (reportsState.loading) {
+        els.platformReportContent.innerHTML = reportsLoadingMarkup();
+        return;
+      }
+      if ((stateLoadError && !stateRecoveryNotice) || reportsState.error) {
+        els.platformReportContent.innerHTML = reportsErrorMarkup();
         return;
       }
 
-      els.platformRankingPanel.classList.remove("hidden");
-      els.platformBars.innerHTML = rows.map(([name, value]) => {
-        const percent = total ? Math.round(value / total * 100) : 0;
-        return `
-          <div class="bar-row">
-            <div class="bar-top"><strong>${name}</strong><span>${money(value)} · ${percent}%</span></div>
-            <div class="bar-track"><div class="bar-fill" style="width:${percent}%"></div></div>
+      const range = period === "month"
+        ? getLocalMonthRange(currentMonth())
+        : getLocalWeekRange(todayString());
+      const previousRange = period === "month"
+        ? getPreviousMonthRange(range)
+        : getPreviousWeekRange(range);
+      const current = aggregatePlatformIncome(state.entries, range, state.platforms);
+      const previous = aggregatePlatformIncome(state.entries, previousRange, state.platforms);
+      reportsState.stale = false;
+      if (!current.hasRecords) {
+        els.platformReportContent.innerHTML = `
+          ${reportsStatusMarkup()}
+          <div class="ds-card ds-empty-state">
+            <strong class="ds-card-title">此期間尚無工作紀錄</strong>
+            <span class="ds-secondary">完成工作紀錄後，平台收入排行會顯示在這裡。</span>
           </div>
         `;
-      }).join("");
+        return;
+      }
+      if (!current.hasData) {
+        els.platformReportContent.innerHTML = `
+          ${reportsStatusMarkup()}
+          <div class="ds-card ds-empty-state">
+            <strong class="ds-card-title">此期間尚無平台收入資料</strong>
+            <span class="ds-secondary">總收入可能包含小費、其他收入，或舊紀錄尚未分類平台。</span>
+          </div>
+        `;
+        return;
+      }
 
-      els.platformTable.innerHTML = `
-        <table>
-          <thead><tr><th>平台</th><th>實拿收入</th><th>比例</th><th>日均</th></tr></thead>
-          <tbody>
-            ${rows.map(([name, value]) => `
-              <tr>
-                <td>${name}</td>
-                <td>${money(value)}</td>
-                <td>${Math.round(value / total * 100)}%</td>
-                <td>${money(value / Math.max(entries.length, 1))}</td>
-              </tr>
-            `).join("")}
-          </tbody>
-        </table>
+      const comparison = compareReportMetric(current.totalPlatformIncome, previous.totalPlatformIncome, {
+        currentHasData: current.hasData,
+        previousHasData: previous.hasData
+      });
+      const reconciliation = current.inconsistent
+        ? `<p class="reports-platform-note" role="status">平台收入合計高於可確認的總收入；資料未被修改，請從工作紀錄檢查舊平台欄位。</p>`
+        : current.unattributedIncome > 0
+          ? `<p class="reports-platform-note">另有 ${money(current.unattributedIncome)} 未歸入平台收入。</p>`
+          : "";
+      const invalidNote = current.invalidPlatforms.length
+        ? `<p class="reports-platform-note" role="status">部分平台資料無法計算，以下只顯示可確認的收入。</p>`
+        : "";
+      els.platformReportContent.innerHTML = `
+        ${reportsStatusMarkup()}
+        <section class="reports-platform-total" aria-label="${period === "month" ? "本月" : "本週"}平台收入總額">
+          <span>${period === "month" ? "本月" : "本週"}平台收入</span>
+          <strong>${money(current.totalPlatformIncome)}</strong>
+        </section>
+        <section class="reports-section" aria-labelledby="platformRankingTitle">
+          <h4 id="platformRankingTitle">平台收入排行</h4>
+          <ol class="reports-platform-list">
+            ${current.rows.map(row => {
+              const percentage = row.share === null ? "不適用" : `${number(row.share * 100)}%`;
+              const shareWidth = row.share === null ? 0 : Math.max(0, Math.min(100, row.share * 100));
+              return `
+                <li class="reports-platform-row" data-share="${row.share === null ? "unavailable" : "available"}"
+                  style="--platform-share:${shareWidth}%"
+                  aria-label="第 ${row.rank} 名，${escapeAttr(row.displayName)}，收入 ${escapeAttr(money(row.income))}，占比 ${escapeAttr(percentage)}">
+                  <div class="reports-platform-identity">
+                    <span class="reports-platform-rank">${row.rank}</span>
+                    <span class="reports-platform-name" title="${escapeAttr(row.displayName)}">${escapeHtml(row.displayName)}</span>
+                  </div>
+                  <div class="reports-platform-values">
+                    <strong>${money(row.income)}</strong><span>${percentage}</span>
+                  </div>
+                  <div class="reports-platform-track" aria-hidden="true"><div class="reports-platform-fill"></div></div>
+                </li>
+              `;
+            }).join("")}
+          </ol>
+        </section>
+        <section class="reports-section" aria-labelledby="platformComparisonTitle">
+          <h4 id="platformComparisonTitle">與上期平台收入比較</h4>
+          <ul class="reports-comparison-list">
+            <li><span>平台收入</span><strong data-direction="${comparison.direction}">${reportComparisonText(comparison, money)}</strong></li>
+          </ul>
+        </section>
+        ${reconciliation}
+        ${invalidNote}
       `;
     }
 
@@ -6295,6 +8659,13 @@
 
     function updateCurrentWeather(weather) {
       if (!weather) return;
+      if (recordEditorState.open) {
+        recordEditorState.draft.weather = weather;
+        document.getElementById("weather").value = weather;
+        syncDetailChoiceButtons();
+        markRecordEditorDirty();
+        return;
+      }
       const date = document.getElementById("date").value || todayString();
       const entry = ensureEntryForDate(date);
       const previous = entry.weather || "";
@@ -6312,7 +8683,7 @@
       const weatherSelect = document.getElementById("weather");
       if (weatherSelect) weatherSelect.value = weather;
       els.entryId.value = entry.id;
-      saveState();
+      if (saveState()) notifyRecordChanged(date, "weather");
       syncDetailChoiceButtons();
       if (date === todayString()) updateWorkControls();
       renderEntries();
@@ -6320,12 +8691,19 @@
 
     function updateCurrentShift(shift) {
       if (!shift) return;
+      if (recordEditorState.open) {
+        recordEditorState.draft.shift = shift;
+        document.getElementById("shift").value = shift;
+        syncDetailChoiceButtons();
+        markRecordEditorDirty();
+        return;
+      }
       const date = document.getElementById("date").value || todayString();
       const entry = ensureEntryForDate(date);
       entry.shift = shift;
       document.getElementById("shift").value = shift;
       els.entryId.value = entry.id;
-      saveState();
+      if (saveState()) notifyRecordChanged(date, "shift");
       syncDetailChoiceButtons();
       renderEntries();
     }
@@ -6361,7 +8739,6 @@
 
     function renderAll() {
       renderInputs();
-      fillSelects();
       renderStats();
       renderEntries();
       renderWeeks();
@@ -6374,29 +8751,181 @@
       updateQuickPreview();
     }
 
-    function setReportView(view, persist = true) {
+    function notifyRecordChanged(dateKey, action = "update") {
+      const date = normalizeDateKey(dateKey);
+      if (!date) return false;
+      reportsState.dataRevision += 1;
+      reportsState.stale = true;
+      window.dispatchEvent(new CustomEvent("driverpay:recordchange", {
+        detail: {
+          dateKey: date,
+          action: String(action || "update"),
+          revision: reportsState.dataRevision
+        }
+      }));
+      return true;
+    }
+
+    function refreshActiveReport() {
+      if (activeReportView === "week") renderWeeks();
+      if (activeReportView === "month") renderMonthReport();
+      if (activeReportView === "platform") renderPlatformReport();
+    }
+
+    function handleRecordChanged() {
+      reportsState.stale = true;
+      if (activeView !== "reports" || reportsRefreshFrame) return;
+      reportsRefreshFrame = window.requestAnimationFrame(() => {
+        reportsRefreshFrame = 0;
+        refreshActiveReport();
+        announceReports("報表已更新");
+      });
+    }
+
+    function captureReportsContext(sourceDate, source) {
+      return {
+        activeReportTab: activeReportView,
+        selectedWeekAnchor: reportsState.selectedWeekAnchor,
+        selectedMonth: reportsState.selectedMonth,
+        selectedPlatformPeriod: reportsState.selectedPlatformPeriod,
+        scrollPosition: Math.max(0, window.scrollY),
+        sourceDate,
+        source
+      };
+    }
+
+    function openReportDateInCalendar(trigger) {
+      const date = normalizeDateKey(trigger?.dataset.reportDate);
+      if (!date) {
+        announceReports("無法開啟這個日期");
+        return;
+      }
+      reportsState.returnContext = captureReportsContext(date, trigger.dataset.reportSource || "");
+      const hash = `#calendar/${date}`;
+      if (location.hash !== hash) history.pushState({}, "", `${location.pathname}${location.search}${hash}`);
+      applyRoute({ view: "calendar", reportView: activeReportView, calendarDate: date });
+    }
+
+    function restoreReportsContext() {
+      const context = reportsState.returnContext;
+      if (!context) return;
+      reportsState.activeReportTab = normalizeReportView(context.activeReportTab);
+      reportsState.selectedWeekAnchor = weekStart(context.selectedWeekAnchor) || weekStart(todayString());
+      reportsState.selectedMonth = daysInCalendarMonth(context.selectedMonth)
+        ? context.selectedMonth
+        : currentMonth();
+      reportsState.selectedPlatformPeriod = ["week", "month"].includes(context.selectedPlatformPeriod)
+        ? context.selectedPlatformPeriod
+        : "week";
+      activeReportView = reportsState.activeReportTab;
+      setReportView(activeReportView);
+      window.requestAnimationFrame(() => {
+        const sourceSelector = context.source
+          ? `[data-report-source="${cssEscape(context.source)}"]`
+          : `[data-report-date="${cssEscape(context.sourceDate)}"]`;
+        const target = document.querySelector(sourceSelector);
+        if (target) target.focus({ preventScroll: true });
+        window.scrollTo({ top: Math.max(0, Number(context.scrollPosition || 0)), behavior: "auto" });
+      });
+    }
+
+    function announceReports(message) {
+      if (!els.reportsAnnouncement) return;
+      els.reportsAnnouncement.textContent = "";
+      window.requestAnimationFrame(() => {
+        els.reportsAnnouncement.textContent = message;
+      });
+    }
+
+    function changeReportPeriod(action) {
+      if (activeReportView === "week") {
+        if (action === "current") {
+          reportsState.selectedWeekAnchor = weekStart(todayString());
+        } else {
+          const offset = action === "previous" ? -7 : 7;
+          reportsState.selectedWeekAnchor = addLocalDays(reportsState.selectedWeekAnchor, offset);
+        }
+        renderWeeks();
+        announceReports(`已顯示 ${els.weekPeriodLabel.textContent}`);
+        return;
+      }
+      if (activeReportView === "month") {
+        if (action === "current") {
+          reportsState.selectedMonth = currentMonth();
+        } else {
+          reportsState.selectedMonth = addCalendarMonths(
+            reportsState.selectedMonth,
+            action === "previous" ? -1 : 1
+          );
+        }
+        renderMonthReport();
+        announceReports(`已顯示 ${els.monthPeriodLabel.textContent}`);
+        return;
+      }
+      if (activeReportView === "platform") {
+        reportsState.selectedPlatformPeriod = action === "month" ? "month" : "week";
+        renderPlatformReport();
+        announceReports(`已顯示${reportsState.selectedPlatformPeriod === "month" ? "本月" : "本週"}平台收入`);
+      }
+    }
+
+    function retryReportsRead() {
+      const recoveredState = loadState();
+      if (stateLoadError && !stateRecoveryNotice) {
+        reportsState.error = stateLoadError;
+        if (activeReportView === "week") renderWeeks();
+        if (activeReportView === "month") renderMonthReport();
+        if (activeReportView === "platform") renderPlatformReport();
+        announceReports("仍然無法讀取報表資料");
+        return;
+      }
+      replaceStateContents(recoveredState);
+      reportsState.error = null;
+      renderAll();
+      announceReports("報表資料已重新讀取");
+    }
+
+    function handleReportTabKeydown(event) {
+      const tabs = [...els.reportButtons];
+      const currentIndex = tabs.indexOf(event.currentTarget);
+      if (currentIndex < 0) return;
+      const offset = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
+      if (!offset) return;
+      event.preventDefault();
+      const next = tabs[(currentIndex + offset + tabs.length) % tabs.length];
+      navigateTo("reports", next.dataset.reportView);
+      next.focus();
+    }
+
+    function setReportView(view) {
       const nextView = normalizeReportView(view);
       activeReportView = nextView;
+      reportsState.activeReportTab = nextView;
+      if (els.reportsAnnouncement) els.reportsAnnouncement.textContent = "";
       els.reportButtons.forEach(button => {
         const active = button.dataset.reportView === nextView;
         button.classList.toggle("active", active);
-        button.setAttribute("aria-pressed", String(active));
+        button.setAttribute("aria-selected", String(active));
+        button.tabIndex = active ? 0 : -1;
       });
       els.reportPanels.forEach(panel => {
-        panel.classList.toggle("hidden", panel.dataset.reportPanel !== nextView);
+        const active = panel.dataset.reportPanel === nextView;
+        panel.classList.toggle("hidden", !active);
+        panel.hidden = !active;
       });
-      if (persist && state.settings.lastReportView !== nextView) {
-        state.settings.lastReportView = nextView;
-        saveState();
-      }
       if (nextView === "week") renderWeeks();
       if (nextView === "month") renderMonthReport();
       if (nextView === "platform") renderPlatformReport();
     }
 
     function setView(view) {
+      const previousView = activeView;
       activeView = view;
       if (view === "ai") renderAiAnalysis();
+      if (view === "calendar") {
+        refreshCalendarToday();
+        renderCalendar();
+      }
       document.querySelectorAll(".view").forEach(section => section.classList.add("hidden"));
       document.getElementById(`view-${view}`)?.classList.remove("hidden");
       const navView = view === "about" ? "settings" : view;
@@ -6405,7 +8934,10 @@
       els.viewSubtitle.textContent = titles[view][1];
       document.body.dataset.activeView = view;
       document.getElementById("newEntry").classList.toggle("hidden", view === "today" || view === "about");
-      if (view === "reports") setReportView(activeReportView, false);
+      if (view === "reports") {
+        setReportView(activeReportView);
+        if (previousView === "calendar" && reportsState.returnContext) restoreReportsContext();
+      }
       updateOverviewVisibility();
     }
 
@@ -6421,7 +8953,13 @@
         const queryReport = query.get("report");
         return { view: "reports", reportView: normalizeReportView(second || queryReport || (first === "analysis" ? "platform" : "")) };
       }
-      if (first === "calendar") return { view: "calendar", reportView: activeReportView };
+      if (first === "calendar") {
+        return {
+          view: "calendar",
+          reportView: activeReportView,
+          calendarDate: second || null
+        };
+      }
       if (first === "ai") return { view: "ai", reportView: activeReportView };
       if (["driver", "settings"].includes(first)) return { view: "settings", reportView: activeReportView };
       if (first === "about") return { view: "about", reportView: activeReportView };
@@ -6429,7 +8967,7 @@
     }
 
     function appRouteHash(view, reportView = activeReportView) {
-      if (view === "reports") return `#reports/${normalizeReportView(reportView)}`;
+      if (view === "reports") return "#reports";
       if (view === "settings") return "#driver";
       return `#${["today", "calendar", "ai", "about"].includes(view) ? view : "today"}`;
     }
@@ -6438,7 +8976,10 @@
       const view = ["today", "calendar", "reports", "ai", "settings", "about"].includes(route?.view)
         ? route.view
         : "today";
-      if (view === "reports") setReportView(route.reportView, true);
+      if (view === "reports") setReportView(route.reportView);
+      if (view === "calendar" && route.calendarDate !== null && route.calendarDate !== undefined) {
+        openCalendar({ selectedDate: route.calendarDate, source: "route" });
+      }
       setView(view);
     }
 
@@ -6533,9 +9074,12 @@
       document.querySelectorAll("[data-income]").forEach(input => incomes[input.dataset.income] = Number(input.value || 0));
       const id = els.entryId.value || makeId();
       const date = document.getElementById("date").value;
-      const existingEntry = state.entries.find(item => item.id === id) || state.entries.find(item => item.date === date);
+      const existingEntry = recordEditorState.open
+        ? recordEditorState.draft
+        : state.entries.find(item => item.id === id) || state.entries.find(item => item.date === date);
       const expenses = { ...(existingEntry?.expenses || {}) };
       return {
+        ...(existingEntry || {}),
         id,
         date,
         shift: document.getElementById("shift").value,
@@ -6551,6 +9095,262 @@
         incomes,
         expenses
       };
+    }
+
+    function setRecordEditorStatus(message = "", type = "") {
+      els.recordEditorStatus.textContent = message;
+      els.recordEditorStatus.dataset.status = type || (message ? "pending" : "idle");
+      const isError = type === "error";
+      els.recordEditorStatus.setAttribute("role", isError ? "alert" : "status");
+      els.recordEditorStatus.setAttribute("aria-live", isError ? "assertive" : "polite");
+      els.recordEditorStatus.setAttribute("aria-atomic", "true");
+      [els.entryForm, els.detailForm].forEach(form => {
+        if (!recordEditorState.open) return;
+        form.setAttribute("aria-describedby", "recordEditorStatus");
+        if (isError) form.setAttribute("aria-invalid", "true");
+        else form.removeAttribute("aria-invalid");
+      });
+    }
+
+    function markRecordEditorDirty() {
+      if (!recordEditorState.open) return;
+      recordEditorState.dirty = true;
+      setRecordEditorStatus(navigator.onLine ? "尚未儲存" : "離線，尚未儲存", "pending");
+    }
+
+    function renderCalendarExpenseList() {
+      if (!recordEditorState.open) {
+        els.calendarExpenseList.innerHTML = "";
+        return;
+      }
+      const expenses = Object.entries(recordEditorState.draft?.expenses || {})
+        .filter(([, amount]) => Number(amount) !== 0);
+      els.calendarExpenseList.innerHTML = expenses.length ? `
+        <h3 class="ds-card-title">這天已記錄的支出</h3>
+        ${expenses.map(([category, amount]) => `
+          <div class="calendar-expense-row">
+            <span>${escapeHtml(category)}　<strong class="ds-numeric">${money(amount)}</strong></span>
+            <button class="ds-button ds-button--text" type="button" data-calendar-remove-expense="${escapeAttr(category)}" aria-label="移除 ${escapeAttr(category)} 支出">移除</button>
+          </div>
+        `).join("")}
+      ` : "";
+    }
+
+    function showRecordEditorConfirm({ title, message, acceptLabel = "確認", destructive = false, onAccept }) {
+      recordEditorConfirmAction = onAccept;
+      els.recordEditorConfirmTitle.textContent = title;
+      els.recordEditorConfirmMessage.textContent = message;
+      els.recordEditorConfirmAccept.textContent = acceptLabel;
+      els.recordEditorConfirmAccept.className = `ds-button ${destructive ? "ds-button--danger" : "ds-button--primary"}`;
+      els.recordEditorConfirm.showModal();
+      window.requestAnimationFrame(() => els.recordEditorConfirmCancel.focus());
+    }
+
+    function moveSharedEditorToDialog() {
+      els.recordEditorContent.append(els.sharedIncomePanel, els.sharedDetailPanel);
+    }
+
+    function restoreSharedEditorToToday() {
+      els.sharedIncomePanelAnchor.after(els.sharedIncomePanel);
+      els.sharedDetailPanelAnchor.after(els.sharedDetailPanel);
+    }
+
+    function calendarEditorReturnSelector(trigger) {
+      if (!(trigger instanceof HTMLElement)) return "";
+      if (trigger.hasAttribute("data-calendar-add")) return "[data-calendar-add]";
+      if (trigger.hasAttribute("data-calendar-edit")) return "[data-calendar-edit]";
+      return "";
+    }
+
+    function openCalendarRecordEditor(date, trigger = document.activeElement) {
+      const normalizedDate = normalizeDateKey(date);
+      if (!normalizedDate || normalizedDate >= todayString() || stateLoadError) return;
+      const existing = entryForDate(normalizedDate);
+      recordEditorState = {
+        open: true,
+        mode: existing ? "edit" : "create",
+        date: normalizedDate,
+        initialRecord: existing ? cloneStatePayload(existing) : null,
+        draft: existing ? cloneStatePayload(existing) : blankEntry(normalizedDate),
+        dirty: false,
+        saving: false,
+        returnFocus: trigger instanceof HTMLElement ? trigger : null,
+        returnFocusSelector: calendarEditorReturnSelector(trigger)
+      };
+      moveSharedEditorToDialog();
+      fillEntryFields(recordEditorState.draft);
+      const dateInput = document.getElementById("date");
+      dateInput.value = normalizedDate;
+      dateInput.disabled = true;
+      syncDateCardDisplay(dateInput);
+      els.formTitle.textContent = existing ? "編輯工作紀錄" : "新增工作紀錄";
+      els.detailForm.querySelector(".save-button").textContent = "完成";
+      els.recordEditorTitle.textContent = existing ? "編輯工作紀錄" : "新增工作紀錄";
+      els.recordEditorDate.textContent = `${formatCalendarFullDate(normalizedDate)}・${calendarWeekdayLabel(normalizedDate)}`;
+      els.recordEditorDelete.classList.toggle("hidden", !existing);
+      renderCalendarExpenseList();
+      setRecordEditorStatus(
+        navigator.onLine ? "" : "離線，可儲存在此裝置",
+        navigator.onLine ? "idle" : "offline"
+      );
+      els.recordEditorDialog.showModal();
+      document.body.classList.add("record-editor-open");
+      window.requestAnimationFrame(() => els.recordEditorClose.focus());
+    }
+
+    function finishRecordEditorClose() {
+      const returnFocus = recordEditorState.returnFocus;
+      const returnFocusSelector = recordEditorState.returnFocusSelector;
+      const returnDate = recordEditorState.date;
+      recordEditorState.open = false;
+      restoreSharedEditorToToday();
+      document.getElementById("date").disabled = false;
+      [els.entryForm, els.detailForm].forEach(form => {
+        form.removeAttribute("aria-describedby");
+        form.removeAttribute("aria-invalid");
+      });
+      els.detailForm.querySelector(".save-button").textContent = "儲存詳細紀錄";
+      els.detailForm.querySelector(".save-button").disabled = false;
+      els.recordEditorDialog.close();
+      document.body.classList.remove("record-editor-open");
+      els.calendarExpenseList.innerHTML = "";
+      resetForm();
+      renderCalendar();
+      window.requestAnimationFrame(() => {
+        const replacement = returnFocusSelector
+          ? document.querySelector(returnFocusSelector)
+          : null;
+        const selectedDateCell = els.calendarGrid.querySelector(`[data-calendar-date="${returnDate}"]`);
+        const focusTarget = returnFocus?.isConnected ? returnFocus : replacement || selectedDateCell;
+        focusTarget?.focus();
+      });
+    }
+
+    function requestRecordEditorClose() {
+      if (!recordEditorState.open || recordEditorState.saving) return;
+      if (!recordEditorState.dirty) {
+        finishRecordEditorClose();
+        return;
+      }
+      showRecordEditorConfirm({
+        title: "放棄尚未儲存的修改？",
+        message: `${formatCalendarFullDate(recordEditorState.date)}的變更尚未儲存。`,
+        acceptLabel: "放棄修改",
+        destructive: true,
+        onAccept: finishRecordEditorClose
+      });
+    }
+
+    function recordHasMeaningfulContent(entry) {
+      const hasIncome = Object.values(entry.incomes || {}).some(value => Number(value) > 0);
+      const hasExpense = Object.values(entry.expenses || {}).some(value => Number(value) > 0);
+      const hasOtherNumber = ["tips", "orders", "km"].some(key => Number(entry[key]) > 0);
+      return hasIncome
+        || hasExpense
+        || workMetrics(entry).durationMs > 0
+        || hasOtherNumber
+        || Boolean(String(entry.weather || "").trim())
+        || Boolean(String(entry.note || "").trim());
+    }
+
+    function validateCalendarRecord(entry) {
+      if (!normalizeDateKey(entry.date) || entry.date !== recordEditorState.date || entry.date >= todayString()) {
+        return "Calendar 只能儲存已過去的所選日期。";
+      }
+      const numberFields = [
+        ["休息時間", entry.breakMinutes, 1440],
+        ["手動工時", entry.manualHours, 24],
+        ["小費", entry.tips, maxPlatformIncome],
+        ["訂單數", entry.orders, 10000],
+        ["公里數", entry.km, 10000]
+      ];
+      const invalidNumber = numberFields.find(([, value, max]) => !Number.isFinite(Number(value)) || Number(value) < 0 || Number(value) > max);
+      if (invalidNumber) return `${invalidNumber[0]}的數值無效。`;
+      const invalidIncome = Object.values(entry.incomes || {}).some(value =>
+        !Number.isSafeInteger(Number(value)) || Number(value) < 0 || Number(value) > maxPlatformIncome
+      );
+      if (invalidIncome) return "平台收入必須是 0 至 99,999,999 的整數。";
+      const invalidExpense = Object.values(entry.expenses || {}).some(value =>
+        !Number.isFinite(Number(value)) || Number(value) < 0 || Number(value) > maxPlatformIncome
+      );
+      if (invalidExpense) return "支出金額必須是有效的非負數。";
+      if (Boolean(entry.startTime) !== Boolean(entry.endTime)) return "開始與結束時間必須同時填寫。";
+      if (entry.startTime && entry.endTime && !Number(entry.manualHours)) {
+        const start = minutes(entry.startTime);
+        let end = minutes(entry.endTime);
+        if (end < start) end += 1440;
+        if (Number(entry.breakMinutes) > end - start) return "休息時間不可超過總經過時間。";
+      }
+      if (!recordHasMeaningfulContent(entry)) return "請至少輸入收入、支出、工時或其他工作紀錄。";
+      return "";
+    }
+
+    function buildCalendarRecordFromForm() {
+      const next = { ...recordEditorState.draft, ...formData(), date: recordEditorState.date };
+      const original = recordEditorState.initialRecord;
+      const timeChanged = original && ["startTime", "endTime", "breakMinutes", "manualHours"]
+        .some(key => String(original[key] ?? "") !== String(next[key] ?? ""));
+      if (timeChanged) delete next.workSession;
+      next.incomes ||= {};
+      next.expenses ||= {};
+      next.expenseNotes ||= {};
+      return next;
+    }
+
+    function commitCalendarRecord() {
+      if (!recordEditorState.open || recordEditorState.saving) return;
+      const nextRecord = buildCalendarRecordFromForm();
+      const validationError = validateCalendarRecord(nextRecord);
+      if (validationError) {
+        setRecordEditorStatus(validationError, "error");
+        return;
+      }
+      recordEditorState.saving = true;
+      els.detailForm.querySelector(".save-button").disabled = true;
+      setRecordEditorStatus("儲存中…", "saving");
+      const nextState = cloneStatePayload(state);
+      const sameDateIndex = nextState.entries.findIndex(entry => entry.date === recordEditorState.date);
+      if (sameDateIndex >= 0) nextState.entries[sameDateIndex] = nextRecord;
+      else nextState.entries.push(nextRecord);
+      Object.keys(nextRecord.expenses || {}).forEach(category => {
+        if (!nextState.expenses.includes(category)) nextState.expenses.push(category);
+      });
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        recordEditorState.saving = false;
+        els.detailForm.querySelector(".save-button").disabled = false;
+        setRecordEditorStatus("儲存失敗，修改尚未寫入；請再試一次。", "error");
+        return;
+      }
+      notifyRecordChanged(recordEditorState.date, sameDateIndex >= 0 ? "edit" : "create");
+      recordEditorState.dirty = false;
+      setRecordEditorStatus(
+        navigator.onLine ? "已儲存在此裝置" : "已離線儲存在此裝置",
+        navigator.onLine ? "saved" : "offline"
+      );
+      renderAll();
+      window.setTimeout(finishRecordEditorClose, 350);
+    }
+
+    function deleteCalendarRecord() {
+      if (!recordEditorState.open || !recordEditorState.initialRecord) return;
+      showRecordEditorConfirm({
+        title: "刪除這天的工作紀錄？",
+        message: `${formatCalendarFullDate(recordEditorState.date)}的收入、支出與工時將一併刪除。此操作無法復原。`,
+        acceptLabel: "刪除紀錄",
+        destructive: true,
+        onAccept: () => {
+          const nextState = cloneStatePayload(state);
+          nextState.entries = nextState.entries.filter(entry => entry.date !== recordEditorState.date);
+          if (!persistStatePayload(nextState, { updateMemory: true })) {
+            setRecordEditorStatus("刪除失敗，原紀錄仍完整保留。", "error");
+            return;
+          }
+          notifyRecordChanged(recordEditorState.date, "delete");
+          recordEditorState.dirty = false;
+          finishRecordEditorClose();
+          announceCalendar("工作紀錄已刪除");
+        }
+      });
     }
 
     function exportCsv() {
@@ -6620,7 +9420,7 @@
         pausedAt: null,
         endedAt: null
       };
-      saveState();
+      if (saveState()) notifyRecordChanged(entry.date, "work-session");
       resetForm();
       refreshToday();
     }
@@ -6644,7 +9444,7 @@
       entry.workSession.status = "paused";
       entry.workSession.pausedAt = now.toISOString();
       entry.workSession.segmentStartedAt = null;
-      saveState();
+      if (saveState()) notifyRecordChanged(entry.date, "work-session");
       resetForm();
       refreshToday();
     }
@@ -6659,7 +9459,7 @@
       entry.workSession.segmentStartedAt = now.toISOString();
       entry.workSession.pausedAt = null;
       entry.breakMinutes = Math.floor(entry.workSession.accumulatedBreakMs / 60000);
-      saveState();
+      if (saveState()) notifyRecordChanged(entry.date, "work-session");
       resetForm();
       refreshToday();
     }
@@ -6692,7 +9492,7 @@
       entry.workSession.pausedAt = null;
       entry.endTime = currentTimeString();
       entry.breakMinutes = Math.floor(Number(entry.workSession.accumulatedBreakMs || 0) / 60000);
-      saveState();
+      if (saveState()) notifyRecordChanged(entry.date, "work-session");
       resetForm();
       refreshToday();
     }
@@ -6766,6 +9566,7 @@
 
       window.clearTimeout(incomeUndoTimer);
       lastIncomeAddition = null;
+      notifyRecordChanged(action.date, "income-rollback");
       refreshIncomeViews();
       showToast(`已復原 ${money(action.amount)}`);
     }
@@ -6782,6 +9583,27 @@
       const mode = input.dataset.incomeMode || "total";
       const raw = String(input.value || "").trim().replaceAll(",", "");
       const amount = raw === "" ? 0 : Number(raw);
+      if (recordEditorState.open) {
+        const invalid = !profile
+          || !platform
+          || date !== recordEditorState.date
+          || mode !== "total"
+          || input.dataset.invalidAmount === "negative"
+          || !Number.isSafeInteger(amount)
+          || amount < 0
+          || amount > maxPlatformIncome;
+        const previousDraftAmount = Number(recordEditorState.draft?.incomes?.[platform] || 0);
+        if (invalid) {
+          restoreIncomeInput(input, platform || input.dataset.inlineIncome || "平台", previousDraftAmount);
+          setRecordEditorStatus("平台收入必須是 0 至 99,999,999 的整數。", "error");
+          return;
+        }
+        recordEditorState.draft.incomes ||= {};
+        recordEditorState.draft.incomes[platform] = amount;
+        restoreIncomeInput(input, platform, amount);
+        markRecordEditorDirty();
+        return;
+      }
       const existingEntry = entryForDate(date);
       const entry = existingEntry || ensureEntryForDate(date);
       const hadIncome = Boolean(platform && Object.prototype.hasOwnProperty.call(entry.incomes, platform));
@@ -6850,6 +9672,7 @@
         window.clearTimeout(incomeUndoTimer);
         lastIncomeAddition = null;
       }
+      notifyRecordChanged(date, mode === "add" ? "income-add" : "income-edit");
       restoreIncomeInput(input, platform, total);
       refreshIncomeViews();
       if (record) {
@@ -6905,7 +9728,7 @@
       entry.incomes[record.platform] = Math.max(0, Number(entry.incomes?.[record.platform] || 0) + difference);
       record.amount = amount;
       record.updatedAt = new Date().toISOString();
-      saveState();
+      if (saveState()) notifyRecordChanged(entry.date, "income-record-edit");
       refreshToday();
       resetForm();
     }
@@ -6916,7 +9739,7 @@
       if (!entry || !record) return;
       entry.incomes[record.platform] = Math.max(0, Number(entry.incomes?.[record.platform] || 0) - Number(record.amount || 0));
       entry.incomeRecords = entry.incomeRecords.filter(item => item.id !== recordId);
-      saveState();
+      if (saveState()) notifyRecordChanged(entry.date, "income-record-delete");
       refreshToday();
       resetForm();
     }
@@ -6961,14 +9784,104 @@
       updateOverviewVisibility();
     });
 
-    els.monthFilter.addEventListener("change", () => updateCalendarMonth(els.monthFilter.value));
-    [els.weekMonthFilter, els.monthReportFilter, els.platformMonthFilter].forEach(select => {
-      select.addEventListener("change", () => updateReportMonth(select.value));
+    els.calendarPreviousMonth.addEventListener("click", () => changeCalendarDisplayedMonth(-1));
+    els.calendarNextMonth.addEventListener("click", () => changeCalendarDisplayedMonth(1));
+    els.calendarTodayButton.addEventListener("click", goToCalendarToday);
+    els.calendarGrid.addEventListener("click", event => {
+      const dateButton = event.target.closest("[data-calendar-date]");
+      if (dateButton) selectCalendarDate(dateButton.dataset.calendarDate, { revealCard: true });
     });
+    els.calendarGrid.addEventListener("keydown", handleCalendarGridKeydown);
+    els.calendarGrid.addEventListener("focusin", event => {
+      const dateButton = event.target.closest("[data-calendar-date]");
+      if (!dateButton) return;
+      calendarState.focusedDate = dateButton.dataset.calendarDate;
+      els.calendarGrid.querySelectorAll("[data-calendar-date]").forEach(button => {
+        button.tabIndex = button === dateButton ? 0 : -1;
+      });
+    });
+    els.calendarRecordCard.addEventListener("click", event => {
+      if (event.target.closest("[data-calendar-go-today]")) {
+        resetForm();
+        navigateTo("today");
+      }
+      const editorTrigger = event.target.closest("[data-calendar-add], [data-calendar-edit]");
+      if (editorTrigger) openCalendarRecordEditor(calendarState.selectedDate, editorTrigger);
+      if (event.target.closest("[data-calendar-retry]")) retryCalendarRead();
+    });
+    els.calendarGrid.addEventListener("pointerdown", event => beginCalendarGesture("month", event));
+    els.calendarGrid.addEventListener("pointerup", event => finishCalendarGesture(event));
+    els.calendarGrid.addEventListener("pointercancel", event => finishCalendarGesture(event, true));
+    els.calendarRecordCard.addEventListener("pointerdown", event => beginCalendarGesture("day", event));
+    els.calendarRecordCard.addEventListener("pointerup", event => finishCalendarGesture(event));
+    els.calendarRecordCard.addEventListener("pointercancel", event => finishCalendarGesture(event, true));
+    els.recordEditorClose.addEventListener("click", requestRecordEditorClose);
+    els.recordEditorDelete.addEventListener("click", deleteCalendarRecord);
+    els.recordEditorDialog.addEventListener("cancel", event => {
+      event.preventDefault();
+      requestRecordEditorClose();
+    });
+    els.recordEditorConfirm.addEventListener("cancel", event => {
+      event.preventDefault();
+      recordEditorConfirmAction = null;
+      els.recordEditorConfirm.close();
+    });
+    els.recordEditorConfirmCancel.addEventListener("click", () => {
+      recordEditorConfirmAction = null;
+      els.recordEditorConfirm.close();
+    });
+    els.recordEditorConfirmAccept.addEventListener("click", () => {
+      const action = recordEditorConfirmAction;
+      recordEditorConfirmAction = null;
+      els.recordEditorConfirm.close();
+      action?.();
+    });
+    els.calendarExpenseList.addEventListener("click", event => {
+      const remove = event.target.closest("[data-calendar-remove-expense]");
+      if (!remove || !recordEditorState.open) return;
+      const category = remove.dataset.calendarRemoveExpense;
+      delete recordEditorState.draft.expenses?.[category];
+      delete recordEditorState.draft.expenseNotes?.[category];
+      renderCalendarExpenseList();
+      markRecordEditorDirty();
+    });
+    document.getElementById("view-reports").addEventListener("click", event => {
+      const reportDate = event.target.closest("[data-report-date]");
+      if (reportDate) {
+        openReportDateInCalendar(reportDate);
+        return;
+      }
+      const platformPeriod = event.target.closest("[data-platform-period]");
+      if (platformPeriod) {
+        reportsState.selectedPlatformPeriod = platformPeriod.dataset.platformPeriod === "month" ? "month" : "week";
+        renderPlatformReport();
+        announceReports(`已顯示${reportsState.selectedPlatformPeriod === "month" ? "本月" : "本週"}平台收入`);
+        return;
+      }
+      const periodButton = event.target.closest("[data-report-period]");
+      if (periodButton) changeReportPeriod(periodButton.dataset.reportPeriod);
+      if (event.target.closest("[data-reports-retry]")) retryReportsRead();
+    });
+    els.reportButtons.forEach(button => button.addEventListener("keydown", handleReportTabKeydown));
+    els.platformPeriodButtons.forEach(button => button.addEventListener("keydown", event => {
+      const buttons = [...els.platformPeriodButtons];
+      const index = buttons.indexOf(event.currentTarget);
+      const offset = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
+      if (!offset || index < 0) return;
+      event.preventDefault();
+      const next = buttons[(index + offset + buttons.length) % buttons.length];
+      reportsState.selectedPlatformPeriod = next.dataset.platformPeriod;
+      renderPlatformReport();
+      next.focus();
+    }));
 
     els.entryForm.addEventListener("submit", event => event.preventDefault());
     els.detailForm.addEventListener("submit", event => {
       event.preventDefault();
+      if (recordEditorState.open) {
+        commitCalendarRecord();
+        return;
+      }
       const entry = formData();
       const index = state.entries.findIndex(item => item.id === entry.id);
       if (index >= 0) state.entries[index] = { ...state.entries[index], ...entry };
@@ -6981,13 +9894,18 @@
           state.entries.push(entry);
         }
       }
-      saveState();
+      if (!saveState()) {
+        showToast("儲存失敗，請稍後再試");
+        return;
+      }
+      notifyRecordChanged(entry.date, "today-update");
       renderAll();
       resetForm();
     });
 
     els.detailForm.addEventListener("input", event => {
       if (event.target.id === "date") syncDateCardDisplay(event.target);
+      if (recordEditorState.open && event.target.id !== "date") markRecordEditorDirty();
       updateQuickPreview();
     });
     els.detailForm.addEventListener("change", event => {
@@ -7001,6 +9919,7 @@
     els.workTimeSection.addEventListener("toggle", event => {
       updateQuickPreview();
       if (!event.isTrusted) return;
+      if (recordEditorState.open) return;
       state.settings.timeDetailsOpen = event.currentTarget.open;
       saveState();
     });
@@ -7208,13 +10127,6 @@
     document.getElementById("openAbout").addEventListener("click", () => navigateTo("about"));
     document.getElementById("closeAbout").addEventListener("click", () => navigateTo("settings"));
 
-    els.entriesTable.addEventListener("click", event => {
-      const editButton = event.target.closest("[data-edit]");
-      const deleteButton = event.target.closest("[data-delete]");
-      if (editButton) editEntry(editButton.dataset.edit);
-      if (deleteButton) deleteEntry(deleteButton.dataset.delete);
-    });
-
     document.getElementById("addPlatform").addEventListener("click", () => {
       const input = document.getElementById("newPlatformName");
       const name = input.value.trim();
@@ -7342,11 +10254,31 @@
     renderEntryDateCard(todayString());
     renderAll();
     resetForm();
-    navigateTo(parseAppRoute(location.hash, location.search).view, parseAppRoute(location.hash, location.search).reportView, true);
+    const initialRoute = parseAppRoute(location.hash, location.search);
+    if (initialRoute.view === "calendar" && initialRoute.calendarDate) {
+      applyRoute(initialRoute);
+    } else {
+      navigateTo(initialRoute.view, initialRoute.reportView, true);
+    }
     updateOverviewVisibility();
     setupPwa();
+    scheduleCalendarMidnightRefresh();
     window.addEventListener("popstate", () => applyRoute(parseAppRoute(location.hash, location.search)));
     window.addEventListener("hashchange", () => applyRoute(parseAppRoute(location.hash, location.search)));
+    window.addEventListener("driverpay:recordchange", handleRecordChanged);
+    window.addEventListener("online", () => {
+      reportsState.offline = false;
+      if (activeView === "reports") refreshActiveReport();
+    });
+    window.addEventListener("offline", () => {
+      reportsState.offline = true;
+      if (activeView === "reports") refreshActiveReport();
+    });
+    window.addEventListener("pageshow", refreshCalendarToday);
+    window.addEventListener("focus", refreshCalendarToday);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") refreshCalendarToday();
+    });
     window.setInterval(() => {
       if (activeView !== "today") return;
       renderStats();

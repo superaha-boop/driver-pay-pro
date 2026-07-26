@@ -1,20 +1,103 @@
 # Driver Pay Pro 專案固定背景
 
-更新日期：2026-07-25
+更新日期：2026-07-26
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
+
+## Calendar V1 完成狀態
+
+- Calendar V1 的 Read、Navigate、Create、Edit、Delete 與 transactional rollback 已完成。
+- Calendar Final Regression 固定 fixture 與 52 項自動測試通過；Today、Calendar、Reports 共用 canonical calculations。
+- Product Owner 已完成並確認 iPhone Safari、installed PWA、Preview 與 Offline Human QA。
+- Calendar UX Freeze — Version 1 已生效；後續只接受 Bug、Accessibility、Data Integrity 與重大使用障礙修正。
+- `driverPayApp.v2`、WorkRecord schema、Heatmap 演算法與計算公式均未因封板改變。
+- Reports Sprint 5B1 與 5B2 已完成週／月核心、平台貢獻、重要日期下鑽與
+  hardening；Final Regression、L3 Human QA 與 Feature Freeze Gate 已完成。
+- Reports UX Freeze — Version 1 已生效；後續只接受 Bug、Accessibility、
+  Data Integrity、Security、重大使用障礙與 Production blocker。
+- Reports 實作必須以 `docs/REPORTS_SPEC.md` 為唯一主要功能規格，不得因此回頭改造 Calendar。
+
+## Reports Specification 狀態
+
+- `docs/REPORTS_SPEC.md` Version 1.0 已定案，涵蓋週／月／平台資訊架構、session state、台北期間、canonical KPI、前期比較、淨收入趨勢、平台貢獻、Calendar exact-date drill-down、empty／loading／error／offline 與驗收規格。
+- 新 App session 固定預設週報；Reports 的 tab、週、月、平台期間與返回 context 都是 session-only，不新增到 `driverPayApp.v2`。
+- 週報固定星期一至星期日；月報採完整台北曆月；月趨勢採四至六個 Monday-first 週彙總。
+- 平台頁只描述收入貢獻、排行、占比與安全比較，不得推論效率或最佳平台；小費不歸入平台收入。
+- Sprint 5B1／5B2 已實作 canonical 週／月 KPI、前期比較、淨收入趨勢、
+  平台週／月收入貢獻、exact-date Calendar drill-down、return context、
+  committed-record refresh 及 Empty／Loading／Error／Offline 狀態。
+- 平台內建別名只在讀取層正規化；未知自訂平台安全保留顯示，歷史資料不被
+  改寫，小費不歸入平台收入。
+- Reports Final Regression 固定 28 情境 fixture；全套 Node tests 88/88 通過。
+- L2 Preview Smoke 與 Product Owner L3 Human QA 已完成，包含 iPhone Safari、
+  installed PWA、Offline、VoiceOver、Reduced Motion、safe area 與 responsive。
+- Reports Feature Freeze Checklist 全項 Passed；一般視覺改善與新增功能轉入
+  Backlog，不得直接修改凍結介面。
+
+## Foundation Cleanup Version 1 狀態
+
+- Foundation branch：`codex/foundation-cleanup-20260726`，base commit：
+  `293c1878d09f95e507311e7ae2b531b7718ac62b`。
+- 專案維持靜態 PWA，不加入 bundler、framework 或 TypeScript migration。
+- `package.json` 提供 lint、全部／Calendar／Reports 測試、Production
+  validation、build alias 與單一 `release:check`。
+- ESLint 檢查 Node scripts、tests、Service Worker 與 `index.html` inline
+  JavaScript；correctness errors 阻擋 release，既有 unused code 保留 warning。
+- Production validation 檢查 HTML、資源、Manifest、Service Worker App Shell、
+  navigation fallback、五個主要導覽、`driverPayApp.v2`、敏感字串與 Preview／
+  tunnel URL。
+- `design-system.html` 保持獨立內部展示頁，已補齊 segmented control、KPI、
+  Empty／Loading／Error、list row、44px touch target、focus-visible 與 reduced
+  motion evidence；不進入正式導覽或 App Shell。
+- Calendar／Reports UX Freeze、Today／AI／Driver、schema、資料與 PWA cache
+  保持不變；Service Worker 仍為 `driver-pay-pro-v12`。
 
 ## 1. App 的核心設計原則
 
 - Driver Pay Pro 是給多元計程車司機使用的收入與工時管理 App。
 - 手機版優先，需適合單手操作、快速閱讀及駕駛工作情境。
-- 首頁與報表採儀表板設計，不做成層層展開的傳統表單。
+- 首頁與報表優先提供清楚總覽，不做成層層展開的傳統表單，也不採傳統企業 Dashboard 或 KPI 卡片牆。
 - 重要資訊直接顯示；能直接點選或原位編輯，就不增加額外輸入畫面。
 - 能自動儲存就不增加「完成」或「確認」按鈕。
 - 避免水平捲動、過度留白、大型套卡與沒有資訊價值的零值欄位。
 - 主視覺使用深綠、灰綠與白色，不使用亮藍色資料文字或各平台品牌色。
 - 已完成的畫面應凍結；除非使用者明確提出需求，不順手重做其他區塊。
 - 任何視覺修改不得改變收入、工時、平台比例、統計或 localStorage 資料結構。
+
+### 全域產品設計摘要
+
+- Driver Pay Pro 是 mobile-first PWA，主要體驗目標依序為 iPhone Safari、installed PWA、其他手機、平板與 Desktop。
+- 視覺方向採 Apple-like 的低彩度、清楚層級與柔和深度感；Apple-like 不等於只增加圓角。
+- Driver Pay Pro 已建立正式 Design System，作為後續 Calendar、Reports、AI 與 Driver UI 的共用基礎。
+- `styles/design-system.css` 的 CSS custom properties 是 spacing、radius、typography、語意色彩、shadow、border、motion、touch target 與 safe area 的單一視覺來源。
+- Design System 採 Apple-inspired、mobile-first、one-hand、calm interface；後續頁面逐步遷移，不進行一次性全站重寫。
+- 全 App 遵循三秒原則、兩層原則、免思考原則、單手操作原則與 Apple 美學原則；完整永久規則以 `AGENTS.md` 為準。
+- 月曆採 `Overview → Detail`：先定位日期與辨識工作狀況，再開啟當日工作紀錄。
+- 月曆點選日期後顯示的正式區域名稱為「工作紀錄卡片」，採核心資訊雙欄、延伸資訊單欄的混合式布局。
+- Calendar V1 已實作標準工作紀錄卡片與過去日期新增／編輯／刪除；精簡、完整、自訂顯示模式仍屬後續核准規格。
+
+### 正式產品架構摘要
+
+- 正式產品邊界、頁面責任、功能歸屬、跨頁資料契約與 Roadmap 以 `docs/PRODUCT_SPEC.md` 為準。
+- 底部主要資訊架構固定為「今天｜月曆｜報表｜AI｜Driver」，不增加第六個主要分頁。
+- 今天只負責今日即時工作與今日紀錄；月曆負責定位日期及管理過去紀錄；報表與 AI 唯讀；Driver 只管理持久設定。
+- 每個可寫入功能只能有一個 Primary owner。跨頁需要修正紀錄時，必須連到負責頁面，不在報表或 AI 複製表單。
+- 收入、支出、淨收入、實際工時、平均時薪及週／月彙總必須共用單一計算來源。
+- 月曆正式定義為星期一至星期日；新啟動選今天，同一 App session 保留選取日期，未來日期不可建立紀錄。
+- Calendar V1 已完成 Monday-first 月份格、session-only selected date、日期 deep link、收入熱度、標準工作紀錄卡片、月份摘要與過去日期安全 mutation。
+- Calendar Sprint 4A.5 已完成低風險 Visual Polish：壓縮頁內垂直節奏、強化月份導覽／星期標題、拉近日期與收入、微調 heat tokens，並以字重、間距與淡分隔線強化工作紀錄卡片層級。
+- Sprint 4A.5 沒有改變 Calendar state、日期／手勢／鍵盤／ARIA、heat 演算法、canonical calculation 或資料；Calendar 仍完全 read-only。
+- 現況差距與技術限制集中記錄於 `docs/TECH_DEBT.md`，不因文件建立而自動授權實作。
+
+### Calendar Specification 摘要
+
+- `docs/CALENDAR_SPEC.md` 已定案；Calendar 定位是歷史日期定位、查看、補登與修正，不取代 Today 或 Reports。
+- Calendar 採 Monday-first；一般新 session 選今天，同 session 保留 selectedDate／displayedMonth，不自動選最近工作日。
+- 單純切換月份不改 selectedDate；點日期或滑動日期才更新工作紀錄卡片，跨月時同步 displayedMonth。
+- 日期格只顯示淨收入簡寫與柔和相對熱度；Today 與 Selected 分開，未來日期可查看但不可新增。
+- 工作紀錄卡片第一版固定標準模式，數值使用 canonical calculations 與 Design System primitives；Calendar 與 Today 共用同一套 Record Editor。
+- Calendar Read／Navigate／Create／Edit／Delete、Final Regression 與 Human QA Gate 已完成；Calendar UX Freeze — Version 1 已生效。
+- 單純月份切換保留原 `selectedDate`，若選取日不在顯示月份，卡片保留該日並提示；此行為已在 Human QA Gate 驗收。
 
 # Development Principles
 
@@ -362,8 +445,8 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 
 - 底部導覽固定為「今天｜月曆｜報表｜AI｜Driver」，使用 24px Lucide inline SVG 與 14px 單行文字。
 - 月曆只顯示月份明細與每日歷史紀錄，不放週報、月報或平台分析。
-- 報表使用固定主標題「報表」，內含週報、月報與平台三個分頁；離開後會記住最後查看的分頁。
-- 月曆月份與報表月份互相獨立；報表三個分頁共用同一個月份。
+- 報表使用固定主標題「報表」，內含週報、月報與平台三個分頁；同一 App session 會記住分頁，fresh session 固定回到週報。
+- 月曆月份與報表期間互相獨立；正式 Reports period state 以 `docs/REPORTS_SPEC.md` 為準。
 - 每日歷史紀錄顯示總收入、平台收入、支出、淨收入與實際工時；編輯與刪除操作至少 44px，刪除保留確認。
 - 舊 `#week`、`#month`、`#platform`、`#analysis` 連結仍會導向對應報表內容。
 
@@ -393,7 +476,7 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 - 班別與天氣：展開「其他資料」後直接點選，無下拉選單與確認按鈕。
 - 日期：點擊完整置中日期卡即可開啟原生日期選擇器，選擇後立即更新。
 - 月曆：使用獨立月份選擇器閱讀每日歷史紀錄，並可直接編輯或刪除既有紀錄。
-- 報表：從「報表」進入週報、月報或平台收入排行；三個分頁共用報表月份並記住最後分頁。
+- 報表：從「報表」進入週報、月報或平台收入排行；同 session 保留各自期間與分頁，fresh session 回到週報。
 
 ## 4. 不能退回的舊設計
 
@@ -421,15 +504,34 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 - 工時已統一由毫秒制的 `workMetrics()` 計算，平均時薪統一由 `hourlyRate()` 計算；歷史未收工紀錄不再持續累加到今天。
 - 週報週期已改用不受 UTC 轉換影響的 date-only 曆法計算星期一至星期日；星期日仍歸屬前一個星期一開始的週。
 - 底部導覽已重整為今天、月曆、報表、AI、Driver；月曆與報表資料責任、月份狀態及 hash 路由已分離。
-- 月份明細已完整移入月曆；報表固定包含週報、月報與平台收入排行，並記住最後查看分頁。
-- PWA Service Worker 使用 `driver-pay-pro-v06-calendar-report-navigation`、略過 HTTP cache 檢查更新並在新 worker 接管後安全重載。
-- 目前程式主要修改集中在 `index.html`；專案沒有 package.json、TypeScript、ESLint 或 build pipeline。
-- 目前已發布至 `main`；本次正式發布整合提交為 `823bfdf`，最新功能提交為 `d58d0a1`，持續發布規則於 2026-07-25 更新。實際 push 與 Production 狀態仍以即時 Git／Vercel 檢查為準。
+- 月份明細已完整移入月曆；報表固定包含週報、月報與平台收入排行；Reports
+  runtime state 已改為 session-only，legacy durable 欄位只為相容而保留、不再讀寫。
+- PWA Service Worker 使用短版 cache `driver-pay-pro-v12`、略過 HTTP cache
+  檢查更新並在新 worker 接管後安全重載。
+- 產品程式仍集中在 `index.html`；Foundation V1 已建立 package、ESLint 與
+  static production validation／release gate，但仍沒有 TypeScript 或 bundler。
+- 目前 Foundation 工作位於 `codex/foundation-cleanup-20260726`，base commit
+  為 `293c1878d09f95e507311e7ae2b531b7718ac62b`。依本次 PRD 不合併 `main`、
+  不 Production deploy；實際 push 狀態仍以即時 Git／GitHub 檢查為準。
 
 ## 6. 下一步工作
 
-1. 使用 iPhone Safari 與加入主畫面的 PWA 驗收五欄底部導覽、月曆、報表切換及返回行為。
-2. 確認 Service Worker 沒有持續提供舊快取。
-3. 確認 375、390、393、430px 下沒有水平 overflow，底部導覽不遮住最後一筆紀錄。
-4. 未經使用者確認，不修改已凍結首頁或重新設計週報。
-5. 若要讓每月固定或分月計算真正影響未來月報，需另立資料 migration 與報表規格，不可直接複製未來月份資料。
+1. 下一步是 Production Release Sprint；Foundation Cleanup 本身不合併
+   `main`、不部署 Production。
+2. AI 後續必須重用 Reports 的 period utilities、`aggregateReport()`、
+   `compareReportPeriods()`、trend／Important Dates／platform selectors、
+   persistence read、record-change refresh、formatting、state patterns 與
+   drill-down adapter，不建立第二套 aggregation。
+3. Calendar 已 UX Freeze；一般視覺偏好與新想法加入 Backlog，不直接修改。
+4. 每次 Calendar、PWA 或原生 input 相關發布仍需實體 iPhone Safari 與 installed PWA 回歸。
+5. 未經使用者確認，不修改已凍結首頁或重新設計週報。
+6. 若要讓每月固定或分月計算真正影響未來月報，需另立資料 migration 與報表規格，不可直接複製未來月份資料。
+
+### QA 分級
+
+- L1：自動驗證。
+- L2：可由未登入 iPhone Safari 直接開啟的 Preview Smoke。
+- L3：模組 Final Regression 後的完整 Human QA。
+- L4：Production Release QA。
+- 小 Sprint 不重複要求完整人工 QA；高風險資料、同步、Service Worker 與
+  iOS 特有行為仍依風險即時提升驗證層級。

@@ -1,0 +1,155 @@
+{
+  "today": "2026-07-26",
+  "platforms": ["Uber", "LINE GO", "Yoxi", "55688", "其他"],
+  "platformRates": {
+    "Uber": 100,
+    "LINE GO": 100,
+    "Yoxi": 100,
+    "55688": 100,
+    "其他": 100
+  },
+  "requiredScenarios": [
+    "no-records",
+    "previous-no-records",
+    "previous-zero",
+    "positive-net",
+    "zero-net",
+    "negative-net",
+    "positive-to-negative",
+    "negative-to-positive",
+    "income-without-work-time",
+    "work-time-without-income",
+    "multiple-platforms",
+    "tips",
+    "unattributed-income",
+    "unknown-platform",
+    "historical-platform-alias",
+    "platform-total-above-total",
+    "extreme-high-value",
+    "very-large-amount",
+    "cross-midnight",
+    "incomplete-legacy-record",
+    "cross-month-week",
+    "cross-year-week",
+    "leap-year-february",
+    "calendar-create",
+    "calendar-edit",
+    "calendar-delete",
+    "mutation-rollback",
+    "storage-corruption"
+  ],
+  "weeklyCurrent": [
+    {
+      "date": "2026-07-13",
+      "incomes": { "Uber": 4000 },
+      "expenses": { "油錢／電費": 500 },
+      "manualHours": 8
+    },
+    {
+      "date": "2026-07-14",
+      "incomes": { "LINE GO": 2750 },
+      "expenses": {},
+      "manualHours": 5.5
+    },
+    {
+      "date": "2026-07-15",
+      "incomes": { "Yoxi": 1000 },
+      "expenses": { "停車費": 1000 },
+      "manualHours": 2
+    },
+    {
+      "date": "2026-07-16",
+      "incomes": { "Uber": 500 },
+      "expenses": { "維修": 800 }
+    },
+    {
+      "date": "2026-07-17",
+      "incomes": { "Uber": 2340 },
+      "expenses": {}
+    },
+    {
+      "date": "2026-07-18",
+      "incomes": {},
+      "expenses": {},
+      "manualHours": 4
+    },
+    {
+      "date": "2026-07-19",
+      "incomes": { "Uber": 1750 },
+      "expenses": {},
+      "startTime": "22:00",
+      "endTime": "02:00",
+      "breakMinutes": 30
+    }
+  ],
+  "weeklyPreviousZero": [
+    {
+      "date": "2026-07-06",
+      "incomes": {},
+      "expenses": {},
+      "tips": 0,
+      "manualHours": 0
+    }
+  ],
+  "platformRecords": [
+    {
+      "date": "2026-07-13",
+      "incomes": {
+        "Uber": 1000,
+        " UBER ": 500,
+        "linego": 1000,
+        "Yoxi": 500,
+        "台灣大車隊": 1000,
+        "Mystery Fleet": 250
+      },
+      "expenses": {},
+      "tips": 200,
+      "manualHours": 2
+    },
+    {
+      "date": "2026-07-14",
+      "incomes": {
+        "LINE GO": 500,
+        "55688": 500,
+        "Broken": "NaN"
+      },
+      "expenses": {},
+      "tips": 0,
+      "manualHours": 1
+    }
+  ],
+  "unattributedRecords": [
+    {
+      "date": "2026-07-13",
+      "incomes": { "Uber": 1000 },
+      "expenses": {},
+      "tips": 250,
+      "manualHours": 2
+    }
+  ],
+  "largeValueRecords": [
+    {
+      "date": "2026-07-13",
+      "incomes": { "Uber": 99999999 },
+      "expenses": {},
+      "manualHours": 8
+    }
+  ],
+  "legacyRecords": [
+    {
+      "date": "2026-07-12",
+      "incomes": null,
+      "expenses": null,
+      "startTime": "08:00",
+      "endTime": "",
+      "breakMinutes": "invalid",
+      "manualHours": "invalid"
+    },
+    {
+      "date": "not-a-date",
+      "incomes": { "Uber": 5000 },
+      "expenses": {},
+      "manualHours": 8
+    }
+  ]
+}

@@ -1,7 +1,8 @@
-const CACHE_NAME = "driver-pay-pro-v06-calendar-report-navigation";
+const CACHE_NAME = "driver-pay-pro-v12";
 const APP_SHELL = [
   "./",
   "./index.html",
+  "./styles/design-system.css",
   "./manifest.webmanifest",
   "./assets/driver-pay-pro-master-icon.png",
   "./assets/driver-pay-pro-icon-512.png",
