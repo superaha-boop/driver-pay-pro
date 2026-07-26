@@ -19,6 +19,9 @@
 
 ### Added
 
+- Reports Final Regression Candidate：新增 28 情境固定 fixture、9 項 Final
+  Regression tests、一次性 L3 Human QA 清單及 Reports Feature Freeze evidence；
+  全部 Node tests 增為 88 項。正式 UX Freeze 等待 Product Owner L3。
 - Reports Sprint 5B2：新增本週／本月平台收入總額、排行、占比、安全前期比較、
   內建 alias 讀取層正規化、未知平台 fallback、未歸因／不一致資料狀態。
 - 建立 L1 自動驗證、L2 Preview Smoke、L3 Module Human QA 與

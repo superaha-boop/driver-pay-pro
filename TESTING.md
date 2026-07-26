@@ -24,6 +24,36 @@
 執行一次。高風險資料、同步、Service Worker 或 iOS 特有變更仍須即時提高
 驗證層級。
 
+## Reports Final Regression Matrix
+
+Date: 2026-07-26
+
+Status: L1 and L2 passed; L3 Product Owner Human QA pending.
+
+- Fixed fixture: `tests/fixtures/reports-final-regression.json`，覆蓋 28 個核准情境。
+- Automated suite: `tests/reports-final-regression.test.js` 與全部既有
+  `tests/*.test.js`。
+- Result: 88/88 Node tests passed；Reports targeted tests 在
+  `TZ=Asia/Taipei` 與 `TZ=UTC` 各 38/38 passed。
+- Weekly: Monday-first 七天、canonical KPI、期間平均時薪、比較、正負跨越、
+  七點趨勢與重要日期 passed。
+- Monthly: 曆月、跨月週 clipping、跨年週、閏年、4–6 週趨勢與重要日期 passed。
+- Platform: aliases、unknown、tips、unattributed、inconsistent、invalid、
+  equal-order、large value、share 及來源不變 passed。
+- Drill-down／context／refresh: exact date、no auto-editor、session-only return、
+  Calendar create/delete refresh、Today notification 與 single-frame refresh passed。
+- Error／Offline／Recovery: corrupt／last-valid／retry／read-only contracts、
+  Offline presentation 與 Service Worker App Shell passed；真機飛航模式及
+  installed-PWA relaunch 留給 L3。
+- Accessibility／Responsive: tabs、ARIA、visible values、44px、reduced-motion
+  contracts passed；320、375、390、393、430、768、1024px 均無 document-level
+  horizontal overflow，Reports tabs 單行。
+- L2 Preview Smoke: Weekly、Monthly、Platform、平台週／月、Calendar mutation
+  refresh、important-date drill-down、return context、390px 與 Console passed。
+- TypeScript、ESLint、Production build：Not available。
+- L3 清單：`docs/REPORTS_HUMAN_QA.md`。
+- Reports UX Freeze Version 1 尚未宣告；必須等待 Product Owner 完成 L3。
+
 ## Reports Sprint 5B2 Platform and Drill-Down Validation
 
 Date: 2026-07-26

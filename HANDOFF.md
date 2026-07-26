@@ -17,6 +17,58 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
+## Reports Final Regression — Freeze Candidate
+
+### 分支與範圍
+
+- 工作分支：`codex/reports-final-regression-20260726`。
+- Base branch：`codex/reports-platform-drilldown-20260726`。
+- Base commit：`62b0be08eb5f27d95d2e39f30b5aa9f9ceb52be4`。
+- 本 Sprint 只新增固定 Regression fixture、測試、Freeze Candidate evidence
+  與一次性 L3 Human QA 清單；目前未發現需要修改產品程式的阻擋性 Bug。
+
+### L1／L2 結果
+
+- Reports Final fixture 覆蓋 28 個核准情境；全套 Node tests 88/88 passed。
+- Reports targeted tests 在 `TZ=Asia/Taipei` 與 `TZ=UTC` 各 38/38 passed。
+- Weekly、Monthly、Platform、comparison、trend、drill-down、context、
+  committed refresh、error／recovery、read-only、Accessibility 與 PWA contract
+  全部通過。
+- Browser L2：Calendar 建立 2026-07-25 Uber NT$2,500 後，平台本月與週報不需
+  reload 即更新；重要日期導向正確 Calendar 日期，返回週報 context 保留。
+  測試紀錄已刪除。
+- 320、375、390、393、430、768、1024px：
+  `scrollWidth === clientWidth`，Reports tabs 單行；Console 0 error／warning。
+- Service Worker 維持 `driver-pay-pro-v12`；本 Sprint 未修改 App Shell。
+
+### Freeze Gate 狀態
+
+- L1 Automated Verification：passed。
+- L2 Preview Smoke：passed。
+- L3 Module Human QA：pending Product Owner。
+- L4 Production Release QA：留給 Production Release Sprint。
+- 一次性 L3 清單：`docs/REPORTS_HUMAN_QA.md`。
+- Human QA 通過前不得宣告 Reports UX Freeze Version 1；通過後再同步
+  `AGENTS.md`、`PROJECT_CONTEXT.md`、`DECISIONS.md`、本文件、Feature Freeze
+  Checklist、Technical Debt 與 Changelog。
+
+### Technical Debt
+
+- TD-023／TD-024：Resolved。
+- TD-025：Reports runtime 已 resolved；legacy 欄位保留相容，不做 migration。
+- TD-026：Partially resolved；自訂平台重新命名的 stable ID 仍需資料 Sprint。
+- TD-006、cross-device sync、Supabase conflict resolution、record metadata、
+  multi-session work model、TypeScript、lint、build、showcase 與 iPhone native
+  input long-term validation 全部保持 Open／Deferred。
+
+### 下一步
+
+Product Owner 使用未登入 iPhone Safari 完成一次 L3 Human QA。通過後只做
+Freeze declaration 文件 commit；不得新增功能、重設 Reports UI、合併 `main`
+或 Production deploy。
+
+---
+
 ## Reports Sprint 5B2 — Platform, Drill-Down, and Hardening
 
 ### 分支與範圍
