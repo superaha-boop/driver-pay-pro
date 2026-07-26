@@ -5,6 +5,7 @@
 ## 目錄
 
 - [Unreleased](#unreleased)
+- [2026-07-26](#2026-07-26)
 - [2026-07-19](#2026-07-19)
 - [2026-07-18](#2026-07-18)
 - [2026-07-17](#2026-07-17)
@@ -107,6 +108,30 @@
 - 週期改為不重複同年年份的精簡格式。
 - 手機月份明細改為單一面板內的緊湊 row，只列有收入的平台。
 - README Documentation 索引補充完整文件說明。
+
+## 2026-07-26
+
+### Calendar and Reports Stable Milestone
+
+- Calendar UX Freeze Version 1、Reports UX Freeze Version 1 與 Foundation
+  Cleanup Version 1 已透過
+  [PR #2](https://github.com/superaha-boop/driver-pay-pro/pull/2) 正常合併至
+  `main`。
+- Main Release merge：
+  `dbaafba321fd3b108ef5d3b07e2adea7c1f23892`。
+- Production：
+  `https://driver-pay-app.vercel.app`；Deployment
+  `dpl_A3wt3sRW7hNDVHFZrWtSPaHpAjKJ`，狀態 READY。
+- Release Gate 通過：94/94 Node tests、Calendar 38/38、Reports 44/44、
+  lint、Production validation、build、`release:check`、Manifest、Service
+  Worker、responsive、Console 與 Offline App Shell。
+- Product Owner 於 2026-07-26 確認 `Production L4 全部通過`，本次穩定
+  milestone 正式標記 Completed。
+- 本次 Release 收尾沒有新增功能、UI、schema、migration、dependency 或正式
+  測試資料；localStorage key 維持 `driverPayApp.v2`，Service Worker cache
+  維持 `driver-pay-pro-v12`。
+- 本次不是完整 Driver Pay Pro V1；AI、Driver、正式同步與其他已記錄技術債
+  仍保持 Open／Deferred。
 
 ## 2026-07-19
 

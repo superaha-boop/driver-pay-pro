@@ -68,6 +68,29 @@ Calendar V1 的 Freeze Gate 已通過。下一個主要模組使用本清單時�
 Reports V1 的 14 項 Freeze Gate 全部 Passed。L3 evidence 位於
 `docs/REPORTS_HUMAN_QA.md`，正式決策為 D-030。
 
+## Production Release Gate — Calendar and Reports Stable Milestone
+
+- [x] Release branch created from the verified Foundation Cleanup remote head.
+- [x] Ancestry and divergence audited without reset, rebase, force push, or
+  history rewrite.
+- [x] Full Release Gate passed：94/94 Node tests、Calendar 38/38、Reports
+  44/44、lint、Production validation、build 與 `release:check`。
+- [x] Release Candidate Preview passed L2 smoke。
+- [x] PR #2 reviewed and merged normally into `main`。
+- [x] Production Deployment `dpl_A3wt3sRW7hNDVHFZrWtSPaHpAjKJ` is READY
+  and matches main Release merge
+  `dbaafba321fd3b108ef5d3b07e2adea7c1f23892`。
+- [x] Manifest、icons、Service Worker v12、Console、responsive 與 Offline
+  App Shell passed Production verification。
+- [x] Product Owner completed the single L4 Production Human QA and confirmed
+  `Production L4 全部通過` on 2026-07-26。
+- [x] Rollback target `dpl_ApoBCEihJtpt2MxB34tjkEkSNTar` re-confirmed。
+- [x] WorkRecord schema、`driverPayApp.v2`、Supabase、Production data 與
+  Service Worker cache remained unchanged。
+
+Calendar and Reports Stable Milestone is formally Completed. This evidence does
+not declare the complete Driver Pay Pro V1 finished.
+
 ## Change After Freeze
 
 凍結模組只接受 Bug、Accessibility、Data Integrity 或重大使用障礙修正。
