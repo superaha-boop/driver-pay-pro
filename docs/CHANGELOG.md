@@ -28,8 +28,8 @@
   Service Worker 對 navigation HTTP 502 的 Offline App Shell fallback。
 - Service Worker candidate 更新為 `driver-pay-pro-v13`；`driverPayApp.v2` 與
   WorkRecord schema 不變。
-- L1 120/120 與公開 iPhone L2 已通過，目前只待單次 Product Owner L3；
-  未合併 `main`，未建立 Production Deployment。
+- L1 120/120、公開 iPhone L2 與 Product Owner L3 全部通過；Driver Pay Pro
+  Local-first V1 UX Freeze 正式生效，21 項 Freeze Gate Passed。
 
 目前工作目錄尚未提交的內容：
 

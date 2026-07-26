@@ -342,7 +342,7 @@ Do not create page-specific copies that differ only slightly. A page may compose
 
 ## 11. Current State Audit
 
-### Local-first V1 Release Candidate — 2026-07-26
+### Local-first V1 UX Freeze — 2026-07-26
 
 - AI 已移除 `analysisEntryTotal()`、`analysisEntryExpenses()`、
   `analysisSummary()` 與平台彙總複本，改由 `sharedAnalytics` 重用 Reports
@@ -353,8 +353,8 @@ Do not create page-specific copies that differ only slightly. A page may compose
   Today 共用 `state.settings.dailyGoal`。
 - 跨頁成功寫入使用單一 committed-record notification；Reports／AI 不建立
   WorkRecord。
-- 目前仍為 Release Candidate，L3 Human QA、V1 Freeze、main merge 與
-  Production 尚未完成。
+- Product Owner L3 Human QA 已通過，Driver Pay Pro Local-first V1 UX Freeze
+  已生效；Production 發布仍須完成安全 main audit、PR、一般合併與自動驗證。
 
 This audit describes the code at branch base `bf29913` and is not an instruction to fix gaps in this documentation Sprint.
 

@@ -91,31 +91,38 @@ Reports V1 的 14 項 Freeze Gate 全部 Passed。L3 evidence 位於
 Calendar and Reports Stable Milestone is formally Completed. This evidence does
 not declare the complete Driver Pay Pro V1 finished.
 
-## Local-first V1 Candidate Evidence
+## Driver Pay Pro Local-first V1 UX Freeze Evidence
 
-- [x] Product responsibility confirmed：Today／Calendar／Reports／AI／Driver
-  符合 Product Ownership Matrix。
-- [x] Specification complete：AI、Driver、Integration 與 Release Candidate
-  規格已建立。
-- [x] Automated tests pass：120/120 Node tests；45-scenario V1 fixture。
-- [x] Cross-page consistency verified：AI 與 Reports 共用 `sharedAnalytics`；
-  committed-record notification 與 Driver goal contracts 通過。
-- [x] Responsive verified：L2 390px 無水平 overflow；320／375／393／430px
-  responsive regression evidence 通過。
-- [ ] iPhone Safari verified：等待 Product Owner L3。
-- [ ] Installed PWA verified：等待 Product Owner L3。
-- [x] Offline verified：自動 contract 與 Safari source-outage／502 App Shell
-  fallback 通過；installed PWA 飛航模式仍由 L3 確認。
-- [ ] Accessibility verified：自動 contract 已通過，等待 VoiceOver L3。
-- [ ] Human QA passed：Pending。
-- [x] Error recovery verified：read error、invalid data、rollback 與 corrupt
-  payload contracts 通過且不清除原始資料。
-- [x] Documentation updated：Release Candidate 文件已同步。
+- [x] Product responsibility confirmed：五頁符合 Product Ownership Matrix。
+- [x] AI specification complete：`docs/AI_SPEC.md`。
+- [x] Driver specification complete：`docs/DRIVER_SPEC.md`。
+- [x] Integration specification complete：`docs/INTEGRATION_SPEC.md`。
+- [x] TD-006 resolved：AI 重用 `sharedAnalytics`，沒有第二套 aggregation。
+- [x] Single Source of Truth verified：AI／Reports shared-result tests 通過。
+- [x] Automated tests pass：120/120；45-scenario V1 fixture。
+- [x] Cross-page consistency verified：canonical analytics、單一 committed
+  notification 與 exact-date drill-down 通過。
+- [x] Responsive verified：320／375／390／393／430px evidence 通過。
+- [x] iPhone Safari verified：Product Owner L3 通過。
+- [x] Installed PWA verified：Product Owner L3 standalone／重開通過。
+- [x] Offline verified：App Shell 502 fallback 與 Product Owner 飛航模式通過。
+- [x] Accessibility verified：contracts 與 Product Owner VoiceOver L3 通過。
+- [x] Human QA passed：Product Owner 於 2026-07-26 正式確認。
+- [x] Error recovery verified：rollback、corrupt data、quota／read failure
+  不清除原始資料。
+- [x] Data integrity verified：`driverPayApp.v2` 與 WorkRecord schema 不變。
+- [x] Documentation updated：Context、Handoff、Testing、Decision、Specs、
+  Changelog、QA 與 Release 文件同步。
 - [x] Technical debt recorded：TD-006 Resolved；其餘 Open／Deferred 保留。
-- [ ] UX Freeze declared：必須等 Product Owner L3 Passed。
+- [x] UX Freeze declared：D-033 正式生效。
+- [x] Release Gate passed：lint、120/120、全部 targeted、syntax、Manifest、
+  Service Worker、Production validation 與 `git diff --check`。
+- [x] Rollback prepared：前一個穩定 main／Production deployment 已記錄；
+  禁止 reset、force push、history rewrite 或資料清除。
 
-本區塊不是 Freeze 宣告。只有收到
-`Driver Pay Pro V1 L3 全部通過` 後，才能完成剩餘項目與 V1 Freeze。
+Driver Pay Pro Local-first V1 的 21 項 Freeze Gate 全部 Passed。後續只接受
+Bug、Accessibility、Data Integrity、Security、重大使用障礙與 Production
+blocker；一般新功能進入 V1.1 或 Cloud Sync Backlog。
 
 ## Change After Freeze
 

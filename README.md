@@ -2,6 +2,9 @@
 
 Driver Pay Pro 是為多元計程車與職業駕駛設計的手機優先收入、工時、支出與營運分析 PWA。
 
+Driver Pay Pro Local-first V1 已通過完整 L1、公開 L2 與 Product Owner L3；
+V1 UX Freeze 已生效。產品仍維持本機優先，沒有登入、雲端備份或跨裝置同步。
+
 ## Project Documentation
 
 開始接手或修改專案時，建議依序閱讀：

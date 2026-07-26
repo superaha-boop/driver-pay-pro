@@ -473,3 +473,25 @@
 - Rejected alternatives:
   - 不建立外部 AI、第二套 aggregation 或新的 durable storage。
   - 不在 Human QA 前更新 Production。
+
+## D-033
+
+- Date: 2026-07-26
+- Decision:
+  1. Product Owner 已確認 `Driver Pay Pro V1 L3 全部通過`。
+  2. Driver Pay Pro Local-first V1 UX Freeze 正式生效。
+  3. Freeze 包含 Today、Calendar、Reports、AI、Driver、Bottom Navigation、
+     drill-down、context restoration、record-change refresh、資料狀態、
+     Accessibility、Responsive、PWA 與 local-first data integrity。
+  4. Freeze 後只接受 Bug、Accessibility、Data Integrity、Security、重大使用
+     障礙與 Production blocker；一般新功能進入 V1.1／Cloud Sync Backlog。
+  5. AI 必須持續重用 `sharedAnalytics`；`driverPayApp.v2` 與 WorkRecord schema
+     不變。
+- Reason: L1 120/120、公開 L2 與單次 Product Owner L3 已全部通過，21 項
+  Local-first V1 Feature Freeze Gate 具備實際證據。
+- Impact: TD-006 維持 Resolved；同步、備份、authentication、metadata、
+  multi-session、TypeScript 與 native input 長期驗證保持 Open／Deferred。
+  Freeze 文件本身不修改產品、資料、PWA 或 dependencies。
+- Rejected alternatives:
+  - 不以 V1 完成為由虛報尚未完成的 Cloud Sync 技術債。
+  - 不允許後續頁面建立第二套 aggregation。

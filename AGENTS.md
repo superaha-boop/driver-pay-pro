@@ -167,6 +167,33 @@ Version: 1.7
   cloud sync、migration 或外部 AI；完整跨頁契約以
   `docs/INTEGRATION_SPEC.md` 為準。
 
+## Driver Pay Pro Local-first V1 UX Freeze
+
+Product Owner 已於 2026-07-26 完成 Driver Pay Pro V1 L3 Human QA。Freeze
+範圍包含 Today 核心流程、Calendar V1、Reports V1、AI V1、Driver V1、
+Bottom Navigation、跨頁 drill-down、context restoration、record-change
+refresh、Loading／Empty／Insufficient／Error／Offline、Accessibility、
+Responsive、PWA 與 local-first data integrity。
+
+Freeze 後只接受：
+
+- 可重現的 Bug。
+- Accessibility 修正。
+- Data Integrity 修正。
+- Security 修正。
+- 重大使用障礙。
+- Production blocker。
+
+一般視覺改善與新增功能進入 V1.1 或 Cloud Sync Backlog。任何突破 V1 Freeze
+的修改都必須說明使用者問題、影響範圍與資料風險，取得正式產品決策，補充
+Regression，並同步更新 `DECISIONS.md`、`docs/DECISION_LOG.md` 與 Feature
+Freeze evidence。
+
+後續 AI 必須重用 `sharedAnalytics` 與 Reports canonical analytics；不得重新
+建立頁面專用 aggregation。Local-first V1 仍固定使用 `driverPayApp.v2`，
+沒有 Supabase、authentication、cloud sync、migration、external AI API 或
+跨裝置同步。
+
 # Driver Pay Pro Product Design Rules
 
 以下規則永久適用於所有新頁面、UI／UX 修改、元件建立或重構、響應式設計、PWA 體驗、動畫、表單、導航、設定頁、報表、月曆與 AI 頁面。

@@ -4,7 +4,7 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## Local-first V1 Completion Program — Release Candidate
+## Driver Pay Pro Local-first V1 UX Freeze
 
 - 工作分支：`codex/v1-completion-program-20260726`；Production baseline：
   `dbaafba321fd3b108ef5d3b07e2adea7c1f23892`。
@@ -16,10 +16,11 @@
 - TD-006 已由 `sharedAnalytics` 與 AI／Reports shared-result tests 解決。
 - `driverPayApp.v2`、WorkRecord schema、Calendar／Reports Freeze 保持不變；
   Service Worker candidate 為 `driver-pay-pro-v13`。
-- L1 120/120 與公開 iPhone L2 已通過；目前只待單次 Product Owner L3。
-  L2 使用未登入 Safari 可直接開啟的公開 HTTPS tunnel，並通過 390px、
-  Manifest、SW v13、Console 與 Offline App Shell。
-- 在 L3 確認前不得宣告 V1 Freeze、合併 `main` 或部署 Production。
+- L1 120/120、公開 iPhone L2 與單次 Product Owner L3 全部通過。
+- Product Owner 已於 2026-07-26 回覆 `Driver Pay Pro V1 L3 全部通過`；
+  Driver Pay Pro Local-first V1 UX Freeze 正式生效。
+- 臨時 QA tunnel 已停止；下一步是安全 main audit、PR、一般合併與既有
+  Vercel Production 發布。
 - Local-first V1 沒有 Supabase、登入、雲端備份、跨裝置同步、migration 或
   外部 AI；相關技術債保持 Open／Deferred。
 

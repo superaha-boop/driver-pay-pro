@@ -2,7 +2,7 @@
 
 Last updated: 2026-07-26  
 Program branch: `codex/v1-completion-program-20260726`  
-Program status: Ready for Product Owner L3 Human QA
+Program status: V1 UX Freeze active; Production release in progress
 
 ## Stable baseline
 
@@ -46,9 +46,9 @@ Status: Passed
 | Phase 5 | V1 regression fixtures and release gate | Passed | `98f64cd`; 45-scenario fixture |
 | L1 | Full automated release candidate gate | Passed | 120/120; audit 0; release:check passed |
 | L2 | Public iPhone Preview smoke QA | Passed | Public Safari QA URL, 390px, Console, Manifest, SW v13, offline App Shell |
-| L3 | Driver Pay Pro V1 Human QA | Pending | Single planned Product Owner gate |
-| Freeze | Local-first V1 docs and checklist | Pending | Only after L3 Passed |
-| Production | Main merge, Production deploy, L4 | Pending | Only after Freeze |
+| L3 | Driver Pay Pro V1 Human QA | Passed | Product Owner confirmed 2026-07-26 |
+| Freeze | Local-first V1 docs and checklist | Passed | D-033; 21/21 Gate |
+| Production | Main merge, Production deploy, L4 | In progress | Only after Freeze commit |
 
 ## Program invariants
 
@@ -57,7 +57,7 @@ Status: Passed
 - No Calendar or Reports freeze redesign.
 - AI remains read-only and reuses canonical Reports analytics.
 - Driver edits only existing durable settings and reports derived local status.
-- Production is not updated before the planned V1 L3 Human QA and freeze gate.
+- Production release may proceed through audited PR and normal merge after this Freeze commit.
 
 ## Program commits
 
@@ -71,7 +71,8 @@ Release closeout prerequisite: `8d8ba50 docs: complete calendar reports producti
 6. `98f64cd test: complete V1 regression coverage`
 7. `b856857 docs: prepare V1 human QA and release`
 8. `eab40ed fix: route AI date insights to Calendar`
-9. `fix: harden V1 preview integration`（本次 L2 handoff commit）
+9. `64c575f fix: harden V1 preview integration`
+10. `docs: freeze Driver Pay Pro local-first V1`（Human QA／Freeze commit）
 
 ## Known open or deferred work
 
@@ -89,6 +90,6 @@ The V1 Program does not claim to resolve:
 
 ## Next automatic gate
 
-Stop at the single V1 L3 Human QA gate and keep the temporary QA channel
-available. TD-006 is resolved by `sharedAnalytics` and shared-result regression
-tests; it must not be reopened by adding page-specific aggregation.
+Complete the audited PR, normal main merge, Production deployment, automatic L4
+verification and release documentation. TD-006 must not be reopened by adding
+page-specific aggregation.

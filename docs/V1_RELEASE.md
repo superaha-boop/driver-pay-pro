@@ -1,6 +1,6 @@
 # Driver Pay Pro — Local-first V1 Release
 
-Status: Release Candidate; Production blocked by L3 Human QA
+Status: V1 UX Freeze active; Production release in progress
 Updated: 2026-07-26
 
 ## V1 Definition
@@ -37,5 +37,6 @@ record metadata migration、多段工作模型、外部 AI 或 TypeScript migrat
 - Persistence: `driverPayApp.v2`, unchanged
 - L1: Passed, 120/120
 - L2: Passed, public Safari／responsive／Manifest／SW v13／offline App Shell
-- L3: Pending
+- L3: Passed by Product Owner
+- UX Freeze: Active, D-033, 21/21 Gate
 - Production: Not deployed
