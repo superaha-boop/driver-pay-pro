@@ -12,7 +12,9 @@
 - Calendar UX Freeze — Version 1 已生效；後續只接受 Bug、Accessibility、Data Integrity 與重大使用障礙修正。
 - `driverPayApp.v2`、WorkRecord schema、Heatmap 演算法與計算公式均未因封板改變。
 - Reports Sprint 5B1 與 5B2 已完成週／月核心、平台貢獻、重要日期下鑽與
-  hardening；下一步是 Reports Final Regression and UX Freeze Gate。
+  hardening；Final Regression、L3 Human QA 與 Feature Freeze Gate 已完成。
+- Reports UX Freeze — Version 1 已生效；後續只接受 Bug、Accessibility、
+  Data Integrity、Security、重大使用障礙與 Production blocker。
 - Reports 實作必須以 `docs/REPORTS_SPEC.md` 為唯一主要功能規格，不得因此回頭改造 Calendar。
 
 ## Reports Specification 狀態
@@ -26,9 +28,11 @@
   committed-record refresh 及 Empty／Loading／Error／Offline 狀態。
 - 平台內建別名只在讀取層正規化；未知自訂平台安全保留顯示，歷史資料不被
   改寫，小費不歸入平台收入。
-- 全套 Node tests 為 79/79 通過；Sprint 5B2 的 L2 Preview Smoke 已完成，
-  完整實體 iPhone Safari／installed PWA L3 Human QA 依核准節奏延後至
-  Reports Final Regression／Freeze Gate 一次執行。
+- Reports Final Regression 固定 28 情境 fixture；全套 Node tests 88/88 通過。
+- L2 Preview Smoke 與 Product Owner L3 Human QA 已完成，包含 iPhone Safari、
+  installed PWA、Offline、VoiceOver、Reduced Motion、safe area 與 responsive。
+- Reports Feature Freeze Checklist 全項 Passed；一般視覺改善與新增功能轉入
+  Backlog，不得直接修改凍結介面。
 
 ## 1. App 的核心設計原則
 
@@ -487,18 +491,19 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 - PWA Service Worker 使用短版 cache `driver-pay-pro-v12`、略過 HTTP cache
   檢查更新並在新 worker 接管後安全重載。
 - 目前程式主要修改集中在 `index.html`；專案沒有 package.json、TypeScript、ESLint 或 build pipeline。
-- Reports Sprint 5B2 位於功能分支
-  `codex/reports-platform-drilldown-20260726`，base commit 為
-  `732929f4980b55eddb913604e0b4024a085c31ad`；依本次 PRD 不合併 `main`、
-  不 Production deploy。實際 push／Preview 狀態仍以即時 Git／GitHub／Vercel
-  檢查為準。
+- Reports Final Regression 與 Freeze 文件收尾位於功能分支
+  `codex/reports-final-regression-20260726`；前置 commits 為 `df8a702` 與
+  `446cef3`。依本次 PRD 不合併 `main`、不 Production deploy；實際 push 狀態
+  仍以即時 Git／GitHub 檢查為準。
 
 ## 6. 下一步工作
 
-1. 執行 Reports Final Regression and UX Freeze Gate，建立固定 evidence 並完成
-   實體 iPhone Safari／installed PWA Human QA。
-2. Reports 後續仍必須重用既有日期、Monday-first、canonical calculations 與
-   純 selectors，不建立第二套公式。
+1. 下一個 Sprint 由 Product Owner 在 Foundation Cleanup Sprint 與 Production
+   Release Sprint 之間擇一；本次 Freeze 文件收尾不合併 `main`、不部署 Production。
+2. AI 後續必須重用 Reports 的 period utilities、`aggregateReport()`、
+   `compareReportPeriods()`、trend／Important Dates／platform selectors、
+   persistence read、record-change refresh、formatting、state patterns 與
+   drill-down adapter，不建立第二套 aggregation。
 3. Calendar 已 UX Freeze；一般視覺偏好與新想法加入 Backlog，不直接修改。
 4. 每次 Calendar、PWA 或原生 input 相關發布仍需實體 iPhone Safari 與 installed PWA 回歸。
 5. 未經使用者確認，不修改已凍結首頁或重新設計週報。

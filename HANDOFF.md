@@ -17,15 +17,17 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
-## Reports Final Regression — Freeze Candidate
+## Reports UX Freeze — Version 1
 
 ### 分支與範圍
 
 - 工作分支：`codex/reports-final-regression-20260726`。
 - Base branch：`codex/reports-platform-drilldown-20260726`。
 - Base commit：`62b0be08eb5f27d95d2e39f30b5aa9f9ceb52be4`。
-- 本 Sprint 只新增固定 Regression fixture、測試、Freeze Candidate evidence
-  與一次性 L3 Human QA 清單；目前未發現需要修改產品程式的阻擋性 Bug。
+- Final Regression 新增固定 fixture、測試與一次性 L3 Human QA 清單；本次
+  文件收尾正式記錄 Product Owner 通過 L3 與 Reports UX Freeze Version 1 生效。
+- 本次未修改 `index.html`、CSS、JavaScript、Service Worker、Manifest 或任何
+  正式產品功能。
 
 ### L1／L2 結果
 
@@ -45,17 +47,22 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 - L1 Automated Verification：passed。
 - L2 Preview Smoke：passed。
-- L3 Module Human QA：pending Product Owner。
+- L3 Module Human QA：passed；Product Owner 於 2026-07-26 確認。
 - L4 Production Release QA：留給 Production Release Sprint。
 - 一次性 L3 清單：`docs/REPORTS_HUMAN_QA.md`。
-- Human QA 通過前不得宣告 Reports UX Freeze Version 1；通過後再同步
-  `AGENTS.md`、`PROJECT_CONTEXT.md`、`DECISIONS.md`、本文件、Feature Freeze
-  Checklist、Technical Debt 與 Changelog。
+- Reports Feature Freeze Checklist 14/14 Passed。
+- Reports UX Freeze Version 1 已正式生效。
+- 凍結範圍包含 Header、Tabs、Period controls、KPI、Comparison、Trends、
+  Important Dates、Platform Ranking、Unattributed Income、資料狀態、
+  Calendar drill-down、context、refresh、Accessibility 與 Responsive。
+- Freeze 後只接受 Bug、Accessibility、Data Integrity、Security、重大使用障礙
+  與 Production blocker；一般改善與新增功能放入 Backlog。
 
 ### Technical Debt
 
 - TD-023／TD-024：Resolved。
-- TD-025：Reports runtime 已 resolved；legacy 欄位保留相容，不做 migration。
+- TD-025：runtime／session requirement resolved；永久 durable state 不需要，
+  legacy 欄位保留相容且不做 migration。
 - TD-026：Partially resolved；自訂平台重新命名的 stable ID 仍需資料 Sprint。
 - TD-006、cross-device sync、Supabase conflict resolution、record metadata、
   multi-session work model、TypeScript、lint、build、showcase 與 iPhone native
@@ -63,9 +70,10 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ### 下一步
 
-Product Owner 使用未登入 iPhone Safari 完成一次 L3 Human QA。通過後只做
-Freeze declaration 文件 commit；不得新增功能、重設 Reports UI、合併 `main`
-或 Production deploy。
+由 Product Owner 選擇 Foundation Cleanup Sprint 或 Production Release Sprint。
+後續 AI 必須重用 Reports 已驗證的共用期間、aggregation、comparison、trend、
+Important Dates、platform、persistence、refresh、formatting、state 與 drill-down
+基礎，不得建立第二套 aggregation。本次不合併 `main`、不部署 Production。
 
 ---
 

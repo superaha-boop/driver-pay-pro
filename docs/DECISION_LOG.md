@@ -399,3 +399,30 @@
 - Rejected alternatives:
   - 不讓每個小型 Sprint 重複完整 iPhone／PWA／VoiceOver 驗收。
   - 不因延後 L3 而跳過高風險變更的必要即時人工確認。
+
+## D-030
+
+- Date: 2026-07-26
+- Decision:
+  1. Product Owner 已完成 Reports L3 Human QA；iPhone Safari、installed PWA、
+     Offline、VoiceOver、Reduced Motion、safe area、responsive 與無 High
+     Priority issue 全部通過。
+  2. Reports Feature Freeze Checklist 14/14 Passed；Reports UX Freeze Version 1
+     正式生效。
+  3. Freeze 範圍涵蓋 Header、週報／月報／平台 Tabs、Period controls、KPI、
+     Comparison、Weekly／Monthly Trend、Important Dates、Platform Ranking、
+     Unattributed Income、資料狀態、Calendar drill-down、context restoration、
+     record-change refresh、Accessibility 與 Responsive。
+  4. Freeze 後只接受 Bug、Accessibility、Data Integrity、Security、重大使用
+     障礙與 Production blocker；一般改善與新增功能進入 Backlog。
+  5. AI 必須重用 Reports 已驗證的 period、aggregation、comparison、trend、
+     Important Dates、platform、persistence、refresh、formatting、state 與
+     drill-down 基礎，不得建立另一套 aggregation。
+- Reason: Final Regression 88/88、L2 Preview Smoke 與 Product Owner L3 Human
+  QA 已完成，Reports V1 已具備可重複驗證的穩定基礎。
+- Impact: TD-023／TD-024 Resolved；TD-025 runtime/session requirement Resolved；
+  TD-026 Partially resolved；所有其餘 Open／Deferred 技術債保持原狀。本次
+  沒有產品程式、資料、PWA、dependency、merge 或 Production 變更。
+- Rejected alternatives:
+  - 不以 Freeze 為名關閉尚未完成的技術債。
+  - 不允許後續 AI 複製另一套 Reports aggregation。

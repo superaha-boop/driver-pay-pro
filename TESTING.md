@@ -28,7 +28,7 @@
 
 Date: 2026-07-26
 
-Status: L1 and L2 passed; L3 Product Owner Human QA pending.
+Status: L1, L2 and L3 passed; Reports UX Freeze Version 1 active.
 
 - Fixed fixture: `tests/fixtures/reports-final-regression.json`，覆蓋 28 個核准情境。
 - Automated suite: `tests/reports-final-regression.test.js` 與全部既有
@@ -43,16 +43,19 @@ Status: L1 and L2 passed; L3 Product Owner Human QA pending.
 - Drill-down／context／refresh: exact date、no auto-editor、session-only return、
   Calendar create/delete refresh、Today notification 與 single-frame refresh passed。
 - Error／Offline／Recovery: corrupt／last-valid／retry／read-only contracts、
-  Offline presentation 與 Service Worker App Shell passed；真機飛航模式及
-  installed-PWA relaunch 留給 L3。
+  Offline presentation 與 Service Worker App Shell passed；Product Owner 已
+  完成真機飛航模式與 installed-PWA relaunch。
 - Accessibility／Responsive: tabs、ARIA、visible values、44px、reduced-motion
   contracts passed；320、375、390、393、430、768、1024px 均無 document-level
   horizontal overflow，Reports tabs 單行。
 - L2 Preview Smoke: Weekly、Monthly、Platform、平台週／月、Calendar mutation
   refresh、important-date drill-down、return context、390px 與 Console passed。
 - TypeScript、ESLint、Production build：Not available。
-- L3 清單：`docs/REPORTS_HUMAN_QA.md`。
-- Reports UX Freeze Version 1 尚未宣告；必須等待 Product Owner 完成 L3。
+- L3 清單：`docs/REPORTS_HUMAN_QA.md`；iPhone Safari、installed PWA、
+  Offline、VoiceOver、Reduced Motion、safe area、responsive 與無 High Priority
+  issue 全部由 Product Owner 確認通過。
+- Reports Feature Freeze Checklist 14/14 Passed。
+- Reports UX Freeze Version 1 已於 2026-07-26 正式生效。
 
 ## Reports Sprint 5B2 Platform and Drill-Down Validation
 

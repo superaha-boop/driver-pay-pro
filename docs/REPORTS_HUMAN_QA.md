@@ -4,13 +4,13 @@ Version: 1.0
 
 Updated: 2026-07-26
 
-Status: Pending Product Owner L3 Module Human QA
+Status: Passed — Product Owner L3 Module Human QA
 
 ## Scope
 
 本清單只執行一次，涵蓋週報、月報、平台、Calendar drill-down、返回 context、
 record-change refresh、Offline、installed PWA、VoiceOver、responsive 與 safe
-area。完成前不得宣告 Reports UX Freeze Version 1。
+area。Product Owner 已依本清單完成驗收。
 
 測試資料只使用 QA 網址所在瀏覽器的 localStorage；不要在正式站建立測試紀錄。
 
@@ -49,15 +49,15 @@ area。完成前不得宣告 Reports UX Freeze Version 1。
 
 ## Result
 
-- [ ] iPhone Safari passed
-- [ ] Installed PWA passed
-- [ ] Offline passed
-- [ ] VoiceOver passed
-- [ ] Reduced Motion passed
-- [ ] Safe area and responsive passed
-- [ ] No High Priority issue
-- [ ] Product Owner confirmed
+- [x] iPhone Safari passed
+- [x] Installed PWA passed
+- [x] Offline passed
+- [x] VoiceOver passed
+- [x] Reduced Motion passed
+- [x] Safe area and responsive passed
+- [x] No High Priority issue
+- [x] Product Owner confirmed
 
-Product Owner confirmation date: Pending
+Product Owner confirmation date: 2026-07-26
 
-Reports UX Freeze Version 1: Not declared until every item above passes.
+Reports UX Freeze Version 1: Active.

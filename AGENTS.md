@@ -675,6 +675,34 @@ Regression，並同步更新 `DECISIONS.md` 與正式決策紀錄。
 所有主要模組（Calendar、Reports、AI、Driver）完成前，都必須依
 `docs/FEATURE_FREEZE_CHECKLIST.md` 執行同一套 Feature Freeze Gate。
 
+## Reports UX Freeze — Version 1
+
+Product Owner 已於 2026-07-26 完成 Reports L3 Human QA。Reports V1 的
+Header、週報／月報／平台 Tabs、Period controls、KPI hierarchy、Comparison
+layout、Weekly Trend、Monthly Trend、Important Dates、Platform Ranking、
+Unattributed Income、Empty／Loading／Error、Reports → Calendar drill-down、
+Reports context restoration、Record-change refresh、Accessibility 與 Responsive
+已正式凍結。
+
+Freeze 後只接受：
+
+- 可重現的 Bug 修正。
+- Accessibility 修正。
+- Data Integrity 修正。
+- Security 修正。
+- 重大使用障礙。
+- Production blocker。
+
+一般視覺改善與新增功能必須放入 Backlog。任何突破 Freeze 的修改都必須說明
+使用者問題、影響範圍與資料風險，取得正式產品決策，補充 Regression，並同步
+更新 `DECISIONS.md`、`docs/DECISION_LOG.md` 與 Feature Freeze evidence。
+
+後續 AI 或其他分析功能必須重用 Reports 已驗證的 period utilities、
+`aggregateReport()`、`compareReportPeriods()`、trend data builder、Important
+Dates selector、platform normalization、platform aggregator、persistence read
+API、record-change refresh、amount／duration formatting、Empty／Loading／Error
+patterns 與 Reports drill-down adapter；不得建立另一套 aggregation。
+
 ## Git and Deployment Safety
 
 完成一個 Sprint 並通過適用驗證後，Codex 可以直接：

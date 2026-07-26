@@ -2,7 +2,7 @@
 
 Version: 1.0
 
-Updated: 2026-07-25
+Updated: 2026-07-26
 
 ## Purpose
 
@@ -43,7 +43,7 @@ Owner 完成人工 QA，不得以桌面模擬器代替實體 iPhone 或 installe
 Calendar V1 的 Freeze Gate 已通過。下一個主要模組使用本清單時，必須建立該
 模組自己的 Evidence 區塊，不得直接複製 Calendar 的通過狀態。
 
-## Reports UX Freeze — Version 1 Candidate Evidence
+## Reports UX Freeze — Version 1 Evidence
 
 - [x] Product responsibility confirmed：Reports 是週／月／平台唯讀比較與分析
   Primary owner；紀錄修正只連到 Calendar exact date。
@@ -52,20 +52,21 @@ Calendar V1 的 Freeze Gate 已通過。下一個主要模組使用本清單時�
 - [x] Cross-page consistency verified：Today、Calendar、Weekly、Monthly 與
   Platform 使用 canonical calculations 與同一 record-change notification。
 - [x] Responsive verified：320、375、390、393、430、768、1024px 無水平 overflow。
-- [ ] iPhone Safari verified：等待 Product Owner L3。
-- [ ] Installed PWA verified：等待 Product Owner L3。
-- [ ] Offline verified：自動 contract／Preview 通過；等待真機飛航模式及 PWA 重開。
-- [ ] Accessibility verified：ARIA／keyboard／44px／reduced-motion contract
-  通過；等待 VoiceOver L3。
-- [ ] Human QA passed：等待 Product Owner。
+- [x] iPhone Safari verified：Product Owner L3 真機驗收通過。
+- [x] Installed PWA verified：Product Owner L3 standalone／重開驗收通過。
+- [x] Offline verified：自動 contract、Preview、真機飛航模式及 PWA 重開通過。
+- [x] Accessibility verified：ARIA／keyboard／44px／reduced-motion contract
+  與 Product Owner VoiceOver L3 通過。
+- [x] Human QA passed：Product Owner 於 2026-07-26 正式確認。
 - [x] Error recovery verified：corrupt／last-valid／retry／partial-invalid／rollback
   contracts 通過，原始資料不被清除。
-- [x] Documentation updated：Freeze Candidate、Testing、Handoff 與 L3 清單已同步。
+- [x] Documentation updated：Context、Handoff、Testing、Decision、Changelog、
+  規格與 L3 清單已同步。
 - [x] Technical debt recorded：TD-023～TD-026 與永久 Open 項目保留。
-- [ ] UX Freeze declared：只能在 L3 全部通過後宣告。
+- [x] UX Freeze declared：Reports UX Freeze Version 1 正式生效。
 
-目前狀態是 `Freeze Candidate`，不是正式 Freeze。L3 使用
-`docs/REPORTS_HUMAN_QA.md`，通過後才可勾選剩餘項目並建立正式決策。
+Reports V1 的 14 項 Freeze Gate 全部 Passed。L3 evidence 位於
+`docs/REPORTS_HUMAN_QA.md`，正式決策為 D-030。
 
 ## Change After Freeze
 

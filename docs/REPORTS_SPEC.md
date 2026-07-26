@@ -3,12 +3,27 @@
 Version: 1.0
 Status: Approved implementation specification
 Updated: 2026-07-26
-Implementation status: Sprint 5B1 and 5B2 implemented; pending Final Regression and Human QA
+Implementation status: Sprint 5B1 and 5B2 implemented; Final Regression and Product Owner L3 Human QA passed; UX Freeze Version 1 active
 
 This document remains the sole primary implementation source and regression
 specification for Reports. If it conflicts with a later, explicitly approved PRD, the later PRD wins.
 General product, Calendar, design, engineering, and data-safety rules continue to come
 from `PRODUCT_SPEC.md`, `CALENDAR_SPEC.md`, `DESIGN_SYSTEM.md`, and `AGENTS.md`.
+
+## Reports UX Freeze — Version 1
+
+Product Owner 已於 2026-07-26 完成 L3 Human QA，且
+`docs/FEATURE_FREEZE_CHECKLIST.md` 的 Reports Gate 14/14 Passed。正式凍結
+Header、週報／月報／平台 Tabs、Period controls、KPI hierarchy、Comparison
+layout、Weekly Trend、Monthly Trend、Important Dates、Platform Ranking、
+Unattributed Income、Empty／Loading／Error、Reports → Calendar drill-down、
+Reports context restoration、Record-change refresh、Accessibility 與 Responsive。
+
+Freeze 後只接受 Bug、Accessibility、Data Integrity、Security、重大使用障礙與
+Production blocker；一般視覺改善與新增功能進入 Backlog。後續 AI 必須重用
+本規格已驗證的 period、aggregation、comparison、trend、Important Dates、
+platform、persistence、refresh、formatting、state 與 drill-down 基礎，不得
+建立另一套 aggregation。
 
 ## 1. Purpose
 

@@ -336,3 +336,39 @@ session return context 與 committed-record notification 則讓 Reports 保持�
 驗收，同時保留資料完整性、PWA 與 iOS 特有風險的必要人工 Gate。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-029](docs/DECISION_LOG.md#d-029)。
+
+## D-030 — Reports UX Freeze Version 1
+
+- Date: 2026-07-26
+
+### 決策
+
+1. Product Owner 已完成 Reports L3 Human QA；iPhone Safari、installed PWA、
+   Offline、VoiceOver、Reduced Motion、safe area、responsive 與無 High Priority
+   issue 全部通過。
+2. Reports Feature Freeze Checklist 14/14 Passed，Reports UX Freeze Version 1
+   正式生效。
+3. Freeze 範圍為 Reports Header、週報／月報／平台 Tabs、Period controls、
+   KPI hierarchy、Comparison layout、Weekly Trend、Monthly Trend、Important
+   Dates、Platform Ranking、Unattributed Income、Empty／Loading／Error、
+   Reports → Calendar drill-down、Reports context restoration、Record-change
+   refresh、Accessibility 與 Responsive。
+4. Freeze 後只接受 Bug、Accessibility、Data Integrity、Security、重大使用
+   障礙與 Production blocker；一般視覺改善與新增功能放入 Backlog。
+5. 後續 AI 必須重用 Reports 的 period utilities、`aggregateReport()`、
+   `compareReportPeriods()`、trend data builder、Important Dates selector、
+   platform normalization、platform aggregator、persistence read API、
+   record-change refresh、amount／duration formatting、Empty／Loading／Error
+   patterns 與 drill-down adapter；不得建立另一套 aggregation。
+6. TD-023／TD-024 Resolved；TD-025 runtime/session requirement Resolved 且不需
+   durable state；TD-026 Partially resolved。其餘 Open／Deferred 技術債不因
+   Freeze 關閉。
+
+### 影響範圍
+
+- 本次只更新文件與 Freeze evidence，沒有產品功能、UI、schema、localStorage、
+  Service Worker、Supabase migration、dependency、`main` merge 或 Production
+  deployment 變更。
+- Reports 後續修改必須遵守 Freeze 例外與突破流程。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-030](docs/DECISION_LOG.md#d-030)。
