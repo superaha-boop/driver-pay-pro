@@ -10,6 +10,25 @@
 - 所有功能變更都必須確認 `driverPayApp.v2` 未被更名或清除。
 - PWA 資源變更必須同步檢查 `sw.js` cache version 與 App Shell。
 
+## Reports Sprint 5B2 Platform and Drill-Down Validation
+
+Date: 2026-07-26
+
+- `tests/reports-platform.test.js` 驗證平台週／月 session control、收入貢獻語意、
+  distinct data states、Calendar exact-date drill-down、return context、
+  committed-record refresh、read-only、Accessibility、responsive 與 PWA v12。
+- `tests/reports-core.test.js` 驗證 alias normalization、未知平台 fallback、小費
+  排除、同額排序、負值／無效值與來源資料不變。
+- Result: 全部 Node tests 79/79 passed；Inline JavaScript 與
+  `git diff --check` passed。
+- Browser: 週／月切換、`#calendar/2026-07-24` exact-date、無自動 Editor、
+  返回週報／scroll／focus、Console 0 error／warning passed。
+- Responsive: 320、375、390、393、430、768、1024px 均為
+  `scrollWidth === clientWidth`；重要日期與 Reports tabs 至少 44px。
+- TypeScript、ESLint、Production build：Not available。
+- Physical iPhone Safari、installed PWA、VoiceOver、offline relaunch 與 Preview：
+  pending Product Owner Human QA。
+
 ## Reports Sprint 5A Specification Validation
 
 Date: 2026-07-26

@@ -270,3 +270,44 @@ validation、資料模型與 canonical calculations 分裂。
 - 現況差距登錄於 `docs/TECH_DEBT.md`，不因規格定案而自動授權全部修正。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-027](docs/DECISION_LOG.md#d-027)。
+
+## D-028 — Reports Platform, Drill-Down, and Refresh Contract
+
+- Date: 2026-07-26
+
+### 決策
+
+1. 平台頁只呈現本週／本月收入貢獻、排行、占比與安全前期比較。
+2. 平台收入只計算 WorkRecord 的平台收入；小費與其他收入不得歸入任何平台。
+3. Uber、LINE GO、Yoxi、55688／台灣大車隊的核准別名只在讀取層正規化；
+   未知自訂平台安全保留，不改寫歷史資料。
+4. 平台合計低於總收入時顯示未歸因金額；高於可確認總收入時顯示資料不一致，
+   不自行修正或隱藏來源資料。
+5. 重要日期是 Reports 的唯讀 drill-down，只連到 Calendar exact date，不自動
+   開啟 Editor 或建立紀錄。
+6. Calendar 返回 Reports 的 context 只存在 session 記憶體，包含 tab、週／月、
+   平台期間、捲動位置與來源焦點。
+7. 成功的既有 record mutation 透過單一 `driverpay:recordchange` 事件通知；
+   Reports 可見時以單一 animation frame 更新，瀏覽行為不得偽裝 mutation。
+8. Reports Error、Offline、Empty、no platform income、stored zero 與資料不一致
+   保持不同狀態；任何狀態都不得清除 `driverPayApp.v2`。
+9. 平台圖形只作輔助；收入與占比必須同時提供可見文字與螢幕閱讀器名稱。
+10. Reports Sprint 5B2 完成後仍須 Final Regression、實體 iPhone Safari 與
+    installed PWA Human QA 才能進入 UX Freeze。
+
+### 原因
+
+平台歷史資料以顯示名稱為 key，直接 migration 或模糊合併可能破壞歸因；採用
+明確 alias 的讀取層 adapter 可在不改資料的前提下提供可信排行。精確日期下鑽、
+session return context 與 committed-record notification 則讓 Reports 保持唯讀，
+同時避免修正紀錄後看到 stale 結果。
+
+### 影響範圍
+
+- 新增平台純 aggregation selector、平台 UI、exact-date drill-down、return
+  context、record-change refresh、測試與文件。
+- `driverPayApp.v2`、WorkRecord schema、Calendar UX、Today 流程、AI、Driver、
+  Supabase 與 dependency 不變。
+- 自訂平台跨重新命名的穩定 ID 仍為 TD-026，需另行核准 migration／資料 Sprint。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-028](docs/DECISION_LOG.md#d-028)。

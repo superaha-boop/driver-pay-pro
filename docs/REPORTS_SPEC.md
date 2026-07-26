@@ -3,9 +3,12 @@
 Version: 1.0
 Status: Approved implementation specification
 Updated: 2026-07-26
-Implementation status: Specification and current-state audit only
+Implementation status: Sprint 5B1 and 5B2 implemented; pending Final Regression and Human QA
 
-This document is the sole primary implementation source for the next Reports Core Implementation sprint. If this document conflicts with a later, explicitly approved PRD, the later PRD wins. General product, Calendar, design, engineering, and data-safety rules continue to come from `PRODUCT_SPEC.md`, `CALENDAR_SPEC.md`, `DESIGN_SYSTEM.md`, and `AGENTS.md`.
+This document remains the sole primary implementation source and regression
+specification for Reports. If it conflicts with a later, explicitly approved PRD, the later PRD wins.
+General product, Calendar, design, engineering, and data-safety rules continue to come
+from `PRODUCT_SPEC.md`, `CALENDAR_SPEC.md`, `DESIGN_SYSTEM.md`, and `AGENTS.md`.
 
 ## 1. Purpose
 
@@ -86,7 +89,7 @@ Reports state is transient runtime state. It is not added to `driverPayApp.v2`.
 | `activeReportTab` | `"week" \| "month" \| "platform"` | `"week"` | Current App session only | Visible Reports tab |
 | `selectedWeek` | `YYYY-MM-DD` Monday key | Taipei-local current week Monday | Current App session only | Weekly period |
 | `selectedMonth` | `YYYY-MM` | Taipei-local current month | Current App session only | Monthly period |
-| `selectedPlatformPeriod` | `"week" \| "month"` | `"month"` | Current App session only | Platform period grain |
+| `selectedPlatformPeriod` | `"week" \| "month"` | `"week"` | Current App session only | Platform period grain |
 | `loadingState` | `"idle" \| "loading" \| "ready"` | `"idle"` | Derived | Read lifecycle |
 | `errorState` | `null \| ReportReadError` | `null` | Derived | Non-destructive read error |
 | `offlineState` | `boolean` | `!navigator.onLine` | Derived | Connectivity message only |
@@ -168,7 +171,8 @@ Monthly trend uses calendar-week buckets rather than 28–31 daily bars. This pr
 
 ## 10. Platform Report
 
-The Platform tab contains a compact `本週｜本月` segmented control. The default is `本月` to preserve the current platform-report mental model.
+The Platform tab contains a compact `本週｜本月` segmented control. The default is
+`本週`, as approved by the Sprint 5B2 PRD.
 
 For the selected period it shows:
 
@@ -520,14 +524,14 @@ Renderers consume prepared view models and do not calculate raw totals.
 
 The implementation introduces one lightweight in-memory notification after a successful committed record mutation, for example `driverpay:recordchange` with the affected date. Today, Calendar, Reports, and AI may subscribe or use a single centralized refresh coordinator. Failed drafts and simple Calendar navigation emit nothing.
 
-### Sprint recommendation
+### Implemented Sprint sequence
 
-Use two implementation increments because the current renderers combine data selection and rendering, comparisons do not exist, and platform history has a name-key limitation:
+The approved implementation was delivered in two increments:
 
 - **Sprint 5B1 — Weekly and Monthly Core:** transient state, periods, canonical aggregation, comparisons, accessible trends, empty/error/loading states, and tests.
 - **Sprint 5B2 — Platform, Drill-Down, and Hardening:** platform segmented period, ranking/share/comparison, exact-date links and return context, record-change notification, full responsive/PWA regression.
 
-Each increment must leave existing Reports usable and must not ship a second formula path.
+Both increments leave existing Reports usable and do not ship a second formula path.
 
 ## 28. Testing Strategy
 

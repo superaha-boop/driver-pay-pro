@@ -138,8 +138,14 @@ Version: 1.7
 - 平均時薪固定為期間淨收入除以期間有效工作時數；零工時不得出現 `Infinity` 或 `NaN`。
 - 週趨勢使用七個每日淨收入點；月趨勢使用四至六個 Monday-first 週彙總，且月份邊界只計入選定月份日期。
 - 平台頁只描述收入貢獻、排行與占比，不得推論平台效率、最佳平台或平台時薪；小費不得誤歸入平台收入。
+- 平台名稱相容只可在讀取層使用核准 alias 正規化；不得為了排行改寫歷史
+  WorkRecord。未知自訂平台必須安全顯示，不得靜默合併為錯誤平台。
 - 比較前一期為緊鄰的同等期間；前期零值、無紀錄、負值或正負跨越時不得顯示誤導百分比。
 - 重要日期只能連到 Calendar 的確切日期；Reports 本身維持唯讀，同 session 返回時保留 Reports context。
+- 重要日期下鑽不得自動開啟 Editor 或建立資料；返回 context 只存在 session
+  記憶體，包含 tab、期間、捲動位置與來源焦點。
+- 成功的紀錄 mutation 必須透過單一 committed-record notification 使可見報表
+  更新；單純瀏覽、選期或開啟 Calendar 不得發出 mutation 通知。
 - Empty、Loading、Error、Offline、stored zero 與 no record 必須是不同狀態；讀取錯誤不得覆寫或清除原始 localStorage。
 - Reports UI 必須使用 Design System、Lucide、44×44px touch targets、正確 tab semantics 與可讀的圖表文字替代。
 - 完整 state、period、KPI、comparison、trend、platform、deep-link、edge-case 與驗收規格以 `docs/REPORTS_SPEC.md` 為準。

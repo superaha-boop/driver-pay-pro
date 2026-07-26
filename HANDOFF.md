@@ -6,6 +6,54 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
+## Reports Sprint 5B2 — Platform, Drill-Down, and Hardening
+
+### 分支與範圍
+
+- 工作分支：`codex/reports-platform-drilldown-20260726`。
+- Base commit：`732929f4980b55eddb913604e0b4024a085c31ad`。
+- 本 Sprint 完成平台週／月貢獻報表、平台名稱讀取層正規化、重要日期精確
+  Calendar 下鑽、同 session 返回 context、record-change refresh 與資料狀態
+  hardening。
+- 未修改 Calendar UX、Today 操作流程、AI、Driver、WorkRecord schema、
+  `driverPayApp.v2`、Supabase、dependency 或 Production。
+
+### 實作摘要
+
+- 平台頁 fresh session 預設本週，可切換本週／本月；顯示平台收入總額、排行、
+  收入、占比與安全的前期比較，不顯示效率、最佳平台或平台時薪。
+- `normalizePlatformKey()`／`aggregatePlatformIncome()` 合併已核准的內建別名，
+  排除小費，未知平台以安全 fallback 顯示；不改寫歷史資料或顯示名稱。
+- 無紀錄、無平台收入、未歸因收入、平台合計不一致與無效平台值各自有不同
+  呈現；圖形為輔助，收入與占比都有可見文字及完整 ARIA label。
+- 週／月重要日期改為 44px 整列按鈕，僅導向 `#calendar/{date}` 的精確日期，
+  不自動開啟編輯器、不新增資料。
+- 返回 Reports 會復原原 tab、週／月期間、平台期間、捲動位置與來源按鈕焦點；
+  context 只存在記憶體，不寫入 localStorage。
+- 成功的既有 record mutation 會發出單一 `driverpay:recordchange` 通知；Reports
+  只在可見時以單一 animation frame 更新，避免 stale 或重複 refresh。
+- App Shell 變更後 Service Worker cache 更新為 `driver-pay-pro-v12`。
+
+### 驗證摘要
+
+- Node 自動測試：79/79 passed。
+- Inline JavaScript syntax 與 `git diff --check`：passed。
+- 真實瀏覽器：平台週／月切換、重要日期 exact-date deep link、返回 context、
+  焦點復原及 Console 0 error／warning passed。
+- 320、375、390、393、430、768、1024px：
+  `scrollWidth === clientWidth`；平台列、tabs、Bottom Navigation 與 44px targets
+  未溢出。
+- TypeScript、ESLint、production build：專案未配置，Not available。
+- 實體 iPhone Safari、installed PWA、VoiceOver、離線重開與 Preview 仍需
+  Product Owner Human QA。
+
+### 下一步
+
+執行 Reports Final Regression and UX Freeze Gate；不得在封板前宣稱 Reports
+已完成實體 iPhone／PWA QA，也不得回頭改造 Calendar。
+
+---
+
 ## Reports Sprint 5B1 — Weekly and Monthly Core
 
 ### 分支與範圍

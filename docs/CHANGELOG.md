@@ -19,6 +19,11 @@
 
 ### Added
 
+- Reports Sprint 5B2：新增本週／本月平台收入總額、排行、占比、安全前期比較、
+  內建 alias 讀取層正規化、未知平台 fallback、未歸因／不一致資料狀態。
+- 報表重要日期新增 Calendar exact-date drill-down、同 session return context、
+  來源焦點復原及單一 committed-record refresh notification。
+- 新增 8 項 Reports Platform contract tests；全套自動測試增為 79 項。
 - Reports Sprint 5B1：新增共用台北週／月 period utilities、單一 report
   aggregator、comparison calculator、session-only Reports state、週／月 KPI、
   前期比較、七日／月份週淨收入趨勢、重要日期及 Empty／Loading／Error／Offline
@@ -58,6 +63,8 @@
 
 ### Changed
 
+- Reports 平台頁移除 legacy 月份下拉與日均語意，改為收入貢獻視圖；
+  Service Worker cache 更新為 `driver-pay-pro-v12`。
 - Reports 週報／月報由 renderer 內各自選期與彙總，改為共用純 selector 流程；
   tab 與週／月選擇不再寫入 `driverPayApp.v2`，App Shell cache 更新為
   `driver-pay-pro-v11`。

@@ -353,3 +353,29 @@
   - 不把現有 UI 偶然行為直接當作正式產品規格。
   - 不在 specification Sprint 順手改 renderer 或重新設計 Reports。
   - 不用第三方 chart/date library 解決現有 no-build 專案可由純函式處理的需求。
+
+## D-028
+
+- Date: 2026-07-26
+- Decision:
+  1. Platform Reports 只呈現本週／本月收入貢獻、排行、占比與安全前期比較。
+  2. 小費與其他收入不歸入平台；未歸因與資料不一致需明確顯示。
+  3. 核准內建別名只在 read adapter 正規化；未知自訂平台安全保留，不改寫歷史資料。
+  4. Important dates 只 deep-link 到 Calendar exact date，不自動開啟 Editor 或建立資料。
+  5. Return context 是 session-only，保留 tab、期間、scroll 與 source focus。
+  6. 成功 mutation 以單一 `driverpay:recordchange` 通知可見 Reports 更新；read navigation 不發出事件。
+  7. Platform visual 必須同時提供 visible income／share 與 screen-reader label。
+  8. Sprint 5B2 後仍需 Final Regression 與 iPhone／PWA Human QA 才能 Freeze。
+- Reason: 歷史平台資料以顯示名稱為 key，讀取層明確 alias 比 silent migration
+  安全；exact-date drill-down 與 committed refresh 可在維持 Reports 唯讀時避免
+  導航 context 遺失與 stale data。
+- Impact:
+  - 新增平台純 selector、平台 UI、Calendar drill-down、return context、
+    record-change refresh、tests 與文件。
+  - `driverPayApp.v2`、WorkRecord schema、Calendar UX、Today flow、AI、Driver、
+    Supabase 與 dependencies 不變。
+  - 自訂平台 rename 的 stable ID 仍為 TD-026，需要獨立 migration 決策。
+- Rejected alternatives:
+  - 不將 platform efficiency、best platform 或 platform hourly rate 加入 V1。
+  - 不依模糊名稱自動合併未知平台。
+  - 不在 Reports 建立第二套 Editor 或 persistence path。
