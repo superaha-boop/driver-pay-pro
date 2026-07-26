@@ -97,6 +97,10 @@ const functionNames = [
   "getRecordsInRange",
   "getWeeksForMonth",
   "aggregateReport",
+  "normalizePlatformKey",
+  "platformDisplayName",
+  "platformCanonicalOrder",
+  "aggregatePlatformIncome",
   "compareReportMetric",
   "compareReportPeriods",
   "summarizeRecordsByDate",
@@ -196,6 +200,69 @@ test("零工時平均時薪使用不可用狀態，不產生 Infinity 或 NaN", 
   assert.equal(aggregate.averageHourlyIncome, null);
   assert.equal(aggregate.validWorkDuration, false);
   assert.equal(Number.isFinite(aggregate.netIncome), true);
+});
+
+test("平台名稱正規化集中處理內建別名並安全保留未知平台", () => {
+  assert.equal(reports.normalizePlatformKey(" Uber "), "uber");
+  assert.equal(reports.normalizePlatformKey("UBER"), "uber");
+  assert.equal(reports.normalizePlatformKey("Line Go"), "lineGo");
+  assert.equal(reports.normalizePlatformKey("linego"), "lineGo");
+  assert.equal(reports.normalizePlatformKey("yoxi"), "yoxi");
+  assert.equal(reports.normalizePlatformKey("台灣大車隊"), "taiwanTaxi");
+  assert.equal(reports.normalizePlatformKey("Taiwan Taxi"), "taiwanTaxi");
+  assert.equal(reports.normalizePlatformKey("大都會車隊"), "custom:大都會車隊");
+  assert.equal(reports.platformDisplayName("taiwanTaxi"), "55688");
+  assert.equal(reports.platformDisplayName("custom:大都會車隊", "  大都會車隊  "), "大都會車隊");
+});
+
+test("平台彙總合併已核准別名、排除小費並維持來源資料不變", () => {
+  const source = [
+    {
+      ...record("2026-07-13", 1000, 0, 2),
+      incomes: { Uber: 1000, uber: 500, "LINE GO": 500 },
+      tips: 200
+    },
+    {
+      ...record("2026-07-14", 0, 0, 1),
+      incomes: { Yoxi: 600, "台灣大車隊": 1000, "大都會車隊": 400 },
+      tips: 100
+    }
+  ];
+  const before = JSON.stringify(source);
+  const result = reports.aggregatePlatformIncome(
+    source,
+    reports.getLocalWeekRange("2026-07-13"),
+    state.platforms
+  );
+  assert.equal(JSON.stringify(source), before);
+  assert.equal(result.recordCount, 2);
+  assert.equal(result.rows.find(row => row.platformKey === "uber").income, 1500);
+  assert.equal(result.rows.find(row => row.platformKey === "lineGo").income, 500);
+  assert.equal(result.rows.find(row => row.platformKey === "yoxi").income, 600);
+  assert.equal(result.rows.find(row => row.platformKey === "taiwanTaxi").income, 1000);
+  assert.equal(result.rows.find(row => row.platformKey === "custom:大都會車隊").income, 400);
+  assert.equal(result.totalPlatformIncome, 4000);
+  assert.equal(result.rows.reduce((sum, row) => sum + (row.share || 0), 0), 1);
+});
+
+test("平台彙總處理空資料、同額排序、未知平台、負數與無效值", () => {
+  const range = reports.getLocalWeekRange("2026-07-13");
+  const empty = reports.aggregatePlatformIncome([], range, state.platforms);
+  assert.equal(empty.hasRecords, false);
+  assert.equal(empty.hasData, false);
+  assert.equal(empty.totalPlatformIncome, 0);
+
+  const result = reports.aggregatePlatformIncome([
+    { ...record("2026-07-13", 0), incomes: { Yoxi: 500, Uber: 500, Mystery: 250, "LINE GO": -50, Broken: "NaN" } }
+  ], range, state.platforms);
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(result.rows.slice(0, 2).map(row => row.platformKey))),
+    ["uber", "yoxi"]
+  );
+  assert.equal(result.rows.find(row => row.platformKey === "lineGo").share, null);
+  assert.equal(result.rows.find(row => row.platformKey === "custom:mystery").displayName, "Mystery");
+  assert.equal(result.invalidPlatforms.length, 1);
+  assert.equal(Number.isFinite(result.totalPlatformIncome), true);
 });
 
 test("上期空白、上期為零、負值跨越與支出方向皆不產生誤導百分比", () => {

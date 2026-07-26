@@ -7757,6 +7757,116 @@
       };
     }
 
+    function normalizePlatformKey(rawName) {
+      const normalized = String(rawName || "").normalize("NFKC").trim().replace(/\s+/g, " ");
+      if (!normalized) return "other";
+      const compact = normalized.toLocaleLowerCase("en").replace(/[\s._-]+/g, "");
+      if (compact === "uber") return "uber";
+      if (compact === "linego") return "lineGo";
+      if (compact === "yoxi") return "yoxi";
+      if (["55688", "台灣大車隊", "taiwantaxi"].includes(compact)) return "taiwanTaxi";
+      if (["其他", "其他平台", "other"].includes(compact)) return "other";
+      return `custom:${compact}`;
+    }
+
+    function platformDisplayName(platformKey, fallbackName = "") {
+      const canonicalNames = {
+        uber: "Uber",
+        lineGo: "LINE GO",
+        yoxi: "Yoxi",
+        taiwanTaxi: "55688",
+        other: "其他"
+      };
+      if (canonicalNames[platformKey]) return canonicalNames[platformKey];
+      const fallback = String(fallbackName || "").normalize("NFKC").trim().replace(/\s+/g, " ");
+      return fallback || "其他";
+    }
+
+    function platformCanonicalOrder(platformKey) {
+      const order = ["uber", "lineGo", "yoxi", "taiwanTaxi", "other"];
+      const index = order.indexOf(platformKey);
+      return index >= 0 ? index : order.length;
+    }
+
+    function aggregatePlatformIncome(records, range, configuredPlatforms = []) {
+      const periodRecords = getRecordsInRange(records, range);
+      const platforms = new Map();
+      const invalidPlatforms = [];
+      const ensurePlatform = rawName => {
+        const platformKey = normalizePlatformKey(rawName);
+        if (!platforms.has(platformKey)) {
+          platforms.set(platformKey, {
+            platformKey,
+            displayName: platformDisplayName(platformKey, rawName),
+            income: 0,
+            recordDates: new Set(),
+            invalid: false
+          });
+        }
+        return platforms.get(platformKey);
+      };
+
+      (Array.isArray(configuredPlatforms) ? configuredPlatforms : []).forEach(ensurePlatform);
+      periodRecords.forEach(record => {
+        Object.entries(record?.incomes || {}).forEach(([rawName, rawValue]) => {
+          const platform = ensurePlatform(rawName);
+          const amount = Number(rawValue);
+          if (!Number.isFinite(amount)) {
+            platform.invalid = true;
+            invalidPlatforms.push({ date: record.date, platformName: rawName, value: rawValue });
+            return;
+          }
+          const recognizedIncome = Number(platformNetAmount(rawName, amount));
+          if (!Number.isFinite(recognizedIncome)) {
+            platform.invalid = true;
+            invalidPlatforms.push({ date: record.date, platformName: rawName, value: rawValue });
+            return;
+          }
+          platform.income += recognizedIncome;
+          platform.recordDates.add(record.date);
+        });
+      });
+
+      const periodAggregate = aggregateReport(periodRecords, range);
+      const totalPlatformIncome = [...platforms.values()]
+        .reduce((sum, platform) => sum + platform.income, 0);
+      const positivePlatformIncome = [...platforms.values()]
+        .reduce((sum, platform) => sum + Math.max(0, platform.income), 0);
+      const rows = [...platforms.values()]
+        .filter(platform => platform.income !== 0)
+        .sort((a, b) => {
+          const incomeDifference = b.income - a.income;
+          if (incomeDifference) return incomeDifference;
+          const orderDifference = platformCanonicalOrder(a.platformKey) - platformCanonicalOrder(b.platformKey);
+          return orderDifference || a.displayName.localeCompare(b.displayName, "zh-Hant");
+        })
+        .map((platform, index) => ({
+          platformKey: platform.platformKey,
+          displayName: platform.displayName,
+          income: platform.income,
+          share: platform.income > 0 && positivePlatformIncome > 0
+            ? platform.income / positivePlatformIncome
+            : null,
+          rank: index + 1,
+          hasData: true,
+          recordCount: platform.recordDates.size,
+          invalid: platform.invalid
+        }));
+      const unattributedIncome = periodAggregate.totalIncome - totalPlatformIncome;
+      return {
+        rows,
+        hasRecords: periodAggregate.hasRecords,
+        hasData: rows.length > 0,
+        totalIncome: periodAggregate.totalIncome,
+        totalPlatformIncome,
+        positivePlatformIncome,
+        unattributedIncome,
+        inconsistent: totalPlatformIncome > periodAggregate.totalIncome,
+        recordCount: periodRecords.length,
+        invalidPlatforms
+      };
+    }
+
     function compareReportMetric(currentValue, previousValue, options = null) {
       options ||= {};
       const currentHasData = options.currentHasData !== false;
