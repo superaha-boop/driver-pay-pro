@@ -5,6 +5,7 @@ const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 const steps = [
   ["Lint", npmCommand, ["run", "lint"]],
   ["All Node tests", npmCommand, ["test"]],
+  ["AI targeted tests", npmCommand, ["run", "test:ai"]],
   ["Reports targeted tests", npmCommand, ["run", "test:reports"]],
   ["Calendar targeted tests", npmCommand, ["run", "test:calendar"]],
   ["Inline JavaScript", npmCommand, ["run", "check:inline"]],

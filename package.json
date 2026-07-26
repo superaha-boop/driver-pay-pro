@@ -5,6 +5,7 @@
   "description": "Static mobile-first PWA for driver income and work-time tracking",
   "scripts": {
     "test": "node --test tests/*.test.js",
+    "test:ai": "TZ=Asia/Taipei node --test tests/ai.test.js",
     "test:calendar": "TZ=Asia/Taipei node --test tests/calendar.test.js tests/calendar-regression.test.js tests/navigation.test.js",
     "test:reports": "TZ=Asia/Taipei node --test tests/reporting.test.js tests/reports-core.test.js tests/reports-platform.test.js tests/reports-final-regression.test.js tests/reports-spec.test.js",
     "lint": "node scripts/lint.mjs",

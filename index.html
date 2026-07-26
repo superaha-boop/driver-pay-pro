@@ -6310,71 +6310,10 @@
       return Math.max(0, finiteNumber(value));
     }
 
-    function analysisPlatformRate(name) {
-      return Math.min(100, Math.max(0, finiteNumber(state.settings.platformRates?.[name] ?? defaultPlatformRates[name] ?? 100)));
-    }
-
-    function analysisPlatformIncome(entry, name) {
-      return nonNegativeNumber(entry?.incomes?.[name]) * analysisPlatformRate(name) / 100;
-    }
-
-    function analysisEntryTotal(entry) {
-      if (!entry) return 0;
-      const platformIncome = state.platforms.reduce((sum, name) => sum + analysisPlatformIncome(entry, name), 0);
-      return platformIncome + nonNegativeNumber(entry.tips);
-    }
-
-    function analysisEntryExpenses(entry) {
-      if (!entry?.expenses || typeof entry.expenses !== "object") return 0;
-      return Object.values(entry.expenses).reduce((sum, value) => sum + nonNegativeNumber(value), 0);
-    }
-
-    function analysisSummary(entries) {
-      const total = entries.reduce((sum, entry) => sum + analysisEntryTotal(entry), 0);
-      const expenses = entries.reduce((sum, entry) => sum + analysisEntryExpenses(entry), 0);
-      const nowMs = Date.now();
-      const currentDate = todayString();
-      const durationMs = entries.reduce((sum, entry) => {
-        return sum + workMetrics(entry, nowMs, currentDate).durationMs;
-      }, 0);
-      const hours = durationMs / workTimeUnits.hourMs;
-      const net = total - expenses;
-      return { total, expenses, durationMs, hours, net, hourly: hourlyRate(net, durationMs) };
-    }
-
-    function analysisPlatformRows(entries) {
-      const rows = state.platforms.map(name => {
-        const amount = entries.reduce((sum, entry) => sum + analysisPlatformIncome(entry, name), 0);
-        return { name, amount };
-      }).filter(row => row.amount > 0).sort((a, b) => b.amount - a.amount);
-      const total = rows.reduce((sum, row) => sum + row.amount, 0);
-      return rows.map(row => ({
-        ...row,
-        share: total > 0 ? Math.round(row.amount / total * 100) : 0
-      }));
-    }
-
     function validAnalysisEntries() {
       return state.entries.filter(entry => {
-        return entry && typeof entry.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(entry.date);
+        return entry && normalizeDateKey(entry.date);
       });
-    }
-
-    function bestIncomeDay(entries) {
-      return entries.map(entry => ({ entry, amount: analysisEntryTotal(entry) }))
-        .filter(item => item.amount > 0)
-        .sort((a, b) => b.amount - a.amount || b.entry.date.localeCompare(a.entry.date))[0] || null;
-    }
-
-    function bestIncomeShift(entries) {
-      const totals = new Map();
-      entries.forEach(entry => {
-        const shift = String(entry.shift || "").trim();
-        const amount = analysisEntryTotal(entry);
-        if (!shift || amount <= 0) return;
-        totals.set(shift, (totals.get(shift) || 0) + amount);
-      });
-      return [...totals.entries()].sort((a, b) => b[1] - a[1])[0] || null;
     }
 
     function fuelExpenseTotal(entry) {
@@ -6384,46 +6323,69 @@
       }, 0);
     }
 
-    function recentRisingPlatform(entries) {
-      const ordered = entries.slice().sort((a, b) => a.date.localeCompare(b.date));
-      if (ordered.length < 4) return null;
-      const recentSize = Math.min(3, Math.floor(ordered.length / 2));
-      const recent = ordered.slice(-recentSize);
-      const earlier = ordered.slice(0, -recentSize);
-      const recentRows = analysisPlatformRows(recent);
-      const earlierRows = analysisPlatformRows(earlier);
-      const recentShares = new Map(recentRows.map(row => [row.name, row.share]));
-      const earlierShares = new Map(earlierRows.map(row => [row.name, row.share]));
-      return state.platforms.map(name => ({
-        name,
-        increase: (recentShares.get(name) || 0) - (earlierShares.get(name) || 0),
-        recentAmount: recentRows.find(row => row.name === name)?.amount || 0
-      })).filter(item => item.recentAmount > 0 && item.increase >= 10)
-        .sort((a, b) => b.increase - a.increase)[0] || null;
+    function hasRecentIncomeDecline(entries) {
+      const recent = sharedAnalytics.summarizeRecordsByDate(entries).values();
+      const recentDays = [...recent].sort((a, b) => a.date.localeCompare(b.date)).slice(-3);
+      if (recentDays.length < 3) return false;
+      const totals = recentDays.map(day => day.aggregate.totalIncome);
+      return totals[0] > totals[1] && totals[1] > totals[2];
     }
 
-    function hasRecentIncomeDecline(entries) {
-      const recent = entries.slice().sort((a, b) => a.date.localeCompare(b.date)).slice(-3);
-      if (recent.length < 3) return false;
-      const totals = recent.map(analysisEntryTotal);
-      return totals[0] > totals[1] && totals[1] > totals[2];
+    function aiAggregateProjection(aggregate) {
+      const durationMs = aggregate.totalWorkDuration;
+      return {
+        total: aggregate.totalIncome,
+        expenses: aggregate.totalExpenses,
+        durationMs,
+        hours: durationMs / workTimeUnits.hourMs,
+        net: aggregate.netIncome,
+        hourly: aggregate.averageHourlyIncome || 0
+      };
+    }
+
+    function aiDayAggregate(entry) {
+      if (!entry || !normalizeDateKey(entry.date)) {
+        return sharedAnalytics.aggregateReport([], sharedAnalytics.getLocalWeekRange(todayString()));
+      }
+      const range = {
+        start: entry.date,
+        end: entry.date,
+        endExclusive: addLocalDays(entry.date, 1)
+      };
+      return sharedAnalytics.aggregateReport([entry], range);
     }
 
     function buildAiAnalysisContext() {
       const entries = validAnalysisEntries();
-      const monthEntries = entries.filter(entry => entry.date.startsWith(currentMonth()));
+      const monthRange = sharedAnalytics.getLocalMonthRange(currentMonth());
+      const monthEntries = sharedAnalytics.getRecordsInRange(entries, monthRange);
       const todayEntry = entries.find(entry => entry.date === todayString()) || null;
-      const monthSummary = analysisSummary(monthEntries);
+      const monthAggregate = sharedAnalytics.aggregateReport(entries, monthRange);
+      const monthPlatformAggregate = sharedAnalytics.aggregatePlatformIncome(entries, monthRange, state.platforms);
+      const importantDates = sharedAnalytics.findImportantReportDates(monthEntries, "month");
+      const bestDay = importantDates.highestNet
+        ? {
+            entry: { date: importantDates.highestNet.date },
+            amount: importantDates.highestNet.aggregate.netIncome
+          }
+        : null;
       return {
         entries,
         monthEntries,
-        monthSummary,
+        monthSummary: aiAggregateProjection(monthAggregate),
+        monthAggregate,
         todayEntry,
-        todaySummary: analysisSummary(todayEntry ? [todayEntry] : []),
-        monthPlatforms: analysisPlatformRows(monthEntries),
-        bestDay: bestIncomeDay(monthEntries),
-        bestShift: bestIncomeShift(monthEntries),
-        risingPlatform: recentRisingPlatform(monthEntries)
+        todaySummary: aiAggregateProjection(aiDayAggregate(todayEntry)),
+        monthPlatforms: monthPlatformAggregate.rows.map(row => ({
+          name: row.displayName,
+          amount: row.income,
+          share: row.share === null ? 0 : Math.round(row.share * 100)
+        })),
+        monthPlatformAggregate,
+        bestDay,
+        bestShift: null,
+        risingPlatform: null,
+        importantDates
       };
     }
 
@@ -6443,7 +6405,21 @@
       const todayWork = workMetrics(todayEntry);
       const todayHours = todayWork.hours;
       const todayHourly = hourlyRate(todaySummary.net, todayWork.durationMs);
-      const topPlatform = analysisPlatformRows([todayEntry])[0];
+      const todayPlatformAggregate = sharedAnalytics.aggregatePlatformIncome(
+        [todayEntry],
+        {
+          start: todayEntry.date,
+          end: todayEntry.date,
+          endExclusive: addLocalDays(todayEntry.date, 1)
+        },
+        state.platforms
+      );
+      const topPlatform = todayPlatformAggregate.rows[0]
+        ? {
+            name: todayPlatformAggregate.rows[0].displayName,
+            amount: todayPlatformAggregate.rows[0].income
+          }
+        : null;
       const dailyGoal = nonNegativeNumber(state.settings.dailyGoal);
 
       if (todayHours >= 12) add(`今日已工作 ${number(todayHours)} 小時，工時偏長，建議安排休息。`);
@@ -6481,12 +6457,9 @@
 
       if (monthSummary.hourly > 0) {
         const lowDay = monthEntries.map(entry => {
-          const work = workMetrics(entry);
-          const hours = work.hours;
-          const hourly = hourlyRate(
-            analysisEntryTotal(entry) - analysisEntryExpenses(entry),
-            work.durationMs
-          );
+          const dayAggregate = aiDayAggregate(entry);
+          const hours = dayAggregate.totalWorkDuration / workTimeUnits.hourMs;
+          const hourly = dayAggregate.averageHourlyIncome || 0;
           return { entry, hours, hourly };
         }).filter(item => item.hours > 0 && item.hourly < monthSummary.hourly * .7)
           .sort((a, b) => a.hourly - b.hourly)[0];
@@ -8174,6 +8147,24 @@
       }
       return result;
     }
+
+    const sharedAnalytics = Object.freeze({
+      getLocalWeekRange,
+      getPreviousWeekRange,
+      getLocalMonthRange,
+      getPreviousMonthRange,
+      getWeekLabel,
+      getMonthLabel,
+      getRecordsInRange,
+      aggregateReport,
+      compareReportPeriods,
+      buildWeeklyNetTrend,
+      buildMonthlyWeeklyNetTrend,
+      findImportantReportDates,
+      summarizeRecordsByDate,
+      normalizePlatformKey,
+      aggregatePlatformIncome
+    });
 
     function reportComparisonText(result, formatValue = money) {
       if (["no-data", "no-previous-data"].includes(result.status)) return "暫無上期資料";
