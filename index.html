@@ -3606,14 +3606,168 @@
       }
     }
 
-    .driver-space-note {
-      margin-bottom: 12px;
-      padding: 14px 15px;
-      border-radius: 16px;
-      color: var(--muted);
-      background: var(--brand-soft);
+    .driver-dashboard {
+      min-width: 0;
+      margin-bottom: 22px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .driver-page-intro {
+      padding: 4px 3px 2px;
+    }
+
+    .driver-page-intro h2 {
+      margin: 0;
+      color: #17211b;
+      font-size: 26px;
+      letter-spacing: -.025em;
+    }
+
+    .driver-page-intro p {
+      margin: 5px 0 0;
+      color: #68736e;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .driver-overview-card {
+      min-width: 0;
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .driver-overview-card h3,
+    .driver-safety-note h3 {
+      margin: 2px 0 0;
+      color: #203128;
+      font-size: 18px;
+    }
+
+    .driver-overview-card p,
+    .driver-safety-note p {
+      margin: 5px 0 0;
+      color: #68736e;
       font-size: 13px;
       line-height: 1.55;
+    }
+
+    .driver-card-kicker {
+      color: var(--brand-strong);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .driver-goal-card {
+      border-color: rgba(21, 150, 111, .22);
+      background: #fbfdfc;
+    }
+
+    .driver-goal-input {
+      display: grid;
+      gap: 7px;
+      color: #506159;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .driver-goal-control {
+      width: 100%;
+      min-width: 0;
+      height: 50px;
+      padding: 0 14px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #cfd9d3;
+      border-radius: 13px;
+      color: #68736e;
+      background: #fff;
+    }
+
+    .driver-goal-control:focus-within {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(21, 150, 111, .13);
+    }
+
+    .driver-goal-control input {
+      width: 100%;
+      min-width: 0;
+      height: 48px;
+      padding: 0;
+      color: #17211b;
+      background: transparent;
+      border: 0;
+      outline: 0;
+      font-size: 21px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .driver-goal-card .ds-save-status {
+      min-height: 20px;
+      margin: -6px 0 0;
+    }
+
+    .driver-status-list {
+      margin: 0;
+      display: grid;
+    }
+
+    .driver-status-list > div {
+      min-width: 0;
+      min-height: 44px;
+      padding: 10px 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      border-top: 1px solid #edf1ef;
+    }
+
+    .driver-status-list dt {
+      color: #68736e;
+      font-size: 13px;
+    }
+
+    .driver-status-list dd {
+      margin: 0;
+      color: #203128;
+      font-size: 13px;
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+
+    .driver-safety-note {
+      padding: 16px;
+      border-radius: 18px;
+      background: var(--brand-soft);
+    }
+
+    .driver-settings-heading {
+      margin: 0 0 12px;
+      color: #203128;
+      font-size: 18px;
+    }
+
+    @media (min-width: 700px) {
+      .driver-dashboard {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .driver-page-intro,
+      .driver-safety-note {
+        grid-column: 1 / -1;
+      }
     }
 
     .settings-about-panel {
@@ -5245,7 +5399,49 @@
       </section>
 
       <section id="view-settings" class="view hidden">
-        <div class="driver-space-note">Driver Space 詳細內容將於後續版本開發；目前保留原有平台、費用、目標與匯出設定。</div>
+        <div class="driver-dashboard">
+          <header class="driver-page-intro">
+            <h2>Driver</h2>
+            <p>管理此裝置的收入目標、資料與 App 狀態。</p>
+          </header>
+
+          <section class="driver-overview-card driver-goal-card" aria-labelledby="driverGoalTitle">
+            <div>
+              <span class="driver-card-kicker">收入目標</span>
+              <h3 id="driverGoalTitle">每日收入目標</h3>
+              <p>與「今天」使用相同設定，輸入後自動儲存。</p>
+            </div>
+            <label class="driver-goal-input" for="dailyGoal">
+              <span>每日目標</span>
+              <span class="driver-goal-control"><span aria-hidden="true">NT$</span><input type="number" id="dailyGoal"
+                min="0" max="99999999" step="100" inputmode="numeric" placeholder="例如：3000"></span>
+            </label>
+            <p class="ds-save-status" id="driverGoalStatus" role="status" aria-live="polite"></p>
+          </section>
+
+          <section class="driver-overview-card" aria-labelledby="driverDataTitle">
+            <div>
+              <span class="driver-card-kicker">資料狀態</span>
+              <h3 id="driverDataTitle">此裝置的工作紀錄</h3>
+            </div>
+            <dl class="driver-status-list" id="driverDataStatus"></dl>
+          </section>
+
+          <section class="driver-overview-card" aria-labelledby="driverAppTitle">
+            <div>
+              <span class="driver-card-kicker">App 狀態</span>
+              <h3 id="driverAppTitle">Driver Pay Pro</h3>
+            </div>
+            <dl class="driver-status-list" id="driverAppStatus"></dl>
+          </section>
+
+          <section class="driver-safety-note" aria-labelledby="driverSafetyTitle">
+            <h3 id="driverSafetyTitle">資料保存在這台裝置</h3>
+            <p>目前沒有跨裝置同步或雲端備份。清除 Safari 網站資料可能會刪除工作紀錄；離線時仍可使用已快取的 App。</p>
+          </section>
+        </div>
+
+        <h2 class="driver-settings-heading">其他設定</h2>
         <div class="layout">
           <div class="panel">
             <div class="panel-head">
@@ -5314,11 +5510,7 @@
                 <input type="number" id="monthlyGoal" min="0" step="100" placeholder="例如：80000">
               </label>
               <div style="height: 12px"></div>
-              <label>每日收入目標
-                <input type="number" id="dailyGoal" min="0" step="100" placeholder="例如：3000">
-              </label>
-              <div style="height: 12px"></div>
-              <button class="button" id="saveGoal">儲存目標</button>
+              <button class="button" id="saveMonthlyGoal">儲存每月目標</button>
               <div class="settings-actions">
                 <button class="button secondary" id="exportCsv" type="button">匯出 CSV</button>
               </div>
@@ -5422,6 +5614,7 @@
     });
     const storageKey = "driverPayApp.v2";
     const lastValidStorageKey = `${storageKey}.lastValid`;
+    const appShellCacheName = "driver-pay-pro-v12";
     const defaultPlatforms = ["Uber", "LINE GO", "Yoxi", "55688", "大都會", "台灣大車隊", "路邊客", "自訂"];
     const defaultPlatformIds = {
       "Uber": "platform-uber",
@@ -5513,6 +5706,9 @@
     let expenseDraft = createExpenseDraft();
     let expenseToastTimer = 0;
     let expenseShortcutStatus = "";
+    let driverGoalSaveTimer = 0;
+    let driverGoalStatus = "";
+    let driverGoalStatusType = "";
     let incomeUndoTimer = 0;
     let lastIncomeAddition = null;
     let calendarState = createCalendarState(todayString());
@@ -5601,6 +5797,9 @@
       aiMonthInsights: document.getElementById("aiMonthInsights"),
       aiAlerts: document.getElementById("aiAlerts"),
       aiAnalysisMetadata: document.getElementById("aiAnalysisMetadata"),
+      driverGoalStatus: document.getElementById("driverGoalStatus"),
+      driverDataStatus: document.getElementById("driverDataStatus"),
+      driverAppStatus: document.getElementById("driverAppStatus"),
       platformChips: document.getElementById("platformChips"),
       platformInputModeSettings: document.getElementById("platformInputModeSettings"),
       platformRateInputs: document.getElementById("platformRateInputs"),
@@ -8807,6 +9006,99 @@
       return categories.map(name => `<option value="${escapeAttr(name)}"${name === selectedCategory ? " selected" : ""}>${escapeHtml(name)}</option>`).join("");
     }
 
+    function driverStatusRow(label, value) {
+      return `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`;
+    }
+
+    function driverLocalStorageStatus() {
+      try {
+        const stored = localStorage.getItem(storageKey);
+        if (stateLoadError) return "讀取錯誤";
+        return stored === null ? "尚無已儲存資料" : "可正常讀取";
+      } catch {
+        return "無法存取";
+      }
+    }
+
+    function renderDriverStatus() {
+      const recordDates = state.entries
+        .map(entry => normalizeDateKey(entry?.date))
+        .filter(Boolean)
+        .sort();
+      const firstDate = recordDates[0];
+      const latestDate = recordDates.at(-1);
+      const offlineAvailable = "serviceWorker" in navigator ? "已啟用 App Shell" : "瀏覽器不支援";
+      const standalone = window.matchMedia?.("(display-mode: standalone)")?.matches
+        || navigator.standalone === true;
+      if (els.driverDataStatus) {
+        els.driverDataStatus.innerHTML = [
+          driverStatusRow("本機紀錄總數", `${state.entries.length} 筆`),
+          driverStatusRow("最早紀錄", firstDate ? formatCalendarFullDate(firstDate) : "尚無紀錄"),
+          driverStatusRow("最新紀錄", latestDate ? formatCalendarFullDate(latestDate) : "尚無紀錄"),
+          driverStatusRow("最後資料更新", "未提供可靠時間"),
+          driverStatusRow("Local-first", "僅此裝置"),
+          driverStatusRow("離線可用", offlineAvailable),
+          driverStatusRow("資料讀取", stateLoadError ? "有錯誤" : "正常"),
+          driverStatusRow(storageKey, driverLocalStorageStatus())
+        ].join("");
+      }
+      if (els.driverAppStatus) {
+        els.driverAppStatus.innerHTML = [
+          driverStatusRow("App", brandAttribution.productName),
+          driverStatusRow("版本里程碑", "Local-first V1"),
+          driverStatusRow("App Shell", appShellCacheName),
+          driverStatusRow("開啟方式", standalone ? "已安裝 PWA" : "Safari／瀏覽器"),
+          driverStatusRow("連線狀態", navigator.onLine ? "Online" : "Offline"),
+          driverStatusRow("更新狀態", "啟動時自動檢查")
+        ].join("");
+      }
+    }
+
+    function setDriverGoalStatus(message, type = "") {
+      driverGoalStatus = message;
+      driverGoalStatusType = type;
+      if (!els.driverGoalStatus) return;
+      els.driverGoalStatus.textContent = message;
+      els.driverGoalStatus.dataset.status = type;
+    }
+
+    function saveDriverDailyGoal(input) {
+      window.clearTimeout(driverGoalSaveTimer);
+      const previous = nonNegativeNumber(state.settings.dailyGoal);
+      const raw = String(input?.value || "").trim();
+      const next = raw === "" ? 0 : Number(raw);
+      if (!Number.isSafeInteger(next) || next < 0 || next > maxPlatformIncome) {
+        if (input) input.value = previous || "";
+        setDriverGoalStatus("請輸入 0 至 99,999,999 的整數。", "error");
+        return false;
+      }
+      if (next === previous) {
+        setDriverGoalStatus("已儲存在此裝置", navigator.onLine ? "saved" : "offline");
+        return true;
+      }
+      state.settings.dailyGoal = next;
+      if (!saveState()) {
+        state.settings.dailyGoal = previous;
+        if (input) input.value = previous || "";
+        setDriverGoalStatus("儲存失敗，原本目標仍保留。", "error");
+        return false;
+      }
+      updateDailyGoal();
+      renderStats();
+      setDriverGoalStatus(
+        navigator.onLine ? "已儲存在此裝置" : "已離線儲存在此裝置",
+        navigator.onLine ? "saved" : "offline"
+      );
+      renderDriverStatus();
+      return true;
+    }
+
+    function scheduleDriverDailyGoalSave(input) {
+      window.clearTimeout(driverGoalSaveTimer);
+      setDriverGoalStatus("儲存中…", "saving");
+      driverGoalSaveTimer = window.setTimeout(() => saveDriverDailyGoal(input), 450);
+    }
+
     function renderSettings() {
       els.platformChips.innerHTML = state.platforms.map(name => chip(name, "platform")).join("");
       if (els.platformInputModeSettings) {
@@ -8854,7 +9146,15 @@
       }
       if (els.expenseShortcutStatus) els.expenseShortcutStatus.textContent = expenseShortcutStatus;
       document.getElementById("monthlyGoal").value = state.settings.monthlyGoal || "";
-      document.getElementById("dailyGoal").value = state.settings.dailyGoal || "";
+      const dailyGoalInput = document.getElementById("dailyGoal");
+      if (dailyGoalInput && document.activeElement !== dailyGoalInput) {
+        dailyGoalInput.value = state.settings.dailyGoal || "";
+      }
+      if (els.driverGoalStatus) {
+        els.driverGoalStatus.textContent = driverGoalStatus;
+        els.driverGoalStatus.dataset.status = driverGoalStatusType;
+      }
+      renderDriverStatus();
     }
 
     function chip(name, type) {
@@ -10438,6 +10738,14 @@
     document.getElementById("driverSpaceLogo").addEventListener("click", () => navigateTo("settings"));
     document.getElementById("openAbout").addEventListener("click", () => navigateTo("about"));
     document.getElementById("closeAbout").addEventListener("click", () => navigateTo("settings"));
+    const driverDailyGoalInput = document.getElementById("dailyGoal");
+    driverDailyGoalInput.addEventListener("input", event => scheduleDriverDailyGoalSave(event.currentTarget));
+    driverDailyGoalInput.addEventListener("change", event => saveDriverDailyGoal(event.currentTarget));
+    driverDailyGoalInput.addEventListener("keydown", event => {
+      if (event.key !== "Enter") return;
+      event.preventDefault();
+      event.currentTarget.blur();
+    });
 
     document.getElementById("addPlatform").addEventListener("click", () => {
       const input = document.getElementById("newPlatformName");
@@ -10476,11 +10784,19 @@
       renderAll();
     });
 
-    document.getElementById("saveGoal").addEventListener("click", () => {
-      state.settings.monthlyGoal = Number(document.getElementById("monthlyGoal").value || 0);
-      state.settings.dailyGoal = Number(document.getElementById("dailyGoal").value || 0);
-      saveState();
+    document.getElementById("saveMonthlyGoal").addEventListener("click", () => {
+      const input = document.getElementById("monthlyGoal");
+      const previous = nonNegativeNumber(state.settings.monthlyGoal);
+      const next = nonNegativeNumber(input.value);
+      state.settings.monthlyGoal = next;
+      if (!saveState()) {
+        state.settings.monthlyGoal = previous;
+        input.value = previous || "";
+        showToast("每月目標儲存失敗");
+        return;
+      }
       renderAll();
+      showToast("每月目標已儲存");
     });
 
     document.getElementById("saveRates").addEventListener("click", () => {
@@ -10582,11 +10898,13 @@
       reportsState.offline = false;
       if (activeView === "reports") refreshActiveReport();
       if (activeView === "ai") renderAiAnalysis();
+      if (activeView === "settings") renderDriverStatus();
     });
     window.addEventListener("offline", () => {
       reportsState.offline = true;
       if (activeView === "reports") refreshActiveReport();
       if (activeView === "ai") renderAiAnalysis();
+      if (activeView === "settings") renderDriverStatus();
     });
     window.addEventListener("pageshow", refreshCalendarToday);
     window.addEventListener("focus", refreshCalendarToday);
