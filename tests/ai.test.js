@@ -66,6 +66,8 @@ const functionNames = [
   "taipeiDateString",
   "todayString",
   "currentMonth",
+  "money",
+  "number",
   "dateOnlyParts",
   "addLocalDays",
   "normalizeDateKey",
@@ -111,10 +113,16 @@ const functionNames = [
   "buildWeeklyNetTrend",
   "buildMonthlyWeeklyNetTrend",
   "findImportantReportDates",
+  "formatCalendarFullDate",
+  "reportDateLabel",
+  "formatReportDuration",
   "validAnalysisEntries",
-  "aiAggregateProjection",
   "aiDayAggregate",
-  "buildAiAnalysisContext"
+  "aiRecordHasInvalidAmount",
+  "buildAIDataQuality",
+  "buildAiAnalysisContext",
+  "aiInsightTarget",
+  "buildAIInsights"
 ];
 const sharedAnalyticsSource = html.match(
   /const sharedAnalytics = Object\.freeze\(\{[\s\S]*?\n    \}\);/
@@ -141,6 +149,7 @@ const context = vm.createContext({
   String,
   Array,
   state,
+  stateLoadError: null,
   defaultPlatformRates: fixture.platformRates,
   workTimeUnits: Object.freeze({
     minuteMs: 60 * 1000,
@@ -150,7 +159,7 @@ const context = vm.createContext({
 vm.runInContext(
   `${functionNames.map(extractFunction).join("\n")}\n`
   + `${sharedAnalyticsSource}\n`
-  + "globalThis.ai = { sharedAnalytics, buildAiAnalysisContext };",
+  + "globalThis.ai = { sharedAnalytics, buildAiAnalysisContext, buildAIInsights };",
   context
 );
 
@@ -210,3 +219,48 @@ test("同一份 fixture 的 AI 與 Reports 平台彙總完全一致", () => {
   );
 });
 
+test("Insight Engine 輸出三個 V1 區塊、證據與分析依據", () => {
+  const source = context.ai.buildAiAnalysisContext();
+  const insights = context.ai.buildAIInsights({
+    currentWeek: source.currentWeek,
+    previousWeek: source.previousWeek,
+    weekComparison: source.weekComparison,
+    currentMonth: source.monthAggregate,
+    previousMonth: source.previousMonthAggregate,
+    monthComparison: source.monthComparison,
+    platformMonth: source.monthPlatformAggregate,
+    importantDates: source.importantDates,
+    monthlyTrend: source.monthlyTrend,
+    dataQuality: source.dataQuality,
+    goalState: source.goalState,
+    ranges: source.ranges
+  });
+  assert.equal(Array.isArray(insights.operatingRecommendations), true);
+  assert.equal(insights.operatingRecommendations.length >= 1, true);
+  assert.equal(insights.operatingRecommendations.length <= 3, true);
+  assert.equal(Array.isArray(insights.monthlyInsights), true);
+  assert.equal(Array.isArray(insights.smartReminders), true);
+  assert.equal(insights.analysisMetadata.recordCount, source.monthAggregate.recordCount);
+  assert.equal(insights.analysisMetadata.workDays, source.monthAggregate.workDays);
+  assert.equal(insights.analysisMetadata.period.start, "2026-07-01");
+  for (const item of insights.operatingRecommendations) {
+    assert.equal(typeof item.title, "string");
+    assert.equal(typeof item.action, "string");
+    assert.equal(typeof item.evidence, "string");
+    assert.equal(typeof item.period, "string");
+    assert.equal(typeof item.sufficiency, "string");
+    assert.equal(typeof item.accessibleName, "string");
+  }
+});
+
+test("AI UI 維持三個主要區塊並提供精確日期與報表導覽", () => {
+  const aiSection = html.match(/<section id="view-ai"[\s\S]*?<\/section>\s*<section id="view-settings"/)?.[0] || "";
+  assert.match(aiSection, />營運建議</);
+  assert.match(aiSection, />本月洞察</);
+  assert.match(aiSection, />智慧提醒</);
+  assert.doesNotMatch(aiSection, />平台表現</);
+  assert.match(html, /data-ai-calendar-date/);
+  assert.match(html, /data-ai-report-view/);
+  assert.match(html, /driverpay:recordchange/);
+  assert.match(html, /離線・使用本機資料/);
+});

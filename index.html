@@ -3425,6 +3425,101 @@
       color: rgba(255, 255, 255, .78);
     }
 
+    .ai-insight-list {
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 12px;
+      list-style: none;
+    }
+
+    .ai-insight-item {
+      min-width: 0;
+      display: grid;
+      gap: 5px;
+    }
+
+    .ai-insight-item + .ai-insight-item {
+      padding-top: 12px;
+      border-top: 1px solid #edf1ef;
+    }
+
+    .ai-insight-card.primary .ai-insight-item + .ai-insight-item {
+      border-top-color: rgba(255, 255, 255, .18);
+    }
+
+    .ai-insight-item h4 {
+      margin: 0;
+      color: #203128;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .ai-insight-card.primary .ai-insight-item h4 {
+      color: #fff;
+    }
+
+    .ai-insight-item p {
+      margin: 0;
+      color: #68736e;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .ai-insight-card.primary .ai-insight-item p {
+      color: rgba(255, 255, 255, .82);
+    }
+
+    .ai-evidence {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .ai-context-button {
+      width: max-content;
+      min-height: 44px;
+      margin: 2px -10px -8px;
+      padding: 0 10px;
+      color: var(--brand-strong);
+      background: transparent;
+      border: 0;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .ai-insight-card.primary .ai-context-button {
+      color: #fff;
+    }
+
+    .ai-reminder-severity {
+      color: #68736e;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .ai-analysis-meta {
+      padding: 2px 4px 6px;
+      color: #68736e;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .ai-analysis-meta strong {
+      color: #3e4d45;
+    }
+
+    .ai-local-status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      margin-top: 4px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      color: #506159;
+      background: #edf3ef;
+      font-size: 11px;
+      font-weight: 650;
+    }
+
     .ai-month-metrics {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -5126,8 +5221,8 @@
           </header>
           <section class="ai-insight-card primary" aria-labelledby="aiTodayTitle">
             <div class="ai-section-head">
-              <h3 id="aiTodayTitle">今日建議</h3>
-              <span class="ai-section-kicker">即時營運</span>
+              <h3 id="aiTodayTitle">營運建議</h3>
+              <span class="ai-section-kicker">本週優先行動</span>
             </div>
             <div id="aiTodayAdvice"></div>
           </section>
@@ -5136,14 +5231,7 @@
               <h3 id="aiMonthTitle">本月洞察</h3>
               <span class="ai-section-kicker">本月累計</span>
             </div>
-            <div class="ai-month-metrics" id="aiMonthInsights"></div>
-          </section>
-          <section class="ai-insight-card" aria-labelledby="aiPlatformTitle">
-            <div class="ai-section-head">
-              <h3 id="aiPlatformTitle">平台表現</h3>
-              <span class="ai-section-kicker">收入占比</span>
-            </div>
-            <div id="aiPlatformInsights"></div>
+            <div id="aiMonthInsights"></div>
           </section>
           <section class="ai-insight-card" aria-labelledby="aiAlertsTitle">
             <div class="ai-section-head">
@@ -5152,6 +5240,7 @@
             </div>
             <div id="aiAlerts"></div>
           </section>
+          <aside class="ai-analysis-meta" id="aiAnalysisMetadata" aria-label="分析依據"></aside>
         </div>
       </section>
 
@@ -5418,6 +5507,7 @@
     let activeView = "today";
     let reportsState = createReportsState(todayString());
     let reportsRefreshFrame = 0;
+    let aiRefreshFrame = 0;
     let activeReportView = reportsState.activeReportTab;
     let overviewVisible = false;
     let expenseDraft = createExpenseDraft();
@@ -5509,8 +5599,8 @@
       platformReportContent: document.getElementById("platformReportContent"),
       aiTodayAdvice: document.getElementById("aiTodayAdvice"),
       aiMonthInsights: document.getElementById("aiMonthInsights"),
-      aiPlatformInsights: document.getElementById("aiPlatformInsights"),
       aiAlerts: document.getElementById("aiAlerts"),
+      aiAnalysisMetadata: document.getElementById("aiAnalysisMetadata"),
       platformChips: document.getElementById("platformChips"),
       platformInputModeSettings: document.getElementById("platformInputModeSettings"),
       platformRateInputs: document.getElementById("platformRateInputs"),
@@ -6002,13 +6092,6 @@
       return `${startMonth}/${startDay}－${endMonth}/${endDay}`;
     }
 
-    function compactDailyDate(dateString) {
-      const [year, month, day] = dateString.split("-").map(Number);
-      const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
-      const weekday = weekdays[new Date(year, month - 1, day).getDay()];
-      return `${month}/${day}（${weekday}）`;
-    }
-
     function calendarWeekdayLabel(dateKey) {
       const index = mondayFirstWeekdayIndex(dateKey);
       return index < 0 ? "" : ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"][index];
@@ -6316,33 +6399,6 @@
       });
     }
 
-    function fuelExpenseTotal(entry) {
-      if (!entry?.expenses || typeof entry.expenses !== "object") return 0;
-      return Object.entries(entry.expenses).reduce((sum, [name, value]) => {
-        return /油|電費|充電|燃料/.test(name) ? sum + nonNegativeNumber(value) : sum;
-      }, 0);
-    }
-
-    function hasRecentIncomeDecline(entries) {
-      const recent = sharedAnalytics.summarizeRecordsByDate(entries).values();
-      const recentDays = [...recent].sort((a, b) => a.date.localeCompare(b.date)).slice(-3);
-      if (recentDays.length < 3) return false;
-      const totals = recentDays.map(day => day.aggregate.totalIncome);
-      return totals[0] > totals[1] && totals[1] > totals[2];
-    }
-
-    function aiAggregateProjection(aggregate) {
-      const durationMs = aggregate.totalWorkDuration;
-      return {
-        total: aggregate.totalIncome,
-        expenses: aggregate.totalExpenses,
-        durationMs,
-        hours: durationMs / workTimeUnits.hourMs,
-        net: aggregate.netIncome,
-        hourly: aggregate.averageHourlyIncome || 0
-      };
-    }
-
     function aiDayAggregate(entry) {
       if (!entry || !normalizeDateKey(entry.date)) {
         return sharedAnalytics.aggregateReport([], sharedAnalytics.getLocalWeekRange(todayString()));
@@ -6355,201 +6411,444 @@
       return sharedAnalytics.aggregateReport([entry], range);
     }
 
+    function aiRecordHasInvalidAmount(entry) {
+      const values = [
+        entry?.tips,
+        ...Object.values(entry?.incomes || {}),
+        ...Object.values(entry?.expenses || {})
+      ].filter(value => value !== undefined && value !== null && value !== "");
+      return values.some(value => !Number.isFinite(Number(value)) || Number(value) < 0);
+    }
+
+    function buildAIDataQuality(records, monthRange, platformAggregate) {
+      const source = Array.isArray(records) ? records : [];
+      const invalidDateRecords = source.filter(entry => !normalizeDateKey(entry?.date));
+      const monthRecords = sharedAnalytics.getRecordsInRange(source, monthRange);
+      const daySummaries = [...sharedAnalytics.summarizeRecordsByDate(monthRecords).values()];
+      const missingWorkDates = daySummaries
+        .filter(day => day.aggregate.totalIncome > 0 && !day.aggregate.validWorkDuration)
+        .map(day => day.date);
+      const negativeNetDates = daySummaries
+        .filter(day => day.aggregate.netIncome < 0)
+        .map(day => day.date);
+      const incompleteLegacyDates = monthRecords
+        .filter(entry => Boolean(entry.startTime) !== Boolean(entry.endTime))
+        .map(entry => entry.date);
+      const invalidAmountDates = source
+        .filter(aiRecordHasInvalidAmount)
+        .map(entry => normalizeDateKey(entry.date))
+        .filter(Boolean);
+      const invalidPlatformDates = (platformAggregate?.invalidPlatforms || [])
+        .map(item => normalizeDateKey(item.date))
+        .filter(Boolean);
+      const uniqueDates = values => [...new Set(values)].sort();
+      const missingDates = uniqueDates([
+        ...missingWorkDates,
+        ...incompleteLegacyDates,
+        ...invalidAmountDates,
+        ...invalidPlatformDates
+      ]);
+      return {
+        invalidDateCount: invalidDateRecords.length,
+        invalidAmountDates: uniqueDates(invalidAmountDates),
+        invalidPlatformDates: uniqueDates(invalidPlatformDates),
+        missingWorkDates: uniqueDates(missingWorkDates),
+        negativeNetDates: uniqueDates(negativeNetDates),
+        incompleteLegacyDates: uniqueDates(incompleteLegacyDates),
+        missingDates,
+        issueCount: invalidDateRecords.length
+          + uniqueDates([...missingDates, ...negativeNetDates]).length,
+        readError: Boolean(stateLoadError)
+      };
+    }
+
     function buildAiAnalysisContext() {
       const entries = validAnalysisEntries();
+      const allRecords = Array.isArray(state.entries) ? state.entries : [];
+      const today = todayString();
+      const weekRange = sharedAnalytics.getLocalWeekRange(today);
+      const previousWeekRange = sharedAnalytics.getPreviousWeekRange(weekRange);
       const monthRange = sharedAnalytics.getLocalMonthRange(currentMonth());
+      const previousMonthRange = sharedAnalytics.getPreviousMonthRange(monthRange);
+      const weekAggregate = sharedAnalytics.aggregateReport(entries, weekRange);
+      const previousWeekAggregate = sharedAnalytics.aggregateReport(entries, previousWeekRange);
       const monthEntries = sharedAnalytics.getRecordsInRange(entries, monthRange);
-      const todayEntry = entries.find(entry => entry.date === todayString()) || null;
+      const todayEntry = entries.find(entry => entry.date === today) || null;
       const monthAggregate = sharedAnalytics.aggregateReport(entries, monthRange);
+      const previousMonthAggregate = sharedAnalytics.aggregateReport(entries, previousMonthRange);
       const monthPlatformAggregate = sharedAnalytics.aggregatePlatformIncome(entries, monthRange, state.platforms);
       const importantDates = sharedAnalytics.findImportantReportDates(monthEntries, "month");
-      const bestDay = importantDates.highestNet
-        ? {
-            entry: { date: importantDates.highestNet.date },
-            amount: importantDates.highestNet.aggregate.netIncome
-          }
-        : null;
+      const dataQuality = buildAIDataQuality(allRecords, monthRange, monthPlatformAggregate);
+      const todayAggregate = aiDayAggregate(todayEntry);
       return {
         entries,
         monthEntries,
-        monthSummary: aiAggregateProjection(monthAggregate),
+        currentWeek: weekAggregate,
+        previousWeek: previousWeekAggregate,
+        weekComparison: sharedAnalytics.compareReportPeriods(weekAggregate, previousWeekAggregate, "week"),
         monthAggregate,
+        previousMonthAggregate,
+        monthComparison: sharedAnalytics.compareReportPeriods(monthAggregate, previousMonthAggregate, "month"),
+        monthlyTrend: sharedAnalytics.buildMonthlyWeeklyNetTrend(entries, monthRange),
         todayEntry,
-        todaySummary: aiAggregateProjection(aiDayAggregate(todayEntry)),
-        monthPlatforms: monthPlatformAggregate.rows.map(row => ({
-          name: row.displayName,
-          amount: row.income,
-          share: row.share === null ? 0 : Math.round(row.share * 100)
-        })),
+        todayAggregate,
         monthPlatformAggregate,
-        bestDay,
-        bestShift: null,
-        risingPlatform: null,
-        importantDates
+        importantDates,
+        dataQuality,
+        ranges: { weekRange, previousWeekRange, monthRange, previousMonthRange },
+        goalState: {
+          dailyGoal: nonNegativeNumber(state.settings.dailyGoal),
+          todayIncome: todayAggregate.totalIncome,
+          hasTodayRecord: todayAggregate.hasRecords
+        }
       };
     }
 
-    function buildTodayAdvice(context) {
-      const { todayEntry, todaySummary, monthSummary } = context;
-      if (!todayEntry) {
-        return {
-          empty: "今天尚無完整營運紀錄，完成收入與工時輸入後即可查看建議。",
-          items: []
-        };
-      }
-
-      const items = [];
-      const add = message => {
-        if (message && !items.includes(message)) items.push(message);
-      };
-      const todayWork = workMetrics(todayEntry);
-      const todayHours = todayWork.hours;
-      const todayHourly = hourlyRate(todaySummary.net, todayWork.durationMs);
-      const todayPlatformAggregate = sharedAnalytics.aggregatePlatformIncome(
-        [todayEntry],
-        {
-          start: todayEntry.date,
-          end: todayEntry.date,
-          endExclusive: addLocalDays(todayEntry.date, 1)
-        },
-        state.platforms
-      );
-      const topPlatform = todayPlatformAggregate.rows[0]
-        ? {
-            name: todayPlatformAggregate.rows[0].displayName,
-            amount: todayPlatformAggregate.rows[0].income
-          }
-        : null;
-      const dailyGoal = nonNegativeNumber(state.settings.dailyGoal);
-
-      if (todayHours >= 12) add(`今日已工作 ${number(todayHours)} 小時，工時偏長，建議安排休息。`);
-      if (todaySummary.total <= 0) add("今天尚未輸入收入，完成平台收入後才能評估營運效率。");
-
-      if (todayHours > 0 && monthSummary.hours > 0) {
-        const monthHourly = monthSummary.hourly;
-        if (todayHourly > monthHourly * 1.1) add(`今日時薪 ${money(todayHourly)}，高於本月平均 ${money(monthHourly)}。`);
-        else if (todayHourly < monthHourly * .9) add(`今日時薪 ${money(todayHourly)}，低於本月平均 ${money(monthHourly)}。`);
-        else add(`今日時薪 ${money(todayHourly)}，與本月平均 ${money(monthHourly)} 接近。`);
-      } else if (todayHours <= 0) {
-        add("今天尚未輸入完整工時，暫時無法計算時薪。");
-      }
-
-      if (dailyGoal > 0) {
-        const percent = Math.max(0, Math.round(todaySummary.total / dailyGoal * 100));
-        if (todaySummary.total < dailyGoal) add(`今日目標已達成 ${percent}%，尚差 ${money(dailyGoal - todaySummary.total)}。`);
-        else if (todaySummary.total === dailyGoal) add("今日收入已達成每日目標 100%。");
-        else add(`今日收入達成 ${percent}%，已超標 ${money(todaySummary.total - dailyGoal)}。`);
-      }
-
-      if (topPlatform) add(`${escapeHtml(topPlatform.name)} 是今日主要收入平台，貢獻 ${money(topPlatform.amount)}。`);
-      if (nonNegativeNumber(todayEntry.km) <= 0) add("今天尚未輸入里程，補上後可更完整評估每公里收益。");
-      if (fuelExpenseTotal(todayEntry) <= 0) add("今天尚未輸入油錢或電費，淨收入可能尚未完整。");
-
-      return { empty: "", items: items.slice(0, 4) };
+    function aiInsightTarget(view, options) {
+      options ||= {};
+      return { view, ...options };
     }
 
-    function buildSmartAlerts(context) {
-      const { monthEntries, monthSummary, todayEntry, todaySummary, risingPlatform } = context;
-      const alerts = [];
-      const add = message => {
-        if (message && !alerts.includes(message)) alerts.push(message);
+    function buildAIInsights(input) {
+      const {
+        currentWeek,
+        weekComparison,
+        currentMonth,
+        previousMonth,
+        monthComparison,
+        platformMonth,
+        importantDates,
+        monthlyTrend,
+        dataQuality,
+        goalState,
+        ranges
+      } = input;
+      const operatingRecommendations = [];
+      const monthlyInsights = [];
+      const smartReminders = [];
+      const addRecommendation = item => {
+        if (operatingRecommendations.length < 3) operatingRecommendations.push(item);
+      };
+      const addReminder = item => {
+        const key = `${item.severity}:${item.date || ""}:${item.reason}`;
+        if (!smartReminders.some(existing => existing.key === key)) {
+          smartReminders.push({ ...item, key });
+        }
       };
 
-      if (monthSummary.hourly > 0) {
-        const lowDay = monthEntries.map(entry => {
-          const dayAggregate = aiDayAggregate(entry);
-          const hours = dayAggregate.totalWorkDuration / workTimeUnits.hourMs;
-          const hourly = dayAggregate.averageHourlyIncome || 0;
-          return { entry, hours, hourly };
-        }).filter(item => item.hours > 0 && item.hourly < monthSummary.hourly * .7)
-          .sort((a, b) => a.hourly - b.hourly)[0];
-        if (lowDay) add(`${compactDailyDate(lowDay.entry.date)} 時薪 ${money(lowDay.hourly)}，明顯低於本月平均。`);
+      if (dataQuality.readError) {
+        addRecommendation({
+          title: "先確認本機資料狀態",
+          action: "目前讀取發生錯誤；請先保留瀏覽器資料，再從 Driver 檢查狀態。",
+          evidence: "原始資料未被 AI 修改或清除。",
+          period: sharedAnalytics.getMonthLabel(ranges.monthRange),
+          sufficiency: "資料讀取異常",
+          target: aiInsightTarget("settings"),
+          accessibleName: "前往 Driver 檢查本機資料狀態"
+        });
       }
 
-      const longDay = monthEntries.map(entry => ({ entry, hours: workMetrics(entry).hours }))
-        .filter(item => item.hours >= 12).sort((a, b) => b.hours - a.hours)[0];
-      if (longDay) add(`${compactDailyDate(longDay.entry.date)} 工作 ${number(longDay.hours)} 小時，單日工時偏長。`);
+      if (dataQuality.missingWorkDates.length) {
+        const date = dataQuality.missingWorkDates[0];
+        addRecommendation({
+          title: "先補齊有收入日期的工時",
+          action: "補上工時後，平均時薪與趨勢判讀才會完整。",
+          evidence: `${reportDateLabel(date)}有收入但沒有有效工時；本月共 ${dataQuality.missingWorkDates.length} 天。`,
+          period: sharedAnalytics.getMonthLabel(ranges.monthRange),
+          sufficiency: "資料不完整",
+          target: aiInsightTarget("calendar", { date }),
+          accessibleName: `前往月曆檢查 ${formatCalendarFullDate(date)}`
+        });
+      }
 
-      const ordered = monthEntries.slice().sort((a, b) => a.date.localeCompare(b.date));
-      for (let index = 1; index < ordered.length; index += 1) {
-        const previousDate = new Date(`${ordered[index - 1].date}T00:00:00`);
-        const currentDate = new Date(`${ordered[index].date}T00:00:00`);
-        const consecutive = currentDate.getTime() - previousDate.getTime() === 86400000;
-        if (consecutive && workMetrics(ordered[index - 1]).hours >= 10 && workMetrics(ordered[index]).hours >= 10) {
-          add(`${compactDailyDate(ordered[index - 1].date)} 至 ${compactDailyDate(ordered[index].date)} 連續兩天工時偏長。`);
-          break;
+      if (dataQuality.negativeNetDates.length) {
+        const date = dataQuality.negativeNetDates[0];
+        const day = sharedAnalytics.summarizeRecordsByDate(currentMonth.records).get(date);
+        addRecommendation({
+          title: "檢查負淨收入工作日",
+          action: "確認當日收入與支出是否完整、是否輸入正確。",
+          evidence: `${reportDateLabel(date)}淨收入為 ${money(day?.aggregate.netIncome || 0)}。`,
+          period: sharedAnalytics.getMonthLabel(ranges.monthRange),
+          sufficiency: "有明確紀錄",
+          target: aiInsightTarget("calendar", { date }),
+          accessibleName: `前往月曆檢查 ${formatCalendarFullDate(date)}`
+        });
+      }
+
+      if (goalState.dailyGoal > 0 && goalState.hasTodayRecord) {
+        const remaining = Math.max(0, goalState.dailyGoal - goalState.todayIncome);
+        const achieved = Math.round(goalState.todayIncome / goalState.dailyGoal * 100);
+        addRecommendation({
+          title: remaining > 0 ? "留意今日收入目標" : "今日收入已達目標",
+          action: remaining > 0 ? "可依目前工作狀況決定是否繼續，不需為達標延長不合理工時。" : "維持完整紀錄，收工前確認支出與工時。",
+          evidence: `今日 ${money(goalState.todayIncome)}／目標 ${money(goalState.dailyGoal)}（${achieved}%）。`,
+          period: formatCalendarFullDate(todayString()),
+          sufficiency: "依既有每日目標",
+          target: aiInsightTarget("today"),
+          accessibleName: "前往今天查看收入目標"
+        });
+      }
+
+      const weekReady = currentWeek.workDays >= 2;
+      if (weekReady && operatingRecommendations.length < 3) {
+        const comparison = weekComparison.netIncome;
+        const evidence = comparison.status === "comparable"
+          ? `本週淨收入 ${money(currentWeek.netIncome)}，較上週${comparison.delta >= 0 ? "增加" : "減少"} ${money(Math.abs(comparison.delta))}（${number(Math.abs(comparison.percentage))}%）。`
+          : `本週 ${currentWeek.workDays} 個有效工作日，淨收入 ${money(currentWeek.netIncome)}。前期資料不足，不顯示百分比。`;
+        addRecommendation({
+          title: "檢視本週營運變化",
+          action: "到週報核對收入、工時與重要日期，再決定是否調整工作安排。",
+          evidence,
+          period: sharedAnalytics.getWeekLabel(ranges.weekRange),
+          sufficiency: comparison.status === "comparable" ? "本週與上週皆有資料" : "僅本週資料足夠",
+          target: aiInsightTarget("reports", { reportView: "week" }),
+          accessibleName: "前往週報查看營運變化"
+        });
+      }
+
+      const topPlatform = platformMonth.rows.find(row => row.income > 0 && row.share !== null);
+      if (topPlatform?.share >= 0.7 && operatingRecommendations.length < 3) {
+        addRecommendation({
+          title: "留意平台收入集中",
+          action: "這是收入組合提醒，不代表其他平台的營運表現較差。",
+          evidence: `${topPlatform.displayName} 占本月已歸因平台收入 ${number(topPlatform.share * 100)}%。`,
+          period: sharedAnalytics.getMonthLabel(ranges.monthRange),
+          sufficiency: `${platformMonth.recordCount} 筆本月紀錄`,
+          target: aiInsightTarget("reports", { reportView: "platform" }),
+          accessibleName: "前往平台報表查看收入組合"
+        });
+      }
+
+      if (!operatingRecommendations.length && currentMonth.workDays < 2) {
+        addRecommendation({
+          title: "目前資料仍不足以形成可靠的營運建議",
+          action: "累積至少 2 個有效工作日後，再查看收入與工時變化。",
+          evidence: `本月目前有 ${currentMonth.workDays} 個有效工作日。`,
+          period: sharedAnalytics.getMonthLabel(ranges.monthRange),
+          sufficiency: "資料不足",
+          target: aiInsightTarget("today"),
+          accessibleName: "前往今天新增工作紀錄"
+        });
+      }
+
+      if (currentMonth.hasRecords) {
+        const netComparison = monthComparison.netIncome;
+        let comparisonText = "上月資料不足，暫不顯示變化百分比。";
+        if (netComparison.status === "comparable") {
+          comparisonText = `較上月${netComparison.delta >= 0 ? "增加" : "減少"} ${money(Math.abs(netComparison.delta))}（${number(Math.abs(netComparison.percentage))}%）。`;
+        } else if (["previous-zero", "amount-only"].includes(netComparison.status)) {
+          comparisonText = `與上月差額為 ${netComparison.delta >= 0 ? "+" : "−"}${money(Math.abs(netComparison.delta))}；不使用可能誤導的百分比。`;
+        }
+        monthlyInsights.push({
+          title: "本月淨收入概況",
+          action: currentMonth.validWorkDuration
+            ? `本月平均時薪 ${money(currentMonth.averageHourlyIncome)}，總工時 ${formatReportDuration(currentMonth.totalWorkDuration)}。`
+            : "目前沒有足夠工時，暫不解讀平均時薪。",
+          evidence: `截至目前淨收入 ${money(currentMonth.netIncome)}；${comparisonText}`,
+          period: sharedAnalytics.getMonthLabel(ranges.monthRange),
+          sufficiency: `${currentMonth.workDays} 個有效工作日`,
+          target: aiInsightTarget("reports", { reportView: "month" }),
+          accessibleName: "前往月報查看本月淨收入"
+        });
+
+        let changeSource = "資料不足以判定";
+        if (previousMonth.validWorkDuration && currentMonth.validWorkDuration && previousMonth.hasRecords) {
+          const workDelta = sharedAnalytics.compareReportMetric(
+            currentMonth.totalWorkDuration,
+            previousMonth.totalWorkDuration,
+            { currentHasData: true, previousHasData: true }
+          );
+          const hourlyDelta = monthComparison.averageHourlyIncome;
+          const workIncreased = workDelta.status === "comparable" && workDelta.percentage > 10;
+          const hourlyIncreased = hourlyDelta.status === "comparable" && hourlyDelta.percentage > 10;
+          if (workIncreased && hourlyIncreased) changeSource = "兩者共同影響";
+          else if (workIncreased) changeSource = "主要受工時增加影響";
+          else if (hourlyIncreased) changeSource = "主要受平均時薪增加影響";
+        }
+        monthlyInsights.push({
+          title: "收入變化來源",
+          action: changeSource === "資料不足以判定"
+            ? "累積完整前期工時與收入後，才能安全判讀變化來源。"
+            : "這是資料關聯的方向性解讀，不代表精確因果。",
+          evidence: changeSource,
+          period: `${sharedAnalytics.getMonthLabel(ranges.previousMonthRange)}與${sharedAnalytics.getMonthLabel(ranges.monthRange)}`,
+          sufficiency: previousMonth.hasRecords ? "已比較相鄰月份" : "缺少完整前期",
+          target: aiInsightTarget("reports", { reportView: "month" }),
+          accessibleName: "前往月報查看月份比較"
+        });
+
+        if (importantDates.highestNet || importantDates.lowestNet) {
+          const highest = importantDates.highestNet;
+          const lowest = importantDates.lowestNet;
+          monthlyInsights.push({
+            title: "本月重要日期",
+            action: "可從月報查看所有重要日期，或前往月曆核對單日紀錄。",
+            evidence: `${highest ? `最高 ${reportDateLabel(highest.date)} ${money(highest.aggregate.netIncome)}` : ""}${highest && lowest ? "；" : ""}${lowest ? `最低 ${reportDateLabel(lowest.date)} ${money(lowest.aggregate.netIncome)}` : ""}。`,
+            period: sharedAnalytics.getMonthLabel(ranges.monthRange),
+            sufficiency: `${currentMonth.workDays} 個有效工作日`,
+            target: aiInsightTarget("reports", { reportView: "month" }),
+            accessibleName: "前往月報查看重要日期"
+          });
         }
       }
 
-      if (todayEntry && nonNegativeNumber(todayEntry.km) <= 0) add("今天缺少里程資料。");
-      if (todayEntry && fuelExpenseTotal(todayEntry) <= 0) add("今天缺少油錢或電費資料。");
-      if (hasRecentIncomeDecline(monthEntries)) add("最近三筆每日收入呈下降趨勢，建議留意時段與平台配置。");
-      if (risingPlatform) add(`${risingPlatform.name} 近期收入占比增加 ${risingPlatform.increase} 個百分點。`);
+      if (dataQuality.readError) {
+        addReminder({
+          severity: "需要處理",
+          date: "",
+          reason: "本機資料讀取發生錯誤。",
+          action: "請停止新增資料並從 Driver 檢查資料狀態；AI 不會清除原始資料。",
+          target: aiInsightTarget("settings")
+        });
+      }
+      dataQuality.missingWorkDates.forEach(date => addReminder({
+        severity: "需要處理",
+        date,
+        reason: "有收入但沒有有效工時。",
+        action: "前往月曆補齊或校正這一天的工時。",
+        target: aiInsightTarget("calendar", { date })
+      }));
+      dataQuality.negativeNetDates.forEach(date => addReminder({
+        severity: "建議檢查",
+        date,
+        reason: "這一天的支出高於收入，淨收入為負。",
+        action: "前往月曆核對收入與支出。",
+        target: aiInsightTarget("calendar", { date })
+      }));
+      dataQuality.invalidAmountDates.forEach(date => addReminder({
+        severity: "需要處理",
+        date,
+        reason: "收入或支出包含無效金額。",
+        action: "前往月曆檢查原始紀錄。",
+        target: aiInsightTarget("calendar", { date })
+      }));
+      dataQuality.invalidPlatformDates.forEach(date => addReminder({
+        severity: "建議檢查",
+        date,
+        reason: "平台收入包含無法計算的值。",
+        action: "前往月曆核對平台收入。",
+        target: aiInsightTarget("calendar", { date })
+      }));
+      dataQuality.incompleteLegacyDates.forEach(date => addReminder({
+        severity: "建議檢查",
+        date,
+        reason: "舊工作紀錄的開始或結束時間不完整。",
+        action: "前往月曆補齊時間，或改用手動工時校正。",
+        target: aiInsightTarget("calendar", { date })
+      }));
+      if (dataQuality.invalidDateCount) {
+        addReminder({
+          severity: "需要處理",
+          date: "",
+          reason: `有 ${dataQuality.invalidDateCount} 筆紀錄使用無效日期。`,
+          action: "無效日期無法安全連到月曆；請先保留資料並使用 CSV 匯出檢查。",
+          target: aiInsightTarget("settings")
+        });
+      }
 
-      const dailyGoal = nonNegativeNumber(state.settings.dailyGoal);
-      if (dailyGoal > 0 && todaySummary.total < dailyGoal) add(`今日目標尚差 ${money(dailyGoal - todaySummary.total)}。`);
-      const monthlyGoal = nonNegativeNumber(state.settings.monthlyGoal);
-      if (monthlyGoal > 0 && monthSummary.net < monthlyGoal) add(`本月淨收入目標尚差 ${money(monthlyGoal - monthSummary.net)}。`);
-
-      return alerts.slice(0, 6);
+      return {
+        operatingRecommendations,
+        monthlyInsights,
+        smartReminders: smartReminders.slice(0, 8),
+        analysisMetadata: {
+          period: ranges.monthRange,
+          workDays: currentMonth.workDays,
+          recordCount: currentMonth.recordCount,
+          missingDataCount: dataQuality.issueCount,
+          sufficient: currentMonth.workDays >= 2,
+          trendPointCount: monthlyTrend.length
+        },
+        dataSufficiency: currentMonth.workDays >= 2 ? "sufficient" : "insufficient",
+        generatedAt: new Date().toISOString()
+      };
     }
 
-    function renderAnalysisList(items, className, emptyText) {
+    function aiContextButtonMarkup(target, accessibleName) {
+      if (!target?.view) return "";
+      const attributes = target.view === "calendar" && target.date
+        ? `data-ai-calendar-date="${escapeAttr(target.date)}"`
+        : target.view === "reports"
+          ? `data-ai-report-view="${escapeAttr(target.reportView || "week")}"`
+          : `data-ai-view="${escapeAttr(target.view)}"`;
+      const label = target.view === "calendar" ? "查看這天"
+        : target.view === "reports" ? "查看報表"
+          : target.view === "settings" ? "查看 Driver"
+            : "前往今天";
+      return `<button class="ai-context-button" type="button" ${attributes} aria-label="${escapeAttr(accessibleName || label)}">${label}　›</button>`;
+    }
+
+    function renderAIInsightItems(items, emptyText, options = {}) {
       if (!items.length) return `<p class="ai-empty-state">${escapeHtml(emptyText)}</p>`;
-      return `<ul class="${className}">${items.map(item => `<li>${item}</li>`).join("")}</ul>`;
+      return `
+        <ul class="ai-insight-list">
+          ${items.map(item => `
+            <li class="ai-insight-item">
+              ${item.severity ? `<span class="ai-reminder-severity">${escapeHtml(item.severity)}${item.date ? `・${escapeHtml(reportDateLabel(item.date))}` : ""}</span>` : ""}
+              <h4>${escapeHtml(item.title || item.reason)}</h4>
+              <p>${escapeHtml(item.action)}</p>
+              ${item.evidence ? `<p class="ai-evidence">${escapeHtml(item.evidence)}</p>` : ""}
+              ${item.period || item.sufficiency ? `<p class="ai-evidence">${escapeHtml([item.period, item.sufficiency].filter(Boolean).join("・"))}</p>` : ""}
+              ${aiContextButtonMarkup(item.target, item.accessibleName)}
+            </li>
+          `).join("")}
+        </ul>
+        ${options.offline ? `<span class="ai-local-status">離線・使用本機資料</span>` : ""}
+      `;
     }
 
     function renderAiAnalysis() {
       if (!els.aiTodayAdvice) return;
-      const context = buildAiAnalysisContext();
-      const todayAdvice = buildTodayAdvice(context);
-      const hasMonthData = context.monthEntries.length > 0;
-      const monthlyGoal = nonNegativeNumber(state.settings.monthlyGoal);
-      const monthlyGoalText = !hasMonthData || monthlyGoal <= 0
-        ? "資料不足"
-        : context.monthSummary.net < monthlyGoal
-          ? `尚差 ${money(monthlyGoal - context.monthSummary.net)}`
-          : context.monthSummary.net === monthlyGoal
-            ? "已達成"
-            : `已超標 ${money(context.monthSummary.net - monthlyGoal)}`;
-      const monthMetrics = [
-        ["本月總收入", hasMonthData ? money(context.monthSummary.total) : "資料不足"],
-        ["本月平均時薪", context.monthSummary.hours > 0 ? money(context.monthSummary.hourly) : "資料不足"],
-        ["最佳收入日", context.bestDay ? `${compactDailyDate(context.bestDay.entry.date)} ${money(context.bestDay.amount)}` : "資料不足"],
-        ["最佳班別", context.bestShift ? `${escapeHtml(context.bestShift[0])} ${money(context.bestShift[1])}` : "資料不足"],
-        ["最高收入平台", context.monthPlatforms[0] ? `${escapeHtml(context.monthPlatforms[0].name)} ${money(context.monthPlatforms[0].amount)}` : "資料不足"],
-        ["本月目標", monthlyGoalText]
-      ];
-
-      els.aiTodayAdvice.innerHTML = todayAdvice.empty
-        ? `<p class="ai-empty-state">${escapeHtml(todayAdvice.empty)}</p>`
-        : renderAnalysisList(todayAdvice.items, "ai-advice-list", "今天尚無可分析資料。");
-      els.aiMonthInsights.innerHTML = monthMetrics.map(([label, value]) => `
-        <div class="ai-metric"><span>${label}</span><strong>${value}</strong></div>
-      `).join("");
-
-      if (!context.monthPlatforms.length) {
-        els.aiPlatformInsights.innerHTML = `<p class="ai-empty-state">本月尚無平台收入資料。</p>`;
-      } else {
-        const top = context.monthPlatforms[0];
-        const rising = context.risingPlatform;
-        const platformSummary = `${top.name} 是本月主要收入來源，占平台收入 ${top.share}%。${rising ? ` ${rising.name} 在近期紀錄的收入占比增加。` : ""}`;
-        els.aiPlatformInsights.innerHTML = `
-          <div class="ai-platform-list">
-            ${context.monthPlatforms.map(row => `
-              <div class="ai-platform-row">
-                <strong>${escapeHtml(row.name)}</strong>
-                <span class="ai-platform-amount">${money(row.amount)}</span>
-                <span class="ai-platform-share">${row.share}%</span>
-              </div>
-            `).join("")}
-          </div>
-          <p class="ai-platform-summary">${escapeHtml(platformSummary)}</p>
+      try {
+        const context = buildAiAnalysisContext();
+        const insights = buildAIInsights({
+          currentWeek: context.currentWeek,
+          previousWeek: context.previousWeek,
+          weekComparison: context.weekComparison,
+          currentMonth: context.monthAggregate,
+          previousMonth: context.previousMonthAggregate,
+          monthComparison: context.monthComparison,
+          platformMonth: context.monthPlatformAggregate,
+          importantDates: context.importantDates,
+          monthlyTrend: context.monthlyTrend,
+          dataQuality: context.dataQuality,
+          goalState: context.goalState,
+          ranges: context.ranges
+        });
+        const offline = !navigator.onLine;
+        els.aiTodayAdvice.innerHTML = renderAIInsightItems(
+          insights.operatingRecommendations,
+          "目前資料仍不足以形成可靠的營運建議。",
+          { offline }
+        );
+        els.aiMonthInsights.innerHTML = renderAIInsightItems(
+          insights.monthlyInsights,
+          "本月尚無可解讀的工作紀錄。"
+        );
+        els.aiAlerts.innerHTML = renderAIInsightItems(
+          insights.smartReminders,
+          "目前沒有需要處理的資料問題。"
+        );
+        const metadata = insights.analysisMetadata;
+        const generatedAt = new Date(insights.generatedAt).toLocaleTimeString("zh-TW", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false
+        });
+        els.aiAnalysisMetadata.innerHTML = `
+          <strong>分析依據</strong><br>
+          根據 ${escapeHtml(formatCalendarFullDate(metadata.period.start))}～${escapeHtml(formatCalendarFullDate(metadata.period.end))}，
+          共 ${metadata.workDays} 個有效工作日、${metadata.recordCount} 筆紀錄。
+          ${metadata.missingDataCount ? `有 ${metadata.missingDataCount} 項資料需要檢查。` : "資料未發現需要處理的問題。"}
+          最後更新 ${escapeHtml(generatedAt)}。${offline ? "目前離線，分析仍使用此裝置已儲存的資料。" : ""}
         `;
+      } catch (error) {
+        console.error("AI 分析失敗", error);
+        const errorMarkup = `<p class="ai-empty-state" role="alert">無法完成分析。原始資料仍保留在此瀏覽器中，請稍後再試。</p>`;
+        els.aiTodayAdvice.innerHTML = errorMarkup;
+        els.aiMonthInsights.innerHTML = errorMarkup;
+        els.aiAlerts.innerHTML = errorMarkup;
+        els.aiAnalysisMetadata.textContent = "分析狀態：錯誤";
       }
-
-      const alerts = buildSmartAlerts(context);
-      els.aiAlerts.innerHTML = renderAnalysisList(alerts.map(escapeHtml), "ai-alert-list", "目前沒有需要特別注意的異常紀錄。");
     }
 
     function formatFullDate(dateString) {
@@ -8157,6 +8456,7 @@
       getMonthLabel,
       getRecordsInRange,
       aggregateReport,
+      compareReportMetric,
       compareReportPeriods,
       buildWeeklyNetTrend,
       buildMonthlyWeeklyNetTrend,
@@ -8765,12 +9065,19 @@
 
     function handleRecordChanged() {
       reportsState.stale = true;
-      if (activeView !== "reports" || reportsRefreshFrame) return;
-      reportsRefreshFrame = window.requestAnimationFrame(() => {
-        reportsRefreshFrame = 0;
-        refreshActiveReport();
-        announceReports("報表已更新");
-      });
+      if (activeView === "reports" && !reportsRefreshFrame) {
+        reportsRefreshFrame = window.requestAnimationFrame(() => {
+          reportsRefreshFrame = 0;
+          refreshActiveReport();
+          announceReports("報表已更新");
+        });
+      }
+      if (activeView === "ai" && !aiRefreshFrame) {
+        aiRefreshFrame = window.requestAnimationFrame(() => {
+          aiRefreshFrame = 0;
+          renderAiAnalysis();
+        });
+      }
     }
 
     function captureReportsContext(sourceDate, source) {
@@ -9865,6 +10172,20 @@
       renderPlatformReport();
       next.focus();
     }));
+    document.getElementById("view-ai").addEventListener("click", event => {
+      const calendarTarget = event.target.closest("[data-ai-calendar-date]");
+      if (calendarTarget) {
+        openCalendar({ selectedDate: calendarTarget.dataset.aiCalendarDate, source: "ai" });
+        return;
+      }
+      const reportTarget = event.target.closest("[data-ai-report-view]");
+      if (reportTarget) {
+        navigateTo("reports", reportTarget.dataset.aiReportView);
+        return;
+      }
+      const viewTarget = event.target.closest("[data-ai-view]");
+      if (viewTarget) navigateTo(viewTarget.dataset.aiView);
+    });
 
     els.entryForm.addEventListener("submit", event => event.preventDefault());
     els.detailForm.addEventListener("submit", event => {
@@ -10260,10 +10581,12 @@
     window.addEventListener("online", () => {
       reportsState.offline = false;
       if (activeView === "reports") refreshActiveReport();
+      if (activeView === "ai") renderAiAnalysis();
     });
     window.addEventListener("offline", () => {
       reportsState.offline = true;
       if (activeView === "reports") refreshActiveReport();
+      if (activeView === "ai") renderAiAnalysis();
     });
     window.addEventListener("pageshow", refreshCalendarToday);
     window.addEventListener("focus", refreshCalendarToday);
