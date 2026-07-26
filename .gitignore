@@ -20,3 +20,9 @@
 # Local logs and temporary files
 *.log
 *.tmp
+
+# Node development tooling and generated validation output
+node_modules/
+coverage/
+dist/
+.cache/
