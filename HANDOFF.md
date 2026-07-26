@@ -6,6 +6,61 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
+## Production Release — Calendar and Reports Stable Milestone
+
+### 正式狀態
+
+- Status：Completed。
+- Product Owner 於 2026-07-26 正式確認：`Production L4 全部通過`。
+- 本次是 Calendar UX Freeze Version 1、Reports UX Freeze Version 1 與
+  Foundation Cleanup Version 1 的穩定 Production milestone，不是完整
+  Driver Pay Pro V1。
+
+### Git 與 Production
+
+- Release branch：`codex/production-release-20260726`。
+- Base：`origin/codex/foundation-cleanup-20260726`，
+  `1166d571c1b152ef84ebef3dfd61c99c2533a45d`。
+- Release Candidate HEAD：
+  `37e7fe913af0039c9457de9f1139694e10b82d20`。
+- Pull Request：
+  `https://github.com/superaha-boop/driver-pay-pro/pull/2`。
+- Main merge：
+  `dbaafba321fd3b108ef5d3b07e2adea7c1f23892`，正常 PR merge。
+- Production URL：`https://driver-pay-app.vercel.app`。
+- Production Deployment：`dpl_A3wt3sRW7hNDVHFZrWtSPaHpAjKJ`，
+  target Production、狀態 READY、commit 與 main Release merge 一致。
+- Previous stable Deployment：`dpl_ApoBCEihJtpt2MxB34tjkEkSNTar`，
+  commit `dd7b26cf3d6b411e8efd55d4aecfa10dcbd2c11f`，保留為 rollback target。
+
+### 驗證與資料安全
+
+- `npm audit`：0 vulnerabilities。
+- lint：0 errors、10 個既有 unused-code warnings。
+- Node tests：94/94；Calendar：38/38；Reports：44/44。
+- Production validation、build、`release:check`、Inline JavaScript、
+  Service Worker、Manifest、`git diff --check`：Passed。
+- 320、375、390、393、430px：Today、Calendar、Reports 無水平 overflow。
+- Production Console：0 error／warning；Vercel runtime errors：0。
+- Manifest、正式 icons、Service Worker、Offline App Shell：Passed。
+- Service Worker cache：`driver-pay-pro-v12`。
+- WorkRecord schema、`driverPayApp.v2`、Supabase 與正式資料未變更。
+- 沒有建立或污染 Production 測試紀錄。
+
+### Rollback 與下一步
+
+- Rollback 優先將 Production 指回
+  `dpl_ApoBCEihJtpt2MxB34tjkEkSNTar`；必要時建立正常 revert commit。
+- 禁止 reset main、force push、改寫歷史、清除 localStorage 或刪除資料。
+- 未完成項目維持 Open／Deferred：AI 正式實作、TD-006、Driver 完整功能、
+  Supabase／跨裝置同步、conflict resolution、record metadata、多段工作模型、
+  TypeScript 與 iPhone native input 長期驗證。
+- 後續功能不得破壞 Calendar／Reports Freeze，並必須重用 Reports 已驗證的
+  period、aggregation、comparison、trend、platform、persistence、refresh、
+  formatting、state 與 drill-down 基礎。
+
+---
+
 ## iPhone Human QA 網址交付規則
 
 - Vercel 受保護 Preview 的 `_vercel_share` 連結曾實測仍導向登入頁；不可只依
