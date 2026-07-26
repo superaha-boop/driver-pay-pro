@@ -16,7 +16,7 @@
 
 ## Unreleased
 
-### Local-first V1 Release Candidate
+### Driver Pay Pro Local-first V1
 
 - 完成唯讀 evidence-based AI：營運建議、本月洞察、智慧提醒，並透過
   `sharedAnalytics` 重用 Reports canonical analytics；TD-006 Resolved。
@@ -30,8 +30,17 @@
   WorkRecord schema 不變。
 - L1 120/120、公開 iPhone L2 與 Product Owner L3 全部通過；Driver Pay Pro
   Local-first V1 UX Freeze 正式生效，21 項 Freeze Gate Passed。
-
-目前工作目錄尚未提交的內容：
+- Freeze commit `2c79a87` 已透過
+  [PR #3](https://github.com/superaha-boop/driver-pay-pro/pull/3) 一般合併
+  至 `main`；merge commit `8041e845`。
+- Production `https://driver-pay-app.vercel.app` 部署
+  `dpl_cXh2FzfHMLCdZxh1HufBm1j6HbGS` 已 READY；Production 與 L3／Freeze
+  candidate 的 Git tree 完全一致。
+- Safari 直開／reload、五分頁、Reports tabs、AI、Driver、Calendar deep
+  link、320／375／390／393／430px、Manifest、Service Worker v13、Console
+  與 Vercel runtime logs 全部通過。
+- Driver Pay Pro Local-first V1 正式標記 Completed；Production 收尾未建立
+  測試紀錄，未改 schema、migration、dependency、environment 或 domain。
 
 ### Added
 

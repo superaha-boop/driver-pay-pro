@@ -35,8 +35,23 @@ GitHub：`superaha-boop/driver-pay-pro`
   與跨頁整合正式 Passed。
 - Driver Pay Pro Local-first V1 UX Freeze 已生效；21 項 Freeze Gate Passed。
 - 臨時 Cloudflare QA tunnel 與本機 QA server 已停止。
-- 下一步：完整 release:check、Freeze 文件 Commit、origin/main audit、PR、
-  一般 main 合併、既有 Vercel Production 與自動 L4 驗證。
+- Freeze commit：
+  `2c79a87aef61776347b6630f3da2680e1bcfdacc`。
+- PR #3：`https://github.com/superaha-boop/driver-pay-pro/pull/3`，Vercel
+  checks Passed，已用一般 merge 合併。
+- Main merge：
+  `8041e84591c76b16582e41403ae7267f5fd1bc90`。
+- Production：`https://driver-pay-app.vercel.app`；Deployment
+  `dpl_cXh2FzfHMLCdZxh1HufBm1j6HbGS`，READY，commit 與 main 一致。
+- Production 與 L3／Freeze candidate 的 Git tree 同為
+  `6b1764729034ff698db3516610fe0eaba741f8a8`。
+- Production Safari 直開／reload、五分頁、Reports tabs、AI、Driver、
+  Calendar exact-date、320／375／390／393／430px、Manifest、SW v13、
+  Console 0 error／warning 與 Vercel runtime 0 error／fatal 全部通過。
+- Rollback target：
+  `dpl_A3wt3sRW7hNDVHFZrWtSPaHpAjKJ`，commit `dbaafba`。
+- Driver Pay Pro Local-first V1 正式 Completed。此 Production 收尾文件只
+  Push Program branch，不再次合併 main，避免純文件觸發第二次部署。
 
 ---
 

@@ -2,7 +2,7 @@
 
 Last updated: 2026-07-26  
 Program branch: `codex/v1-completion-program-20260726`  
-Program status: V1 UX Freeze active; Production release in progress
+Program status: Completed
 
 ## Stable baseline
 
@@ -15,6 +15,10 @@ Program status: V1 UX Freeze active; Production release in progress
 - Calendar UX Freeze Version 1: Active
 - Reports UX Freeze Version 1: Active
 - Product Owner Production L4 result: Passed
+- Driver Pay Pro Local-first V1 L3 result: Passed
+- Current main release: `8041e84591c76b16582e41403ae7267f5fd1bc90`
+- Current Production deployment: `dpl_cXh2FzfHMLCdZxh1HufBm1j6HbGS`
+- Current Service Worker cache: `driver-pay-pro-v13`
 
 ## Baseline Gate
 
@@ -48,7 +52,7 @@ Status: Passed
 | L2 | Public iPhone Preview smoke QA | Passed | Public Safari QA URL, 390px, Console, Manifest, SW v13, offline App Shell |
 | L3 | Driver Pay Pro V1 Human QA | Passed | Product Owner confirmed 2026-07-26 |
 | Freeze | Local-first V1 docs and checklist | Passed | D-033; 21/21 Gate |
-| Production | Main merge, Production deploy, L4 | In progress | Only after Freeze commit |
+| Production | Main merge, Production deploy, automated L4 | Passed | PR #3; `8041e845`; `dpl_cXh2FzfHMLCdZxh1HufBm1j6HbGS` |
 
 ## Program invariants
 
@@ -72,7 +76,16 @@ Release closeout prerequisite: `8d8ba50 docs: complete calendar reports producti
 7. `b856857 docs: prepare V1 human QA and release`
 8. `eab40ed fix: route AI date insights to Calendar`
 9. `64c575f fix: harden V1 preview integration`
-10. `docs: freeze Driver Pay Pro local-first V1`（Human QA／Freeze commit）
+10. `2c79a87 docs: freeze Driver Pay Pro local-first V1`
+
+Release integration:
+
+- PR #3: `https://github.com/superaha-boop/driver-pay-pro/pull/3`
+- Normal main merge: `8041e84591c76b16582e41403ae7267f5fd1bc90`
+- Production: `https://driver-pay-app.vercel.app`
+- Deployment: `dpl_cXh2FzfHMLCdZxh1HufBm1j6HbGS`, READY
+- Production tree equals Freeze tree:
+  `6b1764729034ff698db3516610fe0eaba741f8a8`
 
 ## Known open or deferred work
 
@@ -88,8 +101,13 @@ The V1 Program does not claim to resolve:
 - long-term native iPhone input validation
 - full design-system screenshot automation
 
-## Next automatic gate
+## Release result
 
-Complete the audited PR, normal main merge, Production deployment, automatic L4
-verification and release documentation. TD-006 must not be reopened by adding
-page-specific aggregation.
+Driver Pay Pro Local-first V1 is Completed. Production direct-load, five-tab
+navigation, Reports tabs, AI sections, Driver local-first status, exact-date
+Calendar deep link, responsive widths, Manifest, Service Worker v13, Safari
+reload and Safari Console all passed. Vercel returned no Production error or
+fatal runtime log.
+
+TD-006 must not be reopened by adding page-specific aggregation. Future product
+work belongs to a separately approved V1.1 or Cloud Sync program.

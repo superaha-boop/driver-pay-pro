@@ -1,6 +1,6 @@
 # Driver Pay Pro — Local-first V1 Release
 
-Status: V1 UX Freeze active; Production release in progress
+Status: Completed
 Updated: 2026-07-26
 
 ## V1 Definition
@@ -33,10 +33,40 @@ record metadata migration、多段工作模型、外部 AI 或 TypeScript migrat
 
 - Branch: `codex/v1-completion-program-20260726`
 - Baseline main: `dbaafba321fd3b108ef5d3b07e2adea7c1f23892`
-- Service Worker candidate: `driver-pay-pro-v13`
+- Freeze commit: `2c79a87aef61776347b6630f3da2680e1bcfdacc`
+- Pull Request: `https://github.com/superaha-boop/driver-pay-pro/pull/3`
+- Main merge: `8041e84591c76b16582e41403ae7267f5fd1bc90`
+- Production URL: `https://driver-pay-app.vercel.app`
+- Production deployment: `dpl_cXh2FzfHMLCdZxh1HufBm1j6HbGS` (`READY`)
+- Production deployment commit: `8041e84591c76b16582e41403ae7267f5fd1bc90`
+- Service Worker: `driver-pay-pro-v13`
 - Persistence: `driverPayApp.v2`, unchanged
 - L1: Passed, 120/120
 - L2: Passed, public Safari／responsive／Manifest／SW v13／offline App Shell
 - L3: Passed by Product Owner
 - UX Freeze: Active, D-033, 21/21 Gate
-- Production: Not deployed
+- Production automated verification: Passed
+- Production Safari: direct open／reload Passed; Console 0 error／0 warning
+- Responsive: 320／375／390／393／430px Passed, no horizontal overflow
+- Vercel runtime error／fatal logs: 0
+
+## Production Content Identity
+
+`origin/main` 在合併前是 Program branch 的直接 ancestor，分歧為 0 behind／11
+ahead；PR #3 使用一般 merge，沒有 rebase、force push 或歷史改寫。Production
+merge commit 與 Freeze commit 的 Git tree 均為：
+
+`6b1764729034ff698db3516610fe0eaba741f8a8`
+
+因此 Production 內容與 L3／Freeze 驗證候選內容一致。
+
+## Rollback Target
+
+- Previous stable deployment: `dpl_A3wt3sRW7hNDVHFZrWtSPaHpAjKJ`
+- Previous stable main: `dbaafba321fd3b108ef5d3b07e2adea7c1f23892`
+- Rollback must use Vercel deployment reassignment or a normal revert commit.
+- Rollback does not rename or clear `driverPayApp.v2` and requires no schema action.
+
+Driver Pay Pro Local-first V1 is formally completed. Production-closeout
+documentation is kept on the Program branch and is not merged again, avoiding a
+second documentation-only Production deployment.

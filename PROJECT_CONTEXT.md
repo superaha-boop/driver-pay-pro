@@ -6,7 +6,8 @@
 
 ## Driver Pay Pro Local-first V1 UX Freeze
 
-- 工作分支：`codex/v1-completion-program-20260726`；Production baseline：
+- 狀態：Completed。工作分支：
+  `codex/v1-completion-program-20260726`；Production baseline：
   `dbaafba321fd3b108ef5d3b07e2adea7c1f23892`。
 - Phase 1～5 已完成：AI／Driver audit、Reports canonical analytics 重用、
   evidence-based AI、Driver 每日目標與本機狀態、跨頁 refresh、45 情境
@@ -19,8 +20,16 @@
 - L1 120/120、公開 iPhone L2 與單次 Product Owner L3 全部通過。
 - Product Owner 已於 2026-07-26 回覆 `Driver Pay Pro V1 L3 全部通過`；
   Driver Pay Pro Local-first V1 UX Freeze 正式生效。
-- 臨時 QA tunnel 已停止；下一步是安全 main audit、PR、一般合併與既有
-  Vercel Production 發布。
+- 臨時 QA tunnel 已停止；Freeze commit 為 `2c79a87`。
+- PR #3 已用一般 merge 合併；main merge 為
+  `8041e84591c76b16582e41403ae7267f5fd1bc90`。
+- Production：`https://driver-pay-app.vercel.app`；Deployment
+  `dpl_cXh2FzfHMLCdZxh1HufBm1j6HbGS`，READY，部署 commit 與 main 一致。
+- Production 與 L3／Freeze candidate 的 Git tree 同為
+  `6b1764729034ff698db3516610fe0eaba741f8a8`。
+- Production Safari、五分頁、Reports、AI、Driver、Calendar deep link、
+  responsive、Manifest、Service Worker v13、Console 與 runtime logs 驗證通過。
+- Rollback target 是 `dpl_A3wt3sRW7hNDVHFZrWtSPaHpAjKJ`（`dbaafba`）。
 - Local-first V1 沒有 Supabase、登入、雲端備份、跨裝置同步、migration 或
   外部 AI；相關技術債保持 Open／Deferred。
 
