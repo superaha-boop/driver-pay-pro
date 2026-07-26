@@ -703,6 +703,28 @@ Dates selector、platform normalization、platform aggregator、persistence read
 API、record-change refresh、amount／duration formatting、Empty／Loading／Error
 patterns 與 Reports drill-down adapter；不得建立另一套 aggregation。
 
+## Foundation Tooling
+
+Foundation Cleanup Version 1 自 2026-07-26 起提供最小靜態 PWA 工具鏈：
+
+- `npm run lint`：ESLint correctness rules、Node scripts／tests、Service Worker
+  與 HTML inline JavaScript。
+- `npm test`：全部 Node tests。
+- `npm run test:calendar`：Calendar targeted regression。
+- `npm run test:reports`：Reports targeted regression。
+- `npm run build` 或 `npm run validate:production`：靜態 Production validation，
+  不產生 `dist`，也不引入 bundler。
+- `npm run release:check`：依序執行 lint、全部／專項測試、inline JavaScript、
+  Service Worker、Manifest、Production validation 與 `git diff --check`。
+
+任何 Release Sprint 在 Commit 前必須先通過 `npm run release:check`。Lint 的
+correctness errors 會阻擋 release；既有未使用程式只列 warning，不得為了清零
+warning 而順便改動 frozen 產品邏輯。
+
+`design-system.html` 是不進入 Bottom Navigation、不加入 Service Worker App
+Shell、帶有 `noindex` 的內部展示頁。它可用於 Preview／本機 QA，但不是產品
+功能入口。
+
 ## Git and Deployment Safety
 
 完成一個 Sprint 並通過適用驗證後，Codex 可以直接：
@@ -743,8 +765,8 @@ patterns 與 Reports drill-down adapter；不得建立另一套 aggregation。
 
 完成修改後必須：
 
-1. 執行適用的語法檢查。
-2. 執行可用的測試。
+1. 執行 `npm run release:check`；若工具鏈本身不可用，必須說明原因並停止發布。
+2. 執行適用的額外瀏覽器與 responsive 測試。
 3. 檢查 Console Error。
 4. 檢查 `git diff`。
 5. 再次執行 `git status`。

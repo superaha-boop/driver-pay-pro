@@ -17,6 +17,61 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
+## Foundation Cleanup Sprint Version 1
+
+### 分支與基準
+
+- 工作分支：`codex/foundation-cleanup-20260726`。
+- Base branch：`codex/reports-final-regression-20260726`。
+- Base commit：`293c1878d09f95e507311e7ae2b531b7718ac62b`。
+- 本 Sprint 只建立開發工具、release gate、內部 Design System showcase evidence、
+  tests 與文件；沒有修改 `index.html`、正式 CSS、Manifest、Service Worker 或
+  產品資料。
+
+### Repository Audit
+
+- 既有產品是單一 inline JavaScript 的靜態 PWA，原本沒有 package、lint、build、
+  CI 或單一 release command。
+- Node `node:test` 基準為 88/88 passed；新增 Foundation contracts 後為
+  94/94 passed。
+- `design-system.html` 原已存在且與正式導覽／App Shell 隔離，本 Sprint 只補齊
+  segmented control、KPI、資料狀態、list row 與 44px evidence。
+- AI aggregation duplication 仍是 TD-006；inline coupling、可疑重複 assets 與
+  stable platform ID 不符合低風險抽取條件，因此只保留技術債，不重構或刪除。
+
+### Tooling
+
+- 最小 dev dependencies：ESLint（correctness lint）、`globals`（正確 browser／
+  Node／Service Worker global definitions）、`parse5`（HTML parse validation）。
+- `npm run lint`：0 errors、10 existing unused-code warnings。
+- `npm run build`／`npm run validate:production`：靜態驗證，不產生 dist。
+- `npm run release:check`：lint、94 tests、Reports 44、Calendar 38、inline
+  JavaScript、Service Worker、Manifest、Production validation 及
+  `git diff --check` 全部 passed。
+
+### L2 Preview
+
+- Today、Calendar、Reports weekly／monthly／platform 與 Design System showcase
+  均可開啟。
+- 真實 Chrome 390px：所有頁面及 showcase 均為
+  `scrollWidth === clientWidth === 390`。
+- 線上 Preview Console：0 error／warning。
+- 停止本機伺服器後 App Shell 仍可離線重新載入；離線時 Service Worker 更新
+  嘗試記錄預期 warning，不影響快取內容。
+- Service Worker cache 維持 `driver-pay-pro-v12`。
+
+### Technical Debt 與下一步
+
+- TD-004 lint、TD-005 static production validation／release gate：Resolved。
+- TD-001 showcase automation：Partially resolved。
+- TypeScript：Deferred；TD-006：Open；TD-026：Partially resolved。
+- sync、conflict resolution、record metadata、multi-session model、native input
+  recurring QA 仍為 Open／Deferred。
+- 下一步：Production Release Sprint。本 Sprint 不 merge `main`、不 Production
+  deploy。
+
+---
+
 ## Reports UX Freeze — Version 1
 
 ### 分支與範圍
@@ -65,12 +120,13 @@ GitHub：`superaha-boop/driver-pay-pro`
   legacy 欄位保留相容且不做 migration。
 - TD-026：Partially resolved；自訂平台重新命名的 stable ID 仍需資料 Sprint。
 - TD-006、cross-device sync、Supabase conflict resolution、record metadata、
-  multi-session work model、TypeScript、lint、build、showcase 與 iPhone native
-  input long-term validation 全部保持 Open／Deferred。
+  multi-session work model、TypeScript 與 iPhone native input long-term
+  validation 保持 Open／Deferred；lint／static build 已由 Foundation V1 解決，
+  showcase automation 為 Partially resolved。
 
 ### 下一步
 
-由 Product Owner 選擇 Foundation Cleanup Sprint 或 Production Release Sprint。
+Foundation Cleanup Sprint 已執行；下一步為 Production Release Sprint。
 後續 AI 必須重用 Reports 已驗證的共用期間、aggregation、comparison、trend、
 Important Dates、platform、persistence、refresh、formatting、state 與 drill-down
 基礎，不得建立第二套 aggregation。本次不合併 `main`、不部署 Production。
@@ -730,7 +786,9 @@ Sprint 完成且通過適用驗證後，Codex 可以直接：
 - `sw.js`：Service Worker
 - `assets/`：App 圖示及靜態資源
 
-此專案目前沒有 `package.json`、TypeScript 設定、ESLint 設定或正式 build pipeline，因此無法執行傳統的 TypeScript、ESLint 與 npm build。現階段以 JavaScript 語法檢查、瀏覽器操作測試、Console、響應式尺寸及 Git diff 檢查作為驗證方式。
+專案已有最小 `package.json`、ESLint、static production validation 與
+`release:check`，但仍沒有 TypeScript 或 bundler。Release 前使用
+`npm run release:check`；`npm run build` 只做靜態 PWA 驗證，不產生 dist。
 
 ### 儲存方式
 

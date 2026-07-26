@@ -219,6 +219,10 @@ design-system.html
 - 有 `noindex, nofollow`。
 - 不加入 PWA App Shell。
 - 不影響既有 hash routing。
+- 展示 tokens、typography、buttons、segmented control、KPI、Empty／Loading／
+  Error、list row、44px touch target、focus-visible 與 reduced motion。
+- 由 `tests/design-system.test.js`、`tests/foundation.test.js` 與
+  `npm run validate:production` 驗證 isolation 與必要內容。
 
 專案沒有 build-time environment 或 route guard；為避免引入框架，showcase 採獨立靜態內部預覽頁。它不是產品入口，也不應由正式 UI 連結。
 

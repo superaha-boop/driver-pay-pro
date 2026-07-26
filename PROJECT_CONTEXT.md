@@ -34,6 +34,24 @@
 - Reports Feature Freeze Checklist 全項 Passed；一般視覺改善與新增功能轉入
   Backlog，不得直接修改凍結介面。
 
+## Foundation Cleanup Version 1 狀態
+
+- Foundation branch：`codex/foundation-cleanup-20260726`，base commit：
+  `293c1878d09f95e507311e7ae2b531b7718ac62b`。
+- 專案維持靜態 PWA，不加入 bundler、framework 或 TypeScript migration。
+- `package.json` 提供 lint、全部／Calendar／Reports 測試、Production
+  validation、build alias 與單一 `release:check`。
+- ESLint 檢查 Node scripts、tests、Service Worker 與 `index.html` inline
+  JavaScript；correctness errors 阻擋 release，既有 unused code 保留 warning。
+- Production validation 檢查 HTML、資源、Manifest、Service Worker App Shell、
+  navigation fallback、五個主要導覽、`driverPayApp.v2`、敏感字串與 Preview／
+  tunnel URL。
+- `design-system.html` 保持獨立內部展示頁，已補齊 segmented control、KPI、
+  Empty／Loading／Error、list row、44px touch target、focus-visible 與 reduced
+  motion evidence；不進入正式導覽或 App Shell。
+- Calendar／Reports UX Freeze、Today／AI／Driver、schema、資料與 PWA cache
+  保持不變；Service Worker 仍為 `driver-pay-pro-v12`。
+
 ## 1. App 的核心設計原則
 
 - Driver Pay Pro 是給多元計程車司機使用的收入與工時管理 App。
@@ -490,16 +508,16 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
   runtime state 已改為 session-only，legacy durable 欄位只為相容而保留、不再讀寫。
 - PWA Service Worker 使用短版 cache `driver-pay-pro-v12`、略過 HTTP cache
   檢查更新並在新 worker 接管後安全重載。
-- 目前程式主要修改集中在 `index.html`；專案沒有 package.json、TypeScript、ESLint 或 build pipeline。
-- Reports Final Regression 與 Freeze 文件收尾位於功能分支
-  `codex/reports-final-regression-20260726`；前置 commits 為 `df8a702` 與
-  `446cef3`。依本次 PRD 不合併 `main`、不 Production deploy；實際 push 狀態
-  仍以即時 Git／GitHub 檢查為準。
+- 產品程式仍集中在 `index.html`；Foundation V1 已建立 package、ESLint 與
+  static production validation／release gate，但仍沒有 TypeScript 或 bundler。
+- 目前 Foundation 工作位於 `codex/foundation-cleanup-20260726`，base commit
+  為 `293c1878d09f95e507311e7ae2b531b7718ac62b`。依本次 PRD 不合併 `main`、
+  不 Production deploy；實際 push 狀態仍以即時 Git／GitHub 檢查為準。
 
 ## 6. 下一步工作
 
-1. 下一個 Sprint 由 Product Owner 在 Foundation Cleanup Sprint 與 Production
-   Release Sprint 之間擇一；本次 Freeze 文件收尾不合併 `main`、不部署 Production。
+1. 下一步是 Production Release Sprint；Foundation Cleanup 本身不合併
+   `main`、不部署 Production。
 2. AI 後續必須重用 Reports 的 period utilities、`aggregateReport()`、
    `compareReportPeriods()`、trend／Important Dates／platform selectors、
    persistence read、record-change refresh、formatting、state patterns 與

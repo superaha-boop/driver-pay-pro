@@ -372,3 +372,41 @@ session return context 與 committed-record notification 則讓 Reports 保持�
 - Reports 後續修改必須遵守 Freeze 例外與突破流程。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-030](docs/DECISION_LOG.md#d-030)。
+
+## D-031 — Foundation Cleanup Version 1
+
+- Date: 2026-07-26
+
+### 決策
+
+1. Driver Pay Pro 維持靜態 PWA，不導入 bundler、framework 或大規模
+   TypeScript migration。
+2. 採用 ESLint、`globals` 與 `parse5` 三個最小 dev dependencies；lockfile
+   必須提交以確保可重現。
+3. `npm run lint` 檢查 Node scripts、tests、Service Worker 與 HTML inline
+   JavaScript；correctness errors 阻擋 release，既有 unused code 保留 warning。
+4. `npm run build` 等同 static production validation，不產生 dist。
+5. `npm run release:check` 是單一 release gate，涵蓋 lint、全部／專項測試、
+   inline JavaScript、Service Worker、Manifest、Production validation 與
+   `git diff --check`。
+6. `design-system.html` 是內部 showcase，不進入 Bottom Navigation、不加入
+   App Shell；可在本機與 Preview 開啟。
+7. TD-004 與 TD-005 Resolved；TD-001 Partially resolved；TypeScript Deferred；
+   TD-006 Open；TD-026 Partially resolved，其餘資料與同步債保持 Open／Deferred。
+8. Calendar／Reports UX Freeze 與 Today／AI／Driver 功能均不因本 Sprint改變。
+
+### 原因
+
+靜態 PWA 不需要大型 bundler，但需要可重現的 lint、資源完整性、release hygiene
+與單一 failure gate。保留 inline 產品架構並只加外部驗證，可在不突破 frozen
+UX 的前提下降低發布風險。
+
+### 影響範圍
+
+- 新增開發工具、tests、內部 showcase evidence 與文件。
+- `index.html`、正式 CSS、Manifest、Service Worker、`driverPayApp.v2`、schema、
+  Supabase、Calendar／Reports／Today／AI／Driver 功能均不變。
+- Service Worker 維持 `driver-pay-pro-v12`；本 Sprint 不 merge `main`、不
+  Production deploy。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-031](docs/DECISION_LOG.md#d-031)。

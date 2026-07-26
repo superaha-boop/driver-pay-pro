@@ -29,6 +29,32 @@ Driver Pay Pro 是為多元計程車與職業駕駛設計的手機優先收入�
 - [Project Context](PROJECT_CONTEXT.md)：長期產品原則、已確認 UI 與不可回退設計。
 - [Handoff](HANDOFF.md)：目前分支、Git 狀態、本輪進度與安全接手資訊。
 
+## Development Commands
+
+需要 Node.js 20.19、22.13 或 24 以上相容版本。首次使用執行：
+
+```bash
+npm install
+```
+
+常用命令：
+
+```bash
+npm run lint
+npm test
+npm run test:calendar
+npm run test:reports
+npm run validate:production
+npm run build
+npm run release:check
+```
+
+`npm run build` 是適合目前靜態 PWA 的 Production validation，不會建立
+`dist` 或導入 bundler。Release 前必須使用 `npm run release:check`。
+
+Design System 內部展示頁為 `/design-system.html`；它不在正式導覽，也不加入
+Service Worker App Shell。
+
 ---
 
 ## Author

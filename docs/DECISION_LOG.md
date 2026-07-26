@@ -426,3 +426,28 @@
 - Rejected alternatives:
   - 不以 Freeze 為名關閉尚未完成的技術債。
   - 不允許後續 AI 複製另一套 Reports aggregation。
+
+## D-031
+
+- Date: 2026-07-26
+- Decision:
+  1. 靜態 PWA 維持無 bundler、無 framework、無大規模 TypeScript migration。
+  2. ESLint、`globals` 與 `parse5` 是 Foundation V1 唯一新增 dev dependencies，
+     並提交 lockfile。
+  3. `npm run lint` 檢查 Node、tests、Service Worker 與 inline JavaScript；
+     correctness errors 阻擋 release，既有 unused code 保留 warning。
+  4. `npm run build` 是 static production validation，不產生 dist。
+  5. `npm run release:check` 依序執行 lint、全部／專項 tests、syntax、Manifest、
+     Service Worker、Production validation 與 `git diff --check`。
+  6. `design-system.html` 保持內部、noindex、無 Bottom Navigation 且不進 App
+     Shell。
+  7. TD-004／TD-005 Resolved；TD-001 Partially resolved；TypeScript Deferred；
+     TD-006 Open；TD-026 Partially resolved。
+- Reason: 對目前靜態 PWA，最小驗證工具比導入 bundler 或重寫 inline
+  architecture 更能降低 release 風險，且不突破 Calendar／Reports Freeze。
+- Impact: 新增 tooling、tests、showcase evidence 與文件；產品功能、資料、
+  schema、PWA cache、dependencies at runtime、merge 與 Production 均不變。
+- Rejected alternatives:
+  - 不為符合 build 名稱而導入 bundler。
+  - 不為清除 lint warnings 而重構 frozen 產品程式。
+  - 不在本 Sprint 抽取 AI aggregation 或拆分整個 inline JavaScript。

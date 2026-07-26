@@ -5,7 +5,8 @@
 ## 基本規則
 
 - 依本次變更風險選擇適用測試，不以桌面預覽取代 iPhone Safari 或 installed PWA 實機 QA。
-- 專案目前沒有 package.json、TypeScript、ESLint 或 build pipeline；對應項目須明確標示 Not available，不可假裝通過。
+- 專案已有最小 package、ESLint、static production validation 與 release gate；
+  仍沒有 TypeScript 或 bundler。TypeScript 必須標示 Deferred／Not available。
 - 現行自動測試使用 Node.js 內建 `node:test`。
 - 所有功能變更都必須確認 `driverPayApp.v2` 未被更名或清除。
 - PWA 資源變更必須同步檢查 `sw.js` cache version 與 App Shell。
@@ -23,6 +24,28 @@
 小型 Sprint 原則上不重複執行完整 L3；大模組完成 Final Regression 後集中
 執行一次。高風險資料、同步、Service Worker 或 iOS 特有變更仍須即時提高
 驗證層級。
+
+## Foundation Cleanup Validation
+
+Date: 2026-07-26
+
+Status: L1 and L2 passed; no L3 required by approved PRD.
+
+- `npm run lint`：passed，0 errors／10 existing unused-code warnings。
+- `npm test`：94/94 passed。
+- `npm run test:reports`：44/44 passed。
+- `npm run test:calendar`：38/38 passed。
+- `npm run check:inline`：1 inline JavaScript block passed。
+- `npm run check:sw`：passed。
+- `npm run check:manifest`：2 icons and required PWA metadata passed。
+- `npm run validate:production`／`npm run build`：HTML、assets、navigation、
+  App Shell、fallback、storage key、forbidden URL／secret checks passed。
+- `npm run release:check`：全部 gate 依序 passed；任一步失敗會非零退出。
+- L2 browser：Today、Calendar、Reports 三個 Tabs、showcase、offline App Shell
+  passed；online Console 0 error／warning。
+- 390px Chrome：Today、Calendar、Reports weekly／monthly／platform 與 showcase
+  全部 `scrollWidth === clientWidth === 390`。
+- `driverPayApp.v2`、schema 與 product files 不變；Service Worker 維持 v12。
 
 ## Reports Final Regression Matrix
 
@@ -397,9 +420,10 @@ expected behavior is defined in `docs/CALENDAR_SPEC.md`.
 - [ ] Service Worker syntax。
 - [ ] Node automated tests。
 - [ ] Console 無新增 error／warning。
-- [ ] Production build（目前無 build pipeline，標示 Not available）。
+- [ ] `npm run validate:production`／`npm run build`。
 - [ ] TypeScript（目前無 TypeScript，標示 Not available）。
-- [ ] Lint（目前無 ESLint，標示 Not available）。
+- [ ] `npm run lint`。
+- [ ] `npm run release:check`。
 - [ ] `git diff --check`。
 - [ ] `git diff` 人工核對。
 - [ ] `git status` 人工核對。

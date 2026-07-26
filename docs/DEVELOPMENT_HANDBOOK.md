@@ -109,10 +109,13 @@ Codex 不負責自行決定產品方向。
 - 單頁靜態 App：HTML、CSS、JavaScript 集中在 `index.html`。
 - PWA：`manifest.webmanifest`、`sw.js` 與 `assets/`。
 - 儲存：瀏覽器 `localStorage`，key 為 `driverPayApp.v2`。
-- 沒有 `package.json`、TypeScript、ESLint 或 npm build pipeline。
+- 有最小 `package.json`、ESLint、static production validation 與 release gate。
+- 沒有 TypeScript 或 bundler；`npm run build` 代表靜態 Production validation，
+  不產生 `dist`。
 - 沒有 Supabase、後端、登入或跨裝置同步。
 
-因此不得虛構 lint、type check 或 build 已執行。現行可用驗證為 inline JavaScript 語法檢查、`git diff --check`、瀏覽器 Console 與 320px／390px／1024px 響應式操作驗證。
+標準 release 前驗證為 `npm run release:check`。TypeScript 仍須標示 Not
+available；不得因 lint／validation 存在就宣稱已完成 TypeScript migration。
 
 ## QA Checklist
 

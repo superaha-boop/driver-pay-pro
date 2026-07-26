@@ -19,6 +19,12 @@
 
 ### Added
 
+- Foundation Cleanup Version 1：新增最小 `package.json`、ESLint、HTML／Manifest／
+  Service Worker／App Shell Production validation 與單一 `release:check`；
+  Node tests 增為 94 項。
+- Design System 內部展示頁補齊 segmented control、KPI、Empty／Loading／Error、
+  list row、44px touch target、focus-visible 與 reduced-motion evidence，並維持
+  正式導覽與 PWA App Shell 隔離。
 - Reports Final Regression 與 UX Freeze Version 1：新增 28 情境固定 fixture、
   9 項 Final Regression tests、一次性 L3 Human QA 清單及 Reports Feature
   Freeze evidence；全部 Node tests 增為 88 項。Product Owner L3 Human QA
@@ -70,6 +76,10 @@
 
 ### Changed
 
+- Foundation Cleanup 建立可重現的 lockfile 與三個最小開發相依套件：
+  ESLint、`globals`、`parse5`；未加入 bundler、framework 或 TypeScript。
+- Release 前驗證改為 `npm run release:check`；Service Worker 維持
+  `driver-pay-pro-v12`，正式產品 App Shell 未修改。
 - Reports 平台頁移除 legacy 月份下拉與日均語意，改為收入貢獻視圖；
   Service Worker cache 更新為 `driver-pay-pro-v12`。
 - Reports 週報／月報由 renderer 內各自選期與彙總，改為共用純 selector 流程；
