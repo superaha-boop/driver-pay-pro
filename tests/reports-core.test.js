@@ -325,7 +325,7 @@ test("Reports 狀態不再讀寫 legacy localStorage 設定並保留唯讀介面
   assert.doesNotMatch(html.match(/<section id="view-reports"[\s\S]*?<\/section>\s*<section id="view-ai"/)?.[0] || "", /data-calendar-(?:add|edit|delete)/);
 });
 
-test("App Shell 修改會更新 Service Worker cache 至 v11", () => {
-  assert.match(serviceWorker, /driver-pay-pro-v11/);
-  assert.doesNotMatch(serviceWorker, /driver-pay-pro-v10/);
+test("App Shell 修改會更新 Service Worker cache 至 v12", () => {
+  assert.match(serviceWorker, /driver-pay-pro-v12/);
+  assert.doesNotMatch(serviceWorker, /driver-pay-pro-v11/);
 });

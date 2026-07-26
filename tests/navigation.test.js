@@ -137,7 +137,7 @@ test("報表標題、空白狀態與平台排行符合定案文字", () => {
   assert.match(html, /reports: \["報表"/);
   assert.match(html, /這一週/);
   assert.match(html, /這個月/);
-  assert.match(html, /這個月份尚無平台收入/);
-  assert.match(html, /<h3>平台收入排行<\/h3>/);
-  assert.doesNotMatch(html, /<h3>平台效率<\/h3>/);
+  assert.match(html, /此期間尚無平台收入資料/);
+  assert.match(html, /id="platformRankingTitle">平台收入排行/);
+  assert.doesNotMatch(html, /平台效率|最佳平台|平台時薪/);
 });
