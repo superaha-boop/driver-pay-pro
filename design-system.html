@@ -120,6 +120,66 @@
       flex-wrap: wrap;
       gap: var(--spacing-4);
     }
+    .showcase-segmented {
+      min-height: var(--touch-target-min);
+      padding: var(--spacing-1);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--spacing-1);
+      border-radius: var(--radius-md);
+      background: var(--color-surface-secondary);
+    }
+    .showcase-segmented button {
+      min-width: 0;
+      min-height: var(--touch-target-min);
+      border: 0;
+      border-radius: var(--radius-sm);
+      color: var(--color-text-secondary);
+      background: transparent;
+    }
+    .showcase-segmented button[aria-selected="true"] {
+      color: var(--color-text-primary);
+      background: var(--color-surface);
+      box-shadow: var(--shadow-soft);
+      font-weight: 700;
+    }
+    .showcase-kpi {
+      display: grid;
+      gap: var(--spacing-1);
+    }
+    .showcase-kpi strong {
+      color: var(--color-text-primary);
+      font-size: var(--font-size-page-title);
+      font-variant-numeric: tabular-nums;
+    }
+    .showcase-list-row {
+      min-height: var(--touch-target-min);
+      padding-block: var(--spacing-3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-3);
+      border-bottom: var(--border-subtle);
+    }
+    .showcase-list-row:last-child { border-bottom: 0; }
+    .showcase-touch-target {
+      width: var(--touch-target-min);
+      height: var(--touch-target-min);
+      display: grid;
+      place-items: center;
+      border: var(--border-selected);
+      border-radius: var(--radius-sm);
+      color: var(--color-brand);
+      background: var(--color-brand-subtle);
+      font-size: var(--font-size-caption);
+    }
+    .showcase-error {
+      padding: var(--spacing-4);
+      border: var(--border-danger);
+      border-radius: var(--radius-md);
+      color: var(--color-danger);
+      background: var(--color-danger-soft);
+    }
     .form-demo { display: grid; gap: var(--spacing-4); }
     .form-row {
       display: grid;
@@ -137,7 +197,7 @@
       <p class="ds-caption">Internal component preview</p>
       <h1 class="ds-page-title">Driver Pay Pro Design System</h1>
       <p class="ds-body">供開發與 QA 核對視覺 tokens、共用元件狀態和手機可用性。此頁不屬於正式 App 導覽。</p>
-      <div class="showcase-note">鍵盤使用者可按 Tab 檢查 focus-visible；系統開啟「減少動態效果」時，Loading 與 Skeleton 動畫會停止。</div>
+      <div class="showcase-note">鍵盤使用者可按 Tab 檢查 focus-visible；系統開啟「減少動態效果」時，Loading 與 Skeleton 動畫會停止（prefers-reduced-motion）。</div>
     </header>
 
     <section class="showcase-section" aria-labelledby="colors-title">
@@ -245,6 +305,29 @@
       </div>
     </section>
 
+    <section class="showcase-section" aria-labelledby="patterns-title">
+      <h2 class="ds-section-title" id="patterns-title">Segmented control, KPI and list row</h2>
+      <div class="ds-card stack">
+        <div class="showcase-segmented" role="tablist" aria-label="報表範例">
+          <button type="button" role="tab" aria-selected="true">週報</button>
+          <button type="button" role="tab" aria-selected="false">月報</button>
+          <button type="button" role="tab" aria-selected="false">平台</button>
+        </div>
+        <div class="showcase-kpi">
+          <span class="ds-secondary">KPI · 本週淨收入</span>
+          <strong>NT$12,580</strong>
+        </div>
+        <div aria-label="List row">
+          <div class="showcase-list-row"><span>Uber</span><strong class="ds-numeric">NT$6,800</strong></div>
+          <div class="showcase-list-row"><span>LINE GO</span><strong class="ds-numeric">NT$3,420</strong></div>
+        </div>
+        <div class="button-row">
+          <span class="showcase-touch-target" aria-label="Touch target 44 by 44 pixels">44px</span>
+          <span class="ds-secondary">Touch target 最小尺寸</span>
+        </div>
+      </div>
+    </section>
+
     <section class="showcase-section" aria-labelledby="section-header-title">
       <div class="ds-section-header">
         <div class="ds-section-header__copy">
@@ -273,7 +356,7 @@
     </section>
 
     <section class="showcase-section" aria-labelledby="loading-title">
-      <h2 class="ds-section-title" id="loading-title">Skeleton and SaveStatus</h2>
+      <h2 class="ds-section-title" id="loading-title">Loading state, Error state and SaveStatus</h2>
       <div class="ds-card stack">
         <div class="skeleton-demo" aria-label="載入中">
           <span class="ds-skeleton ds-skeleton--circle"></span>
@@ -289,6 +372,10 @@
           <span class="ds-save-status" data-status="saved" role="status" aria-live="polite">已儲存</span>
           <span class="ds-save-status" data-status="offline" role="status" aria-live="polite">已離線儲存</span>
           <span class="ds-save-status" data-status="error" role="alert">同步失敗</span>
+        </div>
+        <div class="showcase-error" role="alert">
+          <strong>Error state</strong>
+          <div>暫時無法讀取資料，原始紀錄不會被清除。</div>
         </div>
       </div>
     </section>
