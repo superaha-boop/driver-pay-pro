@@ -104,10 +104,24 @@ complete Driver Pay Pro V1 release.
 
 ## Release Candidate Preview
 
-- Preview URL: pending Release branch deployment.
-- Deployment ID: pending.
-- Branch and commit verification: pending.
-- L2 smoke: pending.
+- Preview URL:
+  `https://driver-pay-pro-git-codex-production-relea-1092cf-sky-skill-labs.vercel.app`
+- Deployment ID: `dpl_CRgDiahKWBHGFGmMPvrMq6GMQM5f`.
+- Deployment commit:
+  `862f2b3696c03d1656f67eee8b2f341d3f8844f4`.
+- Environment: Preview (`target: null`), not Production.
+- Vercel Authentication protects the canonical Preview URL. A temporary
+  23-hour share link was verified with a new cookie session; the token is not
+  stored in the repository.
+- HTTP: Driver Pay Pro, Manifest, Service Worker, showcase, and both Manifest
+  icons returned 200 through the verified share session.
+- 390px: Today, Calendar, Weekly, Monthly, Platform, and showcase all had
+  `scrollWidth === clientWidth === 390`.
+- Calendar date selection remained read-only and selected the exact date.
+- Console: 0 error and 0 warning across the verified product views.
+- Offline: after initial load, an isolated browser reloaded the App Shell with
+  network disabled; the active cache was `driver-pay-pro-v12`.
+- Test records: none created or modified.
 
 ## Production Deployment
 
@@ -144,8 +158,8 @@ data, or create a migration for this rollback.
 - [x] Foundation Cleanup Version 1 confirmed.
 - [x] Ancestry and divergence audited.
 - [x] Full local Release Gate passed.
-- [ ] Release Candidate Preview deployed and passed L2 smoke.
-- [ ] Release branch pushed.
+- [x] Release Candidate Preview deployed and passed L2 smoke.
+- [x] Release branch pushed.
 - [ ] Pull Request created with reviewed diff.
 - [ ] Main merged normally.
 - [ ] Production deployment matches main merge commit.
