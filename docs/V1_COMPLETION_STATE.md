@@ -2,7 +2,7 @@
 
 Last updated: 2026-07-26  
 Program branch: `codex/v1-completion-program-20260726`  
-Program status: In progress
+Program status: Release candidate preparation
 
 ## Stable baseline
 
@@ -11,6 +11,7 @@ Program status: In progress
 - Production URL: `https://driver-pay-app.vercel.app`
 - Persistence key: `driverPayApp.v2`
 - Service Worker baseline cache: `driver-pay-pro-v12`
+- Service Worker candidate cache: `driver-pay-pro-v13`
 - Calendar UX Freeze Version 1: Active
 - Reports UX Freeze Version 1: Active
 - Product Owner Production L4 result: Passed
@@ -37,12 +38,13 @@ Status: Passed
 | Phase | Scope | Status | Evidence / commit |
 | --- | --- | --- | --- |
 | Baseline | Git, release closeout, dependencies, release gate | Passed | `8d8ba50`, baseline results above |
-| Phase 1 | AI / Driver current-state audit | Passed | `docs/AI_DRIVER_AUDIT.md` |
-| Phase 2A | Canonical analytics and TD-006 | In progress | Pending |
-| Phase 2B | Evidence-based AI V1 | Pending | Pending |
-| Phase 3 | Driver local settings and status | Pending | Pending |
-| Phase 4 | Cross-page integration and refresh | Pending | Pending |
-| Phase 5 | V1 regression fixtures and release gate | Pending | Pending |
+| Phase 1 | AI / Driver current-state audit | Passed | `7fb8d3f` |
+| Phase 2A | Canonical analytics and TD-006 | Passed | `36b746b` |
+| Phase 2B | Evidence-based AI V1 | Passed | `35815ab` |
+| Phase 3 | Driver local settings and status | Passed | `f22073f` |
+| Phase 4 | Cross-page integration and refresh | Passed | `97ea42d` |
+| Phase 5 | V1 regression fixtures and release gate | Passed | `98f64cd`; 45-scenario fixture |
+| L1 | Full automated release candidate gate | Passed | 119/119; audit 0; release:check passed |
 | L2 | Public iPhone Preview smoke QA | Pending | Pending |
 | L3 | Driver Pay Pro V1 Human QA | Pending | Single planned Product Owner gate |
 | Freeze | Local-first V1 docs and checklist | Pending | Only after L3 Passed |
@@ -60,7 +62,12 @@ Status: Passed
 ## Program commits
 
 1. `8d8ba50 docs: complete calendar reports production release`
-2. Phase 1 audit commit: Pending
+2. `7fb8d3f docs: audit AI and Driver V1 scope`
+3. `36b746b refactor: unify AI with reports aggregation`
+4. `35815ab feat: complete evidence-based AI insights`
+5. `f22073f feat: complete Driver local settings and status`
+6. `97ea42d feat: integrate Driver Pay Pro local-first V1`
+7. `98f64cd test: complete V1 regression coverage`
 
 This list must be updated after every Program phase commit.
 
@@ -80,14 +87,7 @@ The V1 Program does not claim to resolve:
 
 ## Next automatic gate
 
-Phase 2A must prove that Reports and AI use the same:
-
-- period boundaries
-- total and net income
-- work duration
-- average hourly income
-- platform aggregation
-- important-date selection
-
-TD-006 remains Open until these shared-result tests pass.
-
+Commit the documentation sync, create and independently verify a public
+non-Production L2 Preview, then stop at the single V1 L3 Human QA gate. TD-006
+is resolved by `sharedAnalytics` and shared-result regression tests; it must not
+be reopened by adding page-specific aggregation.

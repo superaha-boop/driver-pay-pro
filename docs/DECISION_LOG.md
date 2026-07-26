@@ -451,3 +451,25 @@
   - 不為符合 build 名稱而導入 bundler。
   - 不為清除 lint warnings 而重構 frozen 產品程式。
   - 不在本 Sprint 抽取 AI aggregation 或拆分整個 inline JavaScript。
+
+## D-032
+
+- Date: 2026-07-26
+- Decision:
+  1. Local-first V1 不新增 Supabase、authentication、cloud sync、migration 或
+     external AI。
+  2. AI 固定唯讀三區塊並透過 `sharedAnalytics` 重用 Reports canonical
+     analytics；TD-006 Resolved。
+  3. Driver 只管理既有 durable settings 與 derived local App status；每日目標
+     與 Today 共用同一 setting。
+  4. 成功 WorkRecord mutation 只發出一次 committed-record notification。
+  5. `driverPayApp.v2`、WorkRecord schema 與 Calendar／Reports Freeze 不變；
+     candidate App Shell 為 v13。
+  6. L1／公開 L2 後進入單次 V1 L3；通過前不 Freeze、merge main 或 Production。
+- Reason: 以共用 analytics、單一 refresh 與既有 local persistence 完成五頁
+  V1 閉環，同時避免雲端與 migration 風險。
+- Impact: TD-006 Resolved；其他同步、metadata、multi-session、TypeScript 與
+  iPhone native input 債保持 Open／Deferred。本決策尚未宣告 V1 Freeze。
+- Rejected alternatives:
+  - 不建立外部 AI、第二套 aggregation 或新的 durable storage。
+  - 不在 Human QA 前更新 Production。

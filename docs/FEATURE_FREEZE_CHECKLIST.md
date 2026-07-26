@@ -91,6 +91,30 @@ Reports V1 的 14 項 Freeze Gate 全部 Passed。L3 evidence 位於
 Calendar and Reports Stable Milestone is formally Completed. This evidence does
 not declare the complete Driver Pay Pro V1 finished.
 
+## Local-first V1 Candidate Evidence
+
+- [x] Product responsibility confirmed：Today／Calendar／Reports／AI／Driver
+  符合 Product Ownership Matrix。
+- [x] Specification complete：AI、Driver、Integration 與 Release Candidate
+  規格已建立。
+- [x] Automated tests pass：119/119 Node tests；45-scenario V1 fixture。
+- [x] Cross-page consistency verified：AI 與 Reports 共用 `sharedAnalytics`；
+  committed-record notification 與 Driver goal contracts 通過。
+- [ ] Responsive verified：等待完整 L2 browser evidence。
+- [ ] iPhone Safari verified：等待 Product Owner L3。
+- [ ] Installed PWA verified：等待 Product Owner L3。
+- [ ] Offline verified：自動 contract 已通過，等待 L2／L3。
+- [ ] Accessibility verified：自動 contract 已通過，等待 VoiceOver L3。
+- [ ] Human QA passed：Pending。
+- [x] Error recovery verified：read error、invalid data、rollback 與 corrupt
+  payload contracts 通過且不清除原始資料。
+- [x] Documentation updated：Release Candidate 文件已同步。
+- [x] Technical debt recorded：TD-006 Resolved；其餘 Open／Deferred 保留。
+- [ ] UX Freeze declared：必須等 Product Owner L3 Passed。
+
+本區塊不是 Freeze 宣告。只有收到
+`Driver Pay Pro V1 L3 全部通過` 後，才能完成剩餘項目與 V1 Freeze。
+
 ## Change After Freeze
 
 凍結模組只接受 Bug、Accessibility、Data Integrity 或重大使用障礙修正。

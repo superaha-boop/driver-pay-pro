@@ -410,3 +410,37 @@ UX 的前提下降低發布風險。
   Production deploy。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-031](docs/DECISION_LOG.md#d-031)。
+
+## D-032 — Local-first V1 Release Candidate Architecture
+
+- Date: 2026-07-26
+
+### 決策
+
+1. Local-first V1 不加入 Supabase、登入、同步、migration 或外部 AI。
+2. AI 維持唯讀三區塊，透過 `sharedAnalytics` 重用 Reports canonical
+   analytics；TD-006 Resolved。
+3. Driver 只管理既有持久設定與衍生 App／本機狀態；每日目標與 Today 共用
+   `state.settings.dailyGoal`。
+4. 成功 WorkRecord 寫入只發出一次 committed-record notification；Reports
+   與 AI 可見時各更新一次。
+5. `driverPayApp.v2`、WorkRecord schema、Calendar／Reports Freeze 不變；
+   V1 candidate App Shell 使用 `driver-pay-pro-v13`。
+6. L1 與公開 L2 通過後只進入一次 V1 L3 Human QA；L3 通過前不宣告 Freeze、
+   不合併 `main`、不部署 Production。
+
+### 原因
+
+V1 需要在不引入雲端與資料遷移風險下完成五頁閉環，並消除 AI 與 Reports
+公式分歧。共用 canonical analytics 與單一 refresh event 可提供可重複驗證的
+本機基礎。
+
+### 影響範圍
+
+- 新增 AI、Driver、integration、regression tests、規格與 v13 App Shell。
+- 雲端同步、conflict resolution、record metadata、多段工作、TypeScript 與
+  native input 長期驗證保持 Open／Deferred。
+- 本決策只建立 Release Candidate，不代表 Human QA、Freeze 或 Production
+  已完成。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-032](docs/DECISION_LOG.md#d-032)。

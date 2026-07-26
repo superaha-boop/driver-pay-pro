@@ -4,6 +4,23 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
+## Local-first V1 Completion Program — Release Candidate
+
+- 工作分支：`codex/v1-completion-program-20260726`；Production baseline：
+  `dbaafba321fd3b108ef5d3b07e2adea7c1f23892`。
+- Phase 1～5 已完成：AI／Driver audit、Reports canonical analytics 重用、
+  evidence-based AI、Driver 每日目標與本機狀態、跨頁 refresh、45 情境
+  regression fixture。
+- AI 固定為唯讀「營運建議／本月洞察／智慧提醒」；Driver 只管理既有持久
+  設定與本機／App 狀態。
+- TD-006 已由 `sharedAnalytics` 與 AI／Reports shared-result tests 解決。
+- `driverPayApp.v2`、WorkRecord schema、Calendar／Reports Freeze 保持不變；
+  Service Worker candidate 為 `driver-pay-pro-v13`。
+- 本 Program 仍須通過 L1、公開 iPhone L2 與單次 Product Owner L3；在 L3
+  確認前不得宣告 V1 Freeze、合併 `main` 或部署 Production。
+- Local-first V1 沒有 Supabase、登入、雲端備份、跨裝置同步、migration 或
+  外部 AI；相關技術債保持 Open／Deferred。
+
 ## Calendar and Reports Stable Milestone — Production
 
 - Calendar UX Freeze Version 1、Reports UX Freeze Version 1 與 Foundation

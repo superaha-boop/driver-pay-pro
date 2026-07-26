@@ -342,6 +342,20 @@ Do not create page-specific copies that differ only slightly. A page may compose
 
 ## 11. Current State Audit
 
+### Local-first V1 Release Candidate — 2026-07-26
+
+- AI 已移除 `analysisEntryTotal()`、`analysisEntryExpenses()`、
+  `analysisSummary()` 與平台彙總複本，改由 `sharedAnalytics` 重用 Reports
+  canonical selectors；TD-006 Resolved。
+- AI V1 是唯讀的營運建議、本月洞察與智慧提醒，使用 evidence、period 與
+  data-sufficiency guard，不接外部服務。
+- Driver V1 只處理既有 durable settings 與衍生 local App status；每日目標與
+  Today 共用 `state.settings.dailyGoal`。
+- 跨頁成功寫入使用單一 committed-record notification；Reports／AI 不建立
+  WorkRecord。
+- 目前仍為 Release Candidate，L3 Human QA、V1 Freeze、main merge 與
+  Production 尚未完成。
+
 This audit describes the code at branch base `bf29913` and is not an instruction to fix gaps in this documentation Sprint.
 
 | Area | Status | Evidence and implication |
@@ -352,7 +366,7 @@ This audit describes the code at branch base `bf29913` and is not an instruction
 | AI record mutation | Confirmed compliant | AI renders rule-based analysis and does not write records. |
 | Driver single-day data | Confirmed compliant | Driver stores persistent platform, expense, goal, export, and About settings; it does not own a particular day's weather or note. |
 | Shared work-time/hourly calculation | Confirmed | `workMetrics()` and `hourlyRate()` are used by summaries and AI. |
-| Duplicate income/expense summary logic | Confirmed gap | AI has `analysisPlatformIncome`, `analysisEntryTotal`, `analysisEntryExpenses`, and `analysisSummary` in parallel with canonical entry/summarize functions. |
+| Duplicate income/expense summary logic | Resolved in Local-first V1 | Legacy `analysis*` aggregation copies were removed; AI now uses `sharedAnalytics` and shared-result tests. |
 | Historical edit responsibility | Confirmed gap | Calendar's edit action calls `editEntry()`, which navigates to Today and fills the shared form. Target ownership requires Calendar to own past edits. |
 | Today date responsibility | Confirmed gap | Today's date control can select another date and the submit path saves by that date. |
 | Future record prevention | Confirmed gap | The date input has no `max` and the submit path has no future-date guard. |

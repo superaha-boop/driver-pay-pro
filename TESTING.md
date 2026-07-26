@@ -25,6 +25,32 @@
 執行一次。高風險資料、同步、Service Worker 或 iOS 特有變更仍須即時提高
 驗證層級。
 
+## Local-first V1 Release Candidate
+
+Date: 2026-07-26
+
+Status: L1 passed; public L2 pending.
+
+- Fixed fixture: `tests/fixtures/v1-regression.json`，覆蓋 45 個核准情境。
+- `npm test`：119/119 passed。
+- `npm run test:calendar`：38/38 passed。
+- `npm run test:reports`：44/44 passed。
+- `npm run test:ai`：5/5 passed。
+- `npm run test:driver`：5/5 passed。
+- `npm run test:integration`：15/15 passed。
+- lint：0 errors／10 existing unused-code warnings。
+- `npm ci`：Passed；`npm audit`：0 vulnerabilities。
+- `npm run release:check`：Passed；inline JavaScript、Service Worker syntax、
+  Manifest、static Production validation 與 `git diff --check` 全部通過。
+- AI／Reports shared analytics、AI read-only／exact-date deep link、Driver goal
+  persistence／rollback、single committed-record refresh、five-tab navigation、
+  corrupt-data safety、offline App Shell、Accessibility／responsive contracts
+  passed。
+- Service Worker candidate：`driver-pay-pro-v13`。
+- `driverPayApp.v2`、WorkRecord schema、Supabase 與 Production data 未變。
+- TypeScript：Deferred／Not available；目前靜態 PWA 沒有 TypeScript pipeline。
+- L3 清單：`docs/V1_HUMAN_QA.md`；在公開 L2 驗證後只執行一次。
+
 ## Foundation Cleanup Validation
 
 Date: 2026-07-26
@@ -73,7 +99,7 @@ Status: L1, L2 and L3 passed; Reports UX Freeze Version 1 active.
   horizontal overflow，Reports tabs 單行。
 - L2 Preview Smoke: Weekly、Monthly、Platform、平台週／月、Calendar mutation
   refresh、important-date drill-down、return context、390px 與 Console passed。
-- TypeScript、ESLint、Production build：Not available。
+- TypeScript：Not available；ESLint 與 static Production build：Passed。
 - L3 清單：`docs/REPORTS_HUMAN_QA.md`；iPhone Safari、installed PWA、
   Offline、VoiceOver、Reduced Motion、safe area、responsive 與無 High Priority
   issue 全部由 Product Owner 確認通過。

@@ -16,6 +16,19 @@
 
 ## Unreleased
 
+### Local-first V1 Release Candidate
+
+- 完成唯讀 evidence-based AI：營運建議、本月洞察、智慧提醒，並透過
+  `sharedAnalytics` 重用 Reports canonical analytics；TD-006 Resolved。
+- 完成 Driver 既有每日目標自動儲存、本機資料狀態、App／PWA／離線狀態與
+  local-first 資料警告。
+- 完成單一 committed-record refresh、AI exact-date deep link、45 情境 V1
+  fixture 與 AI／Driver／Integration targeted tests。
+- Service Worker candidate 更新為 `driver-pay-pro-v13`；`driverPayApp.v2` 與
+  WorkRecord schema 不變。
+- 目前仍待完整 L1、公開 iPhone L2 與單次 Product Owner L3；未合併 `main`，
+  未建立 Production Deployment。
+
 目前工作目錄尚未提交的內容：
 
 ### Added
