@@ -119,6 +119,8 @@ test("Service Worker v13 更新、清舊 cache 並保留 navigation fallback", (
   assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v13"/);
   assert.match(serviceWorker, /keys\.filter\(key => key !== CACHE_NAME\)\.map\(key => caches\.delete\(key\)\)/);
   assert.match(serviceWorker, /event\.request\.mode === "navigate"/);
+  assert.match(serviceWorker, /isNavigation && !response\.ok/);
+  assert.match(serviceWorker, /cached \|\| response/);
   assert.match(serviceWorker, /caches\.match\("\.\/index\.html"\)/);
   assert.doesNotMatch(serviceWorker, /driver-pay-pro-v12|trycloudflare|_vercel_share/);
 });

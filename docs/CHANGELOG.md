@@ -24,10 +24,12 @@
   local-first 資料警告。
 - 完成單一 committed-record refresh、AI exact-date deep link、45 情境 V1
   fixture 與 AI／Driver／Integration targeted tests。
+- L2 修正 AI 日期洞察的 Calendar 路由、Driver 本機紀錄狀態重算，以及
+  Service Worker 對 navigation HTTP 502 的 Offline App Shell fallback。
 - Service Worker candidate 更新為 `driver-pay-pro-v13`；`driverPayApp.v2` 與
   WorkRecord schema 不變。
-- 目前仍待完整 L1、公開 iPhone L2 與單次 Product Owner L3；未合併 `main`，
-  未建立 Production Deployment。
+- L1 120/120 與公開 iPhone L2 已通過，目前只待單次 Product Owner L3；
+  未合併 `main`，未建立 Production Deployment。
 
 目前工作目錄尚未提交的內容：
 

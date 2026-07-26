@@ -29,15 +29,15 @@
 
 Date: 2026-07-26
 
-Status: L1 passed; public L2 pending.
+Status: L1 and public L2 passed; Product Owner L3 pending.
 
 - Fixed fixture: `tests/fixtures/v1-regression.json`，覆蓋 45 個核准情境。
-- `npm test`：119/119 passed。
+- `npm test`：120/120 passed。
 - `npm run test:calendar`：38/38 passed。
 - `npm run test:reports`：44/44 passed。
 - `npm run test:ai`：5/5 passed。
 - `npm run test:driver`：5/5 passed。
-- `npm run test:integration`：15/15 passed。
+- `npm run test:integration`：16/16 passed。
 - lint：0 errors／10 existing unused-code warnings。
 - `npm ci`：Passed；`npm audit`：0 vulnerabilities。
 - `npm run release:check`：Passed；inline JavaScript、Service Worker syntax、
@@ -47,9 +47,20 @@ Status: L1 passed; public L2 pending.
   corrupt-data safety、offline App Shell、Accessibility／responsive contracts
   passed。
 - Service Worker candidate：`driver-pay-pro-v13`。
+- Public L2 QA：
+  `https://mystery-kijiji-publicity-tech.trycloudflare.com`，未登入 Safari 可直接
+  開啟，沒有第三方登入或警告頁。
+- L2 browser：Today、Calendar、Reports 三個 tabs、AI 三區、Driver、跨頁
+  deep link、Driver 即時狀態與 390px `scrollWidth === clientWidth` 通過；
+  320／375／393／430px responsive regression contracts 通過。
+- Safari Console：0 error／0 warning；Manifest 與 Service Worker v13 可由
+  同源直接取得。
+- Offline App Shell：停止本機來源、由 Cloudflare 收到 502 時，Safari
+  navigation 會回退至已快取的 `index.html`；恢復來源後重新載入正常。
+- QA 後 `driverPayApp.v2` 沒有測試紀錄，每日目標維持未設定。
 - `driverPayApp.v2`、WorkRecord schema、Supabase 與 Production data 未變。
 - TypeScript：Deferred／Not available；目前靜態 PWA 沒有 TypeScript pipeline。
-- L3 清單：`docs/V1_HUMAN_QA.md`；在公開 L2 驗證後只執行一次。
+- L3 清單：`docs/V1_HUMAN_QA.md`；現在只執行這一次 Product Owner gate。
 
 ## Foundation Cleanup Validation
 

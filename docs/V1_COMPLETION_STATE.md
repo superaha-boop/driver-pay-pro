@@ -2,7 +2,7 @@
 
 Last updated: 2026-07-26  
 Program branch: `codex/v1-completion-program-20260726`  
-Program status: Release candidate preparation
+Program status: Ready for Product Owner L3 Human QA
 
 ## Stable baseline
 
@@ -44,8 +44,8 @@ Status: Passed
 | Phase 3 | Driver local settings and status | Passed | `f22073f` |
 | Phase 4 | Cross-page integration and refresh | Passed | `97ea42d` |
 | Phase 5 | V1 regression fixtures and release gate | Passed | `98f64cd`; 45-scenario fixture |
-| L1 | Full automated release candidate gate | Passed | 119/119; audit 0; release:check passed |
-| L2 | Public iPhone Preview smoke QA | Pending | Pending |
+| L1 | Full automated release candidate gate | Passed | 120/120; audit 0; release:check passed |
+| L2 | Public iPhone Preview smoke QA | Passed | Public Safari QA URL, 390px, Console, Manifest, SW v13, offline App Shell |
 | L3 | Driver Pay Pro V1 Human QA | Pending | Single planned Product Owner gate |
 | Freeze | Local-first V1 docs and checklist | Pending | Only after L3 Passed |
 | Production | Main merge, Production deploy, L4 | Pending | Only after Freeze |
@@ -61,15 +61,17 @@ Status: Passed
 
 ## Program commits
 
-1. `8d8ba50 docs: complete calendar reports production release`
-2. `7fb8d3f docs: audit AI and Driver V1 scope`
-3. `36b746b refactor: unify AI with reports aggregation`
-4. `35815ab feat: complete evidence-based AI insights`
-5. `f22073f feat: complete Driver local settings and status`
-6. `97ea42d feat: integrate Driver Pay Pro local-first V1`
-7. `98f64cd test: complete V1 regression coverage`
+Release closeout prerequisite: `8d8ba50 docs: complete calendar reports production release`
 
-This list must be updated after every Program phase commit.
+1. `7fb8d3f docs: audit AI and Driver V1 scope`
+2. `36b746b refactor: unify AI with reports aggregation`
+3. `35815ab feat: complete evidence-based AI insights`
+4. `f22073f feat: complete Driver local settings and status`
+5. `97ea42d feat: integrate Driver Pay Pro local-first V1`
+6. `98f64cd test: complete V1 regression coverage`
+7. `b856857 docs: prepare V1 human QA and release`
+8. `eab40ed fix: route AI date insights to Calendar`
+9. `fix: harden V1 preview integration`（本次 L2 handoff commit）
 
 ## Known open or deferred work
 
@@ -87,7 +89,6 @@ The V1 Program does not claim to resolve:
 
 ## Next automatic gate
 
-Commit the documentation sync, create and independently verify a public
-non-Production L2 Preview, then stop at the single V1 L3 Human QA gate. TD-006
-is resolved by `sharedAnalytics` and shared-result regression tests; it must not
-be reopened by adding page-specific aggregation.
+Stop at the single V1 L3 Human QA gate and keep the temporary QA channel
+available. TD-006 is resolved by `sharedAnalytics` and shared-result regression
+tests; it must not be reopened by adding page-specific aggregation.

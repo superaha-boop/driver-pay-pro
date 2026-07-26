@@ -3,8 +3,14 @@
 Status: Pending Product Owner L3
 Updated: 2026-07-26
 
-本清單只執行一次。L1 與公開 L2 Preview 通過後，由 Product Owner 使用實體
-iPhone Safari 與 installed PWA 完成。Preview URL 將在 L2 驗證後補入。
+本清單只執行一次。L1 與公開 L2 Preview 已通過，現在由 Product Owner 使用
+實體 iPhone Safari 與 installed PWA 完成。
+
+QA URL：
+`https://mystery-kijiji-publicity-tech.trycloudflare.com`
+
+這是非 Production 的臨時公開 HTTPS tunnel。測試期間 Mac 必須保持開機、
+網路連線，且不得關閉目前 Codex 工作或 tunnel；L3 結束後才停止。
 
 ## L3 Checklist
 

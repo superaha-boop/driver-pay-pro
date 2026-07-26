@@ -11,7 +11,8 @@ GitHub：`superaha-boop/driver-pay-pro`
 - Branch：`codex/v1-completion-program-20260726`，追蹤同名遠端；base
   `dbaafba321fd3b108ef5d3b07e2adea7c1f23892`。
 - 已推送：`7fb8d3f` audit、`36b746b` canonical analytics、`35815ab` AI、
-  `f22073f` Driver、`97ea42d` integration、`98f64cd` 45-scenario regression。
+  `f22073f` Driver、`97ea42d` integration、`98f64cd` 45-scenario regression、
+  `b856857` L3 docs、`eab40ed` AI exact-date route。
 - AI 現在只有「營運建議／本月洞察／智慧提醒」三個主要區塊，唯讀並重用
   Reports 的 `sharedAnalytics`；TD-006 已解決。
 - Driver 的每日目標與 Today 共用 `state.settings.dailyGoal`，自動儲存失敗會
@@ -19,12 +20,18 @@ GitHub：`superaha-boop/driver-pay-pro`
 - 成功 mutation 使用單一 committed-record notification 更新 Reports／AI；
   `driverPayApp.v2` 與 WorkRecord schema 未變。
 - Service Worker candidate 已由 v12 更新一次至 `driver-pay-pro-v13`。
-- 最新自動結果：119/119 Node、Calendar 38/38、Reports 44/44、AI 5/5、
-  Driver 5/5、Integration/V1 15/15；lint 0 errors、10 existing warnings。
-- 完整 L1 已通過：`npm ci`、audit 0 vulnerabilities、119/119、全部專項、
+- 最新自動結果：120/120 Node、Calendar 38/38、Reports 44/44、AI 5/5、
+  Driver 5/5、Integration/V1 16/16；lint 0 errors、10 existing warnings。
+- 完整 L1 已通過：`npm ci`、audit 0 vulnerabilities、120/120、全部專項、
   lint 0 errors、inline JS、SW、Manifest、static build 與 `release:check`。
-- 下一步：建立未登入 iPhone Safari 可直接開啟的非 Production L2 Preview，
-  然後停在 `Ready for Driver Pay Pro V1 L3 Human QA`。
+- 公開 L2 已通過：`https://mystery-kijiji-publicity-tech.trycloudflare.com`；
+  未登入 Safari 直開、五分頁、AI deep link、Driver 即時狀態、390px、
+  Manifest、SW v13、Console 0 error／warning 與 Offline App Shell 通過。
+- L2 發現並修正兩個真實整合問題：AI 日期洞察現在導向確切 Calendar 日期；
+  每次進入 Driver 都重新計算本機紀錄狀態。Service Worker navigation 在來源
+  回傳 502 時也會安全回退 App Shell。
+- 下一步只執行 `docs/V1_HUMAN_QA.md` 的單次 Product Owner L3，狀態為
+  `Ready for Driver Pay Pro V1 L3 Human QA`。
 - 未收到 Product Owner 回覆 `Driver Pay Pro V1 L3 全部通過` 前，不得宣告
   V1 Freeze、合併 `main` 或 Production deploy。
 

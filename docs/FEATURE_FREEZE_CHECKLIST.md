@@ -97,13 +97,15 @@ not declare the complete Driver Pay Pro V1 finished.
   符合 Product Ownership Matrix。
 - [x] Specification complete：AI、Driver、Integration 與 Release Candidate
   規格已建立。
-- [x] Automated tests pass：119/119 Node tests；45-scenario V1 fixture。
+- [x] Automated tests pass：120/120 Node tests；45-scenario V1 fixture。
 - [x] Cross-page consistency verified：AI 與 Reports 共用 `sharedAnalytics`；
   committed-record notification 與 Driver goal contracts 通過。
-- [ ] Responsive verified：等待完整 L2 browser evidence。
+- [x] Responsive verified：L2 390px 無水平 overflow；320／375／393／430px
+  responsive regression evidence 通過。
 - [ ] iPhone Safari verified：等待 Product Owner L3。
 - [ ] Installed PWA verified：等待 Product Owner L3。
-- [ ] Offline verified：自動 contract 已通過，等待 L2／L3。
+- [x] Offline verified：自動 contract 與 Safari source-outage／502 App Shell
+  fallback 通過；installed PWA 飛航模式仍由 L3 確認。
 - [ ] Accessibility verified：自動 contract 已通過，等待 VoiceOver L3。
 - [ ] Human QA passed：Pending。
 - [x] Error recovery verified：read error、invalid data、rollback 與 corrupt

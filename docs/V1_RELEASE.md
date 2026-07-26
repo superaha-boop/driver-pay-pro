@@ -35,5 +35,7 @@ record metadata migration、多段工作模型、外部 AI 或 TypeScript migrat
 - Baseline main: `dbaafba321fd3b108ef5d3b07e2adea7c1f23892`
 - Service Worker candidate: `driver-pay-pro-v13`
 - Persistence: `driverPayApp.v2`, unchanged
+- L1: Passed, 120/120
+- L2: Passed, public Safari／responsive／Manifest／SW v13／offline App Shell
 - L3: Pending
 - Production: Not deployed

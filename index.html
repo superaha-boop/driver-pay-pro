@@ -9520,6 +9520,7 @@
       const previousView = activeView;
       activeView = view;
       if (view === "ai") renderAiAnalysis();
+      if (view === "settings") renderDriverStatus();
       if (view === "calendar") {
         refreshCalendarToday();
         renderCalendar();

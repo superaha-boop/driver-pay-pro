@@ -51,6 +51,13 @@ test("Driver 目標變更沿用既有 persistence 並立即更新 Today", () => 
   assert.doesNotMatch(html, /localStorage\.setItem\([^)]*(?:driverGoal|dailyGoal)/);
 });
 
+test("每次進入 Driver 都重算本機資料與 App 狀態", () => {
+  assert.match(
+    html,
+    /function setView\(view\) \{[\s\S]*?activeView = view;[\s\S]*?if \(view === "settings"\) renderDriverStatus\(\)/
+  );
+});
+
 test("五個主分頁與 session context 保持既有契約", () => {
   for (const view of ["today", "calendar", "reports", "ai", "settings"]) {
     assert.match(html, new RegExp(`data-view="${view}"`));
