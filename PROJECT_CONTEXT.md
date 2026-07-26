@@ -26,8 +26,9 @@
   committed-record refresh 及 Empty／Loading／Error／Offline 狀態。
 - 平台內建別名只在讀取層正規化；未知自訂平台安全保留顯示，歷史資料不被
   改寫，小費不歸入平台收入。
-- 全套 Node tests 為 79/79 通過；實體 iPhone Safari／installed PWA Human QA
-  與 Reports Final Regression／Freeze 尚未完成。
+- 全套 Node tests 為 79/79 通過；Sprint 5B2 的 L2 Preview Smoke 已完成，
+  完整實體 iPhone Safari／installed PWA L3 Human QA 依核准節奏延後至
+  Reports Final Regression／Freeze Gate 一次執行。
 
 ## 1. App 的核心設計原則
 
@@ -502,3 +503,12 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 4. 每次 Calendar、PWA 或原生 input 相關發布仍需實體 iPhone Safari 與 installed PWA 回歸。
 5. 未經使用者確認，不修改已凍結首頁或重新設計週報。
 6. 若要讓每月固定或分月計算真正影響未來月報，需另立資料 migration 與報表規格，不可直接複製未來月份資料。
+
+### QA 分級
+
+- L1：自動驗證。
+- L2：可由未登入 iPhone Safari 直接開啟的 Preview Smoke。
+- L3：模組 Final Regression 後的完整 Human QA。
+- L4：Production Release QA。
+- 小 Sprint 不重複要求完整人工 QA；高風險資料、同步、Service Worker 與
+  iOS 特有行為仍依風險即時提升驗證層級。

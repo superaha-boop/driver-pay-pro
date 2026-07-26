@@ -55,13 +55,22 @@ GitHub：`superaha-boop/driver-pay-pro`
   `scrollWidth === clientWidth`；平台列、tabs、Bottom Navigation 與 44px targets
   未溢出。
 - TypeScript、ESLint、production build：專案未配置，Not available。
-- 實體 iPhone Safari、installed PWA、VoiceOver、離線重開與 Preview 仍需
-  Product Owner Human QA。
+- 本 Sprint 依 PRD 只執行 L2 Preview Smoke：平台頁、週／月切換、排行／
+  占比、用語、exact-date drill-down、return context、mutation refresh 與
+  手機阻擋性錯誤檢查均通過。
+- 完整實體 iPhone Safari、installed PWA、VoiceOver、Offline 與 safe area
+  驗收延後至 Reports Final Regression 後的 L3 Module Human QA。
 
 ### 下一步
 
 執行 Reports Final Regression and UX Freeze Gate；不得在封板前宣稱 Reports
 已完成實體 iPhone／PWA QA，也不得回頭改造 Calendar。
+
+### QA 分級
+
+- L1 自動驗證；L2 Preview Smoke；L3 Module Human QA；L4 Production Release QA。
+- 小型 Sprint 只執行核准 PRD 指定的層級；大模組在 Final Regression 後集中
+  執行一次完整 L3。高風險資料、同步、Service Worker 與 iOS 特有行為例外。
 
 ---
 

@@ -726,6 +726,20 @@ Regression，並同步更新 `DECISIONS.md` 與正式決策紀錄。
 
 Codex 內建預覽不能取代 Chrome、Safari、iPhone 與 PWA 實機測試。
 
+### QA Level
+
+- L1 自動驗證：語法、測試、Console、responsive、資料安全與適用回歸。
+- L2 Preview Smoke QA：使用可由未登入 iPhone Safari 直接開啟的 Preview，
+  快速確認主要流程、導覽、更新、overflow、白畫面與阻擋性錯誤。
+- L3 Module Human QA：主要模組完成 Final Regression 後，一次驗收完整流程、
+  installed PWA、Offline、VoiceOver、safe area 與 iOS 特有行為。
+- L4 Production Release QA：Production 發布後核對正式 commit、核心流程、
+  Service Worker 更新與 rollback readiness。
+
+小型 Sprint 原則上完成 L1 與核准 PRD 指定的 L2，不重複要求完整 L3。
+完整 L3 應集中在大模組的 Final Regression／UX Freeze Gate。高風險資料、
+同步、Service Worker 或 iOS 特有變更仍須依風險立即提高 QA 層級。
+
 提供 iPhone Human QA 網址前，必須先以未登入的新連線實際確認：
 
 - 網址直接顯示 Driver Pay Pro，不會導向 Vercel、GitHub 或其他服務的登入／警告頁。

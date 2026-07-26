@@ -10,6 +10,20 @@
 - 所有功能變更都必須確認 `driverPayApp.v2` 未被更名或清除。
 - PWA 資源變更必須同步檢查 `sw.js` cache version 與 App Shell。
 
+## QA 分級
+
+- L1 自動驗證：語法、Node tests、Console、responsive、資料安全與適用回歸。
+- L2 Preview Smoke QA：以未登入 iPhone Safari 可直接開啟的 Preview 快速驗證
+  主要流程、導覽、即時更新、overflow、白畫面與阻擋性錯誤。
+- L3 Module Human QA：模組 Final Regression 後驗收完整流程、installed PWA、
+  Offline、VoiceOver、safe area 與 iOS 特有行為。
+- L4 Production Release QA：正式發布後核對 Production commit、核心流程、
+  Service Worker 更新與 rollback readiness。
+
+小型 Sprint 原則上不重複執行完整 L3；大模組完成 Final Regression 後集中
+執行一次。高風險資料、同步、Service Worker 或 iOS 特有變更仍須即時提高
+驗證層級。
+
 ## Reports Sprint 5B2 Platform and Drill-Down Validation
 
 Date: 2026-07-26
@@ -26,8 +40,11 @@ Date: 2026-07-26
 - Responsive: 320、375、390、393、430、768、1024px 均為
   `scrollWidth === clientWidth`；重要日期與 Reports tabs 至少 44px。
 - TypeScript、ESLint、Production build：Not available。
-- Physical iPhone Safari、installed PWA、VoiceOver、offline relaunch 與 Preview：
-  pending Product Owner Human QA。
+- L2 Preview Smoke：平台頁、本週／本月、排行／占比、正確用語、exact-date
+  drill-down、return context、mutation refresh 與手機無阻擋性錯誤 passed。
+- 本 Sprint 依核准 PRD 不執行完整 L3；實體 iPhone Safari、installed PWA、
+  VoiceOver、offline relaunch 與 safe area 集中於 Reports Final Regression
+  後的 Module Human QA。
 
 ## Reports Sprint 5A Specification Validation
 

@@ -21,6 +21,9 @@
 
 - Reports Sprint 5B2：新增本週／本月平台收入總額、排行、占比、安全前期比較、
   內建 alias 讀取層正規化、未知平台 fallback、未歸因／不一致資料狀態。
+- 建立 L1 自動驗證、L2 Preview Smoke、L3 Module Human QA 與
+  L4 Production Release QA 分級；Sprint 5B2 完成短版 Smoke，完整 Reports
+  Human QA 延後至 Final Regression。
 - 報表重要日期新增 Calendar exact-date drill-down、同 session return context、
   來源焦點復原及單一 committed-record refresh notification。
 - 新增 8 項 Reports Platform contract tests；全套自動測試增為 79 項。

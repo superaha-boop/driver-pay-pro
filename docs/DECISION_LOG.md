@@ -379,3 +379,23 @@
   - 不將 platform efficiency、best platform 或 platform hourly rate 加入 V1。
   - 不依模糊名稱自動合併未知平台。
   - 不在 Reports 建立第二套 Editor 或 persistence path。
+
+## D-029
+
+- Date: 2026-07-26
+- Decision:
+  1. QA 固定分為 L1 自動驗證、L2 Preview Smoke、L3 Module Human QA 與
+     L4 Production Release QA。
+  2. 小型 Sprint 不重複要求完整 L3；大模組完成 Final Regression 後集中
+     執行一次完整 Human QA。
+  3. Reports Sprint 5B2 只執行八項 L2 Preview Smoke；完整 Reports Human QA
+     延後至 Reports Final Regression。
+  4. 高風險資料、同步、Service Worker 與 iOS 特有行為仍依風險提高 QA 層級。
+  5. iPhone QA 網址必須以未登入的新連線確認可直接開啟。
+- Reason: 分離短版 Smoke 與完整模組驗收可減少重複 QA，同時保留高風險
+  變更的人工 Gate。
+- Impact: Sprint 文件與完成報告必須標示實際完成的 QA 層級；未執行 L3 時
+  不得宣稱實體 iPhone／PWA 完整驗收完成。
+- Rejected alternatives:
+  - 不讓每個小型 Sprint 重複完整 iPhone／PWA／VoiceOver 驗收。
+  - 不因延後 L3 而跳過高風險變更的必要即時人工確認。

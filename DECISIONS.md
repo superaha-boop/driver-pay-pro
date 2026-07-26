@@ -311,3 +311,28 @@ session return context 與 committed-record notification 則讓 Reports 保持�
 - 自訂平台跨重新命名的穩定 ID 仍為 TD-026，需另行核准 migration／資料 Sprint。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-028](docs/DECISION_LOG.md#d-028)。
+
+## D-029 — QA Levels and Reports 5B2 Validation Cadence
+
+- Date: 2026-07-26
+
+### 決策
+
+1. QA 固定分為 L1 自動驗證、L2 Preview Smoke、L3 Module Human QA 與
+   L4 Production Release QA。
+2. 小型 Sprint 不重複要求完整 L3；大模組完成 Final Regression 後集中執行
+   一次完整 Human QA。
+3. Reports Sprint 5B2 只執行八項 L2 Preview Smoke；週報、月報、平台、
+   drill-down、refresh、Offline、PWA、VoiceOver、responsive 與 safe area 的
+   完整驗收延後至 Reports Final Regression。
+4. 高風險資料、同步、Service Worker 與 iOS 特有行為仍須依風險即時提高
+   QA 層級。
+5. iPhone QA 網址必須以未登入的新連線確認可直接開啟，不得只依部署工具
+   回傳成功。
+
+### 原因
+
+將短 Sprint 的阻擋性 Smoke 與模組完成後的完整 Human QA 分開，可避免重複
+驗收，同時保留資料完整性、PWA 與 iOS 特有風險的必要人工 Gate。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-029](docs/DECISION_LOG.md#d-029)。
