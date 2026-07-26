@@ -2,6 +2,9 @@
 
 Driver Pay Pro 是為多元計程車與職業駕駛設計的手機優先收入、工時、支出與營運分析 PWA。
 
+Driver Pay Pro Local-first V1 已通過完整 L1、公開 L2 與 Product Owner L3；
+V1 UX Freeze 已生效。產品仍維持本機優先，沒有登入、雲端備份或跨裝置同步。
+
 ## Project Documentation
 
 開始接手或修改專案時，建議依序閱讀：
@@ -11,6 +14,11 @@ Driver Pay Pro 是為多元計程車與職業駕駛設計的手機優先收入�
 - [Product Specification](docs/PRODUCT_SPEC.md)：正式產品邊界、頁面責任與跨頁資料契約。
 - [Calendar Specification](docs/CALENDAR_SPEC.md)：Calendar 正式互動、資料與驗收契約。
 - [Reports Specification](docs/REPORTS_SPEC.md)：Reports 正式期間、KPI、比較、趨勢、平台與驗收契約。
+- [AI Specification](docs/AI_SPEC.md)：唯讀 AI、canonical analytics 與證據式洞察契約。
+- [Driver Specification](docs/DRIVER_SPEC.md)：既有持久設定與本機 App 狀態契約。
+- [V1 Integration Specification](docs/INTEGRATION_SPEC.md)：跨頁資料、refresh 與 local-first 契約。
+- [V1 Human QA](docs/V1_HUMAN_QA.md)：單次 Local-first V1 L3 驗收清單。
+- [V1 Release](docs/V1_RELEASE.md)：Release Gate、Production 與 rollback 流程。
 - [Design Kit](docs/DESIGN_KIT.md)：Mobile First、UI／UX、互動、響應式與品牌規範。
 - [Development Handbook](docs/DEVELOPMENT_HANDBOOK.md)：Sprint、PRD、開發、QA、Beta 與發布流程。
 - [Decision Log](docs/DECISION_LOG.md)：重要產品與工程決策、理由及影響。
@@ -44,6 +52,9 @@ npm run lint
 npm test
 npm run test:calendar
 npm run test:reports
+npm run test:ai
+npm run test:driver
+npm run test:integration
 npm run validate:production
 npm run build
 npm run release:check

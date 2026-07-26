@@ -1,4 +1,4 @@
-const CACHE_NAME = "driver-pay-pro-v12";
+const CACHE_NAME = "driver-pay-pro-v13";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -32,6 +32,9 @@ self.addEventListener("fetch", event => {
   event.respondWith(
     fetch(networkRequest)
       .then(response => {
+        if (isNavigation && !response.ok) {
+          return caches.match("./index.html").then(cached => cached || response);
+        }
         if (response.ok && response.type === "basic") {
           const copy = response.clone();
           const cacheKey = isNavigation ? "./index.html" : event.request;

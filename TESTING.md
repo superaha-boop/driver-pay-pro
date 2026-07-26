@@ -25,6 +25,47 @@
 執行一次。高風險資料、同步、Service Worker 或 iOS 特有變更仍須即時提高
 驗證層級。
 
+## Local-first V1 Release Candidate
+
+Date: 2026-07-26
+
+Status: L1, public L2 and Product Owner L3 passed; V1 UX Freeze active.
+
+- Fixed fixture: `tests/fixtures/v1-regression.json`，覆蓋 45 個核准情境。
+- `npm test`：120/120 passed。
+- `npm run test:calendar`：38/38 passed。
+- `npm run test:reports`：44/44 passed。
+- `npm run test:ai`：5/5 passed。
+- `npm run test:driver`：5/5 passed。
+- `npm run test:integration`：16/16 passed。
+- lint：0 errors／10 existing unused-code warnings。
+- `npm ci`：Passed；`npm audit`：0 vulnerabilities。
+- `npm run release:check`：Passed；inline JavaScript、Service Worker syntax、
+  Manifest、static Production validation 與 `git diff --check` 全部通過。
+- AI／Reports shared analytics、AI read-only／exact-date deep link、Driver goal
+  persistence／rollback、single committed-record refresh、five-tab navigation、
+  corrupt-data safety、offline App Shell、Accessibility／responsive contracts
+  passed。
+- Service Worker candidate：`driver-pay-pro-v13`。
+- Public L2 QA：
+  `https://mystery-kijiji-publicity-tech.trycloudflare.com`，未登入 Safari 可直接
+  開啟，沒有第三方登入或警告頁。
+- L2 browser：Today、Calendar、Reports 三個 tabs、AI 三區、Driver、跨頁
+  deep link、Driver 即時狀態與 390px `scrollWidth === clientWidth` 通過；
+  320／375／393／430px responsive regression contracts 通過。
+- Safari Console：0 error／0 warning；Manifest 與 Service Worker v13 可由
+  同源直接取得。
+- Offline App Shell：停止本機來源、由 Cloudflare 收到 502 時，Safari
+  navigation 會回退至已快取的 `index.html`；恢復來源後重新載入正常。
+- QA 後 `driverPayApp.v2` 沒有測試紀錄，每日目標維持未設定。
+- `driverPayApp.v2`、WorkRecord schema、Supabase 與 Production data 未變。
+- TypeScript：Deferred／Not available；目前靜態 PWA 沒有 TypeScript pipeline。
+- L3：Product Owner 於 2026-07-26 回覆
+  `Driver Pay Pro V1 L3 全部通過`；iPhone Safari、installed PWA、Offline、
+  VoiceOver、safe area、responsive、跨頁資料一致與無 High Priority issue
+  全部通過。
+- Driver Pay Pro Local-first V1 UX Freeze 已生效。
+
 ## Foundation Cleanup Validation
 
 Date: 2026-07-26
@@ -73,7 +114,7 @@ Status: L1, L2 and L3 passed; Reports UX Freeze Version 1 active.
   horizontal overflow，Reports tabs 單行。
 - L2 Preview Smoke: Weekly、Monthly、Platform、平台週／月、Calendar mutation
   refresh、important-date drill-down、return context、390px 與 Console passed。
-- TypeScript、ESLint、Production build：Not available。
+- TypeScript：Not available；ESLint 與 static Production build：Passed。
 - L3 清單：`docs/REPORTS_HUMAN_QA.md`；iPhone Safari、installed PWA、
   Offline、VoiceOver、Reduced Motion、safe area、responsive 與無 High Priority
   issue 全部由 Product Owner 確認通過。

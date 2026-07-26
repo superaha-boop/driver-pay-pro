@@ -6,6 +6,95 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
+## Local-first V1 Completion Program — Current Handoff
+
+- Branch：`codex/v1-completion-program-20260726`，追蹤同名遠端；base
+  `dbaafba321fd3b108ef5d3b07e2adea7c1f23892`。
+- 已推送：`7fb8d3f` audit、`36b746b` canonical analytics、`35815ab` AI、
+  `f22073f` Driver、`97ea42d` integration、`98f64cd` 45-scenario regression、
+  `b856857` L3 docs、`eab40ed` AI exact-date route。
+- AI 現在只有「營運建議／本月洞察／智慧提醒」三個主要區塊，唯讀並重用
+  Reports 的 `sharedAnalytics`；TD-006 已解決。
+- Driver 的每日目標與 Today 共用 `state.settings.dailyGoal`，自動儲存失敗會
+  rollback；本機資料與 App 狀態不寫入 WorkRecord。
+- 成功 mutation 使用單一 committed-record notification 更新 Reports／AI；
+  `driverPayApp.v2` 與 WorkRecord schema 未變。
+- Service Worker candidate 已由 v12 更新一次至 `driver-pay-pro-v13`。
+- 最新自動結果：120/120 Node、Calendar 38/38、Reports 44/44、AI 5/5、
+  Driver 5/5、Integration/V1 16/16；lint 0 errors、10 existing warnings。
+- 完整 L1 已通過：`npm ci`、audit 0 vulnerabilities、120/120、全部專項、
+  lint 0 errors、inline JS、SW、Manifest、static build 與 `release:check`。
+- 公開 L2 已通過：`https://mystery-kijiji-publicity-tech.trycloudflare.com`；
+  未登入 Safari 直開、五分頁、AI deep link、Driver 即時狀態、390px、
+  Manifest、SW v13、Console 0 error／warning 與 Offline App Shell 通過。
+- L2 發現並修正兩個真實整合問題：AI 日期洞察現在導向確切 Calendar 日期；
+  每次進入 Driver 都重新計算本機紀錄狀態。Service Worker navigation 在來源
+  回傳 502 時也會安全回退 App Shell。
+- Product Owner 已於 2026-07-26 回覆 `Driver Pay Pro V1 L3 全部通過`；
+  iPhone Safari、installed PWA、Offline、VoiceOver、safe area、responsive
+  與跨頁整合正式 Passed。
+- Driver Pay Pro Local-first V1 UX Freeze 已生效；21 項 Freeze Gate Passed。
+- 臨時 Cloudflare QA tunnel 與本機 QA server 已停止。
+- 下一步：完整 release:check、Freeze 文件 Commit、origin/main audit、PR、
+  一般 main 合併、既有 Vercel Production 與自動 L4 驗證。
+
+---
+
+## Production Release — Calendar and Reports Stable Milestone
+
+### 正式狀態
+
+- Status：Completed。
+- Product Owner 於 2026-07-26 正式確認：`Production L4 全部通過`。
+- 本次是 Calendar UX Freeze Version 1、Reports UX Freeze Version 1 與
+  Foundation Cleanup Version 1 的穩定 Production milestone，不是完整
+  Driver Pay Pro V1。
+
+### Git 與 Production
+
+- Release branch：`codex/production-release-20260726`。
+- Base：`origin/codex/foundation-cleanup-20260726`，
+  `1166d571c1b152ef84ebef3dfd61c99c2533a45d`。
+- Release Candidate HEAD：
+  `37e7fe913af0039c9457de9f1139694e10b82d20`。
+- Pull Request：
+  `https://github.com/superaha-boop/driver-pay-pro/pull/2`。
+- Main merge：
+  `dbaafba321fd3b108ef5d3b07e2adea7c1f23892`，正常 PR merge。
+- Production URL：`https://driver-pay-app.vercel.app`。
+- Production Deployment：`dpl_A3wt3sRW7hNDVHFZrWtSPaHpAjKJ`，
+  target Production、狀態 READY、commit 與 main Release merge 一致。
+- Previous stable Deployment：`dpl_ApoBCEihJtpt2MxB34tjkEkSNTar`，
+  commit `dd7b26cf3d6b411e8efd55d4aecfa10dcbd2c11f`，保留為 rollback target。
+
+### 驗證與資料安全
+
+- `npm audit`：0 vulnerabilities。
+- lint：0 errors、10 個既有 unused-code warnings。
+- Node tests：94/94；Calendar：38/38；Reports：44/44。
+- Production validation、build、`release:check`、Inline JavaScript、
+  Service Worker、Manifest、`git diff --check`：Passed。
+- 320、375、390、393、430px：Today、Calendar、Reports 無水平 overflow。
+- Production Console：0 error／warning；Vercel runtime errors：0。
+- Manifest、正式 icons、Service Worker、Offline App Shell：Passed。
+- Service Worker cache：`driver-pay-pro-v12`。
+- WorkRecord schema、`driverPayApp.v2`、Supabase 與正式資料未變更。
+- 沒有建立或污染 Production 測試紀錄。
+
+### Rollback 與下一步
+
+- Rollback 優先將 Production 指回
+  `dpl_ApoBCEihJtpt2MxB34tjkEkSNTar`；必要時建立正常 revert commit。
+- 禁止 reset main、force push、改寫歷史、清除 localStorage 或刪除資料。
+- 未完成項目維持 Open／Deferred：AI 正式實作、TD-006、Driver 完整功能、
+  Supabase／跨裝置同步、conflict resolution、record metadata、多段工作模型、
+  TypeScript 與 iPhone native input 長期驗證。
+- 後續功能不得破壞 Calendar／Reports Freeze，並必須重用 Reports 已驗證的
+  period、aggregation、comparison、trend、platform、persistence、refresh、
+  formatting、state 與 drill-down 基礎。
+
+---
+
 ## iPhone Human QA 網址交付規則
 
 - Vercel 受保護 Preview 的 `_vercel_share` 連結曾實測仍導向登入頁；不可只依

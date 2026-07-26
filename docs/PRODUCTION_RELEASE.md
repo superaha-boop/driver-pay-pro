@@ -4,7 +4,7 @@ Release name: Calendar and Reports Stable Milestone
 
 Release date: 2026-07-26
 
-Status: Release Candidate
+Status: Completed
 
 This milestone is a stable Production release of Calendar UX Freeze Version 1,
 Reports UX Freeze Version 1, and Foundation Cleanup Version 1. It is not the
@@ -18,9 +18,18 @@ complete Driver Pay Pro V1 release.
 - Main before merge: `dd7b26cf3d6b411e8efd55d4aecfa10dcbd2c11f`
 - Merge base: `c40e2721fdb2ef00293967ec77cd3ccaef74632c`
 - Release product commit: `1166d571c1b152ef84ebef3dfd61c99c2533a45d`
-- Release documentation commits: recorded in the Release branch history
-- Pull Request: pending
-- Main merge commit: pending
+- Release Candidate HEAD:
+  `37e7fe913af0039c9457de9f1139694e10b82d20`
+- Release documentation commits:
+  - `9577aa2` — prepare Calendar and Reports Production release
+  - `862f2b3` — finalize Release Candidate metadata
+  - `37e7fe9` — record Release Candidate validation
+- Pull Request:
+  `https://github.com/superaha-boop/driver-pay-pro/pull/2`
+- Merge method: normal GitHub Pull Request merge
+- Main merge commit:
+  `dbaafba321fd3b108ef5d3b07e2adea7c1f23892`
+- Main merge time: 2026-07-26 14:51 Asia/Taipei
 
 ## Included Stable Milestones
 
@@ -45,11 +54,12 @@ complete Driver Pay Pro V1 release.
   one merge commit not present in the feature lineage.
 - The unique main commit is `dd7b26c`, a normal merge commit whose tree is
   byte-identical to the shared ancestor `c40e272`.
-- The Release branch is 31 commits ahead and main is one merge commit ahead by
-  graph count.
+- The Foundation product lineage was 31 commits ahead of main; after the three
+  Release documentation commits, the Release Candidate was 34 commits ahead
+  and main was one merge commit ahead by graph count.
 - Main contains no file content that is absent from the Release branch.
-- A normal PR merge is required. Reset, rebase, force push, and history rewrite
-  are prohibited.
+- A normal PR merge was used. Reset, rebase, force push, and history rewrite
+  were not used.
 
 ## Completed Scope
 
@@ -132,9 +142,53 @@ complete Driver Pay Pro V1 release.
   `https://driver-pay-609gnt7q1-sky-skill-labs.vercel.app`
 - Previous stable deployment commit:
   `dd7b26cf3d6b411e8efd55d4aecfa10dcbd2c11f`
-- New deployment ID: pending.
-- New deployment commit: pending.
-- L4 Production Human QA: pending.
+- New deployment ID: `dpl_A3wt3sRW7hNDVHFZrWtSPaHpAjKJ`.
+- New deployment URL:
+  `https://driver-pay-r2y2ov5z6-sky-skill-labs.vercel.app`
+- New deployment commit:
+  `dbaafba321fd3b108ef5d3b07e2adea7c1f23892`.
+- Deployment environment: Production.
+- Deployment status: READY.
+- Deployment time: 2026-07-26 14:51:18 Asia/Taipei.
+- Stable Production alias: `https://driver-pay-app.vercel.app`.
+- L4 Production Human QA: Passed; Product Owner confirmed
+  `Production L4 全部通過` on 2026-07-26.
+
+## Production Verification
+
+- Public HTTPS and unauthenticated access: Passed, HTTP 200.
+- Today, Calendar, Weekly Reports, Monthly Reports, and Platform Reports:
+  Passed.
+- Calendar exact-date selection: Passed without creating or modifying records.
+- Reports drill-down and return-context contracts: Passed in the 94-test
+  regression suite; Production was not populated with test records.
+- Responsive: Today, Calendar, and Reports passed at 320, 375, 390, 393, and
+  430px with no horizontal overflow.
+- Bottom Navigation: Passed; content retained sufficient bottom clearance.
+- Manifest and both declared PWA icons: Passed, HTTP 200.
+- Service Worker: registered and controlled by `driver-pay-pro-v12`.
+- Offline App Shell: Passed in an isolated browser with external DNS blocked.
+- Console: 0 error and 0 warning.
+- Vercel runtime errors: none found during the release verification window.
+- Production resources: no Preview or temporary tunnel origin was loaded.
+- localStorage key: remains `driverPayApp.v2`.
+- Production data: no test record, initialization, overwrite, or migration.
+
+## L4 Production Human QA
+
+Product Owner completed the single concise L4 Production Human QA on
+2026-07-26 and confirmed all items passed:
+
+- unauthenticated iPhone Safari access;
+- existing record retention;
+- Today, Calendar, and Reports navigation;
+- Weekly, Monthly, and Platform report switching;
+- exact-date Calendar drill-down;
+- installed PWA close and reopen;
+- responsive layout, Bottom Navigation, and absence of blocking errors.
+
+Calendar and Reports Stable Milestone is therefore formally Completed. This
+does not declare the complete Driver Pay Pro V1 finished.
 
 ## Rollback
 
@@ -160,9 +214,9 @@ data, or create a migration for this rollback.
 - [x] Full local Release Gate passed.
 - [x] Release Candidate Preview deployed and passed L2 smoke.
 - [x] Release branch pushed.
-- [ ] Pull Request created with reviewed diff.
-- [ ] Main merged normally.
-- [ ] Production deployment matches main merge commit.
-- [ ] Production automated smoke passed.
-- [ ] Rollback target re-confirmed after deployment.
-- [ ] Product Owner completed the single concise L4 Production Human QA.
+- [x] Pull Request created with reviewed diff.
+- [x] Main merged normally.
+- [x] Production deployment matches main merge commit.
+- [x] Production automated smoke passed.
+- [x] Rollback target re-confirmed after deployment.
+- [x] Product Owner completed the single concise L4 Production Human QA.

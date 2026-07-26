@@ -4,6 +4,50 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
+## Driver Pay Pro Local-first V1 UX Freeze
+
+- 工作分支：`codex/v1-completion-program-20260726`；Production baseline：
+  `dbaafba321fd3b108ef5d3b07e2adea7c1f23892`。
+- Phase 1～5 已完成：AI／Driver audit、Reports canonical analytics 重用、
+  evidence-based AI、Driver 每日目標與本機狀態、跨頁 refresh、45 情境
+  regression fixture。
+- AI 固定為唯讀「營運建議／本月洞察／智慧提醒」；Driver 只管理既有持久
+  設定與本機／App 狀態。
+- TD-006 已由 `sharedAnalytics` 與 AI／Reports shared-result tests 解決。
+- `driverPayApp.v2`、WorkRecord schema、Calendar／Reports Freeze 保持不變；
+  Service Worker candidate 為 `driver-pay-pro-v13`。
+- L1 120/120、公開 iPhone L2 與單次 Product Owner L3 全部通過。
+- Product Owner 已於 2026-07-26 回覆 `Driver Pay Pro V1 L3 全部通過`；
+  Driver Pay Pro Local-first V1 UX Freeze 正式生效。
+- 臨時 QA tunnel 已停止；下一步是安全 main audit、PR、一般合併與既有
+  Vercel Production 發布。
+- Local-first V1 沒有 Supabase、登入、雲端備份、跨裝置同步、migration 或
+  外部 AI；相關技術債保持 Open／Deferred。
+
+## Calendar and Reports Stable Milestone — Production
+
+- Calendar UX Freeze Version 1、Reports UX Freeze Version 1 與 Foundation
+  Cleanup Version 1 已透過 PR
+  `https://github.com/superaha-boop/driver-pay-pro/pull/2` 正常合併至
+  `main`。
+- Release Candidate HEAD：
+  `37e7fe913af0039c9457de9f1139694e10b82d20`；main Release merge：
+  `dbaafba321fd3b108ef5d3b07e2adea7c1f23892`。
+- Production：`https://driver-pay-app.vercel.app`；Deployment：
+  `dpl_A3wt3sRW7hNDVHFZrWtSPaHpAjKJ`，環境 Production、狀態 READY，部署
+  commit 與 main Release merge 一致。
+- Release Gate：94/94 Node tests、Calendar 38/38、Reports 44/44、lint、
+  Production validation、build、`release:check`、Manifest、Service Worker、
+  responsive、Console 與 Offline App Shell 全部通過。
+- Product Owner 已於 2026-07-26 回覆 `Production L4 全部通過`；本次
+  Calendar and Reports Stable Milestone 正式標記 Completed。
+- 本次不是完整 Driver Pay Pro V1。AI 正式實作、TD-006、Driver 完整功能、
+  Supabase／跨裝置同步、conflict resolution、record metadata、多段工作模型、
+  TypeScript 與 iPhone native input 長期驗證仍未完成。
+- 正式資料、WorkRecord schema、`driverPayApp.v2`、Supabase 與 Service
+  Worker cache 均未因 Release 收尾變更；cache 維持
+  `driver-pay-pro-v12`。
+
 ## Calendar V1 完成狀態
 
 - Calendar V1 的 Read、Navigate、Create、Edit、Delete 與 transactional rollback 已完成。

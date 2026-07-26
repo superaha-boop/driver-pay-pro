@@ -410,3 +410,73 @@ UX 的前提下降低發布風險。
   Production deploy。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-031](docs/DECISION_LOG.md#d-031)。
+
+## D-032 — Local-first V1 Release Candidate Architecture
+
+- Date: 2026-07-26
+
+### 決策
+
+1. Local-first V1 不加入 Supabase、登入、同步、migration 或外部 AI。
+2. AI 維持唯讀三區塊，透過 `sharedAnalytics` 重用 Reports canonical
+   analytics；TD-006 Resolved。
+3. Driver 只管理既有持久設定與衍生 App／本機狀態；每日目標與 Today 共用
+   `state.settings.dailyGoal`。
+4. 成功 WorkRecord 寫入只發出一次 committed-record notification；Reports
+   與 AI 可見時各更新一次。
+5. `driverPayApp.v2`、WorkRecord schema、Calendar／Reports Freeze 不變；
+   V1 candidate App Shell 使用 `driver-pay-pro-v13`。
+6. L1 與公開 L2 通過後只進入一次 V1 L3 Human QA；L3 通過前不宣告 Freeze、
+   不合併 `main`、不部署 Production。
+
+### 原因
+
+V1 需要在不引入雲端與資料遷移風險下完成五頁閉環，並消除 AI 與 Reports
+公式分歧。共用 canonical analytics 與單一 refresh event 可提供可重複驗證的
+本機基礎。
+
+### 影響範圍
+
+- 新增 AI、Driver、integration、regression tests、規格與 v13 App Shell。
+- 雲端同步、conflict resolution、record metadata、多段工作、TypeScript 與
+  native input 長期驗證保持 Open／Deferred。
+- 本決策只建立 Release Candidate，不代表 Human QA、Freeze 或 Production
+  已完成。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-032](docs/DECISION_LOG.md#d-032)。
+
+## D-033 — Driver Pay Pro Local-first V1 UX Freeze
+
+- Date: 2026-07-26
+
+### 決策
+
+1. Product Owner 已回覆 `Driver Pay Pro V1 L3 全部通過`；iPhone Safari、
+   installed PWA、Offline、VoiceOver、safe area、responsive、跨頁整合與
+   local-first data integrity 全部通過。
+2. Driver Pay Pro Local-first V1 UX Freeze 正式生效。
+3. Freeze 範圍包含 Today 核心流程、Calendar V1、Reports V1、AI V1、Driver
+   V1、Bottom Navigation、跨頁 drill-down、context restoration、
+   record-change refresh、Loading／Empty／Insufficient／Error／Offline、
+   Accessibility、Responsive、PWA 與 local-first data integrity。
+4. Freeze 後只接受 Bug、Accessibility、Data Integrity、Security、重大使用
+   障礙與 Production blocker；一般新功能進入 V1.1 或 Cloud Sync Backlog。
+5. AI 必須持續透過 `sharedAnalytics` 重用 Reports canonical analytics；
+   TD-006 維持 Resolved。
+6. `driverPayApp.v2`、WorkRecord schema、Calendar／Reports Freeze 與既有
+   local-first 資料保持不變。
+
+### 原因
+
+L1 120/120、公開 L2、單次 Product Owner L3 與全部 Freeze Gate 已具備可追溯
+證據，五個主要頁面形成完整且可回歸的 Local-first V1 閉環。
+
+### 影響範圍
+
+- 本決策宣告 UX Freeze，不關閉 Supabase sync、跨裝置同步、conflict
+  resolution、cloud backup、authentication、record metadata、多段工作模型、
+  TypeScript 或 iPhone native input 長期驗證等 Open／Deferred 技術債。
+- 本次 Freeze 文件 Commit 不修改產品程式、schema、localStorage key、
+  Service Worker、正式資料或 dependencies。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-033](docs/DECISION_LOG.md#d-033)。

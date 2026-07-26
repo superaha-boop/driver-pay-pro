@@ -451,3 +451,47 @@
   - 不為符合 build 名稱而導入 bundler。
   - 不為清除 lint warnings 而重構 frozen 產品程式。
   - 不在本 Sprint 抽取 AI aggregation 或拆分整個 inline JavaScript。
+
+## D-032
+
+- Date: 2026-07-26
+- Decision:
+  1. Local-first V1 不新增 Supabase、authentication、cloud sync、migration 或
+     external AI。
+  2. AI 固定唯讀三區塊並透過 `sharedAnalytics` 重用 Reports canonical
+     analytics；TD-006 Resolved。
+  3. Driver 只管理既有 durable settings 與 derived local App status；每日目標
+     與 Today 共用同一 setting。
+  4. 成功 WorkRecord mutation 只發出一次 committed-record notification。
+  5. `driverPayApp.v2`、WorkRecord schema 與 Calendar／Reports Freeze 不變；
+     candidate App Shell 為 v13。
+  6. L1／公開 L2 後進入單次 V1 L3；通過前不 Freeze、merge main 或 Production。
+- Reason: 以共用 analytics、單一 refresh 與既有 local persistence 完成五頁
+  V1 閉環，同時避免雲端與 migration 風險。
+- Impact: TD-006 Resolved；其他同步、metadata、multi-session、TypeScript 與
+  iPhone native input 債保持 Open／Deferred。本決策尚未宣告 V1 Freeze。
+- Rejected alternatives:
+  - 不建立外部 AI、第二套 aggregation 或新的 durable storage。
+  - 不在 Human QA 前更新 Production。
+
+## D-033
+
+- Date: 2026-07-26
+- Decision:
+  1. Product Owner 已確認 `Driver Pay Pro V1 L3 全部通過`。
+  2. Driver Pay Pro Local-first V1 UX Freeze 正式生效。
+  3. Freeze 包含 Today、Calendar、Reports、AI、Driver、Bottom Navigation、
+     drill-down、context restoration、record-change refresh、資料狀態、
+     Accessibility、Responsive、PWA 與 local-first data integrity。
+  4. Freeze 後只接受 Bug、Accessibility、Data Integrity、Security、重大使用
+     障礙與 Production blocker；一般新功能進入 V1.1／Cloud Sync Backlog。
+  5. AI 必須持續重用 `sharedAnalytics`；`driverPayApp.v2` 與 WorkRecord schema
+     不變。
+- Reason: L1 120/120、公開 L2 與單次 Product Owner L3 已全部通過，21 項
+  Local-first V1 Feature Freeze Gate 具備實際證據。
+- Impact: TD-006 維持 Resolved；同步、備份、authentication、metadata、
+  multi-session、TypeScript 與 native input 長期驗證保持 Open／Deferred。
+  Freeze 文件本身不修改產品、資料、PWA 或 dependencies。
+- Rejected alternatives:
+  - 不以 V1 完成為由虛報尚未完成的 Cloud Sync 技術債。
+  - 不允許後續頁面建立第二套 aggregation。
