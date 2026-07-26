@@ -17,7 +17,8 @@ complete Driver Pay Pro V1 release.
 - Base commit: `1166d571c1b152ef84ebef3dfd61c99c2533a45d`
 - Main before merge: `dd7b26cf3d6b411e8efd55d4aecfa10dcbd2c11f`
 - Merge base: `c40e2721fdb2ef00293967ec77cd3ccaef74632c`
-- Release commit: pending Release Candidate documentation commit
+- Release product commit: `1166d571c1b152ef84ebef3dfd61c99c2533a45d`
+- Release documentation commits: recorded in the Release branch history
 - Pull Request: pending
 - Main merge commit: pending
 
@@ -151,4 +152,3 @@ data, or create a migration for this rollback.
 - [ ] Production automated smoke passed.
 - [ ] Rollback target re-confirmed after deployment.
 - [ ] Product Owner completed the single concise L4 Production Human QA.
-
