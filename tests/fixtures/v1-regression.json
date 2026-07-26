@@ -1,0 +1,176 @@
+{
+  "today": "2026-07-26",
+  "requiredScenarios": [
+    "no-data",
+    "single-valid-record",
+    "multiple-valid-days",
+    "current-week-data",
+    "previous-week-data",
+    "current-month-data",
+    "previous-month-data",
+    "positive-net",
+    "zero-net",
+    "negative-net",
+    "income-without-work-time",
+    "work-time-without-income",
+    "expenses-above-income",
+    "multiple-platforms",
+    "tips",
+    "unattributed-income",
+    "unknown-platform",
+    "historical-platform-alias",
+    "platform-total-inconsistent",
+    "cross-midnight",
+    "cross-month",
+    "cross-year",
+    "leap-year",
+    "incomplete-legacy-record",
+    "corrupt-json",
+    "partial-invalid-record",
+    "calendar-create",
+    "calendar-edit",
+    "calendar-delete",
+    "mutation-rollback",
+    "today-mutation",
+    "driver-goal-save-success",
+    "driver-goal-save-failure",
+    "ai-insufficient-data",
+    "ai-weekday-pattern-insufficient",
+    "ai-weekday-pattern-sufficient",
+    "ai-month-no-previous",
+    "ai-month-previous-zero",
+    "ai-positive-to-negative",
+    "ai-negative-to-positive",
+    "ai-offline",
+    "pwa-reload",
+    "service-worker-upgrade",
+    "navigation-context",
+    "return-focus"
+  ],
+  "platforms": ["Uber", "LINE GO", "Yoxi", "55688", "大都會車隊"],
+  "platformRates": {
+    "Uber": 100,
+    "LINE GO": 100,
+    "Yoxi": 100,
+    "55688": 100,
+    "大都會車隊": 100
+  },
+  "records": [
+    {
+      "id": "previous-month-positive",
+      "date": "2026-06-29",
+      "incomes": { "Uber": 2400 },
+      "expenses": { "油錢／電費": 400 },
+      "manualHours": 4
+    },
+    {
+      "id": "previous-week-positive",
+      "date": "2026-07-13",
+      "incomes": { "Uber": 4000 },
+      "expenses": { "油錢／電費": 500 },
+      "manualHours": 8
+    },
+    {
+      "id": "zero-net",
+      "date": "2026-07-14",
+      "incomes": { "LINE GO": 1000 },
+      "expenses": { "停車費": 1000 },
+      "manualHours": 2
+    },
+    {
+      "id": "negative-net",
+      "date": "2026-07-15",
+      "incomes": { "Yoxi": 500 },
+      "expenses": { "維修": 800 },
+      "manualHours": 2
+    },
+    {
+      "id": "income-without-work-time",
+      "date": "2026-07-20",
+      "incomes": { "Uber": 2340 },
+      "expenses": {}
+    },
+    {
+      "id": "work-time-without-income",
+      "date": "2026-07-21",
+      "incomes": {},
+      "expenses": {},
+      "manualHours": 4
+    },
+    {
+      "id": "multiple-platforms-and-tips",
+      "date": "2026-07-22",
+      "incomes": {
+        "Uber": 1200,
+        "LINE GO": 800,
+        "大都會車隊": 400,
+        "Mystery Fleet": 200
+      },
+      "tips": 150,
+      "expenses": { "油錢／電費": 300 },
+      "manualHours": 5
+    },
+    {
+      "id": "historical-alias",
+      "date": "2026-07-23",
+      "incomes": { "台灣大車隊": 1500 },
+      "expenses": {},
+      "manualHours": 3
+    },
+    {
+      "id": "cross-midnight",
+      "date": "2026-07-24",
+      "incomes": { "Yoxi": 1800 },
+      "expenses": {},
+      "startTime": "22:00",
+      "endTime": "02:00",
+      "breakMinutes": 30
+    },
+    {
+      "id": "incomplete-legacy",
+      "date": "2026-07-25",
+      "incomes": { "Uber": 900 },
+      "expenses": {},
+      "startTime": "08:00"
+    }
+  ],
+  "partialInvalidRecords": [
+    {
+      "id": "invalid-date",
+      "date": "2026-02-30",
+      "incomes": { "Uber": 1000 }
+    },
+    {
+      "id": "invalid-amount",
+      "date": "2026-07-18",
+      "incomes": { "Uber": "not-a-number" }
+    }
+  ],
+  "weekdayPattern": [
+    { "date": "2026-05-01", "incomes": { "Uber": 3000 }, "manualHours": 6 },
+    { "date": "2026-05-08", "incomes": { "Uber": 3200 }, "manualHours": 6 },
+    { "date": "2026-05-15", "incomes": { "Uber": 3100 }, "manualHours": 6 },
+    { "date": "2026-05-22", "incomes": { "Uber": 3300 }, "manualHours": 6 },
+    { "date": "2026-06-05", "incomes": { "Uber": 3400 }, "manualHours": 6 },
+    { "date": "2026-06-12", "incomes": { "Uber": 3350 }, "manualHours": 6 },
+    { "date": "2026-06-19", "incomes": { "Uber": 3450 }, "manualHours": 6 },
+    { "date": "2026-06-26", "incomes": { "Uber": 3500 }, "manualHours": 6 },
+    { "date": "2026-07-03", "incomes": { "Uber": 3550 }, "manualHours": 6 },
+    { "date": "2026-07-10", "incomes": { "Uber": 3600 }, "manualHours": 6 },
+    { "date": "2026-07-17", "incomes": { "Uber": 3650 }, "manualHours": 6 },
+    { "date": "2026-07-24", "incomes": { "Uber": 3700 }, "manualHours": 6 }
+  ],
+  "driverGoal": {
+    "before": 3000,
+    "after": 3500,
+    "invalid": -1
+  },
+  "corruptJson": "{\"entries\":[",
+  "expected": {
+    "storageKey": "driverPayApp.v2",
+    "serviceWorkerCache": "driver-pay-pro-v13",
+    "mainViews": ["today", "calendar", "reports", "ai", "settings"],
+    "aiPrimarySections": ["營運建議", "本月洞察", "智慧提醒"]
+  }
+}
+
