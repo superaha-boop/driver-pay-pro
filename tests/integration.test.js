@@ -31,7 +31,7 @@ test("AI deep link 保留精確日期且不開啟 Calendar Editor", () => {
   assert.match(html, /data-ai-calendar-date/);
   assert.match(
     html,
-    /openCalendar\(\{ selectedDate: calendarTarget\.dataset\.aiCalendarDate, source: "ai" \}\)/
+    /const date = normalizeDateKey\(calendarTarget\.dataset\.aiCalendarDate\);[\s\S]*?const hash = `#calendar\/\$\{date\}`;[\s\S]*?history\.pushState[\s\S]*?applyRoute\(\{ view: "calendar", reportView: activeReportView, calendarDate: date \}\)/
   );
   const aiClickHandler = html.match(
     /document\.getElementById\("view-ai"\)\.addEventListener\("click",[\s\S]*?\n    \}\);/
@@ -77,4 +77,3 @@ test("Offline 狀態允許 AI 與 Driver 繼續使用本機資料", () => {
   assert.match(html, /if \(activeView === "ai"\) renderAiAnalysis\(\)/);
   assert.match(html, /if \(activeView === "settings"\) renderDriverStatus\(\)/);
 });
-

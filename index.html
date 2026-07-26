@@ -10475,7 +10475,11 @@
     document.getElementById("view-ai").addEventListener("click", event => {
       const calendarTarget = event.target.closest("[data-ai-calendar-date]");
       if (calendarTarget) {
-        openCalendar({ selectedDate: calendarTarget.dataset.aiCalendarDate, source: "ai" });
+        const date = normalizeDateKey(calendarTarget.dataset.aiCalendarDate);
+        if (!date) return;
+        const hash = `#calendar/${date}`;
+        if (location.hash !== hash) history.pushState({}, "", `${location.pathname}${location.search}${hash}`);
+        applyRoute({ view: "calendar", reportView: activeReportView, calendarDate: date });
         return;
       }
       const reportTarget = event.target.closest("[data-ai-report-view]");
