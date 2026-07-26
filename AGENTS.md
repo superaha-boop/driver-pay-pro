@@ -726,6 +726,17 @@ Regression，並同步更新 `DECISIONS.md` 與正式決策紀錄。
 
 Codex 內建預覽不能取代 Chrome、Safari、iPhone 與 PWA 實機測試。
 
+提供 iPhone Human QA 網址前，必須先以未登入的新連線實際確認：
+
+- 網址直接顯示 Driver Pay Pro，不會導向 Vercel、GitHub 或其他服務的登入／警告頁。
+- iPhone Safari 可透過公開 HTTPS 載入，不要求測試者建立第三方帳號。
+- Manifest 與 Service Worker 可從相同來源正常取得。
+- 指定手機 viewport 沒有水平 overflow，Console 沒有目前頁面的 error／warning。
+
+部署平台僅回傳「分享網址已建立」不算驗證通過。若受保護的 Preview 分享連結
+實測仍要求登入，必須改提供已實測可直接開啟的臨時公開 QA 網址，並清楚說明
+有效期間及是否需要開發用電腦保持連線。
+
 ## Completion Status
 
 Codex 完成程式後只能標示：

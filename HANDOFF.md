@@ -6,6 +6,17 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
+## iPhone Human QA 網址交付規則
+
+- Vercel 受保護 Preview 的 `_vercel_share` 連結曾實測仍導向登入頁；不可只依
+  工具回傳成功就交付。
+- 每次 iPhone QA 必須先用未登入的新連線確認網址直接顯示 Driver Pay Pro，
+  並驗證 Manifest、Service Worker、手機 viewport 與目前頁面 Console。
+- 若 Vercel 分享機制失效，可使用臨時公開 HTTPS tunnel，但需說明 Mac 必須
+  保持開機、網路連線及 tunnel 執行中；Human QA 結束後再關閉。
+
+---
+
 ## Reports Sprint 5B2 — Platform, Drill-Down, and Hardening
 
 ### 分支與範圍
