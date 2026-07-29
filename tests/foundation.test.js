@@ -17,6 +17,7 @@ test("Foundation scripts provide one-command lint, build and release gates", () 
   assert.equal(packageJson.scripts.build, "npm run validate:production");
   assert.equal(packageJson.scripts["release:check"], "node scripts/release-check.mjs");
   assert.match(packageJson.scripts.test, /tests\/\*\.test\.js/);
+  assert.match(packageJson.scripts["test:today"], /work-time\.test\.js/);
   assert.match(packageJson.scripts["test:calendar"], /calendar-regression\.test\.js/);
   assert.match(packageJson.scripts["test:reports"], /reports-final-regression\.test\.js/);
 });
@@ -53,6 +54,7 @@ test("Release check runs every required gate and stops on failure", () => {
   [
     "lint",
     "test",
+    "test:today",
     "test:reports",
     "test:calendar",
     "check:inline",
@@ -81,10 +83,10 @@ test("Design System showcase covers the approved internal states", () => {
   ].forEach(label => assert.ok(showcase.includes(label), `Missing showcase section: ${label}`));
 });
 
-test("Showcase remains isolated and Local-first V1 App Shell uses v13", () => {
+test("Showcase remains isolated and V1.1 App Shell uses v14", () => {
   const nav = indexHtml.match(/<nav class="nav"[\s\S]*?<\/nav>/)?.[0] || "";
   assert.doesNotMatch(nav, /design-system/i);
   assert.doesNotMatch(serviceWorker, /design-system\.html/);
-  assert.match(serviceWorker, /driver-pay-pro-v13/);
-  assert.doesNotMatch(serviceWorker, /driver-pay-pro-v14/);
+  assert.match(serviceWorker, /driver-pay-pro-v14/);
+  assert.doesNotMatch(serviceWorker, /driver-pay-pro-v15/);
 });

@@ -610,7 +610,7 @@ Calendar reads the existing entry model. No formatted value is stored.
 | Start time | `startTime` | `HH:mm` string | Yes | Work controls/form | Work derivation input |
 | End time | `endTime` | `HH:mm` string | Yes | Work controls/form | May be earlier after midnight |
 | Break | `breakMinutes` | number | Yes/default 0 | Work controls/form | Minutes; normalization required |
-| Manual work time | `manualHours` | number | Yes/default 0 | Form | Hours; currently overrides session/clock duration |
+| Manual work time | `manualHours` | number | Yes/default 0 | Form | Legacy hours; only used when complete valid start/end fields are unavailable, rounded to integer minutes |
 | Tips | `tips` | number | Yes/default 0 | Form | Included in total income |
 | Orders | `orders` | number | Yes/default 0 | Form | Optional detail/work-day signal |
 | Distance | `km` | number | Yes/default 0 | Form | Optional detail/work-day signal |
@@ -633,7 +633,7 @@ Calendar reads the existing entry model. No formatted value is stored.
 | Total income | `entryTotal(record)` | Single implementation |
 | Total expenses | `entryExpenses(record)` | Single implementation |
 | Net income | `entryNet(record)` | Single implementation |
-| Actual duration | `workMetrics(record).durationMs` | Single implementation |
+| Actual duration | `workMetrics(record).durationMs` / `.workMinutes` | Single implementation; complete clock fields take precedence |
 | Hourly income | `hourlyRate(net, durationMs)` | Single implementation |
 | Monthly net | `summarize(entriesForMonth(month)).net` | Reusable existing implementation |
 | Monthly work days | Unique valid dates where duration, total income, expenses, orders, or distance is positive | Missing shared selector; add one pure shared function before Calendar summary |

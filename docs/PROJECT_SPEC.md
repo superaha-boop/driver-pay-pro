@@ -129,10 +129,16 @@ driverPayApp.v2
 
 計算優先順序：
 
-1. `manualHours > 0` 時使用手動工時。
-2. 有 `workSession` 時使用累積有效工作毫秒數；running 狀態加上目前分段。
-3. 否則由開始／結束時間扣除休息分鐘；跨午夜時自動加 24 小時。
-4. 資料不足時為 0。
+1. 開始與結束時間完整且有效時，由兩者差值扣除休息分鐘；跨午夜時自動加
+   24 小時。
+2. 開始與結束時間不完整時，舊 `manualHours > 0` 以
+   `Math.round(hours × 60)` 轉為整數分鐘。
+3. 即時 running／paused 且尚無結束時間時，使用 `workSession` 計算目前有效
+   工作分鐘。
+4. 資料不足或驗證失敗時為 0。
+
+Canonical 衍生值為整數 `workMinutes`；WorkRecord 仍保留既有
+`manualHours` 相容欄位，不新增 durable `workMinutes`。
 
 平均時薪為 `淨收入 ÷ 工時`；工時為 0 時顯示 0 或「資料不足」，不得產生 NaN／Infinity。
 

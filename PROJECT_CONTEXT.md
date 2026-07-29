@@ -1,8 +1,30 @@
 # Driver Pay Pro 專案固定背景
 
-更新日期：2026-07-26
+更新日期：2026-07-29
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
+
+## V1.1 Milestone 1 — Today Workflow and Work-Time Unification
+
+- 工作分支：`codex/v1-1-m1-today-workflow`，基準為最新
+  `origin/main` `8041e84591c76b16582e41403ae7267f5fd1bc90`。
+- Today、Calendar、Reports、AI、CSV 與時薪現在都透過同一個
+  `workMetrics()` 讀取整數 `workMinutes` 衍生結果。
+- 有效 `startTime`／`endTime`／`breakMinutes` 優先；缺少完整時間時才相容
+  讀取舊 `manualHours` 或即時 `workSession`。舊小數工時以
+  `Math.round(hours × 60)` 轉為整數分鐘，不改寫歷史紀錄。
+- Today 手動修正工作時間採 transactional localStorage 寫入；成功讀回後才
+  更新記憶體並發出一次 committed-record notification。開始／暫停／繼續／
+  收工與原生 time picker 共用相同欄位。
+- Today 工作狀態只顯示一個自然語言主工時，詳細經過／休息／實際工時預設
+  收合；手動新增紀錄亦預設收合。手動工時改為「小時＋分鐘」，不再要求輸入
+  小數。
+- `driverPayApp.v2` 與 WorkRecord schema 均未更名或遷移；`manualHours` 只保留
+  作舊資料相容欄位，`workMinutes` 是衍生值而非新儲存欄位。
+- 自動測試目前 150/150，Today targeted 30/30；320、390、393、430px 無水平
+  overflow，Calendar 與 Reports 同一筆 8 小時 8 分紀錄顯示一致。
+- Service Worker App Shell candidate 更新為 `driver-pay-pro-v14`。本
+  Milestone 尚待公開 iPhone Preview 與 Product Owner Human QA。
 
 ## Driver Pay Pro Local-first V1 UX Freeze
 

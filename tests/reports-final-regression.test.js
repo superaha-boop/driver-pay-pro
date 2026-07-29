@@ -80,6 +80,10 @@ const functionNames = [
   "nonNegativeNumber",
   "minutes",
   "timeValueMs",
+  "decimalHoursToMinutes",
+  "minutesToHourMinuteParts",
+  "validateWorkTimeRange",
+  "calculateWorkMinutes",
   "clockWorkDurationMs",
   "sessionWorkDurationMs",
   "workMetrics",
@@ -363,6 +367,6 @@ test("Reports Accessibility、responsive 與 PWA Freeze Candidate 契約完整",
   assert.match(html, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(html, /\.reports-platform-row[\s\S]*?grid-template-columns: minmax\(0, 1fr\) auto/);
   assert.doesNotMatch(reportsSection, /平台效率|最佳平台|平台時薪|<img[^>]+platform/);
-  assert.match(serviceWorker, /driver-pay-pro-v13/);
-  assert.doesNotMatch(serviceWorker, /driver-pay-pro-v14/);
+  assert.match(serviceWorker, /driver-pay-pro-v14/);
+  assert.doesNotMatch(serviceWorker, /driver-pay-pro-v15/);
 });

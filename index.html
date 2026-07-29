@@ -1539,6 +1539,46 @@
       background: #edf2f5;
     }
 
+    .work-primary-time {
+      display: block;
+      color: var(--text);
+      font-size: 21px;
+      font-weight: 700;
+      line-height: 1.25;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .work-details {
+      min-width: 0;
+    }
+
+    .work-details > summary {
+      width: fit-content;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 650;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .work-details > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .work-details > summary::after {
+      content: "＋";
+      margin-left: 6px;
+      color: var(--brand-strong);
+      font-size: 16px;
+    }
+
+    .work-details[open] > summary::after {
+      content: "－";
+    }
+
     .work-metrics {
       padding: 6px 7px;
       display: grid;
@@ -1587,8 +1627,11 @@
     }
 
     .work-actions .button.primary {
-      grid-column: 1 / -1;
       background: var(--brand);
+    }
+
+    #startRun {
+      grid-column: 1 / -1;
     }
 
     .work-actions .button:active {
@@ -4225,6 +4268,52 @@
       gap: 12px;
     }
 
+    .manual-entry-toggle {
+      min-width: 0;
+      min-height: 44px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 0;
+      color: var(--brand-strong);
+      background: transparent;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    .manual-entry-toggle svg {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform var(--motion-normal) var(--ease-standard);
+    }
+
+    .manual-entry-toggle[aria-expanded="true"] svg {
+      transform: rotate(180deg);
+    }
+
+    .manual-work-time-grid {
+      width: 100%;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .today-save-status {
+      grid-column: 1 / -1;
+      min-height: 20px;
+      margin: 0;
+    }
+
     .work-field-label {
       color: #526159;
       font-size: 13px;
@@ -5096,13 +5185,17 @@
               </svg>
               <span>今日工作狀態</span>
             </span>
-            <strong id="workStatusText" data-status="idle">尚未開始</strong>
+            <strong id="workStatusText" data-status="idle">未開始</strong>
           </div>
-          <div class="work-metrics" id="workMetrics" aria-label="今日工時計算">
-            <div><span>總經過時間</span><strong id="workTotal">0 分</strong></div>
-            <div><span>休息時間</span><strong id="workBreak">0 分</strong></div>
-            <div><span>實際工作時間</span><strong id="workActual">0 分</strong></div>
-          </div>
+          <strong class="work-primary-time" id="workPrimaryTime" aria-live="polite">今天尚未開始工作</strong>
+          <details class="work-details" id="workDetails">
+            <summary>工作明細</summary>
+            <div class="work-metrics" id="workMetrics" aria-label="今日工時計算">
+              <div><span>總經過時間</span><strong id="workTotal">0分鐘</strong></div>
+              <div><span>休息時間</span><strong id="workBreak">0分鐘</strong></div>
+              <div><span>實際工作時間</span><strong id="workActual">0分鐘</strong></div>
+            </div>
+          </details>
           <div class="work-actions">
             <button class="button primary" id="startRun" type="button">開始工作</button>
             <button class="button secondary hidden" id="pauseRun" type="button">暫停休息</button>
@@ -5136,10 +5229,15 @@
         <span id="sharedDetailPanelAnchor" hidden></span>
         <div class="panel details-panel" id="sharedDetailPanel">
           <div class="panel-head">
-            <h3 id="formTitle">更新今日紀錄</h3>
+            <button class="manual-entry-toggle" id="manualEntryToggle" type="button" aria-expanded="false" aria-controls="manualEntryContent">
+              <span id="formTitle">手動新增紀錄</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+            </button>
             <button class="button secondary hidden" id="cancelEdit" type="button">取消編輯</button>
           </div>
-          <div class="panel-body">
+          <div class="panel-body hidden" id="manualEntryContent">
             <form id="detailForm">
               <div class="fields quick-fields">
                 <div class="date-card-host" id="entryDateCard"></div>
@@ -5183,12 +5281,23 @@
                   </label>
                   <label>
                     <span class="work-field-label">手動工時</span>
-                    <input type="number" inputmode="decimal" id="manualHours" min="0" step="0.25" placeholder="可留空，自動計算">
+                    <input type="hidden" id="manualHours" value="0">
+                    <span class="manual-work-time-grid">
+                      <span class="work-input-shell">
+                        <input type="number" inputmode="numeric" id="manualHoursPart" min="0" max="24" step="1" placeholder="0" aria-label="手動工時小時">
+                        <span class="work-input-unit" aria-hidden="true">小時</span>
+                      </span>
+                      <span class="work-input-shell">
+                        <input type="number" inputmode="numeric" id="manualMinutesPart" min="0" max="59" step="1" placeholder="0" aria-label="手動工時分鐘">
+                        <span class="work-input-unit" aria-hidden="true">分鐘</span>
+                      </span>
+                    </span>
                   </label>
                   <div class="work-live-summary" aria-live="polite">
                     <span>今日工時</span>
                     <strong id="workLiveValue">等待設定</strong>
                   </div>
+                  <p class="ds-save-status today-save-status" id="todaySaveStatus" role="status" aria-live="polite" aria-atomic="true"></p>
                 </div>
               </details>
               <details class="collapsible detail-section expense-section" id="expenseSection">
@@ -5711,6 +5820,8 @@
     let driverGoalStatusType = "";
     let incomeUndoTimer = 0;
     let lastIncomeAddition = null;
+    let todayWorkSaveTimer = 0;
+    let todayWorkStatusTimer = 0;
     let calendarState = createCalendarState(todayString());
     let calendarTodayTimer = 0;
     let calendarGesture = null;
@@ -5754,6 +5865,9 @@
       sharedIncomePanelAnchor: document.getElementById("sharedIncomePanelAnchor"),
       sharedDetailPanel: document.getElementById("sharedDetailPanel"),
       sharedDetailPanelAnchor: document.getElementById("sharedDetailPanelAnchor"),
+      manualEntryToggle: document.getElementById("manualEntryToggle"),
+      manualEntryContent: document.getElementById("manualEntryContent"),
+      todaySaveStatus: document.getElementById("todaySaveStatus"),
       recordEditorDialog: document.getElementById("recordEditorDialog"),
       recordEditorContent: document.getElementById("recordEditorContent"),
       recordEditorTitle: document.getElementById("recordEditorTitle"),
@@ -5811,6 +5925,7 @@
       resumeRun: document.getElementById("resumeRun"),
       endRun: document.getElementById("endRun"),
       workStatusText: document.getElementById("workStatusText"),
+      workPrimaryTime: document.getElementById("workPrimaryTime"),
       workMetrics: document.getElementById("workMetrics"),
       workTotal: document.getElementById("workTotal"),
       workBreak: document.getElementById("workBreak"),
@@ -6392,15 +6507,96 @@
       return Number.isFinite(timestamp) ? timestamp : null;
     }
 
-    function clockWorkDurationMs(entry) {
-      if (!entry?.startTime || !entry?.endTime) return 0;
+    function decimalHoursToMinutes(value) {
+      const hours = Number(value);
+      if (!Number.isFinite(hours) || hours <= 0) return 0;
+      return Math.round(hours * 60);
+    }
+
+    function minutesToHourMinuteParts(value) {
+      const totalMinutes = Math.max(0, Math.round(Number(value) || 0));
+      return {
+        hours: Math.floor(totalMinutes / 60),
+        minutes: totalMinutes % 60
+      };
+    }
+
+    function validateWorkTimeRange(entry) {
+      entry ||= {};
+      const hasStart = Boolean(entry.startTime);
+      const hasEnd = Boolean(entry.endTime);
+      if (hasStart !== hasEnd) {
+        return {
+          valid: false,
+          complete: false,
+          code: "incomplete",
+          message: "開始與結束時間尚未完整。"
+        };
+      }
+      if (!hasStart) {
+        return {
+          valid: true,
+          complete: false,
+          code: "manual",
+          workMinutes: decimalHoursToMinutes(entry.manualHours)
+        };
+      }
+
       const start = minutes(entry.startTime);
       let end = minutes(entry.endTime);
-      if (!Number.isFinite(start) || !Number.isFinite(end)) return 0;
+      const restMinutes = Number(entry.breakMinutes || 0);
+      if (!Number.isFinite(start) || !Number.isFinite(end)) {
+        return {
+          valid: false,
+          complete: true,
+          code: "invalid-time",
+          message: "工作時間格式無效。"
+        };
+      }
+      if (!Number.isFinite(restMinutes) || restMinutes < 0) {
+        return {
+          valid: false,
+          complete: true,
+          code: "invalid-break",
+          message: "休息時間必須是 0 分鐘以上。"
+        };
+      }
       if (end < start) end += 24 * 60;
       const elapsedMinutes = end - start;
-      const breakMinutes = nonNegativeNumber(entry.breakMinutes);
-      return Math.max(0, elapsedMinutes - breakMinutes) * workTimeUnits.minuteMs;
+      if (restMinutes > elapsedMinutes) {
+        return {
+          valid: false,
+          complete: true,
+          code: "break-exceeds-elapsed",
+          message: "休息時間不可超過總經過時間。"
+        };
+      }
+      return {
+        valid: true,
+        complete: true,
+        code: "clock",
+        elapsedMinutes,
+        breakMinutes: Math.round(restMinutes),
+        workMinutes: Math.max(0, Math.round(elapsedMinutes - restMinutes))
+      };
+    }
+
+    function calculateWorkMinutes(entry) {
+      entry ||= {};
+      const result = validateWorkTimeRange(entry);
+      return result.valid ? Math.max(0, Number(result.workMinutes || 0)) : 0;
+    }
+
+    function formatWorkDuration(value) {
+      const { hours, minutes: minutePart } = minutesToHourMinuteParts(value);
+      if (!hours) return `${minutePart}分鐘`;
+      return minutePart ? `${hours}小時${minutePart}分` : `${hours}小時`;
+    }
+
+    function clockWorkDurationMs(entry) {
+      const result = validateWorkTimeRange(entry);
+      if (!result.valid || !result.complete) return 0;
+      return result.workMinutes * workTimeUnits.minuteMs;
     }
 
     function sessionWorkDurationMs(entry, nowMs, currentDate) {
@@ -6442,15 +6638,19 @@
     }
 
     function workMetrics(entry, nowMs = Date.now(), currentDate = todayString()) {
-      const manualHours = nonNegativeNumber(entry?.manualHours);
-      let durationMs = manualHours > 0
-        ? manualHours * workTimeUnits.hourMs
-        : sessionWorkDurationMs(entry, nowMs, currentDate);
-      if (durationMs === null) durationMs = clockWorkDurationMs(entry);
-      durationMs = nonNegativeNumber(durationMs);
+      const clockResult = validateWorkTimeRange(entry);
+      const manualMinutes = decimalHoursToMinutes(entry?.manualHours);
+      const sessionDurationMs = sessionWorkDurationMs(entry, nowMs, currentDate);
+      const workMinutes = clockResult.valid && clockResult.complete
+        ? calculateWorkMinutes(entry)
+        : manualMinutes > 0
+          ? manualMinutes
+          : Math.max(0, Math.round(nonNegativeNumber(sessionDurationMs) / workTimeUnits.minuteMs));
+      const durationMs = workMinutes * workTimeUnits.minuteMs;
       return {
         durationMs,
-        hours: durationMs / workTimeUnits.hourMs
+        workMinutes,
+        hours: workMinutes / 60
       };
     }
 
@@ -7706,10 +7906,8 @@
     }
 
     function formatHours(hours) {
-      const totalMinutes = Math.max(0, Math.floor(Number(hours || 0) * 60));
-      const h = Math.floor(totalMinutes / 60);
-      const m = totalMinutes % 60;
-      return `${h} 小時 ${String(m).padStart(2, "0")} 分`;
+      const { hours: hourPart, minutes: minutePart } = minutesToHourMinuteParts(decimalHoursToMinutes(hours));
+      return `${hourPart} 小時 ${String(minutePart).padStart(2, "0")} 分`;
     }
 
     function formatWorkTime(time) {
@@ -7721,26 +7919,17 @@
       return `${period}${displayHour}:${match[2]}`;
     }
 
-    function formatCompactWorkHours(hours) {
-      const totalMinutes = Math.max(0, Math.floor(Number(hours || 0) * 60));
-      const h = Math.floor(totalMinutes / 60);
-      const m = totalMinutes % 60;
-      if (h && m) return `${h}小時${m}分`;
-      if (h) return `${h}小時`;
-      return `${m}分`;
-    }
-
     function updateWorkTimeUi(entry) {
       if (!els.workCollapsedPrimary || !els.workCollapsedSecondary || !els.workLiveValue) return;
       const start = entry.startTime;
       const end = entry.endTime;
-      const hours = workMetrics(entry).hours;
+      const work = workMetrics(entry);
 
       if (!start) {
         els.workCollapsedPrimary.textContent = "尚未設定";
         els.workCollapsedSecondary.textContent = "等待開始時間";
         els.workLiveValue.textContent = Number(entry.manualHours) > 0
-          ? formatCompactWorkHours(hours)
+          ? formatWorkDuration(work.workMinutes)
           : "等待設定";
         return;
       }
@@ -7752,7 +7941,7 @@
         return;
       }
 
-      const duration = formatCompactWorkHours(hours);
+      const duration = formatWorkDuration(work.workMinutes);
       els.workCollapsedPrimary.textContent = `${formatWorkTime(start)}－${formatWorkTime(end)}`;
       els.workCollapsedSecondary.textContent = `實際工作 ${duration}`;
       els.workLiveValue.textContent = duration;
@@ -9191,14 +9380,22 @@
     }
 
     function workStatus(entry = entryForDate()) {
-      if (entry?.workSession?.status) return entry.workSession.status;
-      if (entry?.startTime && !entry?.endTime) return "running";
       if (entry?.startTime && entry?.endTime) return "stopped";
+      if (entry?.workSession?.status && entry?.startTime) return entry.workSession.status;
+      if (entry?.startTime && !entry?.endTime) return "running";
       return "idle";
     }
 
     function sessionDetails(entry = entryForDate()) {
       const work = workMetrics(entry || {});
+      const clockRange = validateWorkTimeRange(entry);
+      if (clockRange.valid && clockRange.complete) {
+        return {
+          ...work,
+          breakMs: clockRange.breakMinutes * workTimeUnits.minuteMs,
+          elapsedMs: clockRange.elapsedMinutes * workTimeUnits.minuteMs
+        };
+      }
       const session = entry?.workSession;
       let breakMs = Number(session?.accumulatedBreakMs || 0);
       if (session?.status === "paused" && session.pausedAt) {
@@ -9217,32 +9414,31 @@
       return { ...work, breakMs, elapsedMs };
     }
 
-    function clockDuration(ms) {
-      const seconds = Math.max(0, Math.floor(Number(ms || 0) / 1000));
-      const h = String(Math.floor(seconds / 3600)).padStart(2, "0");
-      const m = String(Math.floor(seconds % 3600 / 60)).padStart(2, "0");
-      const s = String(seconds % 60).padStart(2, "0");
-      return `${h}:${m}:${s}`;
-    }
-
     function updateWorkControls() {
       const entry = entryForDate();
       const status = workStatus(entry);
       const details = sessionDetails(entry);
       const labels = {
-        idle: "尚未開始",
-        running: "跑車中",
-        paused: "休息中",
-        stopped: "今日已收工"
+        idle: "未開始",
+        running: "工作中",
+        paused: "已暫停",
+        stopped: "已收工"
       };
       els.workStatusText.textContent = labels[status];
       els.workStatusText.dataset.status = status;
-      els.workTotal.textContent = clockDuration(details.elapsedMs);
-      els.workBreak.textContent = clockDuration(details.breakMs);
-      els.workActual.textContent = clockDuration(details.durationMs);
-      els.workMetrics.classList.remove("hidden");
+      const actualMinutes = details.workMinutes;
+      const elapsedMinutes = Math.max(0, Math.round(details.elapsedMs / workTimeUnits.minuteMs));
+      const breakMinutes = Math.max(0, Math.round(details.breakMs / workTimeUnits.minuteMs));
+      els.workPrimaryTime.textContent = status === "idle"
+        ? "今天尚未開始工作"
+        : status === "stopped"
+          ? `今日工時 ${formatWorkDuration(actualMinutes)}`
+          : `已工作 ${formatWorkDuration(actualMinutes)}`;
+      els.workTotal.textContent = formatWorkDuration(elapsedMinutes);
+      els.workBreak.textContent = formatWorkDuration(breakMinutes);
+      els.workActual.textContent = formatWorkDuration(actualMinutes);
       els.startRun.classList.toggle("hidden", !["idle", "stopped"].includes(status));
-      els.startRun.textContent = status === "stopped" ? "再次開始工作" : "開始工作";
+      els.startRun.textContent = status === "stopped" ? "修改工作時間" : "開始工作";
       els.pauseRun.classList.toggle("hidden", status !== "running");
       els.resumeRun.classList.toggle("hidden", status !== "paused");
       els.endRun.classList.toggle("hidden", !["running", "paused"].includes(status));
@@ -9596,6 +9792,54 @@
       applyRoute(route);
     }
 
+    function setManualEntryExpanded(expanded, options = {}) {
+      const isExpanded = Boolean(expanded);
+      els.manualEntryContent.classList.toggle("hidden", !isExpanded);
+      els.manualEntryToggle.setAttribute("aria-expanded", String(isExpanded));
+      if (isExpanded && options.focusWorkTime) {
+        els.workTimeSection.open = true;
+        window.requestAnimationFrame(() => document.getElementById("startTime")?.focus());
+      }
+    }
+
+    function syncManualWorkTimeInput(totalMinutes) {
+      const parts = minutesToHourMinuteParts(totalMinutes);
+      document.getElementById("manualHoursPart").value = parts.hours || "";
+      document.getElementById("manualMinutesPart").value = parts.minutes || "";
+      document.getElementById("manualHours").value = totalMinutes > 0 ? totalMinutes / 60 : 0;
+    }
+
+    function manualWorkMinutesFromForm() {
+      const hourPart = Math.floor(Number(document.getElementById("manualHoursPart").value || 0));
+      const minutePart = Math.floor(Number(document.getElementById("manualMinutesPart").value || 0));
+      return hourPart * 60 + minutePart;
+    }
+
+    function validateManualWorkTimeParts() {
+      const hourPart = Number(document.getElementById("manualHoursPart").value || 0);
+      const minutePart = Number(document.getElementById("manualMinutesPart").value || 0);
+      if (!Number.isInteger(hourPart) || hourPart < 0 || hourPart > 24) {
+        return "手動工時的小時必須是 0 至 24。";
+      }
+      if (!Number.isInteger(minutePart) || minutePart < 0 || minutePart > 59) {
+        return "手動工時的分鐘必須是 0 至 59。";
+      }
+      if (hourPart === 24 && minutePart > 0) return "手動工時不可超過 24 小時。";
+      return "";
+    }
+
+    function syncManualWorkTimeParts() {
+      const totalMinutes = manualWorkMinutesFromForm();
+      document.getElementById("manualHours").value = totalMinutes > 0 ? totalMinutes / 60 : 0;
+      return totalMinutes;
+    }
+
+    function setTodaySaveStatus(message = "", type = "") {
+      if (!els.todaySaveStatus) return;
+      els.todaySaveStatus.textContent = message;
+      els.todaySaveStatus.dataset.status = type || (message ? "pending" : "idle");
+    }
+
     function resetForm() {
       els.entryForm.reset();
       els.detailForm.reset();
@@ -9614,10 +9858,12 @@
       if (todayEntry) {
         fillEntryFields(todayEntry);
       }
-      els.formTitle.textContent = "更新今日紀錄";
+      els.formTitle.textContent = "手動新增紀錄";
       els.cancelEdit.classList.add("hidden");
       document.querySelectorAll("#detailForm details").forEach(details => details.open = false);
       els.workTimeSection.open = Boolean(state.settings.timeDetailsOpen);
+      setManualEntryExpanded(recordEditorState.open);
+      setTodaySaveStatus("");
       syncDetailChoiceButtons();
       updateQuickPreview();
     }
@@ -9631,7 +9877,7 @@
       document.getElementById("startTime").value = entry.startTime || "";
       document.getElementById("endTime").value = entry.endTime || "";
       document.getElementById("breakMinutes").value = entry.breakMinutes || 0;
-      document.getElementById("manualHours").value = entry.manualHours || "";
+      syncManualWorkTimeInput(decimalHoursToMinutes(entry.manualHours));
       document.getElementById("tips").value = entry.tips || 0;
       document.getElementById("orders").value = entry.orders || 0;
       document.getElementById("km").value = entry.km || 0;
@@ -9650,6 +9896,7 @@
       if (!entry) return;
       navigateTo("today");
       fillEntryFields(entry);
+      setManualEntryExpanded(true);
       const detailSections = document.querySelectorAll("#detailForm details");
       detailSections.forEach(details => details.open = false);
       detailSections[0].open = Boolean(entry.startTime || entry.endTime || entry.manualHours || entry.breakMinutes);
@@ -9669,6 +9916,7 @@
     }
 
     function formData() {
+      const manualWorkMinutes = syncManualWorkTimeParts();
       const incomes = {};
       document.querySelectorAll("[data-income]").forEach(input => incomes[input.dataset.income] = Number(input.value || 0));
       const id = els.entryId.value || makeId();
@@ -9685,7 +9933,7 @@
         startTime: document.getElementById("startTime").value,
         endTime: document.getElementById("endTime").value,
         breakMinutes: Number(document.getElementById("breakMinutes").value || 0),
-        manualHours: Number(document.getElementById("manualHours").value || 0),
+        manualHours: manualWorkMinutes / 60,
         tips: Number(document.getElementById("tips").value || 0),
         orders: Number(document.getElementById("orders").value || 0),
         km: Number(document.getElementById("km").value || 0),
@@ -9694,6 +9942,119 @@
         incomes,
         expenses
       };
+    }
+
+    function reconcileWorkSessionWithTimes(nextEntry, previousEntry) {
+      const changed = ["startTime", "endTime", "breakMinutes", "manualHours"]
+        .some(key => String(nextEntry[key] ?? "") !== String(previousEntry?.[key] ?? ""));
+      if (!changed) return nextEntry;
+
+      const result = validateWorkTimeRange(nextEntry);
+      if (result.complete || !nextEntry.startTime || Number(nextEntry.manualHours) > 0) {
+        delete nextEntry.workSession;
+        return nextEntry;
+      }
+
+      const previousSession = previousEntry?.workSession;
+      if (!previousSession || !["running", "paused", "stopped"].includes(previousSession.status)) {
+        delete nextEntry.workSession;
+        return nextEntry;
+      }
+
+      const startedAt = new Date(`${nextEntry.date}T${nextEntry.startTime}:00`);
+      if (!Number.isFinite(startedAt.getTime())) {
+        delete nextEntry.workSession;
+        return nextEntry;
+      }
+      const nextStatus = previousSession.status === "paused" ? "paused" : "running";
+      nextEntry.workSession = {
+        ...previousSession,
+        status: nextStatus,
+        startedAt: startedAt.toISOString(),
+        accumulatedBreakMs: Number(nextEntry.breakMinutes || 0) * workTimeUnits.minuteMs,
+        endedAt: null
+      };
+      if (nextStatus === "running") {
+        nextEntry.workSession.pausedAt = null;
+        nextEntry.workSession.segmentStartedAt ||= new Date().toISOString();
+      }
+      return nextEntry;
+    }
+
+    function validateTodayWorkTime(entry) {
+      const manualMinutes = decimalHoursToMinutes(entry.manualHours);
+      if (manualMinutes > 24 * 60) return "手動工時不可超過 24 小時。";
+      const result = validateWorkTimeRange(entry);
+      if (!result.valid && result.code !== "incomplete") return result.message;
+      return "";
+    }
+
+    function saveTodayWorkTimeFromForm() {
+      if (recordEditorState.open) return false;
+      window.clearTimeout(todayWorkSaveTimer);
+      todayWorkSaveTimer = 0;
+      const manualPartsError = validateManualWorkTimeParts();
+      if (manualPartsError) {
+        setTodaySaveStatus(manualPartsError, "error");
+        return false;
+      }
+      const draft = formData();
+      const previous = state.entries.find(item => item.id === draft.id)
+        || state.entries.find(item => item.date === draft.date);
+      const hasWorkValue = Boolean(draft.startTime || draft.endTime || draft.breakMinutes || draft.manualHours);
+      if (!previous && !hasWorkValue) {
+        setTodaySaveStatus("");
+        return true;
+      }
+
+      const validationError = validateTodayWorkTime(draft);
+      if (validationError) {
+        setTodaySaveStatus(validationError, "error");
+        return false;
+      }
+
+      const nextRecord = reconcileWorkSessionWithTimes({
+        ...(previous || blankEntry(draft.date)),
+        id: previous?.id || draft.id,
+        date: draft.date,
+        startTime: draft.startTime,
+        endTime: draft.endTime,
+        breakMinutes: draft.breakMinutes,
+        manualHours: draft.manualHours
+      }, previous);
+      const nextState = cloneStatePayload(state);
+      const recordIndex = nextState.entries.findIndex(item => item.id === nextRecord.id);
+      if (recordIndex >= 0) nextState.entries[recordIndex] = nextRecord;
+      else nextState.entries.push(nextRecord);
+
+      setTodaySaveStatus("儲存中…", "saving");
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        setTodaySaveStatus("儲存失敗，原有工時未變更", "error");
+        return false;
+      }
+
+      els.entryId.value = nextRecord.id;
+      notifyRecordChanged(nextRecord.date, "today-work-time");
+      const range = validateWorkTimeRange(nextRecord);
+      setTodaySaveStatus(range.code === "incomplete" ? "已儲存，時間尚未完整" : "已儲存", "success");
+      window.clearTimeout(todayWorkStatusTimer);
+      todayWorkStatusTimer = window.setTimeout(() => setTodaySaveStatus(""), 2200);
+      renderStats();
+      updateDailyGoal();
+      updateWorkControls();
+      renderEntries();
+      renderWeeks();
+      renderMonthReport();
+      renderPlatformReport();
+      renderAiAnalysis();
+      return true;
+    }
+
+    function scheduleTodayWorkTimeSave() {
+      if (recordEditorState.open) return;
+      window.clearTimeout(todayWorkSaveTimer);
+      setTodaySaveStatus("儲存中…", "saving");
+      todayWorkSaveTimer = window.setTimeout(saveTodayWorkTimeFromForm, 350);
     }
 
     function setRecordEditorStatus(message = "", type = "") {
@@ -9778,6 +10139,7 @@
       };
       moveSharedEditorToDialog();
       fillEntryFields(recordEditorState.draft);
+      setManualEntryExpanded(true);
       const dateInput = document.getElementById("date");
       dateInput.value = normalizedDate;
       dateInput.disabled = true;
@@ -9873,13 +10235,10 @@
         !Number.isFinite(Number(value)) || Number(value) < 0 || Number(value) > maxPlatformIncome
       );
       if (invalidExpense) return "支出金額必須是有效的非負數。";
-      if (Boolean(entry.startTime) !== Boolean(entry.endTime)) return "開始與結束時間必須同時填寫。";
-      if (entry.startTime && entry.endTime && !Number(entry.manualHours)) {
-        const start = minutes(entry.startTime);
-        let end = minutes(entry.endTime);
-        if (end < start) end += 1440;
-        if (Number(entry.breakMinutes) > end - start) return "休息時間不可超過總經過時間。";
-      }
+      const workTimeValidation = validateWorkTimeRange(entry);
+      if (workTimeValidation.code === "incomplete") return "開始與結束時間必須同時填寫。";
+      if (workTimeValidation.code === "break-exceeds-elapsed") return "休息時間不可超過總經過時間。";
+      if (!workTimeValidation.valid) return workTimeValidation.message;
       if (!recordHasMeaningfulContent(entry)) return "請至少輸入收入、支出、工時或其他工作紀錄。";
       return "";
     }
@@ -9960,7 +10319,6 @@
         .sort((a, b) => a.date.localeCompare(b.date))
         .map(entry => {
           const work = workMetrics(entry);
-          const hours = work.hours;
           return [
             entry.date,
             entry.shift,
@@ -9969,7 +10327,7 @@
             entry.tips,
             entryExpenses(entry),
             entryNet(entry),
-            hours,
+            formatWorkDuration(work.workMinutes),
             hourlyRate(entryNet(entry), work.durationMs),
             entry.orders,
             entry.km,
@@ -9995,8 +10353,32 @@
       URL.revokeObjectURL(url);
     }
 
+    function handlePrimaryWorkAction() {
+      if (workStatus(entryForDate()) === "stopped") {
+        setManualEntryExpanded(true, { focusWorkTime: true });
+        return;
+      }
+      startRunNow();
+    }
+
+    function commitTodayWorkSession(nextEntry) {
+      const nextState = cloneStatePayload(state);
+      const index = nextState.entries.findIndex(item => item.id === nextEntry.id);
+      if (index >= 0) nextState.entries[index] = nextEntry;
+      else nextState.entries.push(nextEntry);
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        showToast("工時儲存失敗，原有紀錄未變更");
+        return false;
+      }
+      notifyRecordChanged(nextEntry.date, "work-session");
+      resetForm();
+      refreshToday();
+      return true;
+    }
+
     function startRunNow() {
-      const entry = ensureEntryForDate();
+      const existingEntry = entryForDate();
+      const entry = existingEntry ? cloneStatePayload(existingEntry) : blankEntry();
       const now = new Date();
       const priorDurationMs = entry.workSession?.status === "stopped"
         ? workMetrics(entry).durationMs
@@ -10019,13 +10401,12 @@
         pausedAt: null,
         endedAt: null
       };
-      if (saveState()) notifyRecordChanged(entry.date, "work-session");
-      resetForm();
-      refreshToday();
+      commitTodayWorkSession(entry);
     }
 
     function pauseRunNow() {
-      const entry = entryForDate();
+      const existingEntry = entryForDate();
+      const entry = existingEntry ? cloneStatePayload(existingEntry) : null;
       if (!entry || workStatus(entry) !== "running") return;
       const now = new Date();
       if (!entry.workSession) {
@@ -10043,13 +10424,12 @@
       entry.workSession.status = "paused";
       entry.workSession.pausedAt = now.toISOString();
       entry.workSession.segmentStartedAt = null;
-      if (saveState()) notifyRecordChanged(entry.date, "work-session");
-      resetForm();
-      refreshToday();
+      commitTodayWorkSession(entry);
     }
 
     function resumeRunNow() {
-      const entry = entryForDate();
+      const existingEntry = entryForDate();
+      const entry = existingEntry ? cloneStatePayload(existingEntry) : null;
       if (!entry?.workSession || entry.workSession.status !== "paused") return;
       const now = new Date();
       entry.workSession.accumulatedBreakMs = Number(entry.workSession.accumulatedBreakMs || 0)
@@ -10058,13 +10438,12 @@
       entry.workSession.segmentStartedAt = now.toISOString();
       entry.workSession.pausedAt = null;
       entry.breakMinutes = Math.floor(entry.workSession.accumulatedBreakMs / 60000);
-      if (saveState()) notifyRecordChanged(entry.date, "work-session");
-      resetForm();
-      refreshToday();
+      commitTodayWorkSession(entry);
     }
 
     function endRunNow() {
-      const entry = entryForDate();
+      const existingEntry = entryForDate();
+      const entry = existingEntry ? cloneStatePayload(existingEntry) : null;
       if (!entry || !["running", "paused"].includes(workStatus(entry))) return;
       const now = new Date();
       if (!entry.workSession) {
@@ -10091,9 +10470,7 @@
       entry.workSession.pausedAt = null;
       entry.endTime = currentTimeString();
       entry.breakMinutes = Math.floor(Number(entry.workSession.accumulatedBreakMs || 0) / 60000);
-      if (saveState()) notifyRecordChanged(entry.date, "work-session");
-      resetForm();
-      refreshToday();
+      commitTodayWorkSession(entry);
     }
 
     function restoreIncomeInput(input, platform, total) {
@@ -10374,10 +10751,13 @@
     document.getElementById("newEntry").addEventListener("click", () => { resetForm(); navigateTo("today"); });
     els.cancelEdit.addEventListener("click", resetForm);
     document.getElementById("exportCsv").addEventListener("click", exportCsv);
-    els.startRun.addEventListener("click", startRunNow);
+    els.startRun.addEventListener("click", handlePrimaryWorkAction);
     els.pauseRun.addEventListener("click", pauseRunNow);
     els.resumeRun.addEventListener("click", resumeRunNow);
     els.endRun.addEventListener("click", endRunNow);
+    els.manualEntryToggle.addEventListener("click", () => {
+      setManualEntryExpanded(els.manualEntryToggle.getAttribute("aria-expanded") !== "true");
+    });
     els.toggleOverview.addEventListener("click", () => {
       overviewVisible = !overviewVisible;
       updateOverviewVisibility();
@@ -10496,22 +10876,43 @@
     els.detailForm.addEventListener("submit", event => {
       event.preventDefault();
       if (recordEditorState.open) {
+        const manualPartsError = validateManualWorkTimeParts();
+        if (manualPartsError) {
+          setRecordEditorStatus(manualPartsError, "error");
+          return;
+        }
         commitCalendarRecord();
         return;
       }
-      const entry = formData();
-      const index = state.entries.findIndex(item => item.id === entry.id);
-      if (index >= 0) state.entries[index] = { ...state.entries[index], ...entry };
+      const manualPartsError = validateManualWorkTimeParts();
+      if (manualPartsError) {
+        setTodaySaveStatus(manualPartsError, "error");
+        showToast(manualPartsError);
+        return;
+      }
+      const draft = formData();
+      const validationError = validateTodayWorkTime(draft);
+      if (validationError) {
+        setTodaySaveStatus(validationError, "error");
+        showToast(validationError);
+        return;
+      }
+      const previous = state.entries.find(item => item.id === draft.id)
+        || state.entries.find(item => item.date === draft.date);
+      const entry = reconcileWorkSessionWithTimes({ ...(previous || {}), ...draft }, previous);
+      const nextState = cloneStatePayload(state);
+      const index = nextState.entries.findIndex(item => item.id === entry.id);
+      if (index >= 0) nextState.entries[index] = entry;
       else {
-        const sameDateIndex = state.entries.findIndex(item => item.date === entry.date);
+        const sameDateIndex = nextState.entries.findIndex(item => item.date === entry.date);
         if (sameDateIndex >= 0) {
-          entry.id = state.entries[sameDateIndex].id;
-          state.entries[sameDateIndex] = { ...state.entries[sameDateIndex], ...entry };
+          entry.id = nextState.entries[sameDateIndex].id;
+          nextState.entries[sameDateIndex] = entry;
         } else {
-          state.entries.push(entry);
+          nextState.entries.push(entry);
         }
       }
-      if (!saveState()) {
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
         showToast("儲存失敗，請稍後再試");
         return;
       }
@@ -10522,7 +10923,16 @@
 
     els.detailForm.addEventListener("input", event => {
       if (event.target.id === "date") syncDateCardDisplay(event.target);
+      if (["manualHoursPart", "manualMinutesPart"].includes(event.target.id)) {
+        syncManualWorkTimeParts();
+      }
+      if (["startTime", "endTime"].includes(event.target.id) && manualWorkMinutesFromForm() > 0) {
+        syncManualWorkTimeInput(0);
+      }
       if (recordEditorState.open && event.target.id !== "date") markRecordEditorDirty();
+      if (["startTime", "endTime", "breakMinutes", "manualHoursPart", "manualMinutesPart"].includes(event.target.id)) {
+        scheduleTodayWorkTimeSave();
+      }
       updateQuickPreview();
     });
     els.detailForm.addEventListener("change", event => {
@@ -10530,6 +10940,9 @@
         syncDateCardDisplay(event.target);
         renderIncomeInputs(event.target.value || todayString());
         renderRecentIncome(event.target.value || todayString());
+      }
+      if (["startTime", "endTime", "breakMinutes", "manualHoursPart", "manualMinutesPart"].includes(event.target.id)) {
+        saveTodayWorkTimeFromForm();
       }
       updateQuickPreview();
     });

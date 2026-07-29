@@ -74,6 +74,10 @@ const functionNames = [
   "nonNegativeNumber",
   "minutes",
   "timeValueMs",
+  "decimalHoursToMinutes",
+  "minutesToHourMinuteParts",
+  "validateWorkTimeRange",
+  "calculateWorkMinutes",
   "clockWorkDurationMs",
   "sessionWorkDurationMs",
   "workMetrics",
@@ -325,7 +329,7 @@ test("Reports 狀態不再讀寫 legacy localStorage 設定並保留唯讀介面
   assert.doesNotMatch(html.match(/<section id="view-reports"[\s\S]*?<\/section>\s*<section id="view-ai"/)?.[0] || "", /data-calendar-(?:add|edit|delete)/);
 });
 
-test("Local-first V1 App Shell 使用 Service Worker cache v13", () => {
-  assert.match(serviceWorker, /driver-pay-pro-v13/);
+test("Local-first V1.1 App Shell 使用 Service Worker cache v14", () => {
+  assert.match(serviceWorker, /driver-pay-pro-v14/);
   assert.doesNotMatch(serviceWorker, /driver-pay-pro-v11/);
 });

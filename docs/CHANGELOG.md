@@ -16,6 +16,22 @@
 
 ## Unreleased
 
+### V1.1 Milestone 1 — Today Workflow and Work-Time Unification
+
+- 修正 Today 手動變更開始／結束時間後仍沿用舊 `workSession` 工時的 P0
+  data-integrity bug。
+- 工時統一為衍生整數分鐘：有效 clock fields 優先，缺少完整時間時才相容
+  legacy `manualHours` 或 live session。
+- 新增共用轉換、驗證與自然語言格式函式；Today、Calendar、Reports、AI、
+  CSV 與平均時薪共用 `workMetrics()`。
+- Today 工作狀態改為單一主工時與預設收合明細；手動新增區預設收合，手動
+  工時改為小時／分鐘欄位。
+- Today 工時欄位改為 transactional auto-save，成功 persistence 後才更新
+  記憶體與通知 dependent views。
+- 新增 `test:today` 與 30 項工時回歸；全套測試增為 150 項。
+- Service Worker App Shell candidate 更新為 `driver-pay-pro-v14`。
+- `driverPayApp.v2` 與 WorkRecord schema 未變更，舊資料不遷移、不批量改寫。
+
 ### Local-first V1 Release Candidate
 
 - 完成唯讀 evidence-based AI：營運建議、本月洞察、智慧提醒，並透過

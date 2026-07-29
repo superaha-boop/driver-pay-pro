@@ -1,8 +1,38 @@
 # Driver Pay Pro 開發交接摘要
 
-更新日期：2026-07-26
+更新日期：2026-07-29
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
+
+---
+
+## V1.1 Milestone 1 — Current Handoff
+
+- Branch：`codex/v1-1-m1-today-workflow`；base：
+  `8041e84591c76b16582e41403ae7267f5fd1bc90`。
+- 根本原因：Today 表單保留舊 `workSession`，且舊 `workMetrics()` 先採用
+  `manualHours`／session，導致手動修正開始與結束時間後，畫面與報表仍讀取
+  舊計時值。
+- 修正後 canonical precedence：完整且有效的 clock fields → 缺少 clock 時的
+  legacy manual minutes → live session。所有輸出都以整數分鐘建立
+  `durationMs` 與 `hours`。
+- 新增 `decimalHoursToMinutes()`、`minutesToHourMinuteParts()`、
+  `validateWorkTimeRange()`、`calculateWorkMinutes()` 與
+  `formatWorkDuration()`；Today、Calendar、Reports、AI、CSV 共用同一出口。
+- Today 手動工時 UI 改為小時／分鐘欄位；手動區與工作明細預設收合，工作
+  狀態只保留一個自然語言主工時。收工後「修改工作時間」會直接展開並聚焦
+  原生 time input。
+- Today 時間欄位自動儲存使用 clone → validate → persist/read-back →
+  update-memory → notify，儲存失敗不會先污染畫面狀態。
+- `driverPayApp.v2`、WorkRecord schema、收入／支出公式、Calendar／Reports
+  frozen UI 均未改變；舊 `manualHours` 不遷移、不批量改寫。
+- L1 evidence：150/150 Node、Today 30/30、lint 0 errors、320–430px、原生
+  time input 邊界、開始／暫停／繼續／收工、重開保留、Calendar／Reports
+  8 小時 8 分一致、Console 0 error／warning。
+- Service Worker candidate：`driver-pay-pro-v14`。
+- 下一步：完成 `release:check`、Push 功能分支，建立未登入 iPhone Safari
+  可直接開啟的公開 Preview，交由 Product Owner 執行 Human QA。Human QA
+  通過前不宣告 Milestone Done。
 
 ---
 

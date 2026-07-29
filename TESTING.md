@@ -1,6 +1,6 @@
 # Driver Pay Pro Testing
 
-更新日期：2026-07-26
+更新日期：2026-07-29
 
 ## 基本規則
 
@@ -24,6 +24,26 @@
 小型 Sprint 原則上不重複執行完整 L3；大模組完成 Final Regression 後集中
 執行一次。高風險資料、同步、Service Worker 或 iOS 特有變更仍須即時提高
 驗證層級。
+
+## V1.1 Milestone 1 — Today／Work-Time
+
+- `npm run test:today`：30/30，涵蓋 stale session 修正、正常／無休息／跨午夜、
+  break validation、不完整時間、舊小數工時轉換、整數分鐘、自然語言格式、
+  zero-hour hourly rate、Today 收合 UI、transactional persistence 與 CSV。
+- `npm test`：150/150；Calendar、Reports、AI 與 integration regression 全部
+  保持通過。
+- 真實瀏覽器隔離 origin：
+  - start → pause → resume → end 狀態與主要操作正確。
+  - 手動修改 10:00–18:08 後立即顯示 8 小時 8 分，重開仍保留。
+  - Calendar 與 Reports 對同一筆紀錄皆顯示 8 小時 8 分。
+  - 320、390、393、430px：
+    `scrollWidth === clientWidth`；time input、休息、小時與分鐘欄位均位於
+    父容器內。
+  - Console：0 error／0 warning。
+- App Shell：`driver-pay-pro-v14`；Manifest 與 localStorage key
+  `driverPayApp.v2` 保持原契約。
+- 尚待：公開 iPhone Safari Preview、installed PWA、native picker、鍵盤、
+  safe area 與離線更新 Human QA。
 
 ## Local-first V1 Release Candidate
 

@@ -218,7 +218,7 @@ Every page must reuse the same canonical functions or selectors. Reports must no
 | Expenses | Sum of `entryExpenses(record)` | Integer NT$ | Same distinction |
 | Net income | Sum of `entryNet(record)`, equivalent to total minus expenses | Integer NT$ | Signed values allowed |
 | Work days | Count of unique dates where `isWorkDayRecord(record)` is true | Integer days | `0 天` |
-| Work time | Sum of canonical `workMetrics(record).durationMs` | Milliseconds internally | `0 分` |
+| Work time | Sum of canonical `workMetrics(record).durationMs`; each record is derived from integer `workMinutes` | Milliseconds at aggregation boundary | `0 分` |
 | Average hourly income | Period net income ÷ period valid work hours | NT$/hour | `NT$0` when duration is zero |
 | Platform income | Sum of recognized `platformNetAmount` for that stored platform key | Integer NT$ | No tips included |
 | Platform share | Positive platform income ÷ sum of positive recognized platform income | Percentage | Not available when denominator is zero |

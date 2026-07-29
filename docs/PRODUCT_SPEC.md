@@ -259,7 +259,10 @@ Canonical calculations:
 - Total income: recognized platform income plus tips.
 - Total expenses: sum of the record's expense amounts.
 - Net income: total income minus total expenses.
-- Actual work duration: the canonical duration in milliseconds returned by the shared work-time calculation.
+- Actual work duration: integer derived `workMinutes`, converted to milliseconds at
+  the shared aggregation boundary. Complete valid start/end/break fields take
+  precedence; legacy manual hours and live session are fallbacks when clock fields
+  are incomplete.
 - Average hourly rate: net income divided by actual work hours; zero when duration is zero or invalid.
 - Weekly summary: records in a complete Monday-to-Sunday calendar week.
 - Monthly summary: records whose local date belongs to the selected calendar month.

@@ -413,8 +413,8 @@ test("Calendar session state 不寫入 durable storage 並支援 lifecycle refre
   assert.match(html, /scheduleCalendarMidnightRefresh/);
 });
 
-test("PWA App Shell 更新為簡短 v13 cache 且保留必要資源", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v13"/);
+test("PWA App Shell 更新為簡短 v14 cache 且保留必要資源", () => {
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v14"/);
   assert.match(serviceWorker, /"\.\/index\.html"/);
   assert.match(serviceWorker, /"\.\/styles\/design-system\.css"/);
   assert.match(serviceWorker, /keys\.filter\(key => key !== CACHE_NAME\)/);

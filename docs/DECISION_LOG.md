@@ -495,3 +495,28 @@
 - Rejected alternatives:
   - 不以 V1 完成為由虛報尚未完成的 Cloud Sync 技術債。
   - 不允許後續頁面建立第二套 aggregation。
+
+## D-034
+
+- Date: 2026-07-29
+- Decision:
+  1. 完整有效的 `startTime`／`endTime`／`breakMinutes` 優先產生整數
+     `workMinutes`；跨午夜維持單日規則。
+  2. `workMinutes` 只屬 derived canonical value，不加入 WorkRecord。
+     `manualHours` 在缺少完整 clock fields 時以四捨五入分鐘相容讀取。
+  3. Today、Calendar、Reports、AI、CSV 與時薪共用 `workMetrics()`。
+  4. Today 手動時間修正使用 transactional auto-save，成功 persistence
+     read-back 後才更新記憶體與發出 committed-record notification。
+  5. Today 主狀態不顯示秒；工作明細與手動新增預設收合，手動輸入使用
+     小時／分鐘。
+  6. `driverPayApp.v2`、WorkRecord schema 與歷史資料保持不變。
+- Reason: 舊 `workMetrics()` 讓 stale session／manual value 蓋過剛修改的
+  clock fields，造成跨頁工時不一致。衍生整數分鐘同時解決來源優先順序與
+  小數工時可用性問題，而不需要 migration。
+- Impact: Today workflow、canonical work-time、CSV、tests 與 App Shell cache
+  更新；Calendar／Reports frozen UI、Supabase、同步、正式資料與多段工作模型
+  不變。
+- Rejected alternatives:
+  - 不以 UI clamp 或最大值掩蓋 stale session。
+  - 不新增 `workMinutes` durable 欄位或批量 migration。
+  - 不為 Today 建立第二套工時計算。

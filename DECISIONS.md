@@ -480,3 +480,37 @@ L1 120/120、公開 L2、單次 Product Owner L3 與全部 Freeze Gate 已具備
   Service Worker、正式資料或 dependencies。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-033](docs/DECISION_LOG.md#d-033)。
+
+## D-034 — V1.1 Today 工時統一採衍生整數分鐘
+
+- Date: 2026-07-29
+
+### 決策
+
+1. `startTime`、`endTime` 與 `breakMinutes` 是完整時間存在時的唯一優先來源；
+   `workMinutes = end - start - break`，跨午夜維持單日加 24 小時規則。
+2. `workMinutes` 是 canonical 衍生整數，不新增到 WorkRecord；既有
+   `manualHours` 只在缺少完整 clock fields 時相容讀取，並以
+   `Math.round(hours × 60)` 轉換。
+3. Today、Calendar、Reports、AI、CSV 與平均時薪必須持續重用
+   `workMetrics()`，不得保留頁面專用工時公式。
+4. Today 手動時間修正採 transactional auto-save；只有 localStorage 寫入與
+   read-back 成功後才更新記憶體並通知依賴頁面。
+5. Today 工作狀態使用單一自然語言主工時，不顯示秒；工作明細與手動新增
+   預設收合。手動工時介面使用小時／分鐘欄位。
+6. WorkRecord schema 與 `driverPayApp.v2` 不變，不批量遷移或改寫舊資料。
+
+### 原因
+
+舊 Today 表單會保留 stale `workSession`，而舊優先順序又讓 session 或
+`manualHours` 蓋過使用者剛修正的 clock fields，造成 Today 與下游統計顯示
+舊工時。整數分鐘可消除小數輸入與浮點誤差，同時保留現有 schema 相容性。
+
+### 影響範圍
+
+- 修改 Today 工時流程、共用工時 selector、CSV 工時顯示、測試與 App Shell
+  cache；Calendar／Reports 只接受相同 canonical 結果，不改凍結 UI。
+- Supabase、同步、authentication、多段工作模型與 Production 資料均不在
+  本決策範圍。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-034](docs/DECISION_LOG.md#d-034)。
