@@ -63,8 +63,14 @@ Primary responsibilities:
 - Add today's expenses.
 - Record today's shift, weather, orders, distance, and note.
 - Provide immediate save and work-status feedback.
-- Keep income and work time in the first form level; place supporting fields in the
-  same form's collapsed "其他資料" section without deleting hidden values.
+- Keep work time, expense entry, and supporting data as three independent collapsed
+  sections in the same Today form: "工時設定", "新增支出", and "其他資料".
+- Work time uses one derived input mode at a time: complete clock fields take
+  precedence; otherwise legacy manual hours are used. Switching modes requires
+  confirmation before clearing the inactive mode's values.
+- A stopped clock-based day may continue in the same WorkRecord. The stopped gap is
+  added to break minutes, the original start is retained, and no second daily record
+  is created.
 - When income exists without valid work time, offer a non-blocking path to add work
   time or save for later; incomplete work time must not produce an hourly rate.
 - Treat automatic weather as optional Today-only progressive enhancement: explain

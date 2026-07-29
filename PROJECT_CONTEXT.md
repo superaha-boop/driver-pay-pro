@@ -17,9 +17,15 @@
   更新記憶體並發出一次 committed-record notification。開始／暫停／繼續／
   收工與原生 time picker 共用相同欄位。
 - Today 工作狀態只顯示一個自然語言主工時，詳細經過／休息／實際工時預設
-  收合，工時與 44px「工作明細」控制固定同列。手動工時改為「小時＋分鐘」，
-  不再要求輸入小數；每日紀錄第一層只保留收入與工時，支出及其他選填資料
-  集中於預設收合的「其他資料」。
+  收合，工時與 44px「工作明細」控制固定同列。每日紀錄固定為三個可獨立
+  收合的區塊：「工時設定／新增支出／其他資料」；完整智慧支出流程已恢復
+  為獨立區塊，`儲存支出` 不與 `儲存詳細紀錄` 重疊。
+- 工時設定一次只顯示 clock 或 manual 一種輸入。模式由既有欄位推導，
+  切換前必須確認，確認後才交易式清除另一組欄位；舊資料同時含兩組值時
+  仍以 clock 結果優先，且不會靜默清除。
+- 已收工的 clock 紀錄提供同列「再跑一段／修改時間」。確認續跑後保留原始
+  `startTime`、將收工空檔加入既有 `breakMinutes`、清除 `endTime` 並沿用
+  同一筆 WorkRecord；manual 模式會提示先切換，不建立多段資料模型。
 - 有收入但沒有有效工時時，明確儲存流程會提供「補上工時／稍後再補」；選擇
   稍後再補仍保留紀錄，但 Today、Reports 與 AI 均不計算該筆時薪。
 - 共用資料品質狀態固定為 `complete`、`missing-work-time`、
@@ -34,9 +40,9 @@
 - `driverPayApp.v2` 與 WorkRecord schema 均未更名或遷移；`manualHours` 只保留
   作舊資料相容欄位，`workMinutes` 是衍生值而非新儲存欄位；僅相容擴充上述
   settings 偏好，不需要 migration。
-- 自動測試目前 164/164，Today targeted 42/42；320、375、390、393、430px
+- 自動測試目前 171/171，Today targeted 49/49；320、375、390、393、430px
   必須無水平 overflow，Calendar 與 Reports 維持相同 canonical 結果。
-- Service Worker App Shell candidate 更新為 `driver-pay-pro-v15`。Follow-up
+- Service Worker App Shell candidate 更新為 `driver-pay-pro-v16`。Follow-up
   implementation commit `882bfcd` 已推送；公開 iPhone Preview 已通過未登入
   smoke，Milestone 只待 Product Owner 最終一次 Human QA。
 

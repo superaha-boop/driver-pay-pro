@@ -27,16 +27,23 @@
 
 ## V1.1 Milestone 1 — Today／Work-Time／QA Follow-up
 
-- `npm run test:today`：42/42，涵蓋 stale session 修正、正常／無休息／跨午夜、
+- `npm run test:today`：49/49，涵蓋 stale session 修正、正常／無休息／跨午夜、
   break validation、不完整時間、舊小數工時轉換、整數分鐘、自然語言格式、
   zero-hour hourly rate、Today 同列明細、reduced-motion 捲動、未填工時提醒、
-  精簡表單、天氣權限／映射／手動覆蓋、transactional persistence 與 CSV。
-- `npm test`：164/164；Calendar、Reports、AI 與 integration regression 全部
+  三個獨立收合區塊、工時模式確認、9 小時 10 分＝550 分鐘、續跑休息累加、
+  支出防重複與 transactional persistence、天氣權限／映射／手動覆蓋及 CSV。
+- `npm test`：171/171；Calendar、Reports、AI 與 integration regression 全部
   保持通過。
 - 共用時薪界線：0～9 分鐘不計算；10 分鐘且時薪不高於 NT$2,000 可計算；
   超過 NT$2,000 標記異常，不參與 AI 正常洞察、百分比或排班建議。
 - 真實瀏覽器隔離 origin：
   - start → pause → resume → end 狀態與主要操作正確。
+  - 工時模式一次只顯示一種；雙向切換均先確認，manual 模式的「再跑一段」
+    會提示先切換。
+  - clock 模式「再跑一段」保留原始開始時間、清空結束時間並把收工空檔加入
+    休息；不建立第二筆日期紀錄。
+  - 「新增支出」與「其他資料」獨立收合；快捷／完整類別、三種支出方式、
+    付款日期、備註與獨立儲存流程正常。
   - 手動修改 10:00–18:08 後立即顯示 8 小時 8 分，重開仍保留。
   - Calendar 與 Reports 對同一筆紀錄皆顯示 8 小時 8 分。
   - 320、375、390、393、430px：
@@ -47,12 +54,10 @@
   - 天氣首次展開只顯示隱私說明；未同意不呼叫定位，手動選擇可獨立保存。
     自動定位成功、iOS 權限拒絕及 installed-PWA 權限行為留給最終一次真機 QA。
   - Console：0 error／0 warning。
-- App Shell：`driver-pay-pro-v15`；Manifest 與 localStorage key
+- App Shell：`driver-pay-pro-v16`；Manifest 與 localStorage key
   `driverPayApp.v2` 保持原契約。
-- 公開 Preview：
-  `https://software-colorado-stated-perfectly.trycloudflare.com`；未登入新連線
-  直接開啟、390px 無 overflow、Manifest、Service Worker v15 與 Console
-  0 error／warning 已通過。
+- Final follow-up 必須建立新的公開 Preview，並在未登入 iPhone Safari 直開
+  驗證後才交付本 Milestone 唯一一次最終 Human QA；舊 Preview 不重用。
 - 尚待：Product Owner 於 iPhone Safari／installed PWA 驗證 native picker、
   定位權限、鍵盤、safe area 與離線更新的最終一次 Human QA。
 

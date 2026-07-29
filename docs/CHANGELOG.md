@@ -28,8 +28,12 @@
   工時改為小時／分鐘欄位。
 - Human QA follow-up 將主工時與 44px 工作明細控制固定同列；修改工作時間
   會展開並安全捲動，不自動 focus 或彈出鍵盤。
-- 每日紀錄第一層精簡為收入與工時；支出及其他選填資料集中到預設收合的
-  「其他資料」，收合不清除既有值。
+- 每日紀錄使用三個獨立收合區塊：「工時設定／新增支出／其他資料」；完整
+  智慧支出流程恢復為獨立區塊，且 `儲存支出` 與 `儲存詳細紀錄` 分離。
+- 工時輸入改為互斥 clock／manual 模式，切換前明確確認並在成功 persistence
+  後才清除另一組欄位；模式由既有欄位推導，不新增 schema。
+- 已收工 clock 紀錄新增同列「再跑一段／修改時間」；確認續跑保留原開始、
+  將收工空檔累加為休息並沿用同一筆 WorkRecord。
 - 有收入無有效工時時提供「補上工時／稍後再補」；共用資料品質規則排除
   少於 10 分鐘或高於 NT$2,000／小時的異常時薪，AI 顯示原因而不輸出誤導
   數字、比較或建議。
@@ -38,8 +42,8 @@
   手動值優先。
 - Today 工時欄位改為 transactional auto-save，成功 persistence 後才更新
   記憶體與通知 dependent views。
-- `test:today` 增為 42 項；全套測試增為 164 項。
-- Service Worker App Shell candidate 更新為 `driver-pay-pro-v15`。
+- `test:today` 增為 49 項；全套測試增為 171 項。
+- Service Worker App Shell candidate 更新為 `driver-pay-pro-v16`。
 - `driverPayApp.v2` 與 WorkRecord schema 未變更，舊資料不遷移、不批量改寫。
 
 ### Local-first V1 Release Candidate

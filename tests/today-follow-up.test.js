@@ -89,15 +89,57 @@ test("補上工時保留表單並定位，稍後再補只提交一次", () => {
   assert.doesNotMatch(listeners, /resetForm\(\)/);
 });
 
-test("每日紀錄第一層保留收入與工時，選填資料集中於預設收合的其他資料", () => {
+test("每日紀錄保留工時、支出與其他資料三個獨立收合區塊", () => {
   const detail = html.slice(html.indexOf('id="sharedDetailPanel"'), html.indexOf('id="recentIncomePanel"'));
   assert.match(detail, /id="workTimeSection"/);
+  assert.match(detail, /id="expenseSection"/);
   assert.match(detail, /id="otherDataSection"/);
+  assert.ok(detail.indexOf('id="workTimeSection"') < detail.indexOf('id="expenseSection"'));
+  assert.ok(detail.indexOf('id="expenseSection"') < detail.indexOf('id="otherDataSection"'));
+  assert.match(detail, /id="workTimeToggle"[^>]*aria-expanded="false"[^>]*aria-controls="workTimeContent"/);
+  assert.match(detail, /id="expenseSectionToggle"[^>]*aria-expanded="false"[^>]*aria-controls="expenseInputs"/);
   assert.match(detail, /id="otherDataToggle"[^>]*aria-expanded="false"/);
+  const expense = detail.slice(detail.indexOf('id="expenseSection"'), detail.indexOf('id="otherDataSection"'));
+  assert.match(expense, /id="expenseInputs"/);
   const other = detail.slice(detail.indexOf('id="otherDataSection"'));
-  for (const id of ["expenseInputs", "tips", "shift", "orders", "km", "weather", "note"]) {
+  assert.doesNotMatch(other, /id="expenseInputs"/);
+  for (const id of ["tips", "shift", "orders", "km", "weather", "note"]) {
     assert.match(other, new RegExp(`id="${id}"`));
   }
+});
+
+test("工時只顯示一種輸入方式且切換前需要確認", () => {
+  const detail = html.slice(html.indexOf('id="workTimeSection"'), html.indexOf('id="expenseSection"'));
+  assert.match(detail, /id="clockWorkFields"/);
+  assert.match(detail, /class="work-mode-fields hidden" id="manualWorkFields"/);
+  assert.match(detail, /id="workModeToggle"/);
+  assert.match(html, /id="workModeDialog"/);
+  const request = extractFunction("requestWorkTimeModeSwitch");
+  const apply = extractFunction("applyWorkTimeModeSwitch");
+  assert.match(request, /切換後會清除開始時間、結束時間與休息時間/);
+  assert.match(request, /切換後會清除手動工時/);
+  assert.match(apply, /saveTodayWorkTimeFromForm\(\)/);
+  assert.match(apply, /previousValues/);
+  assert.doesNotMatch(apply, /saveState\(\)/);
+});
+
+test("新增支出使用獨立交易儲存且防止重複提交", () => {
+  const source = extractFunction("saveSmartExpense");
+  assert.match(source, /expenseSaveInProgress/);
+  assert.match(source, /persistStatePayload\(nextState, \{ updateMemory: true \}\)/);
+  assert.match(source, /notifyRecordChanged\(paymentDate, "expense"\)/);
+  assert.match(source, /原有支出未變更/);
+  assert.doesNotMatch(source, /ensureEntryForDate\(paymentDate\)/);
+});
+
+test("已收工提供同排再跑一段與修改時間操作", () => {
+  const card = html.slice(html.indexOf('id="homeWorkCard"'), html.indexOf('id="sharedIncomePanelAnchor"'));
+  assert.match(card, /id="continueRun"[^>]*>再跑一段</);
+  assert.match(card, /id="modifyWorkTime"[^>]*>修改時間</);
+  assert.match(html, /#continueRun,[\s\S]*?#modifyWorkTime\s*\{[\s\S]*?min-width:\s*0/);
+  const controls = extractFunction("updateWorkControls");
+  assert.match(controls, /continueRun\.classList\.toggle\("hidden", status !== "stopped"\)/);
+  assert.match(controls, /modifyWorkTime\.classList\.toggle\("hidden", status !== "stopped"\)/);
 });
 
 test("Open-Meteo 天氣代碼集中映射到有限分類", () => {

@@ -63,6 +63,8 @@ const functionNames = [
   "timeValueMs",
   "decimalHoursToMinutes",
   "minutesToHourMinuteParts",
+  "deriveWorkTimeInputMode",
+  "continuedWorkBreakMinutes",
   "validateWorkTimeRange",
   "calculateWorkMinutes",
   "formatWorkDuration",
@@ -231,6 +233,37 @@ test("有效開始與結束時間優先於舊手動工時", () => {
     manualHours: 8
   });
   assert.equal(result.workMinutes, 60);
+});
+
+test("工時輸入方式由既有欄位推導且舊雙值優先顯示時鐘模式", () => {
+  assert.equal(context.workTime.deriveWorkTimeInputMode({}), "clock");
+  assert.equal(context.workTime.deriveWorkTimeInputMode({ manualHours: 9 + 10 / 60 }), "manual");
+  assert.equal(context.workTime.deriveWorkTimeInputMode({
+    startTime: "08:00",
+    endTime: "17:00",
+    manualHours: 9 + 10 / 60
+  }), "clock");
+});
+
+test("手動 9 小時 10 分維持 550 分鐘", () => {
+  assert.equal(context.workTime.decimalHoursToMinutes(9 + 10 / 60), 550);
+});
+
+test("再跑一段把收工空檔累加到既有休息分鐘", () => {
+  const endMs = Date.parse("2026-07-29T10:00:00+08:00");
+  const firstContinueMs = Date.parse("2026-07-29T11:00:00+08:00");
+  const secondEndMs = Date.parse("2026-07-29T12:00:00+08:00");
+  const secondContinueMs = Date.parse("2026-07-29T12:30:00+08:00");
+  const firstBreak = context.workTime.continuedWorkBreakMinutes(20, endMs, firstContinueMs);
+  const secondBreak = context.workTime.continuedWorkBreakMinutes(firstBreak, secondEndMs, secondContinueMs);
+  assert.equal(firstBreak, 80);
+  assert.equal(secondBreak, 110);
+});
+
+test("系統時間早於最後收工時間時拒絕再跑一段", () => {
+  const endMs = Date.parse("2026-07-29T11:00:00+08:00");
+  const nowMs = Date.parse("2026-07-29T10:59:00+08:00");
+  assert.equal(context.workTime.continuedWorkBreakMinutes(0, endMs, nowMs), null);
 });
 
 test("缺少開始與結束時間時沿用舊手動工時", () => {

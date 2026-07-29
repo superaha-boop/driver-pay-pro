@@ -22,8 +22,16 @@ GitHub：`superaha-boop/driver-pay-pro`
 - Today 手動工時 UI 改為小時／分鐘欄位；工作狀態只保留一個自然語言主
   工時，並與 44px「工作明細」控制同列。收工後「修改工作時間」會先展開，
   再依 reduced-motion 安全捲動至工時設定，不會 focus time input 或彈出鍵盤。
-- 每日紀錄第一層固定為收入與工時；支出、小費、班別、訂單、公里、天氣與
-  備註位於預設收合的「其他資料」。收合只改 UI，不清除草稿或舊資料。
+- 每日紀錄固定為三個獨立收合區塊：「工時設定／新增支出／其他資料」。
+  完整智慧支出元件已從「其他資料」恢復為獨立區塊，保留快捷類別、完整類別、
+  一次／固定／分月預覽、付款日期、備註與獨立 `儲存支出`；持久化使用
+  clone → validate → persist/read-back，失敗不污染既有 state。
+- 工時一次只顯示 clock 或 manual 一種輸入；模式由現有欄位推導，不新增
+  durable mode 欄位。切換前顯示清除範圍，確認後才交易式保存；舊雙值資料
+  仍優先使用 clock 且不靜默清除。
+- 已收工的 clock 紀錄提供同列「再跑一段／修改時間」。續跑確認會保留
+  原始開始時間、把收工空檔累加至休息時間、清除結束時間並沿用同一筆
+  WorkRecord；manual 模式先提示切換。
 - 明確儲存有收入但無有效工時的紀錄時，使用既有輕量 dialog 提供「補上工時」
   或「稍後再補」；前者保留輸入並定位工時，後者允許儲存但不計算時薪。
 - `hourlyRateQuality()` 與 `recordDataQuality()` 是 Today、Reports、AI 共用
@@ -36,18 +44,14 @@ GitHub：`superaha-boop/driver-pay-pro`
   update-memory → notify，儲存失敗不會先污染畫面狀態。
 - `driverPayApp.v2`、WorkRecord schema、收入／支出公式、Calendar／Reports
   frozen UI 均未改變；舊 `manualHours` 不遷移、不批量改寫。
-- L1 evidence：164/164 Node、Today 42/42、lint 0 errors、320–430px、原生
+- L1 evidence：171/171 Node、Today 49/49、lint 0 errors、320–430px、原生
   time input 邊界、開始／暫停／繼續／收工、重開保留、Calendar／Reports
   8 小時 8 分一致、Console 0 error／warning。
-- Service Worker candidate：`driver-pay-pro-v15`。
+- Service Worker candidate：`driver-pay-pro-v16`。
 - Follow-up implementation commit：`882bfcd fix: complete Today workflow QA follow-up`，
   已推送至同名遠端功能分支。
-- `release:check`、164/164 Node、全部專項、0-vulnerability audit、responsive、
-  Console、Manifest、Service Worker v15 與 Offline App Shell 已通過。
-- 公開 Preview：
-  `https://software-colorado-stated-perfectly.trycloudflare.com`；未登入新連線可
-  直接開啟，390px 無 overflow，Console 0 error／warning。這是臨時 tunnel，
-  開發用 Mac、4177 本機 server 與 tunnel 必須保持連線。
+- Final follow-up 的 `release:check`、Preview URL 與單次 Product Owner Human
+  QA 狀態將於本次完成 Commit 後補入；舊 Preview 不作為本次驗收網址。
 - 下一步只剩 Product Owner 執行本 Milestone 最終一次 Human QA。通過前不
   宣告 Milestone Done，也不合併 main 或部署 Production。
 

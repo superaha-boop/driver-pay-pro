@@ -1640,6 +1640,11 @@
       grid-column: 1 / -1;
     }
 
+    #continueRun,
+    #modifyWorkTime {
+      min-width: 0;
+    }
+
     .work-actions .button:active {
       transform: scale(.985);
       opacity: .9;
@@ -4201,20 +4206,6 @@
       background: #bd9564;
     }
 
-    .other-data-expense {
-      grid-column: 1 / -1;
-      min-width: 0;
-      display: grid;
-      gap: 10px;
-    }
-
-    .other-data-expense > h4 {
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
     .weather-auto-control {
       min-width: 0;
       display: grid;
@@ -4307,6 +4298,30 @@
 
     .work-time-fields {
       gap: 12px;
+    }
+
+    .work-mode-fields {
+      display: contents;
+    }
+
+    .manual-work-time-field,
+    .work-mode-notice,
+    .work-mode-toggle {
+      grid-column: 1 / -1;
+    }
+
+    .work-mode-notice {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .work-mode-toggle {
+      min-width: 0;
+      min-height: 44px;
+      justify-self: start;
+      padding-inline: 14px;
     }
 
     .manual-entry-toggle {
@@ -5245,6 +5260,8 @@
             <button class="button secondary hidden" id="pauseRun" type="button">暫停休息</button>
             <button class="button primary hidden" id="resumeRun" type="button">繼續跑車</button>
             <button class="button secondary hidden" id="endRun" type="button">收工</button>
+            <button class="button primary hidden" id="continueRun" type="button">再跑一段</button>
+            <button class="button secondary hidden" id="modifyWorkTime" type="button">修改時間</button>
           </div>
         </section>
 
@@ -5288,7 +5305,7 @@
               </div>
               <div class="quick-preview" id="quickPreview"></div>
               <details class="collapsible detail-section work-section" id="workTimeSection">
-                <summary>
+                <summary id="workTimeToggle" aria-expanded="false" aria-controls="workTimeContent">
                   <span class="detail-summary-main">
                     <span class="section-heading detail-summary-title">
                       <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -5303,46 +5320,64 @@
                     </span>
                   </span>
                 </summary>
-                <div class="collapsible-body fields work-time-fields">
-                  <label>
-                    <span class="work-field-label">開始跑車</span>
-                    <span class="work-time-control">
-                      <input type="time" id="startTime">
-                    </span>
-                  </label>
-                  <label>
-                    <span class="work-field-label">結束跑車</span>
-                    <span class="work-time-control">
-                      <input type="time" id="endTime">
-                    </span>
-                  </label>
-                  <label>
-                    <span class="work-field-label">休息</span>
-                    <span class="work-input-shell">
-                      <input type="number" inputmode="numeric" id="breakMinutes" min="0" step="1" value="0">
-                      <span class="work-input-unit" aria-hidden="true">分鐘</span>
-                    </span>
-                  </label>
-                  <label>
-                    <span class="work-field-label">手動工時</span>
-                    <input type="hidden" id="manualHours" value="0">
-                    <span class="manual-work-time-grid">
-                      <span class="work-input-shell">
-                        <input type="number" inputmode="numeric" id="manualHoursPart" min="0" max="24" step="1" placeholder="0" aria-label="手動工時小時">
-                        <span class="work-input-unit" aria-hidden="true">小時</span>
+                <div class="collapsible-body fields work-time-fields" id="workTimeContent">
+                  <div class="work-mode-fields" id="clockWorkFields">
+                    <label>
+                      <span class="work-field-label">開始跑車</span>
+                      <span class="work-time-control">
+                        <input type="time" id="startTime">
                       </span>
+                    </label>
+                    <label>
+                      <span class="work-field-label">結束跑車</span>
+                      <span class="work-time-control">
+                        <input type="time" id="endTime">
+                      </span>
+                    </label>
+                    <label>
+                      <span class="work-field-label">休息</span>
                       <span class="work-input-shell">
-                        <input type="number" inputmode="numeric" id="manualMinutesPart" min="0" max="59" step="1" placeholder="0" aria-label="手動工時分鐘">
+                        <input type="number" inputmode="numeric" id="breakMinutes" min="0" step="1" value="0">
                         <span class="work-input-unit" aria-hidden="true">分鐘</span>
                       </span>
-                    </span>
-                  </label>
+                    </label>
+                  </div>
+                  <div class="work-mode-fields hidden" id="manualWorkFields">
+                    <label class="manual-work-time-field">
+                      <span class="work-field-label">手動工時</span>
+                      <input type="hidden" id="manualHours" value="0">
+                      <span class="manual-work-time-grid">
+                        <span class="work-input-shell">
+                          <input type="number" inputmode="numeric" id="manualHoursPart" min="0" max="24" step="1" placeholder="0" aria-label="手動工時小時">
+                          <span class="work-input-unit" aria-hidden="true">小時</span>
+                        </span>
+                        <span class="work-input-shell">
+                          <input type="number" inputmode="numeric" id="manualMinutesPart" min="0" max="59" step="1" placeholder="0" aria-label="手動工時分鐘">
+                          <span class="work-input-unit" aria-hidden="true">分鐘</span>
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                  <p class="work-mode-notice hidden" id="workModeNotice"></p>
+                  <button class="button secondary work-mode-toggle" id="workModeToggle" type="button">改用手動工時</button>
                   <div class="work-live-summary" aria-live="polite">
                     <span>今日工時</span>
                     <strong id="workLiveValue">等待設定</strong>
                   </div>
                   <p class="ds-save-status today-save-status" id="todaySaveStatus" role="status" aria-live="polite" aria-atomic="true"></p>
                 </div>
+              </details>
+              <details class="collapsible detail-section expense-section" id="expenseSection">
+                <summary id="expenseSectionToggle" aria-expanded="false" aria-controls="expenseInputs">
+                  <span class="section-heading detail-summary-title">
+                    <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M4 2v20l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2V2l-2 2-2-2-2 2-2-2-2 2-2-2-2 2Z"></path>
+                      <path d="M10 8h6M10 12h6M10 16h3"></path>
+                    </svg>
+                    <span>新增支出</span>
+                  </span>
+                </summary>
+                <div class="collapsible-body" id="expenseInputs"></div>
               </details>
               <details class="collapsible detail-section other-section" id="otherDataSection">
                 <summary id="otherDataToggle" aria-expanded="false" aria-controls="otherDataContent">
@@ -5355,16 +5390,6 @@
                   </span>
                 </summary>
                 <div class="collapsible-body fields" id="otherDataContent">
-                  <section class="other-data-expense" id="expenseSection" aria-labelledby="expenseSectionTitle">
-                    <h4 class="section-heading" id="expenseSectionTitle">
-                      <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M4 2v20l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2V2l-2 2-2-2-2 2-2-2-2 2-2-2-2 2Z"></path>
-                        <path d="M10 8h6M10 12h6M10 16h3"></path>
-                      </svg>
-                      <span>新增支出</span>
-                    </h4>
-                    <div id="expenseInputs"></div>
-                  </section>
                   <label>小費
                     <input type="number" inputmode="numeric" id="tips" min="0" step="1" value="0">
                   </label>
@@ -5782,6 +5807,28 @@
     </form>
   </dialog>
 
+  <dialog class="record-editor-confirm" id="workModeDialog" aria-labelledby="workModeDialogTitle">
+    <div class="record-editor-confirm__body">
+      <h2 class="ds-card-title" id="workModeDialogTitle">切換工時輸入方式？</h2>
+      <p class="ds-secondary" id="workModeDialogMessage"></p>
+      <div class="record-editor-confirm__actions">
+        <button class="ds-button ds-button--secondary" id="workModeDialogCancel" type="button">取消</button>
+        <button class="ds-button ds-button--primary" id="workModeDialogAccept" type="button">確認切換</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="record-editor-confirm" id="continueWorkDialog" aria-labelledby="continueWorkDialogTitle">
+    <div class="record-editor-confirm__body">
+      <h2 class="ds-card-title" id="continueWorkDialogTitle">繼續今天的工作？</h2>
+      <p class="ds-secondary" id="continueWorkDialogMessage"></p>
+      <div class="record-editor-confirm__actions">
+        <button class="ds-button ds-button--secondary" id="continueWorkDialogCancel" type="button">取消</button>
+        <button class="ds-button ds-button--primary" id="continueWorkDialogAccept" type="button">再跑一段</button>
+      </div>
+    </div>
+  </dialog>
+
   <script>
     const brandAttribution = Object.freeze({
       productName: "Driver Pay Pro",
@@ -5793,7 +5840,7 @@
     });
     const storageKey = "driverPayApp.v2";
     const lastValidStorageKey = `${storageKey}.lastValid`;
-    const appShellCacheName = "driver-pay-pro-v15";
+    const appShellCacheName = "driver-pay-pro-v16";
     const defaultPlatforms = ["Uber", "LINE GO", "Yoxi", "55688", "大都會", "台灣大車隊", "路邊客", "自訂"];
     const defaultPlatformIds = {
       "Uber": "platform-uber",
@@ -5887,6 +5934,7 @@
     let activeReportView = reportsState.activeReportTab;
     let overviewVisible = false;
     let expenseDraft = createExpenseDraft();
+    let expenseSaveInProgress = false;
     let expenseToastTimer = 0;
     let expenseShortcutStatus = "";
     let driverGoalSaveTimer = 0;
@@ -5900,6 +5948,9 @@
     let weatherDetectionPromise = null;
     let weatherManualOverride = false;
     let weatherSuggestionCache = null;
+    let workTimeInputMode = "clock";
+    let pendingWorkMode = "";
+    let pendingContinueWork = null;
     const weatherDetectionAttemptedDates = new Set();
     let calendarState = createCalendarState(todayString());
     let calendarTodayTimer = 0;
@@ -5965,8 +6016,24 @@
       weatherPermissionDialog: document.getElementById("weatherPermissionDialog"),
       weatherPermissionLater: document.getElementById("weatherPermissionLater"),
       weatherPermissionAllow: document.getElementById("weatherPermissionAllow"),
+      workModeDialog: document.getElementById("workModeDialog"),
+      workModeDialogMessage: document.getElementById("workModeDialogMessage"),
+      workModeDialogCancel: document.getElementById("workModeDialogCancel"),
+      workModeDialogAccept: document.getElementById("workModeDialogAccept"),
+      continueWorkDialog: document.getElementById("continueWorkDialog"),
+      continueWorkDialogTitle: document.getElementById("continueWorkDialogTitle"),
+      continueWorkDialogMessage: document.getElementById("continueWorkDialogMessage"),
+      continueWorkDialogCancel: document.getElementById("continueWorkDialogCancel"),
+      continueWorkDialogAccept: document.getElementById("continueWorkDialogAccept"),
       calendarExpenseList: document.getElementById("calendarExpenseList"),
       workTimeSection: document.getElementById("workTimeSection"),
+      workTimeToggle: document.getElementById("workTimeToggle"),
+      clockWorkFields: document.getElementById("clockWorkFields"),
+      manualWorkFields: document.getElementById("manualWorkFields"),
+      workModeNotice: document.getElementById("workModeNotice"),
+      workModeToggle: document.getElementById("workModeToggle"),
+      expenseSection: document.getElementById("expenseSection"),
+      expenseSectionToggle: document.getElementById("expenseSectionToggle"),
       otherDataSection: document.getElementById("otherDataSection"),
       otherDataToggle: document.getElementById("otherDataToggle"),
       detectWeather: document.getElementById("detectWeather"),
@@ -6013,6 +6080,8 @@
       pauseRun: document.getElementById("pauseRun"),
       resumeRun: document.getElementById("resumeRun"),
       endRun: document.getElementById("endRun"),
+      continueRun: document.getElementById("continueRun"),
+      modifyWorkTime: document.getElementById("modifyWorkTime"),
       workStatusText: document.getElementById("workStatusText"),
       workPrimaryTime: document.getElementById("workPrimaryTime"),
       workDetailsToggle: document.getElementById("workDetailsToggle"),
@@ -7834,7 +7903,7 @@
             ` : ""}
           </div>
           <span class="expense-existing-hint" id="expenseExistingHint"${existingAmount ? "" : " hidden"}>這天已有 ${money(existingAmount)}，儲存後會更新此類別。</span>
-          <button class="expense-save-button" type="button" id="saveSmartExpense"${amount > 0 ? "" : " disabled"}>儲存支出</button>
+          <button class="expense-save-button" type="button" id="saveSmartExpense"${amount > 0 && !expenseSaveInProgress ? "" : " disabled"}>${expenseSaveInProgress ? "儲存中…" : "儲存支出"}</button>
           <p class="expense-form-status${expenseDraft.statusType === "error" ? " error" : ""}" id="expenseFormStatus" role="status">${escapeHtml(expenseDraft.status)}</p>
         </div>
       `;
@@ -7958,8 +8027,8 @@
         renderExpenseForm();
         return;
       }
-      if (!Number.isFinite(amount) || amount <= 0) {
-        expenseDraft.status = "請輸入大於 0 的金額。";
+      if (!Number.isSafeInteger(amount) || amount <= 0 || amount > maxPlatformIncome) {
+        expenseDraft.status = "請輸入 1 至 99,999,999 的整數金額。";
         expenseDraft.statusType = "error";
         renderExpenseForm();
         return;
@@ -7994,9 +8063,13 @@
         renderExpenseForm();
         return;
       }
+      if (expenseSaveInProgress) return;
+      expenseSaveInProgress = true;
+      renderExpenseForm();
 
       if (recordEditorState.open) {
         if (paymentDate !== recordEditorState.date) {
+          expenseSaveInProgress = false;
           expenseDraft.status = "付款日期必須與目前編輯日期相同。";
           expenseDraft.statusType = "error";
           renderExpenseForm();
@@ -8009,6 +8082,7 @@
         const note = String(expenseDraft.note || "").trim().slice(0, 160);
         if (note) draft.expenseNotes[category] = note;
         else delete draft.expenseNotes[category];
+        expenseSaveInProgress = false;
         expenseDraft = createExpenseDraft(paymentDate);
         renderExpenseForm();
         renderCalendarExpenseList();
@@ -8017,15 +8091,29 @@
         return;
       }
 
-      const entry = ensureEntryForDate(paymentDate);
-      entry.expenses[category] = Math.round(amount);
+      const nextState = cloneStatePayload(state);
+      let entry = nextState.entries.find(item => item.date === paymentDate);
+      if (!entry) {
+        entry = blankEntry(paymentDate);
+        nextState.entries.push(entry);
+      }
+      entry.expenses ||= {};
+      entry.expenses[category] = amount;
       entry.expenseNotes ||= {};
       const note = String(expenseDraft.note || "").trim().slice(0, 160);
       if (note) entry.expenseNotes[category] = note;
       else delete entry.expenseNotes[category];
-      if (!state.expenses.includes(category)) state.expenses.push(category);
-      const saved = saveState();
-      if (saved) notifyRecordChanged(paymentDate, "expense");
+      if (!nextState.expenses.includes(category)) nextState.expenses.push(category);
+      const saved = persistStatePayload(nextState, { updateMemory: true });
+      expenseSaveInProgress = false;
+      if (!saved) {
+        expenseDraft.status = "儲存失敗，原有支出未變更。";
+        expenseDraft.statusType = "error";
+        renderExpenseForm();
+        showToast("支出儲存失敗，請稍後再試");
+        return;
+      }
+      notifyRecordChanged(paymentDate, "expense");
 
       expenseDraft = createExpenseDraft(paymentDate);
       renderAll();
@@ -9613,6 +9701,7 @@
       if (entry?.startTime && entry?.endTime) return "stopped";
       if (entry?.workSession?.status && entry?.startTime) return entry.workSession.status;
       if (entry?.startTime && !entry?.endTime) return "running";
+      if (!entry?.startTime && !entry?.endTime && decimalHoursToMinutes(entry?.manualHours) > 0) return "stopped";
       return "idle";
     }
 
@@ -9671,11 +9760,13 @@
       els.workTotal.textContent = formatWorkDuration(elapsedMinutes);
       els.workBreak.textContent = formatWorkDuration(breakMinutes);
       els.workActual.textContent = formatWorkDuration(actualMinutes);
-      els.startRun.classList.toggle("hidden", !["idle", "stopped"].includes(status));
-      els.startRun.textContent = status === "stopped" ? "修改工作時間" : "開始工作";
+      els.startRun.classList.toggle("hidden", status !== "idle");
+      els.startRun.textContent = "開始工作";
       els.pauseRun.classList.toggle("hidden", status !== "running");
       els.resumeRun.classList.toggle("hidden", status !== "paused");
       els.endRun.classList.toggle("hidden", !["running", "paused"].includes(status));
+      els.continueRun.classList.toggle("hidden", status !== "stopped");
+      els.modifyWorkTime.classList.toggle("hidden", status !== "stopped");
     }
 
     function mapWeatherCode(weatherCode) {
@@ -10181,6 +10272,83 @@
       }
     }
 
+    function deriveWorkTimeInputMode(entry) {
+      entry ||= {};
+      const hasClockValue = Boolean(entry.startTime || entry.endTime);
+      const hasManualValue = decimalHoursToMinutes(entry.manualHours) > 0;
+      if (hasClockValue) return "clock";
+      if (hasManualValue) return "manual";
+      return "clock";
+    }
+
+    function continuedWorkBreakMinutes(previousBreakMinutes, endMs, nowMs) {
+      const previous = Math.max(0, Math.round(Number(previousBreakMinutes) || 0));
+      const stoppedAt = Number(endMs);
+      const continuedAt = Number(nowMs);
+      if (!Number.isFinite(stoppedAt) || !Number.isFinite(continuedAt) || continuedAt < stoppedAt) {
+        return null;
+      }
+      return previous + Math.floor((continuedAt - stoppedAt) / workTimeUnits.minuteMs);
+    }
+
+    function setWorkTimeInputMode(mode, entry = formData()) {
+      workTimeInputMode = mode === "manual" ? "manual" : "clock";
+      const isManual = workTimeInputMode === "manual";
+      els.clockWorkFields.classList.toggle("hidden", isManual);
+      els.manualWorkFields.classList.toggle("hidden", !isManual);
+      els.workModeToggle.textContent = isManual ? "改用開始／結束時間" : "改用手動工時";
+      const hasLegacyConflict = Boolean(entry?.startTime && entry?.endTime)
+        && decimalHoursToMinutes(entry?.manualHours) > 0;
+      els.workModeNotice.classList.toggle("hidden", !hasLegacyConflict);
+      els.workModeNotice.textContent = hasLegacyConflict
+        ? "這筆舊紀錄同時有兩種工時；目前以開始／結束時間計算。切換後才會移除另一組時間。"
+        : "";
+    }
+
+    function requestWorkTimeModeSwitch() {
+      pendingWorkMode = workTimeInputMode === "clock" ? "manual" : "clock";
+      els.workModeDialogMessage.textContent = pendingWorkMode === "manual"
+        ? "切換後會清除開始時間、結束時間與休息時間，改用手動輸入的工時。"
+        : "切換後會清除手動工時，改用開始時間、結束時間與休息時間。";
+      els.workModeDialog.showModal();
+      window.requestAnimationFrame(() => els.workModeDialogCancel.focus());
+    }
+
+    function applyWorkTimeModeSwitch() {
+      const targetMode = pendingWorkMode;
+      pendingWorkMode = "";
+      if (!["clock", "manual"].includes(targetMode) || targetMode === workTimeInputMode) return false;
+      const previousMode = workTimeInputMode;
+      const previousValues = {
+        startTime: document.getElementById("startTime").value,
+        endTime: document.getElementById("endTime").value,
+        breakMinutes: document.getElementById("breakMinutes").value,
+        manualMinutes: manualWorkMinutesFromForm()
+      };
+      if (targetMode === "manual") {
+        document.getElementById("startTime").value = "";
+        document.getElementById("endTime").value = "";
+        document.getElementById("breakMinutes").value = 0;
+      } else {
+        syncManualWorkTimeInput(0);
+      }
+      setWorkTimeInputMode(targetMode, formData());
+      updateQuickPreview();
+      if (recordEditorState.open) {
+        markRecordEditorDirty();
+        return true;
+      }
+      if (saveTodayWorkTimeFromForm()) return true;
+
+      document.getElementById("startTime").value = previousValues.startTime;
+      document.getElementById("endTime").value = previousValues.endTime;
+      document.getElementById("breakMinutes").value = previousValues.breakMinutes;
+      syncManualWorkTimeInput(previousValues.manualMinutes);
+      setWorkTimeInputMode(previousMode, formData());
+      updateQuickPreview();
+      return false;
+    }
+
     function syncManualWorkTimeInput(totalMinutes) {
       const parts = minutesToHourMinuteParts(totalMinutes);
       document.getElementById("manualHoursPart").value = parts.hours || "";
@@ -10236,11 +10404,15 @@
       const todayEntry = state.entries.find(entry => entry.date === todayString());
       if (todayEntry) {
         fillEntryFields(todayEntry);
+      } else {
+        setWorkTimeInputMode("clock", {});
       }
       els.formTitle.textContent = "每日紀錄";
       els.cancelEdit.classList.add("hidden");
       document.querySelectorAll("#detailForm details").forEach(details => details.open = false);
       els.workTimeSection.open = Boolean(state.settings.timeDetailsOpen);
+      els.workTimeToggle.setAttribute("aria-expanded", String(els.workTimeSection.open));
+      els.expenseSectionToggle.setAttribute("aria-expanded", "false");
       els.otherDataToggle.setAttribute("aria-expanded", "false");
       setManualEntryExpanded(true);
       setWorkDetailsExpanded(false);
@@ -10261,6 +10433,7 @@
       document.getElementById("endTime").value = entry.endTime || "";
       document.getElementById("breakMinutes").value = entry.breakMinutes || 0;
       syncManualWorkTimeInput(decimalHoursToMinutes(entry.manualHours));
+      setWorkTimeInputMode(deriveWorkTimeInputMode(entry), entry);
       document.getElementById("tips").value = entry.tips || 0;
       document.getElementById("orders").value = entry.orders || 0;
       document.getElementById("km").value = entry.km || 0;
@@ -10283,16 +10456,18 @@
       const detailSections = document.querySelectorAll("#detailForm details");
       detailSections.forEach(details => details.open = false);
       detailSections[0].open = Boolean(entry.startTime || entry.endTime || entry.manualHours || entry.breakMinutes);
-      detailSections[1].open = Boolean(
-        entryExpenses(entry) > 0
-        || entry.tips
+      detailSections[1].open = entryExpenses(entry) > 0;
+      detailSections[2].open = Boolean(
+        entry.tips
         || entry.orders
         || entry.km
         || entry.note
         || entry.weather
         || entry.shift
       );
-      els.otherDataToggle.setAttribute("aria-expanded", String(detailSections[1].open));
+      els.workTimeToggle.setAttribute("aria-expanded", String(detailSections[0].open));
+      els.expenseSectionToggle.setAttribute("aria-expanded", String(detailSections[1].open));
+      els.otherDataToggle.setAttribute("aria-expanded", String(detailSections[2].open));
       els.formTitle.textContent = "編輯紀錄";
       els.cancelEdit.classList.remove("hidden");
       updateQuickPreview();
@@ -10809,14 +10984,6 @@
       URL.revokeObjectURL(url);
     }
 
-    function handlePrimaryWorkAction() {
-      if (workStatus(entryForDate()) === "stopped") {
-        setManualEntryExpanded(true, { revealWorkTime: true });
-        return;
-      }
-      startRunNow();
-    }
-
     function commitTodayWorkSession(nextEntry) {
       const nextState = cloneStatePayload(state);
       const index = nextState.entries.findIndex(item => item.id === nextEntry.id);
@@ -10832,28 +10999,137 @@
       return true;
     }
 
+    function stoppedWorkEndMs(entry) {
+      const sessionEndMs = entry?.workSession?.status === "stopped"
+        ? timeValueMs(entry.workSession.endedAt)
+        : null;
+      if (sessionEndMs !== null) return sessionEndMs;
+      if (!normalizeDateKey(entry?.date) || !entry?.startTime || !entry?.endTime) return null;
+      const startMs = new Date(`${entry.date}T${entry.startTime}:00`).getTime();
+      let endMs = new Date(`${entry.date}T${entry.endTime}:00`).getTime();
+      if (!Number.isFinite(startMs) || !Number.isFinite(endMs)) return null;
+      if (endMs < startMs) endMs += workTimeUnits.dayMs;
+      return endMs;
+    }
+
+    function requestContinueWork() {
+      const entry = entryForDate();
+      if (!entry || workStatus(entry) !== "stopped") {
+        showToast("目前沒有可繼續的已收工時段");
+        return false;
+      }
+      if (!entry.startTime && decimalHoursToMinutes(entry.manualHours) > 0) {
+        pendingContinueWork = { type: "manual" };
+        els.continueWorkDialogTitle.textContent = "目前使用手動工時";
+        els.continueWorkDialogMessage.textContent = "要使用「再跑一段」，請先到工時設定切換為開始／結束時間。";
+        els.continueWorkDialogAccept.textContent = "前往工時設定";
+        els.continueWorkDialog.showModal();
+        return false;
+      }
+      if (entry.startTime && entry.endTime && decimalHoursToMinutes(entry.manualHours) > 0) {
+        pendingContinueWork = { type: "legacy-clock", entryId: entry.id };
+        els.continueWorkDialogTitle.textContent = "先確認工時輸入方式";
+        els.continueWorkDialogMessage.textContent = "這筆舊紀錄同時有兩種工時。確認使用開始／結束時間後，才可再跑一段；手動工時將被清除。";
+        els.continueWorkDialogAccept.textContent = "使用開始／結束";
+        els.continueWorkDialog.showModal();
+        return false;
+      }
+      const endMs = stoppedWorkEndMs(entry);
+      const nowMs = Date.now();
+      if (endMs === null || nowMs < endMs) {
+        showToast("最後收工時間無效，請先修改時間");
+        return false;
+      }
+      const totalBreakMinutes = continuedWorkBreakMinutes(entry.breakMinutes, endMs, nowMs);
+      const gapMinutes = totalBreakMinutes - Math.max(0, Math.round(Number(entry.breakMinutes || 0)));
+      pendingContinueWork = {
+        type: "continue",
+        entryId: entry.id,
+        date: entry.date,
+        endMs
+      };
+      els.continueWorkDialogTitle.textContent = "繼續今天的工作？";
+      els.continueWorkDialogMessage.textContent =
+        `從上次收工到現在的 ${formatWorkDuration(gapMinutes)}，會自動加入休息時間。`;
+      els.continueWorkDialogAccept.textContent = "再跑一段";
+      els.continueWorkDialog.showModal();
+      return true;
+    }
+
+    function continueTodayWork(binding) {
+      const existingEntry = entryForDate(binding?.date);
+      if (!existingEntry
+        || existingEntry.id !== binding?.entryId
+        || workStatus(existingEntry) !== "stopped"
+        || decimalHoursToMinutes(existingEntry.manualHours) > 0) {
+        showToast("工時狀態已變更，請重新確認");
+        return false;
+      }
+      const endMs = stoppedWorkEndMs(existingEntry);
+      const now = new Date();
+      if (endMs === null || endMs !== binding.endMs || now.getTime() < endMs) {
+        showToast("最後收工時間已變更，請先檢查");
+        return false;
+      }
+      const entry = cloneStatePayload(existingEntry);
+      const previousWorkMs = workMetrics(entry, endMs, entry.date).durationMs;
+      const breakMinutes = continuedWorkBreakMinutes(entry.breakMinutes, endMs, now.getTime());
+      if (breakMinutes === null) {
+        showToast("目前時間早於最後收工時間，無法繼續");
+        return false;
+      }
+      const startedAtMs = timeValueMs(entry.workSession?.startedAt);
+      const fallbackStartedAt = new Date(`${entry.date}T${entry.startTime}:00`).getTime();
+      entry.endTime = "";
+      entry.breakMinutes = breakMinutes;
+      entry.manualHours = 0;
+      entry.workSession = {
+        status: "running",
+        startedAt: new Date(startedAtMs ?? fallbackStartedAt).toISOString(),
+        segmentStartedAt: now.toISOString(),
+        accumulatedActiveMs: previousWorkMs,
+        accumulatedBreakMs: breakMinutes * workTimeUnits.minuteMs,
+        pausedAt: null,
+        endedAt: null
+      };
+      return commitTodayWorkSession(entry);
+    }
+
+    function resolveContinueWorkAction() {
+      const action = pendingContinueWork;
+      pendingContinueWork = null;
+      if (!action) return;
+      if (action.type === "manual") {
+        setManualEntryExpanded(true, { revealWorkTime: true });
+        return;
+      }
+      if (action.type === "legacy-clock") {
+        const entry = entryForDate();
+        if (!entry || entry.id !== action.entryId) return;
+        syncManualWorkTimeInput(0);
+        setWorkTimeInputMode("clock", formData());
+        if (saveTodayWorkTimeFromForm()) {
+          showToast("已改用開始／結束時間，可再次選擇「再跑一段」");
+        }
+        return;
+      }
+      if (action.type === "continue") continueTodayWork(action);
+    }
+
     function startRunNow() {
       const existingEntry = entryForDate();
+      if (existingEntry && workStatus(existingEntry) !== "idle") return false;
       const entry = existingEntry ? cloneStatePayload(existingEntry) : blankEntry();
       const now = new Date();
-      const priorDurationMs = entry.workSession?.status === "stopped"
-        ? workMetrics(entry).durationMs
-        : 0;
-      const stoppedGapMs = entry.workSession?.status === "stopped" && entry.workSession.endedAt
-        ? Math.max(0, now.getTime() - new Date(entry.workSession.endedAt).getTime())
-        : 0;
-      const priorBreakMs = entry.workSession?.status === "stopped"
-        ? Number(entry.workSession.accumulatedBreakMs || 0) + stoppedGapMs
-        : 0;
       entry.startTime ||= currentTimeString();
       entry.endTime = "";
       entry.manualHours = 0;
       entry.workSession = {
         status: "running",
-        startedAt: entry.workSession?.startedAt || now.toISOString(),
+        startedAt: now.toISOString(),
         segmentStartedAt: now.toISOString(),
-        accumulatedActiveMs: priorDurationMs,
-        accumulatedBreakMs: priorBreakMs,
+        accumulatedActiveMs: 0,
+        accumulatedBreakMs: 0,
         pausedAt: null,
         endedAt: null
       };
@@ -11207,10 +11483,39 @@
     document.getElementById("newEntry").addEventListener("click", () => { resetForm(); navigateTo("today"); });
     els.cancelEdit.addEventListener("click", resetForm);
     document.getElementById("exportCsv").addEventListener("click", exportCsv);
-    els.startRun.addEventListener("click", handlePrimaryWorkAction);
+    els.startRun.addEventListener("click", startRunNow);
     els.pauseRun.addEventListener("click", pauseRunNow);
     els.resumeRun.addEventListener("click", resumeRunNow);
     els.endRun.addEventListener("click", endRunNow);
+    els.continueRun.addEventListener("click", requestContinueWork);
+    els.modifyWorkTime.addEventListener("click", () => setManualEntryExpanded(true, { revealWorkTime: true }));
+    els.workModeToggle.addEventListener("click", requestWorkTimeModeSwitch);
+    els.workModeDialog.addEventListener("cancel", event => {
+      event.preventDefault();
+      pendingWorkMode = "";
+      els.workModeDialog.close();
+    });
+    els.workModeDialogCancel.addEventListener("click", () => {
+      pendingWorkMode = "";
+      els.workModeDialog.close();
+    });
+    els.workModeDialogAccept.addEventListener("click", () => {
+      els.workModeDialog.close();
+      applyWorkTimeModeSwitch();
+    });
+    els.continueWorkDialog.addEventListener("cancel", event => {
+      event.preventDefault();
+      pendingContinueWork = null;
+      els.continueWorkDialog.close();
+    });
+    els.continueWorkDialogCancel.addEventListener("click", () => {
+      pendingContinueWork = null;
+      els.continueWorkDialog.close();
+    });
+    els.continueWorkDialogAccept.addEventListener("click", () => {
+      els.continueWorkDialog.close();
+      resolveContinueWorkAction();
+    });
     els.workDetailsToggle.addEventListener("click", () => {
       setWorkDetailsExpanded(els.workDetailsToggle.getAttribute("aria-expanded") !== "true");
     });
@@ -11379,9 +11684,6 @@
       if (["manualHoursPart", "manualMinutesPart"].includes(event.target.id)) {
         syncManualWorkTimeParts();
       }
-      if (["startTime", "endTime"].includes(event.target.id) && manualWorkMinutesFromForm() > 0) {
-        syncManualWorkTimeInput(0);
-      }
       if (recordEditorState.open && event.target.id !== "date") markRecordEditorDirty();
       if (["startTime", "endTime", "breakMinutes", "manualHoursPart", "manualMinutesPart"].includes(event.target.id)) {
         scheduleTodayWorkTimeSave();
@@ -11400,11 +11702,15 @@
       updateQuickPreview();
     });
     els.workTimeSection.addEventListener("toggle", event => {
+      els.workTimeToggle.setAttribute("aria-expanded", String(event.currentTarget.open));
       updateQuickPreview();
       if (!event.isTrusted) return;
       if (recordEditorState.open) return;
       state.settings.timeDetailsOpen = event.currentTarget.open;
       saveState();
+    });
+    els.expenseSection.addEventListener("toggle", event => {
+      els.expenseSectionToggle.setAttribute("aria-expanded", String(event.currentTarget.open));
     });
     els.otherDataSection.addEventListener("toggle", event => {
       const expanded = event.currentTarget.open;

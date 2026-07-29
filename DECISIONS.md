@@ -553,3 +553,43 @@ L1 120/120、公開 L2、單次 Product Owner L3 與全部 Freeze Gate 已具備
 - Open-Meteo 與 iOS 定位權限的長期真機覆蓋記錄於 TD-027。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-035](docs/DECISION_LOG.md#d-035)。
+
+## D-036 — V1.1 Today 獨立支出、互斥工時模式與同日續跑
+
+- Date: 2026-07-29
+
+### 決策
+
+1. D-035 的表單分層第 4 點由本決策取代：Today 固定保留三個獨立可收合區塊
+   「工時設定／新增支出／其他資料」，不得再把完整新增支出元件嵌入其他資料。
+2. `儲存支出` 只寫入單筆支出；`儲存詳細紀錄` 處理工時與其他資料。兩條
+   流程都必須防止重複提交，且成功 persistence read-back 後才顯示成功。
+3. 工時一次只允許 clock 或 manual 一種有效輸入。模式由既有欄位推導，
+   不新增 durable mode 欄位；切換模式前必須說明清除範圍並取得確認。
+4. 舊紀錄同時含完整 clock 與 manual 時，canonical 結果仍以 clock 優先，
+   UI 必須揭露衝突並要求使用者明確選擇，不得靜默清除。
+5. 已收工的 clock 紀錄可在確認後「再跑一段」：保留原 `startTime`、將停止
+   空檔累加進 `breakMinutes`、清除 `endTime`，並沿用同一天同一筆
+   WorkRecord。manual 模式必須先切換。
+6. 本 Milestone 不建立完整多段工作資料模型；同日續跑仍輸出同一個 canonical
+   實際工時給 Today、Calendar、Reports、AI 與 CSV。
+7. Product Owner 只執行一次 Final Human QA；所有程式、L1、公開 Preview
+   smoke 與文件完成後才交付，不在過程中重複要求。
+
+### 原因
+
+把完整支出流程放進其他資料會降低高頻支出的可發現性；同時顯示 clock 與
+manual 會產生兩個互相競爭的答案。將輸入模式互斥、切換改為確認式交易，
+以及把同日第二段工作建模為停止空檔休息，可在不變更 schema 的前提下維持
+單一 canonical 工時與原有報表相容性。
+
+### 影響範圍
+
+- 修改 Today 表單結構、支出 persistence、工時輸入 UI、同日續跑、測試、
+  文件與 App Shell cache v16。
+- `driverPayApp.v2`、WorkRecord schema、收入／支出／工時計算公式、
+  Calendar／Reports／AI frozen UI、Supabase、同步與正式資料均不變。
+- 完整多段工作模型維持 Deferred；本決策不授權 main merge 或 Production
+  deployment，須先完成本 Milestone 唯一一次 Final Human QA。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-036](docs/DECISION_LOG.md#d-036)。

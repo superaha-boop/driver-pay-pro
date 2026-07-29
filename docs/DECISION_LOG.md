@@ -550,3 +550,29 @@
   - 不用 UI clamp 或魔術數字只隱藏極端時薪。
   - 不建立第二套 AI／Reports 時薪判斷。
   - 不把 API key、精確座標或持續定位加入前端與 localStorage。
+
+## D-036
+
+- Date: 2026-07-29
+- Decision:
+  1. D-035 的表單分層第 4 點由本決策取代；Today 固定為「工時設定／新增
+     支出／其他資料」三個獨立收合區塊。
+  2. `儲存支出` 與 `儲存詳細紀錄` 是互不重疊的 persistence 流程，成功
+     read-back 前不得顯示成功。
+  3. 工時一次只使用 clock 或 manual 一種輸入；模式由既有欄位推導，不新增
+     durable mode 欄位，切換前必須確認清除範圍。
+  4. legacy clock＋manual 同時存在時以 clock 為 canonical，但不靜默清除。
+  5. 已收工 clock 紀錄可確認「再跑一段」；保留原始開始、把停止空檔加入
+     休息、清除結束並沿用同一筆 WorkRecord。manual 模式必須先切換。
+  6. 不建立完整 multi-session schema；所有頁面仍共用同一 canonical 工時。
+  7. 全部實作、L1、公開 Preview smoke 與文件完成後，才交付一次 Final
+     Human QA。
+- Reason: 獨立支出可恢復高頻操作的可發現性；互斥工時避免兩個有效答案；
+  將停止空檔視為休息可在不遷移資料下支援同日續跑。
+- Impact: Today、tests、文件與 App Shell v16 更新；`driverPayApp.v2`、
+  WorkRecord schema、計算公式、Calendar／Reports／AI UI、Supabase、同步與
+  正式資料不變。Final Human QA 前不 merge main、不 Production deploy。
+- Rejected alternatives:
+  - 不把完整支出留在其他資料。
+  - 不同時顯示兩套可生效的工時欄位。
+  - 不為本次建立多段工作陣列或 migration。
