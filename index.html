@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-display-size="standard">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -9,6 +9,21 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="format-detection" content="telephone=no">
+  <script>
+    (() => {
+      try {
+        const payload = JSON.parse(localStorage.getItem("driverPayApp.v2") || "null");
+        const settings = payload?.settings || {};
+        const hasDisplaySize = Object.prototype.hasOwnProperty.call(settings, "displaySize");
+        const candidate = hasDisplaySize ? settings.displaySize : settings.aiReportsReadingSize;
+        document.documentElement.dataset.displaySize = ["standard", "comfort", "large"].includes(candidate)
+          ? candidate
+          : "standard";
+      } catch {
+        document.documentElement.dataset.displaySize = "standard";
+      }
+    })();
+  </script>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/driver-pay-pro-icon-512.png" type="image/png">
   <link rel="apple-touch-icon" sizes="192x192" href="assets/driver-pay-pro-icon-192.png">
@@ -28,7 +43,64 @@
       --coral: var(--color-legacy-coral);
       --danger: var(--color-danger);
       --shadow: var(--shadow-card);
+      --reading-ai-body-size: 14px;
+      --reading-ai-detail-size: 13px;
+      --reading-ai-small-size: 12px;
+      --reading-ai-micro-size: 11px;
+      --reading-ai-section-title-size: 18px;
+      --reading-ai-item-title-size: 15px;
+      --reading-ai-value-size: 15px;
+      --reading-report-body-size: var(--font-size-secondary);
+      --reading-report-caption-size: var(--font-size-caption);
+      --reading-report-value-size: var(--font-size-body);
+      --reading-report-title-size: var(--font-size-card-title);
+      --reading-body-line-height: 1.55;
+      --reading-small-line-height: 1.6;
+      --reading-card-padding: 16px;
+      --reading-card-gap: 12px;
+      --reading-list-gap: 9px;
+      --reading-item-gap: 5px;
       font-family: var(--font-family-sans);
+    }
+
+    html[data-display-size="comfort"] {
+      --reading-ai-body-size: 16px;
+      --reading-ai-detail-size: 14px;
+      --reading-ai-small-size: 14px;
+      --reading-ai-micro-size: 13px;
+      --reading-ai-section-title-size: 19px;
+      --reading-ai-item-title-size: 16px;
+      --reading-ai-value-size: 16px;
+      --reading-report-body-size: 16px;
+      --reading-report-caption-size: 14px;
+      --reading-report-value-size: 17px;
+      --reading-report-title-size: 18px;
+      --reading-body-line-height: 1.65;
+      --reading-small-line-height: 1.65;
+      --reading-card-padding: 17px;
+      --reading-card-gap: 14px;
+      --reading-list-gap: 11px;
+      --reading-item-gap: 6px;
+    }
+
+    html[data-display-size="large"] {
+      --reading-ai-body-size: 18px;
+      --reading-ai-detail-size: 16px;
+      --reading-ai-small-size: 16px;
+      --reading-ai-micro-size: 14px;
+      --reading-ai-section-title-size: 20px;
+      --reading-ai-item-title-size: 18px;
+      --reading-ai-value-size: 18px;
+      --reading-report-body-size: 18px;
+      --reading-report-caption-size: 16px;
+      --reading-report-value-size: 18px;
+      --reading-report-title-size: 19px;
+      --reading-body-line-height: 1.72;
+      --reading-small-line-height: 1.72;
+      --reading-card-padding: 18px;
+      --reading-card-gap: 16px;
+      --reading-list-gap: 13px;
+      --reading-item-gap: 7px;
     }
 
     * { box-sizing: border-box; }
@@ -1498,17 +1570,46 @@
     }
 
     .work-status-row {
+      width: 100%;
+      min-width: 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      min-height: 30px;
+      min-height: 44px;
+      padding: 0;
+      border: 0;
+      border-radius: 12px;
+      color: inherit;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
     }
 
-    .work-status-row span {
+    .work-status-row:focus-visible {
+      outline: 3px solid rgba(21, 150, 111, .2);
+      outline-offset: 1px;
+    }
+
+    .work-status-row .home-heading {
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .work-status-row .home-heading > span {
       color: var(--text);
       font-size: 14px;
       font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .work-status-meta {
+      min-width: 0;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 7px;
     }
 
     .work-status-row strong {
@@ -1522,6 +1623,7 @@
       background: var(--panel-2);
       font-size: 13px;
       line-height: 1;
+      white-space: nowrap;
     }
 
     #workStatusText[data-status="running"] {
@@ -1537,6 +1639,22 @@
     #workStatusText[data-status="stopped"] {
       color: #4d6170;
       background: #edf2f5;
+    }
+
+    .work-details-chevron {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+      color: var(--brand-strong);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .work-status-row[aria-expanded="true"] .work-details-chevron {
+      transform: rotate(180deg);
     }
 
     .work-metrics {
@@ -1587,8 +1705,16 @@
     }
 
     .work-actions .button.primary {
-      grid-column: 1 / -1;
       background: var(--brand);
+    }
+
+    #startRun {
+      grid-column: 1 / -1;
+    }
+
+    #continueRun,
+    #modifyWorkTime {
+      min-width: 0;
     }
 
     .work-actions .button:active {
@@ -1843,7 +1969,7 @@
 
     .smart-expense-primary {
       display: grid;
-      gap: 16px;
+      gap: 12px;
     }
 
     .expense-section-label {
@@ -1861,13 +1987,14 @@
     }
 
     .expense-quick-button {
+      position: relative;
       min-width: 0;
-      min-height: 60px;
-      padding: 6px 4px;
-      display: grid;
-      place-items: center;
-      align-content: center;
-      gap: 3px;
+      min-height: 46px;
+      padding: 5px 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
       border: 1px solid #dce4df;
       border-radius: 14px;
       color: #33413a;
@@ -1881,6 +2008,17 @@
       color: #087653;
       border-color: #15966f;
       background: #eaf7f1;
+      box-shadow: inset 0 0 0 1px #15966f;
+    }
+
+    .expense-quick-button.active::after {
+      position: absolute;
+      top: 3px;
+      right: 5px;
+      content: "✓";
+      font-size: 10px;
+      font-weight: 800;
+      line-height: 1;
     }
 
     .expense-quick-button span {
@@ -1891,8 +2029,9 @@
     }
 
     .expense-quick-icon {
-      width: 21px;
-      height: 21px;
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
       color: #087653;
       fill: none;
       stroke: currentColor;
@@ -1953,15 +2092,22 @@
       gap: 6px;
     }
 
-    .expense-compact-row {
-      width: 100%;
+    .expense-choice-row {
       min-width: 0;
-      min-height: 54px;
-      padding: 0 14px;
       display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .expense-choice-button {
+      min-width: 0;
+      width: 100%;
+      min-height: 48px;
+      padding: 0 12px;
+      display: flex;
       align-items: center;
+      justify-content: space-between;
+      gap: 8px;
       border: 1px solid #dce4df;
       border-radius: 14px;
       color: #17211d;
@@ -1969,28 +2115,30 @@
       text-align: left;
     }
 
-    .expense-compact-row-label {
-      color: #68736e;
-      font-size: 13px;
-      font-weight: 650;
+    select.expense-choice-button {
+      padding-right: 34px;
+      font-size: 15px;
+      font-weight: 750;
+      line-height: 1.2;
+      appearance: auto;
+      -webkit-appearance: menulist;
     }
 
-    .expense-compact-row strong {
+    .expense-choice-button strong {
       min-width: 0;
       overflow: hidden;
       color: #203128;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 750;
-      text-align: right;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
-    .expense-compact-row-action {
+    .expense-choice-chevron {
+      flex: 0 0 auto;
       color: #087653;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 750;
-      white-space: nowrap;
     }
 
     .expense-mode-option {
@@ -2010,10 +2158,6 @@
       color: #087653;
       border-color: #15966f;
       background: #e3f5ed;
-    }
-
-    .expense-compact-row + .expense-mode-options {
-      margin-top: 8px;
     }
 
     .date-card {
@@ -2345,15 +2489,43 @@
       gap: 9px;
     }
 
+    .expense-date-note-row {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 13fr) minmax(0, 7fr);
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .expense-date-note-row .date-card-host,
+    .expense-date-note-row .date-card {
+      min-width: 0;
+      height: 100%;
+    }
+
+    @media (max-width: 400px) {
+      .expense-date-note-row .date-card-value.compact-mobile-date {
+        font-size: 0;
+      }
+
+      .expense-date-note-row .date-card-value.compact-mobile-date::after {
+        content: attr(data-short-date);
+        font-size: 17px;
+        font-weight: 700;
+      }
+    }
+
     .expense-note-toggle {
-      width: fit-content;
+      width: 100%;
       min-height: 44px;
-      padding: 0 2px;
+      padding: 0 10px;
+      border: 1px solid #dce4df;
+      border-radius: 15px;
       color: #087653;
-      background: transparent;
+      background: #fafcfb;
       font-size: 14px;
       font-weight: 750;
-      text-align: left;
+      text-align: center;
     }
 
     .expense-note-field {
@@ -2562,14 +2734,14 @@
     .reports-period-title span {
       display: block;
       color: var(--color-text-tertiary);
-      font: var(--font-weight-medium) var(--font-size-caption)/var(--line-height-caption) var(--font-family-sans);
+      font: var(--font-weight-medium) var(--reading-report-caption-size)/var(--reading-small-line-height) var(--font-family-sans);
     }
 
     .reports-period-title h3 {
       margin: 1px 0 0;
       overflow: hidden;
       color: var(--color-text-primary);
-      font: var(--font-weight-bold) var(--font-size-card-title)/var(--line-height-title) var(--font-family-sans);
+      font: var(--font-weight-bold) var(--reading-report-title-size)/var(--line-height-title) var(--font-family-sans);
       font-variant-numeric: tabular-nums;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -2613,7 +2785,7 @@
     .reports-kpi-label,
     .reports-secondary-kpi span {
       color: var(--color-text-secondary);
-      font: var(--font-weight-regular) var(--font-size-caption)/var(--line-height-caption) var(--font-family-sans);
+      font: var(--font-weight-regular) var(--reading-report-caption-size)/var(--reading-small-line-height) var(--font-family-sans);
     }
 
     .reports-primary-kpi strong {
@@ -2652,13 +2824,13 @@
     .reports-secondary-kpi strong {
       overflow-wrap: anywhere;
       color: var(--color-text-primary);
-      font: var(--font-weight-semibold) var(--font-size-body)/var(--line-height-title) var(--font-family-sans);
+      font: var(--font-weight-semibold) var(--reading-report-value-size)/var(--line-height-title) var(--font-family-sans);
       font-variant-numeric: tabular-nums;
     }
 
     .reports-section {
       min-width: 0;
-      padding: var(--spacing-4);
+      padding: var(--reading-card-padding);
       border: var(--border-default);
       border-radius: var(--radius-card);
       background: var(--color-surface);
@@ -2667,7 +2839,7 @@
     .reports-section h4 {
       margin: 0 0 var(--spacing-3);
       color: var(--color-text-primary);
-      font: var(--font-weight-semibold) var(--font-size-card-title)/var(--line-height-title) var(--font-family-sans);
+      font: var(--font-weight-semibold) var(--reading-report-title-size)/var(--line-height-title) var(--font-family-sans);
     }
 
     .reports-comparison-list,
@@ -2705,14 +2877,16 @@
     .reports-important-list span {
       min-width: 0;
       color: var(--color-text-secondary);
-      font-size: var(--font-size-secondary);
+      font-size: var(--reading-report-body-size);
+      line-height: var(--reading-body-line-height);
     }
 
     .reports-comparison-list strong,
     .reports-important-list strong {
       flex: 0 0 auto;
       color: var(--color-text-primary);
-      font-size: var(--font-size-secondary);
+      font-size: var(--reading-report-body-size);
+      line-height: var(--reading-body-line-height);
       font-variant-numeric: tabular-nums;
       text-align: right;
     }
@@ -2740,7 +2914,8 @@
     .reports-trend-label,
     .reports-trend-value {
       color: var(--color-text-secondary);
-      font-size: var(--font-size-caption);
+      font-size: var(--reading-report-caption-size);
+      line-height: var(--reading-small-line-height);
       font-variant-numeric: tabular-nums;
     }
 
@@ -2805,8 +2980,8 @@
       border-radius: var(--radius-sm);
       color: var(--color-text-secondary);
       background: var(--color-surface-secondary);
-      font-size: var(--font-size-caption);
-      line-height: var(--line-height-caption);
+      font-size: var(--reading-report-caption-size);
+      line-height: var(--reading-small-line-height);
     }
 
     .reports-goal-progress {
@@ -2820,7 +2995,8 @@
       justify-content: space-between;
       gap: var(--spacing-3);
       color: var(--color-text-secondary);
-      font-size: var(--font-size-secondary);
+      font-size: var(--reading-report-body-size);
+      line-height: var(--reading-body-line-height);
     }
 
     .reports-goal-meta strong {
@@ -2878,7 +3054,8 @@
 
     .reports-platform-total span {
       color: var(--color-text-secondary);
-      font-size: var(--font-size-caption);
+      font-size: var(--reading-report-caption-size);
+      line-height: var(--reading-small-line-height);
     }
 
     .reports-platform-total strong {
@@ -2924,7 +3101,7 @@
       flex: 0 0 auto;
       width: 24px;
       color: var(--color-text-tertiary);
-      font-size: var(--font-size-caption);
+      font-size: var(--reading-report-caption-size);
       font-variant-numeric: tabular-nums;
     }
 
@@ -2932,7 +3109,7 @@
       min-width: 0;
       overflow: hidden;
       color: var(--color-text-primary);
-      font-size: var(--font-size-secondary);
+      font-size: var(--reading-report-body-size);
       font-weight: var(--font-weight-semibold);
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -2949,13 +3126,13 @@
 
     .reports-platform-values strong {
       color: var(--color-text-primary);
-      font-size: var(--font-size-secondary);
+      font-size: var(--reading-report-body-size);
     }
 
     .reports-platform-values span {
       min-width: 42px;
       color: var(--color-text-secondary);
-      font-size: var(--font-size-caption);
+      font-size: var(--reading-report-caption-size);
       text-align: right;
     }
 
@@ -2984,8 +3161,8 @@
       border-radius: var(--radius-sm);
       color: var(--color-text-secondary);
       background: var(--color-surface-secondary);
-      font-size: var(--font-size-caption);
-      line-height: var(--line-height-caption);
+      font-size: var(--reading-report-caption-size);
+      line-height: var(--reading-small-line-height);
     }
 
     .reports-important-action {
@@ -3015,6 +3192,32 @@
     .reports-important-action strong {
       flex: 0 0 auto;
       text-align: right;
+    }
+
+    .reports-page .report-switcher button,
+    .reports-page .reports-platform-period button,
+    .reports-page .reports-current-button {
+      font-size: var(--reading-report-body-size);
+    }
+
+    .reports-page .ds-empty-state .ds-card-title {
+      font-size: var(--reading-report-value-size);
+      line-height: var(--reading-body-line-height);
+    }
+
+    .reports-page .ds-empty-state .ds-secondary {
+      font-size: var(--reading-report-body-size);
+      line-height: var(--reading-body-line-height);
+    }
+
+    html[data-display-size="comfort"] .reports-comparison-list strong,
+    html[data-display-size="large"] .reports-comparison-list strong,
+    html[data-display-size="comfort"] .reports-important-list strong,
+    html[data-display-size="large"] .reports-important-list strong {
+      min-width: 0;
+      max-width: 60%;
+      flex-shrink: 1;
+      overflow-wrap: anywhere;
     }
 
     .month-summary-grid {
@@ -3315,7 +3518,7 @@
     .ai-dashboard {
       min-width: 0;
       display: grid;
-      gap: 12px;
+      gap: var(--reading-card-gap);
     }
 
     .ai-page-intro {
@@ -3332,13 +3535,13 @@
     .ai-page-intro p {
       margin: 5px 0 0;
       color: #68736e;
-      font-size: 14px;
-      line-height: 1.5;
+      font-size: var(--reading-ai-body-size);
+      line-height: var(--reading-body-line-height);
     }
 
     .ai-insight-card {
       min-width: 0;
-      padding: 16px;
+      padding: var(--reading-card-padding);
       border: 1px solid var(--line);
       border-radius: 18px;
       background: #fff;
@@ -3353,7 +3556,7 @@
     }
 
     .ai-section-head {
-      margin-bottom: 12px;
+      margin-bottom: var(--reading-card-gap);
       display: flex;
       align-items: baseline;
       justify-content: space-between;
@@ -3363,7 +3566,7 @@
     .ai-section-head h3 {
       margin: 0;
       color: #17211b;
-      font-size: 18px;
+      font-size: var(--reading-ai-section-title-size);
     }
 
     .ai-insight-card.primary .ai-section-head h3 {
@@ -3372,7 +3575,7 @@
 
     .ai-section-kicker {
       color: #7e8982;
-      font-size: 12px;
+      font-size: var(--reading-ai-small-size);
       white-space: nowrap;
     }
 
@@ -3385,7 +3588,7 @@
       margin: 0;
       padding: 0;
       display: grid;
-      gap: 9px;
+      gap: var(--reading-list-gap);
       list-style: none;
     }
 
@@ -3393,8 +3596,8 @@
     .ai-alert-list li {
       position: relative;
       padding-left: 14px;
-      font-size: 14px;
-      line-height: 1.55;
+      font-size: var(--reading-ai-body-size);
+      line-height: var(--reading-body-line-height);
     }
 
     .ai-advice-list li::before,
@@ -3417,8 +3620,8 @@
     .ai-empty-state {
       margin: 0;
       color: #7e8982;
-      font-size: 14px;
-      line-height: 1.6;
+      font-size: var(--reading-ai-body-size);
+      line-height: var(--reading-small-line-height);
     }
 
     .ai-insight-card.primary .ai-empty-state {
@@ -3429,18 +3632,18 @@
       margin: 0;
       padding: 0;
       display: grid;
-      gap: 12px;
+      gap: var(--reading-card-gap);
       list-style: none;
     }
 
     .ai-insight-item {
       min-width: 0;
       display: grid;
-      gap: 5px;
+      gap: var(--reading-item-gap);
     }
 
     .ai-insight-item + .ai-insight-item {
-      padding-top: 12px;
+      padding-top: var(--reading-card-gap);
       border-top: 1px solid #edf1ef;
     }
 
@@ -3451,8 +3654,8 @@
     .ai-insight-item h4 {
       margin: 0;
       color: #203128;
-      font-size: 15px;
-      line-height: 1.4;
+      font-size: var(--reading-ai-item-title-size);
+      line-height: var(--reading-body-line-height);
     }
 
     .ai-insight-card.primary .ai-insight-item h4 {
@@ -3462,8 +3665,8 @@
     .ai-insight-item p {
       margin: 0;
       color: #68736e;
-      font-size: 13px;
-      line-height: 1.55;
+      font-size: var(--reading-ai-detail-size);
+      line-height: var(--reading-body-line-height);
     }
 
     .ai-insight-card.primary .ai-insight-item p {
@@ -3482,7 +3685,7 @@
       color: var(--brand-strong);
       background: transparent;
       border: 0;
-      font-size: 13px;
+      font-size: var(--reading-ai-detail-size);
       font-weight: 650;
     }
 
@@ -3492,15 +3695,15 @@
 
     .ai-reminder-severity {
       color: #68736e;
-      font-size: 12px;
+      font-size: var(--reading-ai-small-size);
       font-weight: 700;
     }
 
     .ai-analysis-meta {
       padding: 2px 4px 6px;
       color: #68736e;
-      font-size: 12px;
-      line-height: 1.6;
+      font-size: var(--reading-ai-small-size);
+      line-height: var(--reading-small-line-height);
     }
 
     .ai-analysis-meta strong {
@@ -3516,7 +3719,7 @@
       border-radius: 999px;
       color: #506159;
       background: #edf3ef;
-      font-size: 11px;
+      font-size: var(--reading-ai-micro-size);
       font-weight: 650;
     }
 
@@ -3537,14 +3740,14 @@
 
     .ai-metric span {
       color: #7e8982;
-      font-size: 12px;
+      font-size: var(--reading-ai-small-size);
     }
 
     .ai-metric strong {
       min-width: 0;
       color: #203128;
-      font-size: 15px;
-      line-height: 1.35;
+      font-size: var(--reading-ai-value-size);
+      line-height: var(--reading-body-line-height);
       overflow-wrap: anywhere;
     }
 
@@ -3573,6 +3776,7 @@
     .ai-platform-row strong {
       min-width: 0;
       color: #203128;
+      font-size: var(--reading-ai-body-size);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -3580,6 +3784,7 @@
 
     .ai-platform-amount {
       color: #203128;
+      font-size: var(--reading-ai-body-size);
       font-weight: 650;
       white-space: nowrap;
     }
@@ -3587,6 +3792,7 @@
     .ai-platform-share {
       min-width: 38px;
       color: #7e8982;
+      font-size: var(--reading-ai-small-size);
       text-align: right;
       white-space: nowrap;
     }
@@ -3596,8 +3802,8 @@
       padding-top: 11px;
       color: #68736e;
       border-top: 1px solid #edf1ef;
-      font-size: 13px;
-      line-height: 1.6;
+      font-size: var(--reading-ai-detail-size);
+      line-height: var(--reading-small-line-height);
     }
 
     @media (min-width: 700px) {
@@ -3747,6 +3953,90 @@
       overflow-wrap: anywhere;
     }
 
+    .driver-system-status {
+      margin-top: 12px;
+      padding: 0;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    .driver-system-status-toggle {
+      width: 100%;
+      min-width: 0;
+      min-height: 56px;
+      padding: 10px 16px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 10px;
+      color: inherit;
+      background: transparent;
+      text-align: left;
+    }
+
+    .driver-system-status-toggle:focus-visible {
+      outline: 3px solid var(--color-focus-ring);
+      outline-offset: -3px;
+    }
+
+    .driver-system-status-heading {
+      min-width: 0;
+      display: grid;
+      gap: 2px;
+    }
+
+    .driver-system-status-heading h3 {
+      margin: 0;
+    }
+
+    .driver-system-status-badge {
+      min-width: 0;
+      padding: 4px 8px;
+      border-radius: var(--radius-pill);
+      color: var(--color-success);
+      background: var(--color-success-soft);
+      font-size: var(--display-secondary-size);
+      font-weight: var(--font-weight-semibold);
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .driver-system-status-badge[data-status="warning"] {
+      color: var(--color-warning);
+      background: var(--color-warning-soft);
+    }
+
+    .driver-system-status-chevron {
+      width: 20px;
+      height: 20px;
+      display: block;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform var(--motion-fast) var(--ease-standard);
+    }
+
+    .driver-system-status-toggle[aria-expanded="true"] .driver-system-status-chevron {
+      transform: rotate(180deg);
+    }
+
+    .driver-system-status-content {
+      padding: 0 16px 16px;
+      border-top: 1px solid var(--color-border-subtle);
+    }
+
+    .driver-system-status-content[hidden] {
+      display: none;
+    }
+
+    .driver-system-status-content .driver-safety-note {
+      margin: 14px 0 4px;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+    }
+
     .driver-safety-note {
       padding: 16px;
       border-radius: 18px;
@@ -3759,13 +4049,224 @@
       font-size: 18px;
     }
 
+    .reading-size-fieldset {
+      min-inline-size: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .reading-size-fieldset legend {
+      margin-bottom: 10px;
+      color: #203128;
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .reading-size-options {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .reading-size-choice {
+      position: relative;
+      min-width: 0;
+      min-height: 44px;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid #d7dfda;
+      border-radius: 12px;
+      color: #506159;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 650;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .reading-size-choice:has(input:checked) {
+      color: var(--brand-strong);
+      border-color: rgba(21, 150, 111, .42);
+      background: var(--brand-soft);
+    }
+
+    .reading-size-choice:has(input:focus-visible) {
+      outline: 3px solid rgba(21, 150, 111, .22);
+      outline-offset: 2px;
+    }
+
+    .reading-size-choice input {
+      width: 18px;
+      min-width: 18px;
+      height: 18px;
+      min-height: 18px;
+      margin: 0;
+      accent-color: var(--brand);
+    }
+
+    .reading-size-choice span {
+      min-width: 0;
+      white-space: nowrap;
+    }
+
+    .reading-size-status {
+      min-height: 20px;
+      margin: 10px 0 0;
+    }
+
+    .nav button,
+    .nav button:hover {
+      font-size: var(--display-nav-label-size);
+    }
+
+    html:not([data-display-size="standard"]) #view-today :is(
+      .income-unit,
+      .work-metrics strong,
+      .direct-choice,
+      .expense-quick-button,
+      .expense-mode-option,
+      .expense-end-option,
+      .expense-modify-button,
+      .expense-duration-option,
+      .expense-recent-pill,
+      .expense-note-toggle,
+      .app-toast,
+      .app-toast-action
+    ),
+    html:not([data-display-size="standard"]) #view-settings :is(
+      .reading-size-choice,
+      .panel-body label,
+      .panel-body button:not(.income-add-button),
+      .panel-body select,
+      .panel-body input:not(#dailyGoal)
+    ) {
+      font-size: var(--display-body-size);
+      line-height: var(--display-body-line-height);
+    }
+
+    html:not([data-display-size="standard"]) #view-today :is(
+      .work-status-row strong,
+      .direct-choice-label,
+      .smart-expense-field,
+      .expense-recent-label,
+      .expense-note-field,
+      .expense-form-status
+    ),
+    html:not([data-display-size="standard"]) #view-settings :is(
+      .driver-page-intro p,
+      .driver-overview-card p,
+      .driver-safety-note p,
+      .driver-goal-input,
+      .driver-status-list dt,
+      .driver-status-list dd,
+      .expense-shortcut-settings-note
+    ) {
+      color: var(--display-secondary-color);
+      font-size: var(--display-secondary-size);
+      line-height: var(--display-body-line-height);
+    }
+
+    html:not([data-display-size="standard"]) #view-today :is(
+      .work-metrics span,
+      .recent-record small,
+      .date-card-today,
+      .expense-model-note,
+      .expense-remainder-note,
+      .expense-suggestion-label,
+      .expense-existing-hint
+    ) {
+      color: var(--display-secondary-color);
+      font-size: var(--display-caption-size);
+      line-height: var(--display-body-line-height);
+    }
+
+    html:not([data-display-size="standard"]) #view-today :is(
+      input[type="date"],
+      input[type="time"],
+      select,
+      textarea,
+      .smart-expense-field input:not(.expense-amount-input),
+      .expense-note-field input
+    ) {
+      font-size: var(--display-control-size);
+    }
+
+    html:not([data-display-size="standard"]) #view-calendar :is(
+      .calendar-record-weekday,
+      .calendar-record-context,
+      .calendar-platform-row span,
+      .calendar-note,
+      .calendar-month-summary-item span
+    ) {
+      color: var(--display-secondary-color);
+      font-size: var(--display-secondary-size);
+      line-height: var(--display-body-line-height);
+    }
+
+    html:not([data-display-size="standard"]) #view-calendar :is(
+      .calendar-record-edit,
+      .calendar-empty-action,
+      .record-editor-content label,
+      .record-editor-content input,
+      .record-editor-content select,
+      .record-editor-content textarea,
+      .record-editor-content button:not(.ds-icon-button)
+    ) {
+      font-size: var(--display-control-size);
+    }
+
     @media (min-width: 700px) {
       .driver-dashboard {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .driver-page-intro,
-      .driver-safety-note {
+      .driver-goal-card {
+        grid-column: 1 / -1;
+      }
+    }
+
+    html[data-display-size="comfort"] .reports-period-title h3,
+    html[data-display-size="large"] .reports-period-title h3,
+    html[data-display-size="comfort"] .reports-platform-name,
+    html[data-display-size="large"] .reports-platform-name,
+    html[data-display-size="comfort"] .ai-platform-row strong,
+    html[data-display-size="large"] .ai-platform-row strong {
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 350px) {
+      html[data-display-size="large"] .reports-trend-row {
+        grid-template-columns: auto minmax(0, 1fr);
+      }
+
+      html[data-display-size="large"] .reports-trend-label {
+        grid-column: 1;
+      }
+
+      html[data-display-size="large"] .reports-trend-value {
+        grid-column: 2;
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+
+      html[data-display-size="large"] .reports-trend-visual {
+        grid-column: 1 / -1;
+      }
+
+      html[data-display-size="large"] .ai-platform-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+      }
+
+      html[data-display-size="large"] .ai-platform-row strong {
         grid-column: 1 / -1;
       }
     }
@@ -4131,6 +4632,7 @@
       position: relative;
       margin-bottom: 0;
       border-radius: 18px;
+      scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 18px);
     }
 
     .details-panel .detail-section::before {
@@ -4149,6 +4651,26 @@
 
     .details-panel .other-section::before {
       background: #bd9564;
+    }
+
+    .weather-auto-control {
+      min-width: 0;
+      display: grid;
+      gap: 4px;
+    }
+
+    .weather-detect-button {
+      width: fit-content;
+      max-width: 100%;
+      padding-inline: 14px;
+    }
+
+    .weather-auto-status {
+      min-height: 18px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
     }
 
     .details-panel .detail-section summary {
@@ -4223,6 +4745,76 @@
 
     .work-time-fields {
       gap: 12px;
+    }
+
+    .work-mode-fields {
+      display: contents;
+    }
+
+    .manual-work-time-field,
+    .work-mode-notice,
+    .work-mode-toggle {
+      grid-column: 1 / -1;
+    }
+
+    .work-mode-notice {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .work-mode-toggle {
+      min-width: 0;
+      min-height: 44px;
+      justify-self: start;
+      padding-inline: 14px;
+    }
+
+    .manual-entry-toggle {
+      min-width: 0;
+      min-height: 44px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 0;
+      color: var(--brand-strong);
+      background: transparent;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    .manual-entry-toggle svg {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform var(--motion-normal) var(--ease-standard);
+    }
+
+    .manual-entry-toggle[aria-expanded="true"] svg {
+      transform: rotate(180deg);
+    }
+
+    .manual-work-time-grid {
+      width: 100%;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .today-save-status {
+      grid-column: 1 / -1;
+      min-height: 20px;
+      margin: 0;
     }
 
     .work-field-label {
@@ -4470,6 +5062,7 @@
     }
 
     .calendar-date {
+      --calendar-day-marker-size: 34px;
       position: relative;
       min-width: 0;
       min-height: 58px;
@@ -4477,7 +5070,7 @@
       border: 1px solid transparent;
       border-radius: var(--radius-sm);
       display: grid;
-      grid-template-rows: auto auto 1fr;
+      grid-template-rows: var(--calendar-day-marker-size) auto 1fr;
       align-items: start;
       justify-items: center;
       gap: 1px;
@@ -4524,6 +5117,11 @@
       font-weight: var(--font-weight-semibold);
     }
 
+    .calendar-date[aria-current="date"][aria-selected="true"] {
+      background: transparent;
+      border-color: transparent;
+    }
+
     .calendar-date__day,
     .calendar-date__amount {
       max-width: 100%;
@@ -4534,30 +5132,38 @@
     }
 
     .calendar-date__day {
-      font-size: var(--font-size-body);
-      line-height: 1.15;
+      width: var(--calendar-day-marker-size);
+      height: var(--calendar-day-marker-size);
+      border: 2px solid transparent;
+      border-radius: var(--radius-pill);
+      display: grid;
+      place-items: center;
+      box-sizing: border-box;
+      font-size: var(--display-calendar-date-size);
+      line-height: 1;
+    }
+
+    .calendar-date[aria-current="date"] .calendar-date__day {
+      border: 2px solid var(--color-brand-pressed);
+      color: var(--color-brand-pressed);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .calendar-date[aria-current="date"][aria-selected="true"] .calendar-date__day {
+      color: var(--color-text-inverse);
+      background: var(--color-brand-pressed);
+      border-color: var(--color-brand-pressed);
     }
 
     .calendar-date__amount {
       color: var(--color-text-secondary);
-      font-size: 11px;
+      font-size: var(--display-calendar-amount-size);
       font-weight: var(--font-weight-semibold);
       line-height: 1.1;
     }
 
     .calendar-date[aria-selected="true"] .calendar-date__amount {
       color: var(--color-brand-pressed);
-    }
-
-    .calendar-date__today-dot {
-      position: absolute;
-      left: 50%;
-      bottom: 3px;
-      width: 4px;
-      height: 4px;
-      border-radius: var(--radius-pill);
-      background: var(--color-brand-pressed);
-      transform: translateX(-50%);
     }
 
     .calendar-record-card {
@@ -4941,15 +5547,16 @@
       }
 
       .calendar-date {
+        --calendar-day-marker-size: 32px;
         min-height: 54px;
       }
 
       .calendar-date__day {
-        font-size: 15px;
+        font-size: var(--display-calendar-date-size);
       }
 
       .calendar-date__amount {
-        font-size: 10px;
+        font-size: max(10px, var(--display-calendar-amount-size));
       }
 
       .calendar-record-card {
@@ -5087,7 +5694,7 @@
         <section class="grid stats" id="summaryStats"></section>
 
         <section class="home-work-card" id="homeWorkCard" aria-labelledby="workStatusTitle">
-          <div class="work-status-row">
+          <button class="work-status-row" id="workDetailsToggle" type="button" aria-expanded="false" aria-controls="workMetrics" aria-label="今日工作狀態，尚未開始，工作明細已收合，按兩下展開">
             <span class="home-heading" id="workStatusTitle">
               <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path d="m21 8-2 2-1.5-3.7A2 2 0 0 0 15.65 5h-7.3A2 2 0 0 0 6.5 6.3L5 10 3 8"></path>
@@ -5096,18 +5703,25 @@
               </svg>
               <span>今日工作狀態</span>
             </span>
-            <strong id="workStatusText" data-status="idle">尚未開始</strong>
-          </div>
-          <div class="work-metrics" id="workMetrics" aria-label="今日工時計算">
-            <div><span>總經過時間</span><strong id="workTotal">0 分</strong></div>
-            <div><span>休息時間</span><strong id="workBreak">0 分</strong></div>
-            <div><span>實際工作時間</span><strong id="workActual">0 分</strong></div>
+            <span class="work-status-meta">
+              <strong id="workStatusText" data-status="idle">尚未開始</strong>
+              <svg class="work-details-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+            </span>
+          </button>
+          <div class="work-metrics hidden" id="workMetrics" aria-label="今日工時計算">
+            <div><span>總經過時間</span><strong id="workTotal">0 分鐘</strong></div>
+            <div><span>休息時間</span><strong id="workBreak">0 分鐘</strong></div>
+            <div><span>實際工作時間</span><strong id="workActual">0 分鐘</strong></div>
           </div>
           <div class="work-actions">
             <button class="button primary" id="startRun" type="button">開始工作</button>
             <button class="button secondary hidden" id="pauseRun" type="button">暫停休息</button>
             <button class="button primary hidden" id="resumeRun" type="button">繼續跑車</button>
             <button class="button secondary hidden" id="endRun" type="button">收工</button>
+            <button class="button primary hidden" id="continueRun" type="button">再跑一段</button>
+            <button class="button secondary hidden" id="modifyWorkTime" type="button">修改時間</button>
           </div>
         </section>
 
@@ -5136,17 +5750,22 @@
         <span id="sharedDetailPanelAnchor" hidden></span>
         <div class="panel details-panel" id="sharedDetailPanel">
           <div class="panel-head">
-            <h3 id="formTitle">更新今日紀錄</h3>
+            <button class="manual-entry-toggle" id="manualEntryToggle" type="button" aria-expanded="true" aria-controls="manualEntryContent">
+              <span id="formTitle">每日紀錄</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+            </button>
             <button class="button secondary hidden" id="cancelEdit" type="button">取消編輯</button>
           </div>
-          <div class="panel-body">
+          <div class="panel-body" id="manualEntryContent">
             <form id="detailForm">
               <div class="fields quick-fields">
                 <div class="date-card-host" id="entryDateCard"></div>
               </div>
               <div class="quick-preview" id="quickPreview"></div>
               <details class="collapsible detail-section work-section" id="workTimeSection">
-                <summary>
+                <summary id="workTimeToggle" aria-expanded="false" aria-controls="workTimeContent">
                   <span class="detail-summary-main">
                     <span class="section-heading detail-summary-title">
                       <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -5161,38 +5780,55 @@
                     </span>
                   </span>
                 </summary>
-                <div class="collapsible-body fields work-time-fields">
-                  <label>
-                    <span class="work-field-label">開始跑車</span>
-                    <span class="work-time-control">
-                      <input type="time" id="startTime">
-                    </span>
-                  </label>
-                  <label>
-                    <span class="work-field-label">結束跑車</span>
-                    <span class="work-time-control">
-                      <input type="time" id="endTime">
-                    </span>
-                  </label>
-                  <label>
-                    <span class="work-field-label">休息</span>
-                    <span class="work-input-shell">
-                      <input type="number" inputmode="numeric" id="breakMinutes" min="0" step="1" value="0">
-                      <span class="work-input-unit" aria-hidden="true">分鐘</span>
-                    </span>
-                  </label>
-                  <label>
-                    <span class="work-field-label">手動工時</span>
-                    <input type="number" inputmode="decimal" id="manualHours" min="0" step="0.25" placeholder="可留空，自動計算">
-                  </label>
-                  <div class="work-live-summary" aria-live="polite">
-                    <span>今日工時</span>
+                <div class="collapsible-body fields work-time-fields" id="workTimeContent">
+                  <div class="work-mode-fields" id="clockWorkFields">
+                    <label>
+                      <span class="work-field-label">開始跑車</span>
+                      <span class="work-time-control">
+                        <input type="time" id="startTime">
+                      </span>
+                    </label>
+                    <label>
+                      <span class="work-field-label">結束跑車</span>
+                      <span class="work-time-control">
+                        <input type="time" id="endTime">
+                      </span>
+                    </label>
+                    <label>
+                      <span class="work-field-label">休息</span>
+                      <span class="work-input-shell">
+                        <input type="number" inputmode="numeric" id="breakMinutes" min="0" step="1" value="0">
+                        <span class="work-input-unit" aria-hidden="true">分鐘</span>
+                      </span>
+                    </label>
+                  </div>
+                  <div class="work-mode-fields hidden" id="manualWorkFields">
+                    <label class="manual-work-time-field">
+                      <span class="work-field-label">手動工時</span>
+                      <input type="hidden" id="manualHours" value="0">
+                      <span class="manual-work-time-grid">
+                        <span class="work-input-shell">
+                          <input type="number" inputmode="numeric" id="manualHoursPart" min="0" max="24" step="1" placeholder="0" aria-label="手動工時小時">
+                          <span class="work-input-unit" aria-hidden="true">小時</span>
+                        </span>
+                        <span class="work-input-shell">
+                          <input type="number" inputmode="numeric" id="manualMinutesPart" min="0" max="59" step="1" placeholder="0" aria-label="手動工時分鐘">
+                          <span class="work-input-unit" aria-hidden="true">分鐘</span>
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                  <p class="work-mode-notice hidden" id="workModeNotice"></p>
+                  <button class="button secondary work-mode-toggle" id="workModeToggle" type="button">改用手動工時</button>
+                  <div class="work-live-summary" id="workLiveSummary" aria-live="polite">
+                    <span>計算工時</span>
                     <strong id="workLiveValue">等待設定</strong>
                   </div>
+                  <p class="ds-save-status today-save-status" id="todaySaveStatus" role="status" aria-live="polite" aria-atomic="true"></p>
                 </div>
               </details>
               <details class="collapsible detail-section expense-section" id="expenseSection">
-                <summary>
+                <summary id="expenseSectionToggle" aria-expanded="false" aria-controls="expenseInputs">
                   <span class="section-heading detail-summary-title">
                     <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                       <path d="M4 2v20l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2V2l-2 2-2-2-2 2-2-2-2 2-2-2-2 2Z"></path>
@@ -5203,8 +5839,8 @@
                 </summary>
                 <div class="collapsible-body" id="expenseInputs"></div>
               </details>
-              <details class="collapsible detail-section other-section">
-                <summary>
+              <details class="collapsible detail-section other-section" id="otherDataSection">
+                <summary id="otherDataToggle" aria-expanded="false" aria-controls="otherDataContent">
                   <span class="section-heading detail-summary-title">
                     <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                       <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5Z"></path>
@@ -5213,7 +5849,7 @@
                     <span>其他資料</span>
                   </span>
                 </summary>
-                <div class="collapsible-body fields">
+                <div class="collapsible-body fields" id="otherDataContent">
                   <label>小費
                     <input type="number" inputmode="numeric" id="tips" min="0" step="1" value="0">
                   </label>
@@ -5238,15 +5874,21 @@
                   </label>
                   <div class="direct-choice-field">
                     <span class="direct-choice-label">天氣</span>
+                    <div class="weather-auto-control">
+                      <button class="button secondary weather-detect-button" id="detectWeather" type="button">自動偵測天氣</button>
+                      <p class="weather-auto-status" id="weatherAutoStatus" role="status" aria-live="polite"></p>
+                    </div>
                     <div class="direct-choice-options" role="group" aria-label="選擇天氣">
                       <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="晴天">晴天</button>
+                      <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="多雲">多雲</button>
                       <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="陰天">陰天</button>
                       <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="雨天">雨天</button>
                       <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="大雨">大雨</button>
+                      <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="雷雨">雷雨</button>
                       <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="其他">其他</button>
                     </div>
                     <select class="choice-value-control" id="weather" aria-hidden="true" tabindex="-1">
-                      <option value="" disabled selected>請選擇</option><option>晴天</option><option>陰天</option><option>雨天</option><option>大雨</option><option>其他</option>
+                      <option value="" disabled selected>請選擇</option><option>晴天</option><option>多雲</option><option>陰天</option><option>雨天</option><option>大雨</option><option>雷雨</option><option>其他</option>
                     </select>
                   </div>
                   <label style="grid-column: 1 / -1;">備註
@@ -5402,7 +6044,7 @@
         <div class="driver-dashboard">
           <header class="driver-page-intro">
             <h2>Driver</h2>
-            <p>管理此裝置的收入目標、資料與 App 狀態。</p>
+            <p>管理此裝置的收入目標、顯示方式與常用設定。</p>
           </header>
 
           <section class="driver-overview-card driver-goal-card" aria-labelledby="driverGoalTitle">
@@ -5416,33 +6058,39 @@
               <span class="driver-goal-control"><span aria-hidden="true">NT$</span><input type="number" id="dailyGoal"
                 min="0" max="99999999" step="100" inputmode="numeric" placeholder="例如：3000"></span>
             </label>
-            <p class="ds-save-status" id="driverGoalStatus" role="status" aria-live="polite"></p>
+            <p class="ds-save-status" id="driverGoalStatus" data-status="idle" role="status" aria-live="polite"></p>
           </section>
 
-          <section class="driver-overview-card" aria-labelledby="driverDataTitle">
-            <div>
-              <span class="driver-card-kicker">資料狀態</span>
-              <h3 id="driverDataTitle">此裝置的工作紀錄</h3>
-            </div>
-            <dl class="driver-status-list" id="driverDataStatus"></dl>
-          </section>
-
-          <section class="driver-overview-card" aria-labelledby="driverAppTitle">
-            <div>
-              <span class="driver-card-kicker">App 狀態</span>
-              <h3 id="driverAppTitle">Driver Pay Pro</h3>
-            </div>
-            <dl class="driver-status-list" id="driverAppStatus"></dl>
-          </section>
-
-          <section class="driver-safety-note" aria-labelledby="driverSafetyTitle">
-            <h3 id="driverSafetyTitle">資料保存在這台裝置</h3>
-            <p>目前沒有跨裝置同步或雲端備份。清除 Safari 網站資料可能會刪除工作紀錄；離線時仍可使用已快取的 App。</p>
-          </section>
         </div>
 
-        <h2 class="driver-settings-heading">其他設定</h2>
+        <h2 class="driver-settings-heading">常用設定</h2>
         <div class="layout">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>顯示設定</h3>
+            </div>
+            <div class="panel-body">
+              <fieldset class="reading-size-fieldset">
+                <legend>顯示大小</legend>
+                <div class="reading-size-options">
+                  <label class="reading-size-choice">
+                    <input type="radio" name="displaySize" value="standard" data-display-size-option checked>
+                    <span>標準</span>
+                  </label>
+                  <label class="reading-size-choice">
+                    <input type="radio" name="displaySize" value="comfort" data-display-size-option>
+                    <span>舒適</span>
+                  </label>
+                  <label class="reading-size-choice">
+                    <input type="radio" name="displaySize" value="large" data-display-size-option>
+                    <span>大字</span>
+                  </label>
+                </div>
+              </fieldset>
+              <p class="ds-save-status reading-size-status" id="displaySizeStatus" data-status="idle" role="status" aria-live="polite"></p>
+            </div>
+          </div>
+
           <div class="panel">
             <div class="panel-head">
               <h3>快捷支出設定</h3>
@@ -5536,6 +6184,27 @@
             </button>
           </div>
         </div>
+
+        <section class="driver-overview-card driver-system-status" aria-labelledby="driverSystemStatusTitle">
+          <button class="driver-system-status-toggle" id="driverSystemStatusToggle" type="button"
+            aria-expanded="false" aria-controls="driverSystemStatusContent">
+            <span class="driver-system-status-heading">
+              <span class="driver-card-kicker">系統狀態</span>
+              <h3 id="driverSystemStatusTitle">此裝置與 App</h3>
+            </span>
+            <span class="driver-system-status-badge" id="driverSystemStatusBadge">正常</span>
+            <svg class="driver-system-status-chevron" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m6 9 6 6 6-6"></path>
+            </svg>
+          </button>
+          <div class="driver-system-status-content" id="driverSystemStatusContent" hidden>
+            <aside class="driver-safety-note" aria-labelledby="driverSafetyTitle">
+              <h3 id="driverSafetyTitle">資料保存在這台裝置</h3>
+              <p>目前沒有跨裝置同步或雲端備份。清除 Safari 網站資料可能會刪除工作紀錄；離線時仍可使用已快取的 App。</p>
+            </aside>
+            <dl class="driver-status-list" id="driverSystemStatusDetails"></dl>
+          </div>
+        </section>
       </section>
 
       <section id="view-about" class="view about-view hidden" aria-labelledby="aboutProductName">
@@ -5603,6 +6272,50 @@
     </div>
   </dialog>
 
+  <dialog class="record-editor-confirm" id="missingWorkTimeDialog" aria-labelledby="missingWorkTimeTitle">
+    <form method="dialog" class="record-editor-confirm__body">
+      <h2 class="ds-card-title" id="missingWorkTimeTitle">要不要順便記一下工時？</h2>
+      <p class="ds-secondary">這樣時薪才準確。</p>
+      <div class="record-editor-confirm__actions">
+        <button class="ds-button ds-button--secondary" id="missingWorkLater" type="button">稍後再補</button>
+        <button class="ds-button ds-button--primary" id="missingWorkAdd" type="button">補上工時</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="record-editor-confirm" id="weatherPermissionDialog" aria-labelledby="weatherPermissionTitle">
+    <form method="dialog" class="record-editor-confirm__body">
+      <h2 class="ds-card-title" id="weatherPermissionTitle">自動帶入目前天氣</h2>
+      <p class="ds-secondary">允許定位後，可自動帶入目前天氣；位置只用於取得天氣，不會儲存在每日紀錄中。</p>
+      <div class="record-editor-confirm__actions">
+        <button class="ds-button ds-button--secondary" id="weatherPermissionLater" type="button">暫時不要</button>
+        <button class="ds-button ds-button--primary" id="weatherPermissionAllow" type="button">允許並自動帶入</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="record-editor-confirm" id="workModeDialog" aria-labelledby="workModeDialogTitle">
+    <div class="record-editor-confirm__body">
+      <h2 class="ds-card-title" id="workModeDialogTitle">切換工時輸入方式？</h2>
+      <p class="ds-secondary" id="workModeDialogMessage"></p>
+      <div class="record-editor-confirm__actions">
+        <button class="ds-button ds-button--secondary" id="workModeDialogCancel" type="button">取消</button>
+        <button class="ds-button ds-button--primary" id="workModeDialogAccept" type="button">確認切換</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="record-editor-confirm" id="continueWorkDialog" aria-labelledby="continueWorkDialogTitle">
+    <div class="record-editor-confirm__body">
+      <h2 class="ds-card-title" id="continueWorkDialogTitle">繼續今天的工作？</h2>
+      <p class="ds-secondary" id="continueWorkDialogMessage"></p>
+      <div class="record-editor-confirm__actions">
+        <button class="ds-button ds-button--secondary" id="continueWorkDialogCancel" type="button">取消</button>
+        <button class="ds-button ds-button--primary" id="continueWorkDialogAccept" type="button">再跑一段</button>
+      </div>
+    </div>
+  </dialog>
+
   <script>
     const brandAttribution = Object.freeze({
       productName: "Driver Pay Pro",
@@ -5614,7 +6327,12 @@
     });
     const storageKey = "driverPayApp.v2";
     const lastValidStorageKey = `${storageKey}.lastValid`;
-    const appShellCacheName = "driver-pay-pro-v13";
+    const appShellCacheName = "driver-pay-pro-v22";
+    const displaySizeLabels = Object.freeze({
+      standard: "標準",
+      comfort: "舒適",
+      large: "大字"
+    });
     const defaultPlatforms = ["Uber", "LINE GO", "Yoxi", "55688", "大都會", "台灣大車隊", "路邊客", "自訂"];
     const defaultPlatformIds = {
       "Uber": "platform-uber",
@@ -5635,6 +6353,10 @@
       hourMs: 3600000,
       dayMs: 86400000
     });
+    const MIN_VALID_WORK_MINUTES = 10;
+    const MAX_REASONABLE_HOURLY_RATE = 2000;
+    const WEATHER_SERVICE_URL = "https://api.open-meteo.com/v1/forecast";
+    const WEATHER_CACHE_TTL_MS = 30 * 60 * 1000;
     const maxPlatformIncome = 99999999;
     const defaultExpenses = ["油錢/電費", "洗車", "停車費", "保養", "車租/車貸", "保險", "平台抽成", "罰單", "其他"];
     const expenseCategoryGroups = [
@@ -5704,13 +6426,28 @@
     let activeReportView = reportsState.activeReportTab;
     let overviewVisible = false;
     let expenseDraft = createExpenseDraft();
+    let expenseSaveInProgress = false;
     let expenseToastTimer = 0;
     let expenseShortcutStatus = "";
+    let displaySizeStatus = "";
+    let displaySizeStatusType = "";
+    let systemStatusExpanded = Boolean(stateLoadError);
+    let systemStatusAutoOpened = Boolean(stateLoadError);
     let driverGoalSaveTimer = 0;
     let driverGoalStatus = "";
     let driverGoalStatusType = "";
     let incomeUndoTimer = 0;
     let lastIncomeAddition = null;
+    let todayWorkSaveTimer = 0;
+    let todayWorkStatusTimer = 0;
+    let pendingTodayRecordSave = null;
+    let weatherDetectionPromise = null;
+    let weatherManualOverride = false;
+    let weatherSuggestionCache = null;
+    let workTimeInputMode = "clock";
+    let pendingWorkMode = "";
+    let pendingContinueWork = null;
+    const weatherDetectionAttemptedDates = new Set();
     let calendarState = createCalendarState(todayString());
     let calendarTodayTimer = 0;
     let calendarGesture = null;
@@ -5754,6 +6491,9 @@
       sharedIncomePanelAnchor: document.getElementById("sharedIncomePanelAnchor"),
       sharedDetailPanel: document.getElementById("sharedDetailPanel"),
       sharedDetailPanelAnchor: document.getElementById("sharedDetailPanelAnchor"),
+      manualEntryToggle: document.getElementById("manualEntryToggle"),
+      manualEntryContent: document.getElementById("manualEntryContent"),
+      todaySaveStatus: document.getElementById("todaySaveStatus"),
       recordEditorDialog: document.getElementById("recordEditorDialog"),
       recordEditorContent: document.getElementById("recordEditorContent"),
       recordEditorTitle: document.getElementById("recordEditorTitle"),
@@ -5766,10 +6506,37 @@
       recordEditorConfirmMessage: document.getElementById("recordEditorConfirmMessage"),
       recordEditorConfirmCancel: document.getElementById("recordEditorConfirmCancel"),
       recordEditorConfirmAccept: document.getElementById("recordEditorConfirmAccept"),
+      missingWorkTimeDialog: document.getElementById("missingWorkTimeDialog"),
+      missingWorkLater: document.getElementById("missingWorkLater"),
+      missingWorkAdd: document.getElementById("missingWorkAdd"),
+      weatherPermissionDialog: document.getElementById("weatherPermissionDialog"),
+      weatherPermissionLater: document.getElementById("weatherPermissionLater"),
+      weatherPermissionAllow: document.getElementById("weatherPermissionAllow"),
+      workModeDialog: document.getElementById("workModeDialog"),
+      workModeDialogMessage: document.getElementById("workModeDialogMessage"),
+      workModeDialogCancel: document.getElementById("workModeDialogCancel"),
+      workModeDialogAccept: document.getElementById("workModeDialogAccept"),
+      continueWorkDialog: document.getElementById("continueWorkDialog"),
+      continueWorkDialogTitle: document.getElementById("continueWorkDialogTitle"),
+      continueWorkDialogMessage: document.getElementById("continueWorkDialogMessage"),
+      continueWorkDialogCancel: document.getElementById("continueWorkDialogCancel"),
+      continueWorkDialogAccept: document.getElementById("continueWorkDialogAccept"),
       calendarExpenseList: document.getElementById("calendarExpenseList"),
       workTimeSection: document.getElementById("workTimeSection"),
+      workTimeToggle: document.getElementById("workTimeToggle"),
+      clockWorkFields: document.getElementById("clockWorkFields"),
+      manualWorkFields: document.getElementById("manualWorkFields"),
+      workModeNotice: document.getElementById("workModeNotice"),
+      workModeToggle: document.getElementById("workModeToggle"),
+      expenseSection: document.getElementById("expenseSection"),
+      expenseSectionToggle: document.getElementById("expenseSectionToggle"),
+      otherDataSection: document.getElementById("otherDataSection"),
+      otherDataToggle: document.getElementById("otherDataToggle"),
+      detectWeather: document.getElementById("detectWeather"),
+      weatherAutoStatus: document.getElementById("weatherAutoStatus"),
       workCollapsedPrimary: document.getElementById("workCollapsedPrimary"),
       workCollapsedSecondary: document.getElementById("workCollapsedSecondary"),
+      workLiveSummary: document.getElementById("workLiveSummary"),
       workLiveValue: document.getElementById("workLiveValue"),
       entryId: document.getElementById("entryId"),
       formTitle: document.getElementById("formTitle"),
@@ -5797,9 +6564,12 @@
       aiMonthInsights: document.getElementById("aiMonthInsights"),
       aiAlerts: document.getElementById("aiAlerts"),
       aiAnalysisMetadata: document.getElementById("aiAnalysisMetadata"),
+      displaySizeStatus: document.getElementById("displaySizeStatus"),
       driverGoalStatus: document.getElementById("driverGoalStatus"),
-      driverDataStatus: document.getElementById("driverDataStatus"),
-      driverAppStatus: document.getElementById("driverAppStatus"),
+      driverSystemStatusToggle: document.getElementById("driverSystemStatusToggle"),
+      driverSystemStatusBadge: document.getElementById("driverSystemStatusBadge"),
+      driverSystemStatusContent: document.getElementById("driverSystemStatusContent"),
+      driverSystemStatusDetails: document.getElementById("driverSystemStatusDetails"),
       platformChips: document.getElementById("platformChips"),
       platformInputModeSettings: document.getElementById("platformInputModeSettings"),
       platformRateInputs: document.getElementById("platformRateInputs"),
@@ -5810,7 +6580,10 @@
       pauseRun: document.getElementById("pauseRun"),
       resumeRun: document.getElementById("resumeRun"),
       endRun: document.getElementById("endRun"),
+      continueRun: document.getElementById("continueRun"),
+      modifyWorkTime: document.getElementById("modifyWorkTime"),
       workStatusText: document.getElementById("workStatusText"),
+      workDetailsToggle: document.getElementById("workDetailsToggle"),
       workMetrics: document.getElementById("workMetrics"),
       workTotal: document.getElementById("workTotal"),
       workBreak: document.getElementById("workBreak"),
@@ -5930,21 +6703,39 @@
 
     function normalizeSettings(settings = {}, platforms = defaultPlatforms) {
       const platformRates = { ...defaultPlatformRates, ...(settings.platformRates || {}) };
+      const { aiReportsReadingSize: legacyReadingSize, ...retainedSettings } = settings;
+      const displaySizeSource = Object.hasOwn(settings, "displaySize")
+        ? settings.displaySize
+        : legacyReadingSize;
       platforms.forEach(name => {
         if (!Number(platformRates[name])) platformRates[name] = 100;
       });
       return {
-        ...settings,
+        ...retainedSettings,
         monthlyGoal: Number(settings.monthlyGoal || 0),
         dailyGoal: Number(settings.dailyGoal || 0),
         timeDetailsOpen: Boolean(settings.timeDetailsOpen),
+        weatherAutoConsent: ["granted", "declined"].includes(settings.weatherAutoConsent)
+          ? settings.weatherAutoConsent
+          : "",
         calendarMonth: normalizeMonthKey(settings.calendarMonth),
         reportMonth: normalizeMonthKey(settings.reportMonth),
         lastReportView: normalizeReportView(settings.lastReportView),
+        displaySize: normalizeDisplaySize(displaySizeSource),
         expenseShortcuts: normalizeExpenseShortcuts(settings.expenseShortcuts),
         platformProfiles: normalizePlatformProfiles(settings, platforms),
         platformRates
       };
+    }
+
+    function normalizeDisplaySize(value) {
+      return Object.hasOwn(displaySizeLabels, value) ? value : "standard";
+    }
+
+    function applyDisplaySize(value) {
+      const normalized = normalizeDisplaySize(value);
+      document.documentElement.dataset.displaySize = normalized;
+      return normalized;
     }
 
     function normalizeMonthKey(value, fallback = currentMonth()) {
@@ -6379,6 +7170,83 @@
       return Object.values(entry.expenses || {}).reduce((sum, val) => sum + Number(val || 0), 0);
     }
 
+    function normalizeExpenseAllocation(value) {
+      if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+      const months = Math.floor(Number(value.months));
+      const startMonth = String(value.startMonth || "");
+      if (!Number.isFinite(months) || months < 2 || months > 60) return null;
+      if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(startMonth)) return null;
+      return { months, startMonth };
+    }
+
+    function expenseAllocationFor(entry, category) {
+      return normalizeExpenseAllocation(entry?.expenseAllocations?.[category]);
+    }
+
+    function expenseAllocationMonth(startMonth, offset) {
+      const match = /^(\d{4})-(\d{2})$/.exec(String(startMonth || ""));
+      if (!match) return "";
+      const monthIndex = Number(match[1]) * 12 + Number(match[2]) - 1 + Number(offset || 0);
+      const year = Math.floor(monthIndex / 12);
+      const month = monthIndex % 12 + 1;
+      return `${year}-${String(month).padStart(2, "0")}`;
+    }
+
+    function expenseAllocationAmount(amount, months, index) {
+      const total = Math.max(0, Math.round(Number(amount || 0)));
+      const count = Math.max(1, Math.floor(Number(months || 1)));
+      const position = Math.max(0, Math.floor(Number(index || 0)));
+      const regular = Math.floor(total / count);
+      return position === count - 1 ? total - regular * (count - 1) : regular;
+    }
+
+    function reportExpenseSummary(records, range) {
+      const source = Array.isArray(records) ? records : [];
+      const start = normalizeDateKey(range?.start);
+      const endExclusive = normalizeDateKey(range?.endExclusive);
+      const byDate = new Map();
+      if (!start || !endExclusive || start >= endExclusive) {
+        return { total: 0, byDate, occurrenceCount: 0 };
+      }
+      const add = (date, amount, sourceRecord, category, allocated) => {
+        if (date < start || date >= endExclusive) return;
+        const value = Math.max(0, Number(amount || 0));
+        if (!Number.isFinite(value)) return;
+        const current = byDate.get(date) || { date, total: 0, items: [] };
+        current.total += value;
+        current.items.push({ sourceRecord, category, amount: value, allocated });
+        byDate.set(date, current);
+      };
+      source.forEach(entry => {
+        const paymentDate = normalizeDateKey(entry?.date);
+        if (!paymentDate) return;
+        Object.entries(entry.expenses || {}).forEach(([category, rawAmount]) => {
+          const amount = Math.max(0, Number(rawAmount || 0));
+          if (!Number.isFinite(amount)) return;
+          const allocation = expenseAllocationFor(entry, category);
+          if (!allocation) {
+            add(paymentDate, amount, entry, category, false);
+            return;
+          }
+          for (let index = 0; index < allocation.months; index += 1) {
+            const month = expenseAllocationMonth(allocation.startMonth, index);
+            add(
+              `${month}-01`,
+              expenseAllocationAmount(amount, allocation.months, index),
+              entry,
+              category,
+              true
+            );
+          }
+        });
+      });
+      return {
+        total: [...byDate.values()].reduce((sum, day) => sum + day.total, 0),
+        byDate,
+        occurrenceCount: [...byDate.values()].reduce((sum, day) => sum + day.items.length, 0)
+      };
+    }
+
     function entryTotal(entry) {
       return entryIncome(entry) + Number(entry.tips || 0);
     }
@@ -6392,15 +7260,96 @@
       return Number.isFinite(timestamp) ? timestamp : null;
     }
 
-    function clockWorkDurationMs(entry) {
-      if (!entry?.startTime || !entry?.endTime) return 0;
+    function decimalHoursToMinutes(value) {
+      const hours = Number(value);
+      if (!Number.isFinite(hours) || hours <= 0) return 0;
+      return Math.round(hours * 60);
+    }
+
+    function minutesToHourMinuteParts(value) {
+      const totalMinutes = Math.max(0, Math.round(Number(value) || 0));
+      return {
+        hours: Math.floor(totalMinutes / 60),
+        minutes: totalMinutes % 60
+      };
+    }
+
+    function validateWorkTimeRange(entry) {
+      entry ||= {};
+      const hasStart = Boolean(entry.startTime);
+      const hasEnd = Boolean(entry.endTime);
+      if (hasStart !== hasEnd) {
+        return {
+          valid: false,
+          complete: false,
+          code: "incomplete",
+          message: "開始與結束時間尚未完整。"
+        };
+      }
+      if (!hasStart) {
+        return {
+          valid: true,
+          complete: false,
+          code: "manual",
+          workMinutes: decimalHoursToMinutes(entry.manualHours)
+        };
+      }
+
       const start = minutes(entry.startTime);
       let end = minutes(entry.endTime);
-      if (!Number.isFinite(start) || !Number.isFinite(end)) return 0;
+      const restMinutes = Number(entry.breakMinutes || 0);
+      if (!Number.isFinite(start) || !Number.isFinite(end)) {
+        return {
+          valid: false,
+          complete: true,
+          code: "invalid-time",
+          message: "工作時間格式無效。"
+        };
+      }
+      if (!Number.isFinite(restMinutes) || restMinutes < 0) {
+        return {
+          valid: false,
+          complete: true,
+          code: "invalid-break",
+          message: "休息時間必須是 0 分鐘以上。"
+        };
+      }
       if (end < start) end += 24 * 60;
       const elapsedMinutes = end - start;
-      const breakMinutes = nonNegativeNumber(entry.breakMinutes);
-      return Math.max(0, elapsedMinutes - breakMinutes) * workTimeUnits.minuteMs;
+      if (restMinutes > elapsedMinutes) {
+        return {
+          valid: false,
+          complete: true,
+          code: "break-exceeds-elapsed",
+          message: "休息時間不可超過總經過時間。"
+        };
+      }
+      return {
+        valid: true,
+        complete: true,
+        code: "clock",
+        elapsedMinutes,
+        breakMinutes: Math.round(restMinutes),
+        workMinutes: Math.max(0, Math.round(elapsedMinutes - restMinutes))
+      };
+    }
+
+    function calculateWorkMinutes(entry) {
+      entry ||= {};
+      const result = validateWorkTimeRange(entry);
+      return result.valid ? Math.max(0, Number(result.workMinutes || 0)) : 0;
+    }
+
+    function formatWorkDuration(value) {
+      const { hours, minutes: minutePart } = minutesToHourMinuteParts(value);
+      if (!hours) return `${minutePart} 分鐘`;
+      return minutePart ? `${hours} 小時 ${minutePart} 分` : `${hours} 小時`;
+    }
+
+    function clockWorkDurationMs(entry) {
+      const result = validateWorkTimeRange(entry);
+      if (!result.valid || !result.complete) return 0;
+      return result.workMinutes * workTimeUnits.minuteMs;
     }
 
     function sessionWorkDurationMs(entry, nowMs, currentDate) {
@@ -6442,22 +7391,65 @@
     }
 
     function workMetrics(entry, nowMs = Date.now(), currentDate = todayString()) {
-      const manualHours = nonNegativeNumber(entry?.manualHours);
-      let durationMs = manualHours > 0
-        ? manualHours * workTimeUnits.hourMs
-        : sessionWorkDurationMs(entry, nowMs, currentDate);
-      if (durationMs === null) durationMs = clockWorkDurationMs(entry);
-      durationMs = nonNegativeNumber(durationMs);
+      const clockResult = validateWorkTimeRange(entry);
+      const manualMinutes = decimalHoursToMinutes(entry?.manualHours);
+      const sessionDurationMs = sessionWorkDurationMs(entry, nowMs, currentDate);
+      const workMinutes = clockResult.valid && clockResult.complete
+        ? calculateWorkMinutes(entry)
+        : manualMinutes > 0
+          ? manualMinutes
+          : Math.max(0, Math.round(nonNegativeNumber(sessionDurationMs) / workTimeUnits.minuteMs));
+      const durationMs = workMinutes * workTimeUnits.minuteMs;
       return {
         durationMs,
-        hours: durationMs / workTimeUnits.hourMs
+        workMinutes,
+        hours: workMinutes / 60,
+        source: clockResult.valid && clockResult.complete
+          ? "clock"
+          : manualMinutes > 0
+            ? "manual"
+            : sessionDurationMs > 0
+              ? "session"
+              : "none",
+        validationCode: clockResult.complete && !clockResult.valid
+          ? "invalid-time-range"
+          : workMinutes > 0
+            ? "complete"
+            : "missing-work-time"
       };
     }
 
+    function hourlyRateQuality(netIncome, workMinutes, validationCode = "") {
+      const income = Number(netIncome);
+      const minutesValue = Number(workMinutes);
+      if (validationCode === "invalid-time-range") {
+        return { status: "invalid-time-range", hourlyRate: null, workMinutes: 0 };
+      }
+      if (!Number.isFinite(minutesValue) || minutesValue <= 0) {
+        return { status: "missing-work-time", hourlyRate: null, workMinutes: 0 };
+      }
+      const roundedMinutes = Math.max(0, Math.round(minutesValue));
+      if (roundedMinutes < MIN_VALID_WORK_MINUTES) {
+        return { status: "insufficient-work-time", hourlyRate: null, workMinutes: roundedMinutes };
+      }
+      if (!Number.isFinite(income)) {
+        return { status: "abnormal-hourly-rate", hourlyRate: null, workMinutes: roundedMinutes };
+      }
+      const calculatedRate = income / (roundedMinutes / 60);
+      if (!Number.isFinite(calculatedRate) || calculatedRate <= 0 || calculatedRate > MAX_REASONABLE_HOURLY_RATE) {
+        return {
+          status: "abnormal-hourly-rate",
+          hourlyRate: null,
+          calculatedRate: Number.isFinite(calculatedRate) ? calculatedRate : null,
+          workMinutes: roundedMinutes
+        };
+      }
+      return { status: "complete", hourlyRate: calculatedRate, workMinutes: roundedMinutes };
+    }
+
     function hourlyRate(netIncome, durationMs) {
-      const safeDurationMs = nonNegativeNumber(durationMs);
-      if (safeDurationMs < workTimeUnits.minuteMs) return 0;
-      return finiteNumber(netIncome) / (safeDurationMs / workTimeUnits.hourMs);
+      const workMinutes = Math.round(nonNegativeNumber(durationMs) / workTimeUnits.minuteMs);
+      return hourlyRateQuality(netIncome, workMinutes).hourlyRate || 0;
     }
 
     function minutes(time) {
@@ -6560,6 +7552,13 @@
       return { total, tips, expenses, durationMs, hours, orders, net, hourly: hourlyRate(net, durationMs) };
     }
 
+    function recordDataQuality(entry) {
+      const work = workMetrics(entry || {});
+      const range = validateWorkTimeRange(entry || {});
+      const validationCode = range.complete && !range.valid ? "invalid-time-range" : work.validationCode;
+      return hourlyRateQuality(entryNet(entry || {}), work.workMinutes, validationCode);
+    }
+
     function isWorkDayRecord(entry, derived = null) {
       if (!entry || !normalizeDateKey(entry.date)) return false;
       const values = derived || {
@@ -6625,8 +7624,17 @@
       const monthRecords = sharedAnalytics.getRecordsInRange(source, monthRange);
       const daySummaries = [...sharedAnalytics.summarizeRecordsByDate(monthRecords).values()];
       const missingWorkDates = daySummaries
-        .filter(day => day.aggregate.totalIncome > 0 && !day.aggregate.validWorkDuration)
+        .filter(day => day.aggregate.totalIncome > 0 && day.aggregate.hourlyRateStatus === "missing-work-time")
         .map(day => day.date);
+      const insufficientWorkDates = daySummaries
+        .filter(day => day.aggregate.totalIncome > 0 && day.aggregate.hourlyRateStatus === "insufficient-work-time")
+        .map(day => day.date);
+      const abnormalHourlyRateDates = daySummaries
+        .filter(day => day.aggregate.totalIncome > 0 && day.aggregate.hourlyRateStatus === "abnormal-hourly-rate")
+        .map(day => day.date);
+      const invalidTimeRangeDates = monthRecords
+        .filter(entry => recordDataQuality(entry).status === "invalid-time-range")
+        .map(entry => entry.date);
       const negativeNetDates = daySummaries
         .filter(day => day.aggregate.netIncome < 0)
         .map(day => day.date);
@@ -6643,6 +7651,9 @@
       const uniqueDates = values => [...new Set(values)].sort();
       const missingDates = uniqueDates([
         ...missingWorkDates,
+        ...insufficientWorkDates,
+        ...abnormalHourlyRateDates,
+        ...invalidTimeRangeDates,
         ...incompleteLegacyDates,
         ...invalidAmountDates,
         ...invalidPlatformDates
@@ -6652,6 +7663,9 @@
         invalidAmountDates: uniqueDates(invalidAmountDates),
         invalidPlatformDates: uniqueDates(invalidPlatformDates),
         missingWorkDates: uniqueDates(missingWorkDates),
+        insufficientWorkDates: uniqueDates(insufficientWorkDates),
+        abnormalHourlyRateDates: uniqueDates(abnormalHourlyRateDates),
+        invalidTimeRangeDates: uniqueDates(invalidTimeRangeDates),
         negativeNetDates: uniqueDates(negativeNetDates),
         incompleteLegacyDates: uniqueDates(incompleteLegacyDates),
         missingDates,
@@ -6708,6 +7722,14 @@
       return { view, ...options };
     }
 
+    function hourlyRateStatusMessage(status) {
+      if (status === "insufficient-work-time") return "工時資料不足，暫不計算時薪";
+      if (status === "abnormal-hourly-rate") return "時薪資料可能異常，請檢查收入與工時紀錄";
+      if (status === "invalid-time-range") return "工作時間範圍無效，請檢查工時紀錄";
+      if (status === "missing-work-time") return "尚未記錄有效工時，暫不計算時薪";
+      return "";
+    }
+
     function buildAIInsights(input) {
       const {
         currentWeek,
@@ -6755,6 +7777,32 @@
           evidence: `${reportDateLabel(date)}有收入但沒有有效工時；本月共 ${dataQuality.missingWorkDates.length} 天。`,
           period: sharedAnalytics.getMonthLabel(ranges.monthRange),
           sufficiency: "資料不完整",
+          target: aiInsightTarget("calendar", { date }),
+          accessibleName: `前往月曆檢查 ${formatCalendarFullDate(date)}`
+        });
+      }
+
+      if (dataQuality.insufficientWorkDates.length) {
+        const date = dataQuality.insufficientWorkDates[0];
+        addRecommendation({
+          title: "工時資料不足，暫不計算時薪",
+          action: "請確認這一天的開始、結束與休息時間是否完整。",
+          evidence: `${reportDateLabel(date)}的有效工時少於 ${MIN_VALID_WORK_MINUTES} 分鐘；不以極短工時產生營運建議。`,
+          period: sharedAnalytics.getMonthLabel(ranges.monthRange),
+          sufficiency: "工時資料不足",
+          target: aiInsightTarget("calendar", { date }),
+          accessibleName: `前往月曆檢查 ${formatCalendarFullDate(date)}`
+        });
+      }
+
+      if (dataQuality.abnormalHourlyRateDates.length) {
+        const date = dataQuality.abnormalHourlyRateDates[0];
+        addRecommendation({
+          title: "時薪資料可能異常",
+          action: "請檢查收入與工時紀錄；異常值不會用來產生排班或表現建議。",
+          evidence: `${reportDateLabel(date)}的推算時薪超過資料品質上限 ${money(MAX_REASONABLE_HOURLY_RATE)}／小時。`,
+          period: sharedAnalytics.getMonthLabel(ranges.monthRange),
+          sufficiency: "異常資料已排除",
           target: aiInsightTarget("calendar", { date }),
           accessibleName: `前往月曆檢查 ${formatCalendarFullDate(date)}`
         });
@@ -6840,18 +7888,18 @@
         }
         monthlyInsights.push({
           title: "本月淨收入概況",
-          action: currentMonth.validWorkDuration
+          action: currentMonth.validHourlyRate
             ? `本月平均時薪 ${money(currentMonth.averageHourlyIncome)}，總工時 ${formatReportDuration(currentMonth.totalWorkDuration)}。`
-            : "目前沒有足夠工時，暫不解讀平均時薪。",
+            : hourlyRateStatusMessage(currentMonth.hourlyRateStatus),
           evidence: `截至目前淨收入 ${money(currentMonth.netIncome)}；${comparisonText}`,
           period: sharedAnalytics.getMonthLabel(ranges.monthRange),
-          sufficiency: `${currentMonth.workDays} 個有效工作日`,
+          sufficiency: `${currentMonth.validHourlyRecordCount} 筆有效時薪紀錄・有效工時 ${formatReportDuration(currentMonth.totalWorkDuration)}`,
           target: aiInsightTarget("reports", { reportView: "month" }),
           accessibleName: "前往月報查看本月淨收入"
         });
 
         let changeSource = "資料不足以判定";
-        if (previousMonth.validWorkDuration && currentMonth.validWorkDuration && previousMonth.hasRecords) {
+        if (previousMonth.validHourlyRate && currentMonth.validHourlyRate && previousMonth.hasRecords) {
           const workDelta = sharedAnalytics.compareReportMetric(
             currentMonth.totalWorkDuration,
             previousMonth.totalWorkDuration,
@@ -6907,6 +7955,27 @@
         action: "前往月曆補齊或校正這一天的工時。",
         target: aiInsightTarget("calendar", { date })
       }));
+      dataQuality.insufficientWorkDates.forEach(date => addReminder({
+        severity: "建議檢查",
+        date,
+        reason: "工時資料不足，暫不計算時薪。",
+        action: `有效工時未滿 ${MIN_VALID_WORK_MINUTES} 分鐘；請前往月曆核對。`,
+        target: aiInsightTarget("calendar", { date })
+      }));
+      dataQuality.abnormalHourlyRateDates.forEach(date => addReminder({
+        severity: "需要處理",
+        date,
+        reason: "時薪資料可能異常，請檢查收入與工時紀錄。",
+        action: "此異常值不會用於營運或排班建議。",
+        target: aiInsightTarget("calendar", { date })
+      }));
+      dataQuality.invalidTimeRangeDates.forEach(date => addReminder({
+        severity: "需要處理",
+        date,
+        reason: "工作時間範圍無效。",
+        action: "請前往月曆修正開始、結束或休息時間。",
+        target: aiInsightTarget("calendar", { date })
+      }));
       dataQuality.negativeNetDates.forEach(date => addReminder({
         severity: "建議檢查",
         date,
@@ -6953,6 +8022,9 @@
           period: ranges.monthRange,
           workDays: currentMonth.workDays,
           recordCount: currentMonth.recordCount,
+          validHourlyRecordCount: currentMonth.validHourlyRecordCount,
+          validWorkDuration: currentMonth.totalWorkDuration,
+          hourlyRateStatus: currentMonth.hourlyRateStatus,
           missingDataCount: dataQuality.issueCount,
           sufficient: currentMonth.workDays >= 2,
           trendPointCount: monthlyTrend.length
@@ -7036,7 +8108,9 @@
         els.aiAnalysisMetadata.innerHTML = `
           <strong>分析依據</strong><br>
           根據 ${escapeHtml(formatCalendarFullDate(metadata.period.start))}～${escapeHtml(formatCalendarFullDate(metadata.period.end))}，
-          共 ${metadata.workDays} 個有效工作日、${metadata.recordCount} 筆紀錄。
+          共 ${metadata.workDays} 個工作日、${metadata.recordCount} 筆紀錄；
+          ${metadata.validHourlyRecordCount} 筆可計算時薪，有效工時 ${escapeHtml(formatReportDuration(metadata.validWorkDuration))}。
+          ${metadata.hourlyRateStatus === "complete" ? "" : `${escapeHtml(hourlyRateStatusMessage(metadata.hourlyRateStatus))}。`}
           ${metadata.missingDataCount ? `有 ${metadata.missingDataCount} 項資料需要檢查。` : "資料未發現需要處理的問題。"}
           最後更新 ${escapeHtml(generatedAt)}。${offline ? "目前離線，分析仍使用此裝置已儲存的資料。" : ""}
         `;
@@ -7056,13 +8130,20 @@
       return `${Number(match[1])}年${Number(match[2])}月${Number(match[3])}日`;
     }
 
-    function dateCardMarkup({ id, value, label, required = false, inlineToday = false }) {
+    function formatShortDate(dateString, includeToday = false) {
+      const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateString || "");
+      if (!match) return "選擇日期";
+      const date = `${Number(match[2])}月${Number(match[3])}日`;
+      return includeToday && dateString === todayString() ? `今天・${date}` : date;
+    }
+
+    function dateCardMarkup({ id, value, label, required = false, inlineToday = false, compactMobile = false }) {
       const isToday = value === todayString();
       const displayValue = inlineToday && isToday ? `今天・${formatFullDate(value)}` : formatFullDate(value);
       return `
         <label class="date-card${inlineToday ? " inline-date" : ""}" for="${escapeAttr(id)}">
           <span class="date-card-copy">
-            <strong class="date-card-value" data-date-display${inlineToday ? " data-date-inline" : ""}>${escapeHtml(displayValue)}</strong>
+            <strong class="date-card-value${compactMobile ? " compact-mobile-date" : ""}" data-date-display${inlineToday ? " data-date-inline" : ""}${compactMobile ? ` data-short-date="${escapeAttr(formatShortDate(value, inlineToday))}"` : ""}>${escapeHtml(displayValue)}</strong>
             ${inlineToday ? "" : `<small class="date-card-today" data-date-today${isToday ? "" : " hidden"}>今天</small>`}
           </span>
           <input type="date" id="${escapeAttr(id)}" value="${escapeAttr(value)}" aria-label="${escapeAttr(label)}"${required ? " required" : ""}>
@@ -7085,6 +8166,9 @@
         display.textContent = isInline && input.value === todayString()
           ? `今天・${formatFullDate(input.value)}`
           : formatFullDate(input.value);
+        if (display.classList.contains("compact-mobile-date")) {
+          display.dataset.shortDate = formatShortDate(input.value, isInline);
+        }
       }
       if (today) today.hidden = input.value !== todayString();
     }
@@ -7134,7 +8218,6 @@
         startMonth: safeDate.slice(0, 7),
         startMonthChanged: false,
         advancedOpen: false,
-        categoryOpen: false,
         modeOpen: false,
         noteOpen: false,
         note: "",
@@ -7184,7 +8267,7 @@
     }
 
     function expenseDurationText(months = selectedExpenseMonths()) {
-      return `算 ${months} 個月`;
+      return `分 ${months} 個月`;
     }
 
     function expenseMonthRange(startMonth = expenseDraft.startMonth, months = selectedExpenseMonths()) {
@@ -7217,6 +8300,14 @@
         ? recordEditorState.draft
         : entryForDate(date);
       return String(entry?.expenseNotes?.[category] || "").slice(0, 160);
+    }
+
+    function existingExpenseAllocation(category = expenseDraft.category, date = expenseDraft.paymentDate) {
+      if (!category || !date) return null;
+      const entry = recordEditorState.open && recordEditorState.date === date
+        ? recordEditorState.draft
+        : entryForDate(date);
+      return expenseAllocationFor(entry, category);
     }
 
     function recentExpenseAmounts(category = expenseDraft.category) {
@@ -7315,13 +8406,10 @@
         <section class="expense-suggestion-card" aria-live="polite">
           <div class="expense-suggestion-copy">
             <strong class="expense-suggestion-category" id="expenseSuggestionCategory">${escapeHtml(expenseDraft.category || "分月計算")}</strong>
-            <div>
-              <p class="expense-suggestion-label">系統建議</p>
-              <div class="expense-suggestion-duration"><span class="expense-suggestion-check" aria-hidden="true">✓</span><span id="expenseDurationText">${escapeHtml(expenseDurationText(months))}</span></div>
-            </div>
+            <div class="expense-suggestion-duration"><span id="expenseDurationText">${escapeHtml(expenseDurationText(months))}</span></div>
             <div class="expense-cost-preview">
-              <div><span>期間</span><strong id="expensePeriodText">${escapeHtml(expenseMonthRange(expenseDraft.startMonth, months))}</strong></div>
-              <div><span>每月成本</span><strong id="expenseMonthlyCost">${amount ? money(breakdown.monthly) : "輸入金額後顯示"}</strong></div>
+              <div><span>計算期間</span><strong id="expensePeriodText">${escapeHtml(expenseMonthRange(expenseDraft.startMonth, months))}</strong></div>
+              <div><span>每月成本</span><strong id="expenseMonthlyCost">${amount ? money(breakdown.monthly) : "輸入金額後即可計算"}</strong></div>
             </div>
             <p class="expense-remainder-note" id="expenseRemainderNote"${breakdown.hasRemainder ? "" : " hidden"}>最後一個月為 ${money(breakdown.lastMonth)}，確保總額一致。</p>
           </div>
@@ -7341,7 +8429,6 @@
             <input type="month" id="expenseStartMonth" value="${escapeAttr(expenseDraft.startMonth)}" aria-label="開始月份">
           </label>
         </div>
-        <p class="expense-model-note">目前先提供分月預覽；儲存仍只記入付款日期，月報尚不會分月計入。</p>
       `;
     }
 
@@ -7359,7 +8446,7 @@
             <span class="expense-section-label">快捷新增</span>
             <div class="expense-quick-actions" role="group" aria-label="快捷新增支出">
               ${shortcuts.map(category => `
-                <button class="expense-quick-button${expenseDraft.category === category ? " active" : ""}" type="button" data-expense-quick="${escapeAttr(category)}" aria-pressed="${String(expenseDraft.category === category)}">
+                <button class="expense-quick-button${expenseDraft.category === category ? " active" : ""}" type="button" data-expense-quick="${escapeAttr(category)}" aria-label="${escapeAttr(expenseShortcutLabel(category))}" aria-pressed="${String(expenseDraft.category === category)}">
                   ${expenseQuickIcon(expenseQuickIconType(category))}
                   <span>${escapeHtml(expenseShortcutLabel(category))}</span>
                 </button>
@@ -7368,20 +8455,19 @@
           </section>
 
           <div class="smart-expense-primary">
-            ${expenseDraft.category && !expenseDraft.categoryOpen ? `
-              <button class="expense-compact-row" type="button" data-expense-toggle-category aria-expanded="false">
-                <span class="expense-compact-row-label">支出類別</span>
-                <strong>${escapeHtml(expenseDraft.category)}</strong>
-                <span class="expense-compact-row-action">更改</span>
+            <div class="expense-choice-row">
+              <select class="expense-choice-button" id="smartExpenseCategory" aria-label="支出類別">
+                <option value="">選擇類別</option>
+                ${expenseCategoryOptionsMarkup()}
+              </select>
+              <button class="expense-choice-button" type="button" data-expense-toggle-mode aria-expanded="${String(expenseDraft.modeOpen)}" aria-label="支出方式，${escapeAttr(expenseModeLabel())}">
+                <strong>${escapeHtml(expenseModeLabel())}</strong>
+                <span class="expense-choice-chevron" aria-hidden="true">▾</span>
               </button>
-            ` : `
-              <label class="smart-expense-field">支出類別
-                <select id="smartExpenseCategory" aria-label="支出類別">
-                  <option value="">選擇支出類別</option>
-                  ${expenseCategoryOptionsMarkup()}
-                </select>
-              </label>
-            `}
+            </div>
+            <div class="expense-mode-options"${expenseDraft.modeOpen ? "" : " hidden"} role="group" aria-label="支出方式">
+              ${modes.map(([value, label]) => `<button class="expense-mode-option${expenseDraft.mode === value ? " active" : ""}" type="button" data-expense-mode="${value}" aria-pressed="${String(expenseDraft.mode === value)}">${label}</button>`).join("")}
+            </div>
             <label class="smart-expense-field">金額
               <span class="expense-amount-wrap">
                 <span class="expense-amount-prefix" aria-hidden="true">$</span>
@@ -7396,23 +8482,15 @@
                 </div>
               </div>
             ` : ""}
-            <div>
-              <button class="expense-compact-row" type="button" data-expense-toggle-mode aria-expanded="${String(expenseDraft.modeOpen)}">
-                <span class="expense-compact-row-label">支出方式</span>
-                <strong>${escapeHtml(expenseModeLabel())}</strong>
-                <span class="expense-compact-row-action">修改</span>
-              </button>
-              <div class="expense-mode-options"${expenseDraft.modeOpen ? "" : " hidden"} role="group" aria-label="支出方式">
-                ${modes.map(([value, label]) => `<button class="expense-mode-option${expenseDraft.mode === value ? " active" : ""}" type="button" data-expense-mode="${value}" aria-pressed="${String(expenseDraft.mode === value)}">${label}</button>`).join("")}
-              </div>
-            </div>
           </div>
 
           ${expenseDraft.mode === "recurring" ? recurringExpenseMarkup(amount) : ""}
           ${expenseDraft.mode === "allocated" ? allocatedExpenseMarkup(amount, months) : ""}
-          ${dateCardMarkup({ id: "smartExpenseDate", value: expenseDraft.paymentDate, label: "付款日期", inlineToday: true })}
+          <div class="expense-date-note-row">
+            ${dateCardMarkup({ id: "smartExpenseDate", value: expenseDraft.paymentDate, label: "付款日期", inlineToday: true, compactMobile: true })}
+            <button class="expense-note-toggle" type="button" data-expense-toggle-note aria-expanded="${String(expenseDraft.noteOpen)}">${expenseDraft.noteOpen ? "收起備註" : expenseDraft.note ? "備註 ✓" : "＋備註"}</button>
+          </div>
           <div class="expense-note-area">
-            <button class="expense-note-toggle" type="button" data-expense-toggle-note aria-expanded="${String(expenseDraft.noteOpen)}">${expenseDraft.noteOpen ? "－ 收起備註" : "＋ 加入備註"}</button>
             ${expenseDraft.noteOpen ? `
               <label class="expense-note-field">備註
                 <input type="text" id="smartExpenseNote" maxlength="160" value="${escapeAttr(expenseDraft.note)}" placeholder="輸入地點或補充說明" autocomplete="off">
@@ -7420,7 +8498,7 @@
             ` : ""}
           </div>
           <span class="expense-existing-hint" id="expenseExistingHint"${existingAmount ? "" : " hidden"}>這天已有 ${money(existingAmount)}，儲存後會更新此類別。</span>
-          <button class="expense-save-button" type="button" id="saveSmartExpense"${amount > 0 ? "" : " disabled"}>儲存支出</button>
+          <button class="expense-save-button" type="button" id="saveSmartExpense"${amount > 0 && !expenseSaveInProgress ? "" : " disabled"}>${expenseSaveInProgress ? "儲存中…" : "儲存支出"}</button>
           <p class="expense-form-status${expenseDraft.statusType === "error" ? " error" : ""}" id="expenseFormStatus" role="status">${escapeHtml(expenseDraft.status)}</p>
         </div>
       `;
@@ -7446,7 +8524,7 @@
       const breakdown = expenseAllocationBreakdown(amount, months);
       if (durationText) durationText.textContent = expenseDurationText(months);
       if (periodText) periodText.textContent = expenseMonthRange(expenseDraft.startMonth, months);
-      if (monthlyCost) monthlyCost.textContent = amount ? money(breakdown.monthly) : "輸入金額後顯示";
+      if (monthlyCost) monthlyCost.textContent = amount ? money(breakdown.monthly) : "輸入金額後即可計算";
       if (remainderNote) {
         remainderNote.hidden = !breakdown.hasRemainder;
         remainderNote.textContent = breakdown.hasRemainder ? `最後一個月為 ${money(breakdown.lastMonth)}，確保總額一致。` : "";
@@ -7459,29 +8537,35 @@
       }
     }
 
-    function selectExpenseCategory(category, focusAmount = false) {
+    function selectExpenseCategory(category, focusAmount = false, preserveDraft = false) {
       const sameCategory = expenseDraft.category === category;
       const currentNote = expenseDraft.note;
       const currentNoteOpen = expenseDraft.noteOpen;
       expenseDraft.category = category;
-      expenseDraft.mode = suggestedExpenseMode(category);
-      const months = suggestedExpenseMonths(category);
-      expenseDraft.durationChoice = String(months);
-      expenseDraft.customMonths = months;
-      expenseDraft.startMonth = expenseDraft.paymentDate.slice(0, 7);
-      expenseDraft.recurringStartMonth = expenseDraft.paymentDate.slice(0, 7);
-      expenseDraft.recurringStartMonthChanged = false;
-      expenseDraft.recurringDay = Number(expenseDraft.paymentDate.slice(-2));
-      expenseDraft.startMonthChanged = false;
-      expenseDraft.advancedOpen = false;
-      expenseDraft.categoryOpen = false;
+      if (!preserveDraft) {
+        const existingAmount = existingExpenseAmount(category, expenseDraft.paymentDate);
+        const savedAllocation = existingExpenseAllocation(category, expenseDraft.paymentDate);
+        expenseDraft.mode = savedAllocation
+          ? "allocated"
+          : existingAmount
+            ? "one_time"
+            : suggestedExpenseMode(category);
+        const months = savedAllocation?.months || suggestedExpenseMonths(category);
+        expenseDraft.durationChoice = [2, 3, 6, 12].includes(months) ? String(months) : "custom";
+        expenseDraft.customMonths = months;
+        expenseDraft.startMonth = savedAllocation?.startMonth || expenseDraft.paymentDate.slice(0, 7);
+        expenseDraft.recurringStartMonth = expenseDraft.paymentDate.slice(0, 7);
+        expenseDraft.recurringStartMonthChanged = false;
+        expenseDraft.recurringDay = Number(expenseDraft.paymentDate.slice(-2));
+        expenseDraft.startMonthChanged = false;
+        expenseDraft.advancedOpen = false;
+        expenseDraft.note = sameCategory ? currentNote : existingExpenseNote(category, expenseDraft.paymentDate);
+        expenseDraft.noteOpen = sameCategory ? currentNoteOpen : false;
+        expenseDraft.amount = existingAmount ? String(existingAmount) : "";
+      }
       expenseDraft.modeOpen = false;
-      expenseDraft.note = sameCategory ? currentNote : existingExpenseNote(category, expenseDraft.paymentDate);
-      expenseDraft.noteOpen = sameCategory ? currentNoteOpen : false;
       expenseDraft.status = "";
       expenseDraft.statusType = "";
-      const existingAmount = existingExpenseAmount(category, expenseDraft.paymentDate);
-      expenseDraft.amount = existingAmount ? String(existingAmount) : "";
       renderExpenseForm();
       if (focusAmount) {
         window.requestAnimationFrame(() => {
@@ -7544,8 +8628,8 @@
         renderExpenseForm();
         return;
       }
-      if (!Number.isFinite(amount) || amount <= 0) {
-        expenseDraft.status = "請輸入大於 0 的金額。";
+      if (!Number.isSafeInteger(amount) || amount <= 0 || amount > maxPlatformIncome) {
+        expenseDraft.status = "請輸入 1 至 99,999,999 的整數金額。";
         expenseDraft.statusType = "error";
         renderExpenseForm();
         return;
@@ -7580,9 +8664,13 @@
         renderExpenseForm();
         return;
       }
+      if (expenseSaveInProgress) return;
+      expenseSaveInProgress = true;
+      renderExpenseForm();
 
       if (recordEditorState.open) {
         if (paymentDate !== recordEditorState.date) {
+          expenseSaveInProgress = false;
           expenseDraft.status = "付款日期必須與目前編輯日期相同。";
           expenseDraft.statusType = "error";
           renderExpenseForm();
@@ -7592,9 +8680,20 @@
         draft.expenses ||= {};
         draft.expenseNotes ||= {};
         draft.expenses[category] = Math.round(amount);
+        if (expenseDraft.mode === "allocated") {
+          draft.expenseAllocations ||= {};
+          draft.expenseAllocations[category] = {
+            months: selectedExpenseMonths(),
+            startMonth: expenseDraft.startMonth
+          };
+        } else if (draft.expenseAllocations) {
+          delete draft.expenseAllocations[category];
+          if (!Object.keys(draft.expenseAllocations).length) delete draft.expenseAllocations;
+        }
         const note = String(expenseDraft.note || "").trim().slice(0, 160);
         if (note) draft.expenseNotes[category] = note;
         else delete draft.expenseNotes[category];
+        expenseSaveInProgress = false;
         expenseDraft = createExpenseDraft(paymentDate);
         renderExpenseForm();
         renderCalendarExpenseList();
@@ -7603,21 +8702,43 @@
         return;
       }
 
-      const entry = ensureEntryForDate(paymentDate);
-      entry.expenses[category] = Math.round(amount);
+      const nextState = cloneStatePayload(state);
+      let entry = nextState.entries.find(item => item.date === paymentDate);
+      if (!entry) {
+        entry = blankEntry(paymentDate);
+        nextState.entries.push(entry);
+      }
+      entry.expenses ||= {};
+      entry.expenses[category] = amount;
+      if (expenseDraft.mode === "allocated") {
+        entry.expenseAllocations ||= {};
+        entry.expenseAllocations[category] = {
+          months: selectedExpenseMonths(),
+          startMonth: expenseDraft.startMonth
+        };
+      } else if (entry.expenseAllocations) {
+        delete entry.expenseAllocations[category];
+        if (!Object.keys(entry.expenseAllocations).length) delete entry.expenseAllocations;
+      }
       entry.expenseNotes ||= {};
       const note = String(expenseDraft.note || "").trim().slice(0, 160);
       if (note) entry.expenseNotes[category] = note;
       else delete entry.expenseNotes[category];
-      if (!state.expenses.includes(category)) state.expenses.push(category);
-      const saved = saveState();
-      if (saved) notifyRecordChanged(paymentDate, "expense");
+      if (!nextState.expenses.includes(category)) nextState.expenses.push(category);
+      const saved = persistStatePayload(nextState, { updateMemory: true });
+      expenseSaveInProgress = false;
+      if (!saved) {
+        expenseDraft.status = "儲存失敗，原有支出未變更。";
+        expenseDraft.statusType = "error";
+        renderExpenseForm();
+        showToast("支出儲存失敗，請稍後再試");
+        return;
+      }
+      notifyRecordChanged(paymentDate, "expense");
 
       expenseDraft = createExpenseDraft(paymentDate);
       renderAll();
       renderExpenseForm();
-      const section = document.getElementById("expenseSection");
-      if (section) section.open = false;
       showToast(`已儲存 ${category} ${money(amount)}`);
     }
 
@@ -7706,10 +8827,8 @@
     }
 
     function formatHours(hours) {
-      const totalMinutes = Math.max(0, Math.floor(Number(hours || 0) * 60));
-      const h = Math.floor(totalMinutes / 60);
-      const m = totalMinutes % 60;
-      return `${h} 小時 ${String(m).padStart(2, "0")} 分`;
+      const { hours: hourPart, minutes: minutePart } = minutesToHourMinuteParts(decimalHoursToMinutes(hours));
+      return `${hourPart} 小時 ${String(minutePart).padStart(2, "0")} 分`;
     }
 
     function formatWorkTime(time) {
@@ -7721,26 +8840,17 @@
       return `${period}${displayHour}:${match[2]}`;
     }
 
-    function formatCompactWorkHours(hours) {
-      const totalMinutes = Math.max(0, Math.floor(Number(hours || 0) * 60));
-      const h = Math.floor(totalMinutes / 60);
-      const m = totalMinutes % 60;
-      if (h && m) return `${h}小時${m}分`;
-      if (h) return `${h}小時`;
-      return `${m}分`;
-    }
-
     function updateWorkTimeUi(entry) {
       if (!els.workCollapsedPrimary || !els.workCollapsedSecondary || !els.workLiveValue) return;
       const start = entry.startTime;
       const end = entry.endTime;
-      const hours = workMetrics(entry).hours;
+      const work = workMetrics(entry);
 
       if (!start) {
         els.workCollapsedPrimary.textContent = "尚未設定";
         els.workCollapsedSecondary.textContent = "等待開始時間";
         els.workLiveValue.textContent = Number(entry.manualHours) > 0
-          ? formatCompactWorkHours(hours)
+          ? formatWorkDuration(work.workMinutes)
           : "等待設定";
         return;
       }
@@ -7752,7 +8862,7 @@
         return;
       }
 
-      const duration = formatCompactWorkHours(hours);
+      const duration = formatWorkDuration(work.workMinutes);
       els.workCollapsedPrimary.textContent = `${formatWorkTime(start)}－${formatWorkTime(end)}`;
       els.workCollapsedSecondary.textContent = `實際工作 ${duration}`;
       els.workLiveValue.textContent = duration;
@@ -7910,7 +9020,6 @@
                 >
                   <span class="calendar-date__day">${cell.day}</span>
                   <span class="calendar-date__amount">${escapeHtml(amount)}</span>
-                  ${isToday ? `<span class="calendar-date__today-dot" aria-hidden="true"></span>` : ""}
                 </button>
               `;
             }).join("")}
@@ -8351,6 +9460,23 @@
     function aggregateReport(records, range) {
       const periodRecords = getRecordsInRange(records, range);
       const summary = summarize(periodRecords);
+      const expenseSummary = reportExpenseSummary(records, range);
+      summary.expenses = expenseSummary.total;
+      summary.net = summary.total - summary.expenses;
+      summary.hourly = hourlyRate(summary.net, summary.durationMs);
+      const workMinutes = Math.round(summary.durationMs / workTimeUnits.minuteMs);
+      const hourlyRecordQualities = periodRecords
+        .filter(record => entryTotal(record) > 0)
+        .map(record => recordDataQuality(record));
+      const blockingHourlyStatus = [
+        "invalid-time-range",
+        "missing-work-time",
+        "insufficient-work-time",
+        "abnormal-hourly-rate"
+      ].find(status => hourlyRecordQualities.some(quality => quality.status === status));
+      const hourlyQuality = blockingHourlyStatus
+        ? { status: blockingHourlyStatus, hourlyRate: null, workMinutes }
+        : hourlyRateQuality(summary.net, workMinutes);
       const recordsByDate = new Map();
       const platformTotals = {};
       periodRecords.forEach(record => {
@@ -8368,14 +9494,17 @@
         records: periodRecords,
         recordsByDate,
         recordCount: periodRecords.length,
-        hasRecords: periodRecords.length > 0,
+        hasRecords: periodRecords.length > 0 || expenseSummary.occurrenceCount > 0,
         totalIncome: summary.total,
         totalExpenses: summary.expenses,
         netIncome: summary.net,
         workDays,
         totalWorkDuration: summary.durationMs,
         validWorkDuration: summary.durationMs > 0,
-        averageHourlyIncome: summary.durationMs > 0 ? summary.hourly : null,
+        validHourlyRate: hourlyQuality.status === "complete",
+        hourlyRateStatus: hourlyQuality.status,
+        averageHourlyIncome: hourlyQuality.hourlyRate,
+        validHourlyRecordCount: hourlyRecordQualities.filter(quality => quality.status === "complete").length,
         platformTotals
       };
     }
@@ -8537,8 +9666,8 @@
           previousHasData: previous.hasRecords
         }),
         averageHourlyIncome: compareReportMetric(current.averageHourlyIncome, previous.averageHourlyIncome, {
-          currentHasData: current.validWorkDuration,
-          previousHasData: previous.validWorkDuration
+          currentHasData: current.validHourlyRate,
+          previousHasData: previous.validHourlyRate
         })
       };
       if (mode === "month") {
@@ -8583,12 +9712,15 @@
     }
 
     function buildWeeklyNetTrend(records, range) {
-      const byDate = summarizeRecordsByDate(getRecordsInRange(records, range));
       return Array.from({ length: 7 }, (_, index) => {
         const dateKey = addLocalDays(range.start, index);
-        const day = byDate.get(dateKey);
-        const hasRecord = Boolean(day);
-        const value = day?.aggregate.netIncome || 0;
+        const aggregate = aggregateReport(records, {
+          start: dateKey,
+          end: dateKey,
+          endExclusive: addLocalDays(dateKey, 1)
+        });
+        const hasRecord = aggregate.hasRecords;
+        const value = aggregate.netIncome;
         return {
           dateKey,
           label: reportWeekdayLabel(dateKey),
@@ -8640,7 +9772,7 @@
         result.highestHourly = pick(
           day => day.aggregate.averageHourlyIncome,
           "max",
-          day => day.aggregate.validWorkDuration
+          day => day.aggregate.validHourlyRate
         );
       }
       return result;
@@ -8654,6 +9786,7 @@
       getWeekLabel,
       getMonthLabel,
       getRecordsInRange,
+      reportExpenseSummary,
       aggregateReport,
       compareReportMetric,
       compareReportPeriods,
@@ -8661,6 +9794,8 @@
       buildMonthlyWeeklyNetTrend,
       findImportantReportDates,
       summarizeRecordsByDate,
+      hourlyRateQuality,
+      recordDataQuality,
       normalizePlatformKey,
       aggregatePlatformIncome
     });
@@ -9030,8 +10165,24 @@
       const offlineAvailable = "serviceWorker" in navigator ? "已啟用 App Shell" : "瀏覽器不支援";
       const standalone = window.matchMedia?.("(display-mode: standalone)")?.matches
         || navigator.standalone === true;
-      if (els.driverDataStatus) {
-        els.driverDataStatus.innerHTML = [
+      const storageStatus = driverLocalStorageStatus();
+      const needsAttention = Boolean(stateLoadError) || ["讀取錯誤", "無法存取"].includes(storageStatus);
+      if (needsAttention && !systemStatusAutoOpened) {
+        systemStatusExpanded = true;
+        systemStatusAutoOpened = true;
+      }
+      if (els.driverSystemStatusBadge) {
+        els.driverSystemStatusBadge.textContent = needsAttention ? "需要注意" : "正常";
+        els.driverSystemStatusBadge.dataset.status = needsAttention ? "warning" : "normal";
+      }
+      if (els.driverSystemStatusToggle) {
+        els.driverSystemStatusToggle.setAttribute("aria-expanded", String(systemStatusExpanded));
+      }
+      if (els.driverSystemStatusContent) {
+        els.driverSystemStatusContent.hidden = !systemStatusExpanded;
+      }
+      if (els.driverSystemStatusDetails) {
+        els.driverSystemStatusDetails.innerHTML = [
           driverStatusRow("本機紀錄總數", `${state.entries.length} 筆`),
           driverStatusRow("最早紀錄", firstDate ? formatCalendarFullDate(firstDate) : "尚無紀錄"),
           driverStatusRow("最新紀錄", latestDate ? formatCalendarFullDate(latestDate) : "尚無紀錄"),
@@ -9039,11 +10190,7 @@
           driverStatusRow("Local-first", "僅此裝置"),
           driverStatusRow("離線可用", offlineAvailable),
           driverStatusRow("資料讀取", stateLoadError ? "有錯誤" : "正常"),
-          driverStatusRow(storageKey, driverLocalStorageStatus())
-        ].join("");
-      }
-      if (els.driverAppStatus) {
-        els.driverAppStatus.innerHTML = [
+          driverStatusRow(storageKey, storageStatus),
           driverStatusRow("App", brandAttribution.productName),
           driverStatusRow("版本里程碑", "Local-first V1"),
           driverStatusRow("App Shell", appShellCacheName),
@@ -9052,6 +10199,12 @@
           driverStatusRow("更新狀態", "啟動時自動檢查")
         ].join("");
       }
+    }
+
+    function toggleDriverSystemStatus() {
+      systemStatusExpanded = !systemStatusExpanded;
+      renderDriverStatus();
+      els.driverSystemStatusToggle?.focus();
     }
 
     function setDriverGoalStatus(message, type = "") {
@@ -9145,6 +10298,13 @@
         `;
       }
       if (els.expenseShortcutStatus) els.expenseShortcutStatus.textContent = expenseShortcutStatus;
+      document.querySelectorAll("[data-display-size-option]").forEach(input => {
+        input.checked = input.value === normalizeDisplaySize(state.settings.displaySize);
+      });
+      if (els.displaySizeStatus) {
+        els.displaySizeStatus.textContent = displaySizeStatus;
+        els.displaySizeStatus.dataset.status = displaySizeStatusType || "idle";
+      }
       document.getElementById("monthlyGoal").value = state.settings.monthlyGoal || "";
       const dailyGoalInput = document.getElementById("dailyGoal");
       if (dailyGoalInput && document.activeElement !== dailyGoalInput) {
@@ -9152,9 +10312,45 @@
       }
       if (els.driverGoalStatus) {
         els.driverGoalStatus.textContent = driverGoalStatus;
-        els.driverGoalStatus.dataset.status = driverGoalStatusType;
+        els.driverGoalStatus.dataset.status = driverGoalStatusType || "idle";
       }
       renderDriverStatus();
+    }
+
+    function setDisplaySizeStatus(message, type = "") {
+      displaySizeStatus = message;
+      displaySizeStatusType = type;
+      if (!els.displaySizeStatus) return;
+      els.displaySizeStatus.textContent = message;
+      els.displaySizeStatus.dataset.status = type;
+    }
+
+    function saveDisplaySize(input) {
+      const previous = normalizeDisplaySize(state.settings.displaySize);
+      const next = normalizeDisplaySize(input?.value);
+      if (next === previous) {
+        applyDisplaySize(next);
+        setDisplaySizeStatus("已儲存在此裝置", navigator.onLine ? "saved" : "offline");
+        return true;
+      }
+
+      const nextState = cloneStatePayload(state);
+      delete nextState.settings.aiReportsReadingSize;
+      nextState.settings.displaySize = next;
+      applyDisplaySize(next);
+      setDisplaySizeStatus("儲存中…", "saving");
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        applyDisplaySize(previous);
+        renderSettings();
+        setDisplaySizeStatus("儲存失敗，已保留原本設定。", "error");
+        return false;
+      }
+
+      setDisplaySizeStatus(
+        navigator.onLine ? `已套用「${displaySizeLabels[next]}」` : `已離線套用「${displaySizeLabels[next]}」`,
+        navigator.onLine ? "saved" : "offline"
+      );
+      return true;
     }
 
     function chip(name, type) {
@@ -9191,14 +10387,23 @@
     }
 
     function workStatus(entry = entryForDate()) {
-      if (entry?.workSession?.status) return entry.workSession.status;
-      if (entry?.startTime && !entry?.endTime) return "running";
       if (entry?.startTime && entry?.endTime) return "stopped";
+      if (entry?.workSession?.status && entry?.startTime) return entry.workSession.status;
+      if (entry?.startTime && !entry?.endTime) return "running";
+      if (!entry?.startTime && !entry?.endTime && decimalHoursToMinutes(entry?.manualHours) > 0) return "stopped";
       return "idle";
     }
 
     function sessionDetails(entry = entryForDate()) {
       const work = workMetrics(entry || {});
+      const clockRange = validateWorkTimeRange(entry);
+      if (clockRange.valid && clockRange.complete) {
+        return {
+          ...work,
+          breakMs: clockRange.breakMinutes * workTimeUnits.minuteMs,
+          elapsedMs: clockRange.elapsedMinutes * workTimeUnits.minuteMs
+        };
+      }
       const session = entry?.workSession;
       let breakMs = Number(session?.accumulatedBreakMs || 0);
       if (session?.status === "paused" && session.pausedAt) {
@@ -9217,12 +10422,20 @@
       return { ...work, breakMs, elapsedMs };
     }
 
-    function clockDuration(ms) {
-      const seconds = Math.max(0, Math.floor(Number(ms || 0) / 1000));
-      const h = String(Math.floor(seconds / 3600)).padStart(2, "0");
-      const m = String(Math.floor(seconds % 3600 / 60)).padStart(2, "0");
-      const s = String(seconds % 60).padStart(2, "0");
-      return `${h}:${m}:${s}`;
+    function setWorkDetailsExpanded(expanded) {
+      const isExpanded = Boolean(expanded);
+      els.workMetrics.classList.toggle("hidden", !isExpanded);
+      els.workDetailsToggle.setAttribute("aria-expanded", String(isExpanded));
+      syncWorkDetailsToggleA11y();
+    }
+
+    function syncWorkDetailsToggleA11y() {
+      const isExpanded = els.workDetailsToggle.getAttribute("aria-expanded") === "true";
+      const statusLabel = els.workStatusText.textContent.trim() || "尚未開始";
+      els.workDetailsToggle.setAttribute(
+        "aria-label",
+        `今日工作狀態，${statusLabel}，工作明細${isExpanded ? "已展開，按兩下收合" : "已收合，按兩下展開"}`
+      );
     }
 
     function updateWorkControls() {
@@ -9231,25 +10444,165 @@
       const details = sessionDetails(entry);
       const labels = {
         idle: "尚未開始",
-        running: "跑車中",
-        paused: "休息中",
-        stopped: "今日已收工"
+        running: "工作中",
+        paused: "已暫停",
+        stopped: "已收工"
       };
       els.workStatusText.textContent = labels[status];
       els.workStatusText.dataset.status = status;
-      els.workTotal.textContent = clockDuration(details.elapsedMs);
-      els.workBreak.textContent = clockDuration(details.breakMs);
-      els.workActual.textContent = clockDuration(details.durationMs);
-      els.workMetrics.classList.remove("hidden");
-      els.startRun.classList.toggle("hidden", !["idle", "stopped"].includes(status));
-      els.startRun.textContent = status === "stopped" ? "再次開始工作" : "開始工作";
+      syncWorkDetailsToggleA11y();
+      const actualMinutes = details.workMinutes;
+      const elapsedMinutes = Math.max(0, Math.round(details.elapsedMs / workTimeUnits.minuteMs));
+      const breakMinutes = Math.max(0, Math.round(details.breakMs / workTimeUnits.minuteMs));
+      els.workTotal.textContent = formatWorkDuration(elapsedMinutes);
+      els.workBreak.textContent = formatWorkDuration(breakMinutes);
+      els.workActual.textContent = formatWorkDuration(actualMinutes);
+      els.startRun.classList.toggle("hidden", status !== "idle");
+      els.startRun.textContent = "開始工作";
       els.pauseRun.classList.toggle("hidden", status !== "running");
       els.resumeRun.classList.toggle("hidden", status !== "paused");
       els.endRun.classList.toggle("hidden", !["running", "paused"].includes(status));
+      els.continueRun.classList.toggle("hidden", status !== "stopped");
+      els.modifyWorkTime.classList.toggle("hidden", status !== "stopped");
     }
 
-    function updateCurrentWeather(weather) {
+    function mapWeatherCode(weatherCode) {
+      const code = Number(weatherCode);
+      if (!Number.isFinite(code)) return "其他";
+      if (code === 0) return "晴天";
+      if ([1, 2].includes(code)) return "多雲";
+      if ([3, 45, 48].includes(code)) return "陰天";
+      if ([95, 96, 99].includes(code)) return "雷雨";
+      if ([65, 67, 82].includes(code)) return "大雨";
+      if ((code >= 51 && code <= 63) || [66, 80, 81].includes(code)) return "雨天";
+      return "其他";
+    }
+
+    function setWeatherAutoStatus(message = "") {
+      if (!els.weatherAutoStatus) return;
+      els.weatherAutoStatus.textContent = message;
+    }
+
+    function weatherTargetDate() {
+      return normalizeDateKey(document.getElementById("date")?.value) || todayString();
+    }
+
+    function saveWeatherAutoConsent(value) {
+      const nextState = cloneStatePayload(state);
+      nextState.settings.weatherAutoConsent = value;
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        setWeatherAutoStatus("定位偏好未能儲存；仍可手動選擇天氣。");
+        return false;
+      }
+      return true;
+    }
+
+    function requestCurrentPositionOnce() {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error("geolocation-unavailable"));
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: false,
+          maximumAge: 15 * 60 * 1000,
+          timeout: 10000
+        });
+      });
+    }
+
+    async function fetchCurrentWeather(latitude, longitude) {
+      const url = new URL(WEATHER_SERVICE_URL);
+      url.searchParams.set("latitude", String(latitude));
+      url.searchParams.set("longitude", String(longitude));
+      url.searchParams.set("current", "weather_code");
+      url.searchParams.set("timezone", "Asia/Taipei");
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) throw new Error(`weather-http-${response.status}`);
+      const payload = await response.json();
+      return mapWeatherCode(payload?.current?.weather_code);
+    }
+
+    function detectCurrentWeather(options = {}) {
+      const { manual = false } = options;
+      const date = weatherTargetDate();
+      if (recordEditorState.open || date !== todayString()) {
+        setWeatherAutoStatus("歷史紀錄不會套用目前天氣，請手動選擇。");
+        return false;
+      }
+      if (weatherDetectionPromise) return weatherDetectionPromise;
+      if (!manual && weatherDetectionAttemptedDates.has(date)) return false;
+      weatherDetectionAttemptedDates.add(date);
+      if (weatherSuggestionCache?.date === date && weatherSuggestionCache.expiresAt > Date.now()) {
+        if (!weatherManualOverride || manual) {
+          updateCurrentWeather(weatherSuggestionCache.weather, { source: "auto" });
+          setWeatherAutoStatus(`已使用最近偵測：${weatherSuggestionCache.weather}`);
+        }
+        return true;
+      }
+      if (!navigator.onLine) {
+        setWeatherAutoStatus("目前離線，無法自動取得天氣；仍可手動選擇。");
+        return false;
+      }
+      setWeatherAutoStatus("正在取得目前天氣…");
+      els.detectWeather.disabled = true;
+      weatherDetectionPromise = (async () => {
+        try {
+          const position = await requestCurrentPositionOnce();
+          const weather = await fetchCurrentWeather(
+            position.coords.latitude,
+            position.coords.longitude
+          );
+          weatherSuggestionCache = {
+            date,
+            weather,
+            expiresAt: Date.now() + WEATHER_CACHE_TTL_MS
+          };
+          if (weatherTargetDate() !== date || weatherManualOverride && !manual) return false;
+          updateCurrentWeather(weather, { source: "auto" });
+          setWeatherAutoStatus(`已自動偵測：${weather}`);
+          return true;
+        } catch (error) {
+          const denied = Number(error?.code) === 1;
+          setWeatherAutoStatus(denied
+            ? "無法取得定位，可手動選擇天氣。"
+            : "暫時無法取得天氣，可手動選擇並繼續儲存。");
+          return false;
+        } finally {
+          weatherDetectionPromise = null;
+          els.detectWeather.disabled = false;
+        }
+      })();
+      return weatherDetectionPromise;
+    }
+
+    function offerAutomaticWeather(options = {}) {
+      const { manual = false } = options;
+      const date = weatherTargetDate();
+      if (recordEditorState.open || date !== todayString()) {
+        if (manual) setWeatherAutoStatus("歷史紀錄不會套用目前天氣，請手動選擇。");
+        return;
+      }
+      if (!manual && document.getElementById("weather")?.value) return;
+      if (state.settings.weatherAutoConsent === "granted") {
+        detectCurrentWeather({ manual });
+        return;
+      }
+      if (!manual && state.settings.weatherAutoConsent === "declined") {
+        setWeatherAutoStatus("可手動選擇天氣，或按「自動偵測天氣」重新開啟。");
+        return;
+      }
+      els.weatherPermissionDialog.showModal();
+      window.requestAnimationFrame(() => els.weatherPermissionLater.focus());
+    }
+
+    function updateCurrentWeather(weather, options = {}) {
       if (!weather) return;
+      const source = options.source === "auto" ? "auto" : "manual";
+      if (source === "manual") {
+        weatherManualOverride = true;
+        setWeatherAutoStatus(`已手動選擇：${weather}`);
+      }
       if (recordEditorState.open) {
         recordEditorState.draft.weather = weather;
         document.getElementById("weather").value = weather;
@@ -9596,6 +10949,142 @@
       applyRoute(route);
     }
 
+    function setManualEntryExpanded(expanded, options = {}) {
+      const isExpanded = Boolean(expanded);
+      els.manualEntryContent.classList.toggle("hidden", !isExpanded);
+      els.manualEntryToggle.setAttribute("aria-expanded", String(isExpanded));
+      if (isExpanded && options.revealWorkTime) {
+        els.workTimeSection.open = true;
+        window.requestAnimationFrame(() => {
+          const rect = els.workTimeSection.getBoundingClientRect();
+          const visibleTop = Math.max(0, Number.parseFloat(getComputedStyle(els.workTimeSection).scrollMarginTop) || 0);
+          const fullyVisible = rect.top >= visibleTop && rect.bottom <= window.innerHeight;
+          if (fullyVisible) return;
+          const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          els.workTimeSection.scrollIntoView({
+            behavior: reduceMotion ? "auto" : "smooth",
+            block: "start"
+          });
+        });
+      }
+    }
+
+    function deriveWorkTimeInputMode(entry) {
+      entry ||= {};
+      const hasClockValue = Boolean(entry.startTime || entry.endTime);
+      const hasManualValue = decimalHoursToMinutes(entry.manualHours) > 0;
+      if (hasClockValue) return "clock";
+      if (hasManualValue) return "manual";
+      return "clock";
+    }
+
+    function continuedWorkBreakMinutes(previousBreakMinutes, endMs, nowMs) {
+      const previous = Math.max(0, Math.round(Number(previousBreakMinutes) || 0));
+      const stoppedAt = Number(endMs);
+      const continuedAt = Number(nowMs);
+      if (!Number.isFinite(stoppedAt) || !Number.isFinite(continuedAt) || continuedAt < stoppedAt) {
+        return null;
+      }
+      return previous + Math.floor((continuedAt - stoppedAt) / workTimeUnits.minuteMs);
+    }
+
+    function setWorkTimeInputMode(mode, entry = formData()) {
+      workTimeInputMode = mode === "manual" ? "manual" : "clock";
+      const isManual = workTimeInputMode === "manual";
+      els.clockWorkFields.classList.toggle("hidden", isManual);
+      els.manualWorkFields.classList.toggle("hidden", !isManual);
+      els.workLiveSummary.classList.toggle("hidden", isManual);
+      els.workModeToggle.textContent = isManual ? "改用開始／結束時間" : "改用手動工時";
+      const hasLegacyConflict = Boolean(entry?.startTime && entry?.endTime)
+        && decimalHoursToMinutes(entry?.manualHours) > 0;
+      els.workModeNotice.classList.toggle("hidden", !hasLegacyConflict);
+      els.workModeNotice.textContent = hasLegacyConflict
+        ? "這筆舊紀錄同時有兩種工時；目前以開始／結束時間計算。切換後才會移除另一組時間。"
+        : "";
+    }
+
+    function requestWorkTimeModeSwitch() {
+      pendingWorkMode = workTimeInputMode === "clock" ? "manual" : "clock";
+      els.workModeDialogMessage.textContent = pendingWorkMode === "manual"
+        ? "切換後會清除開始時間、結束時間與休息時間，改用手動輸入的工時。"
+        : "切換後會清除手動工時，改用開始時間、結束時間與休息時間。";
+      els.workModeDialog.showModal();
+      window.requestAnimationFrame(() => els.workModeDialogCancel.focus());
+    }
+
+    function applyWorkTimeModeSwitch() {
+      const targetMode = pendingWorkMode;
+      pendingWorkMode = "";
+      if (!["clock", "manual"].includes(targetMode) || targetMode === workTimeInputMode) return false;
+      const previousMode = workTimeInputMode;
+      const previousValues = {
+        startTime: document.getElementById("startTime").value,
+        endTime: document.getElementById("endTime").value,
+        breakMinutes: document.getElementById("breakMinutes").value,
+        manualMinutes: manualWorkMinutesFromForm()
+      };
+      if (targetMode === "manual") {
+        document.getElementById("startTime").value = "";
+        document.getElementById("endTime").value = "";
+        document.getElementById("breakMinutes").value = 0;
+      } else {
+        syncManualWorkTimeInput(0);
+      }
+      setWorkTimeInputMode(targetMode, formData());
+      updateQuickPreview();
+      if (recordEditorState.open) {
+        markRecordEditorDirty();
+        return true;
+      }
+      if (saveTodayWorkTimeFromForm()) return true;
+
+      document.getElementById("startTime").value = previousValues.startTime;
+      document.getElementById("endTime").value = previousValues.endTime;
+      document.getElementById("breakMinutes").value = previousValues.breakMinutes;
+      syncManualWorkTimeInput(previousValues.manualMinutes);
+      setWorkTimeInputMode(previousMode, formData());
+      updateQuickPreview();
+      return false;
+    }
+
+    function syncManualWorkTimeInput(totalMinutes) {
+      const parts = minutesToHourMinuteParts(totalMinutes);
+      document.getElementById("manualHoursPart").value = parts.hours || "";
+      document.getElementById("manualMinutesPart").value = parts.minutes || "";
+      document.getElementById("manualHours").value = totalMinutes > 0 ? totalMinutes / 60 : 0;
+    }
+
+    function manualWorkMinutesFromForm() {
+      const hourPart = Math.floor(Number(document.getElementById("manualHoursPart").value || 0));
+      const minutePart = Math.floor(Number(document.getElementById("manualMinutesPart").value || 0));
+      return hourPart * 60 + minutePart;
+    }
+
+    function validateManualWorkTimeParts() {
+      const hourPart = Number(document.getElementById("manualHoursPart").value || 0);
+      const minutePart = Number(document.getElementById("manualMinutesPart").value || 0);
+      if (!Number.isInteger(hourPart) || hourPart < 0 || hourPart > 24) {
+        return "手動工時的小時必須是 0 至 24。";
+      }
+      if (!Number.isInteger(minutePart) || minutePart < 0 || minutePart > 59) {
+        return "手動工時的分鐘必須是 0 至 59。";
+      }
+      if (hourPart === 24 && minutePart > 0) return "手動工時不可超過 24 小時。";
+      return "";
+    }
+
+    function syncManualWorkTimeParts() {
+      const totalMinutes = manualWorkMinutesFromForm();
+      document.getElementById("manualHours").value = totalMinutes > 0 ? totalMinutes / 60 : 0;
+      return totalMinutes;
+    }
+
+    function setTodaySaveStatus(message = "", type = "") {
+      if (!els.todaySaveStatus) return;
+      els.todaySaveStatus.textContent = message;
+      els.todaySaveStatus.dataset.status = type || (message ? "pending" : "idle");
+    }
+
     function resetForm() {
       els.entryForm.reset();
       els.detailForm.reset();
@@ -9613,11 +11102,21 @@
       const todayEntry = state.entries.find(entry => entry.date === todayString());
       if (todayEntry) {
         fillEntryFields(todayEntry);
+      } else {
+        setWorkTimeInputMode("clock", {});
       }
-      els.formTitle.textContent = "更新今日紀錄";
+      els.formTitle.textContent = "每日紀錄";
       els.cancelEdit.classList.add("hidden");
       document.querySelectorAll("#detailForm details").forEach(details => details.open = false);
       els.workTimeSection.open = Boolean(state.settings.timeDetailsOpen);
+      els.workTimeToggle.setAttribute("aria-expanded", String(els.workTimeSection.open));
+      els.expenseSectionToggle.setAttribute("aria-expanded", "false");
+      els.otherDataToggle.setAttribute("aria-expanded", "false");
+      setManualEntryExpanded(true);
+      setWorkDetailsExpanded(false);
+      setTodaySaveStatus("");
+      weatherManualOverride = false;
+      setWeatherAutoStatus("");
       syncDetailChoiceButtons();
       updateQuickPreview();
     }
@@ -9631,7 +11130,8 @@
       document.getElementById("startTime").value = entry.startTime || "";
       document.getElementById("endTime").value = entry.endTime || "";
       document.getElementById("breakMinutes").value = entry.breakMinutes || 0;
-      document.getElementById("manualHours").value = entry.manualHours || "";
+      syncManualWorkTimeInput(decimalHoursToMinutes(entry.manualHours));
+      setWorkTimeInputMode(deriveWorkTimeInputMode(entry), entry);
       document.getElementById("tips").value = entry.tips || 0;
       document.getElementById("orders").value = entry.orders || 0;
       document.getElementById("km").value = entry.km || 0;
@@ -9650,11 +11150,22 @@
       if (!entry) return;
       navigateTo("today");
       fillEntryFields(entry);
+      setManualEntryExpanded(true);
       const detailSections = document.querySelectorAll("#detailForm details");
       detailSections.forEach(details => details.open = false);
       detailSections[0].open = Boolean(entry.startTime || entry.endTime || entry.manualHours || entry.breakMinutes);
       detailSections[1].open = entryExpenses(entry) > 0;
-      detailSections[2].open = Boolean(entry.orders || entry.km || entry.note || entry.weather || entry.shift);
+      detailSections[2].open = Boolean(
+        entry.tips
+        || entry.orders
+        || entry.km
+        || entry.note
+        || entry.weather
+        || entry.shift
+      );
+      els.workTimeToggle.setAttribute("aria-expanded", String(detailSections[0].open));
+      els.expenseSectionToggle.setAttribute("aria-expanded", String(detailSections[1].open));
+      els.otherDataToggle.setAttribute("aria-expanded", String(detailSections[2].open));
       els.formTitle.textContent = "編輯紀錄";
       els.cancelEdit.classList.remove("hidden");
       updateQuickPreview();
@@ -9669,6 +11180,7 @@
     }
 
     function formData() {
+      const manualWorkMinutes = syncManualWorkTimeParts();
       const incomes = {};
       document.querySelectorAll("[data-income]").forEach(input => incomes[input.dataset.income] = Number(input.value || 0));
       const id = els.entryId.value || makeId();
@@ -9685,7 +11197,7 @@
         startTime: document.getElementById("startTime").value,
         endTime: document.getElementById("endTime").value,
         breakMinutes: Number(document.getElementById("breakMinutes").value || 0),
-        manualHours: Number(document.getElementById("manualHours").value || 0),
+        manualHours: manualWorkMinutes / 60,
         tips: Number(document.getElementById("tips").value || 0),
         orders: Number(document.getElementById("orders").value || 0),
         km: Number(document.getElementById("km").value || 0),
@@ -9694,6 +11206,184 @@
         incomes,
         expenses
       };
+    }
+
+    function reconcileWorkSessionWithTimes(nextEntry, previousEntry) {
+      const changed = ["startTime", "endTime", "breakMinutes", "manualHours"]
+        .some(key => String(nextEntry[key] ?? "") !== String(previousEntry?.[key] ?? ""));
+      if (!changed) return nextEntry;
+
+      const result = validateWorkTimeRange(nextEntry);
+      if (result.complete || !nextEntry.startTime || Number(nextEntry.manualHours) > 0) {
+        delete nextEntry.workSession;
+        return nextEntry;
+      }
+
+      const previousSession = previousEntry?.workSession;
+      if (!previousSession || !["running", "paused", "stopped"].includes(previousSession.status)) {
+        delete nextEntry.workSession;
+        return nextEntry;
+      }
+
+      const startedAt = new Date(`${nextEntry.date}T${nextEntry.startTime}:00`);
+      if (!Number.isFinite(startedAt.getTime())) {
+        delete nextEntry.workSession;
+        return nextEntry;
+      }
+      const nextStatus = previousSession.status === "paused" ? "paused" : "running";
+      nextEntry.workSession = {
+        ...previousSession,
+        status: nextStatus,
+        startedAt: startedAt.toISOString(),
+        accumulatedBreakMs: Number(nextEntry.breakMinutes || 0) * workTimeUnits.minuteMs,
+        endedAt: null
+      };
+      if (nextStatus === "running") {
+        nextEntry.workSession.pausedAt = null;
+        nextEntry.workSession.segmentStartedAt ||= new Date().toISOString();
+      }
+      return nextEntry;
+    }
+
+    function validateTodayWorkTime(entry) {
+      const manualMinutes = decimalHoursToMinutes(entry.manualHours);
+      if (manualMinutes > 24 * 60) return "手動工時不可超過 24 小時。";
+      const result = validateWorkTimeRange(entry);
+      if (!result.valid && result.code !== "incomplete") return result.message;
+      return "";
+    }
+
+    function saveTodayWorkTimeFromForm() {
+      if (recordEditorState.open) return false;
+      window.clearTimeout(todayWorkSaveTimer);
+      todayWorkSaveTimer = 0;
+      const manualPartsError = validateManualWorkTimeParts();
+      if (manualPartsError) {
+        setTodaySaveStatus(manualPartsError, "error");
+        return false;
+      }
+      const draft = formData();
+      const previous = state.entries.find(item => item.id === draft.id)
+        || state.entries.find(item => item.date === draft.date);
+      const hasWorkValue = Boolean(draft.startTime || draft.endTime || draft.breakMinutes || draft.manualHours);
+      if (!previous && !hasWorkValue) {
+        setTodaySaveStatus("");
+        return true;
+      }
+
+      const validationError = validateTodayWorkTime(draft);
+      if (validationError) {
+        setTodaySaveStatus(validationError, "error");
+        return false;
+      }
+
+      const nextRecord = reconcileWorkSessionWithTimes({
+        ...(previous || blankEntry(draft.date)),
+        id: previous?.id || draft.id,
+        date: draft.date,
+        startTime: draft.startTime,
+        endTime: draft.endTime,
+        breakMinutes: draft.breakMinutes,
+        manualHours: draft.manualHours
+      }, previous);
+      const nextState = cloneStatePayload(state);
+      const recordIndex = nextState.entries.findIndex(item => item.id === nextRecord.id);
+      if (recordIndex >= 0) nextState.entries[recordIndex] = nextRecord;
+      else nextState.entries.push(nextRecord);
+
+      setTodaySaveStatus("儲存中…", "saving");
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        setTodaySaveStatus("儲存失敗，原有工時未變更", "error");
+        return false;
+      }
+
+      els.entryId.value = nextRecord.id;
+      notifyRecordChanged(nextRecord.date, "today-work-time");
+      const range = validateWorkTimeRange(nextRecord);
+      setTodaySaveStatus(range.code === "incomplete" ? "已儲存，時間尚未完整" : "已儲存", "success");
+      window.clearTimeout(todayWorkStatusTimer);
+      todayWorkStatusTimer = window.setTimeout(() => setTodaySaveStatus(""), 2200);
+      renderStats();
+      updateDailyGoal();
+      updateWorkControls();
+      renderEntries();
+      renderWeeks();
+      renderMonthReport();
+      renderPlatformReport();
+      renderAiAnalysis();
+      return true;
+    }
+
+    function scheduleTodayWorkTimeSave() {
+      if (recordEditorState.open) return;
+      window.clearTimeout(todayWorkSaveTimer);
+      setTodaySaveStatus("儲存中…", "saving");
+      todayWorkSaveTimer = window.setTimeout(saveTodayWorkTimeFromForm, 350);
+    }
+
+    function showMissingWorkTimePrompt() {
+      pendingTodayRecordSave = true;
+      els.missingWorkTimeDialog.showModal();
+      window.requestAnimationFrame(() => els.missingWorkAdd.focus());
+    }
+
+    function saveTodayDetailRecord(options = {}) {
+      const { allowMissingWorkTime = false } = options;
+      const manualPartsError = validateManualWorkTimeParts();
+      if (manualPartsError) {
+        setTodaySaveStatus(manualPartsError, "error");
+        showToast(manualPartsError);
+        return false;
+      }
+      const draft = formData();
+      if (entryTotal(draft) <= 0) {
+        setTodaySaveStatus("請先輸入收入金額。", "error");
+        showToast("請先輸入收入金額");
+        els.sharedIncomePanel.scrollIntoView({
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+          block: "start"
+        });
+        return false;
+      }
+      const validationError = validateTodayWorkTime(draft);
+      if (validationError) {
+        setTodaySaveStatus(validationError, "error");
+        showToast(validationError);
+        return false;
+      }
+      const quality = recordDataQuality(draft);
+      if (!allowMissingWorkTime && quality.status === "missing-work-time") {
+        showMissingWorkTimePrompt();
+        return false;
+      }
+      const previous = state.entries.find(item => item.id === draft.id)
+        || state.entries.find(item => item.date === draft.date);
+      const entry = reconcileWorkSessionWithTimes({ ...(previous || {}), ...draft }, previous);
+      const nextState = cloneStatePayload(state);
+      const index = nextState.entries.findIndex(item => item.id === entry.id);
+      if (index >= 0) nextState.entries[index] = entry;
+      else {
+        const sameDateIndex = nextState.entries.findIndex(item => item.date === entry.date);
+        if (sameDateIndex >= 0) {
+          entry.id = nextState.entries[sameDateIndex].id;
+          nextState.entries[sameDateIndex] = entry;
+        } else {
+          nextState.entries.push(entry);
+        }
+      }
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        setTodaySaveStatus("儲存失敗，原有紀錄未變更", "error");
+        showToast("儲存失敗，請稍後再試");
+        return false;
+      }
+      notifyRecordChanged(entry.date, "today-update");
+      const missingWorkTime = quality.status === "missing-work-time";
+      renderAll();
+      resetForm();
+      if (missingWorkTime) {
+        setTodaySaveStatus("已儲存；工時尚未完成", "success");
+      }
+      return true;
     }
 
     function setRecordEditorStatus(message = "", type = "") {
@@ -9778,6 +11468,7 @@
       };
       moveSharedEditorToDialog();
       fillEntryFields(recordEditorState.draft);
+      setManualEntryExpanded(true);
       const dateInput = document.getElementById("date");
       dateInput.value = normalizedDate;
       dateInput.disabled = true;
@@ -9873,13 +11564,10 @@
         !Number.isFinite(Number(value)) || Number(value) < 0 || Number(value) > maxPlatformIncome
       );
       if (invalidExpense) return "支出金額必須是有效的非負數。";
-      if (Boolean(entry.startTime) !== Boolean(entry.endTime)) return "開始與結束時間必須同時填寫。";
-      if (entry.startTime && entry.endTime && !Number(entry.manualHours)) {
-        const start = minutes(entry.startTime);
-        let end = minutes(entry.endTime);
-        if (end < start) end += 1440;
-        if (Number(entry.breakMinutes) > end - start) return "休息時間不可超過總經過時間。";
-      }
+      const workTimeValidation = validateWorkTimeRange(entry);
+      if (workTimeValidation.code === "incomplete") return "開始與結束時間必須同時填寫。";
+      if (workTimeValidation.code === "break-exceeds-elapsed") return "休息時間不可超過總經過時間。";
+      if (!workTimeValidation.valid) return workTimeValidation.message;
       if (!recordHasMeaningfulContent(entry)) return "請至少輸入收入、支出、工時或其他工作紀錄。";
       return "";
     }
@@ -9954,13 +11642,20 @@
 
     function exportCsv() {
       const platformHeaders = state.platforms.flatMap(name => [`${name}原始`, `${name}實拿`, `${name}比例%`]);
-      const headers = ["日期", "班別", "平台原始總額", "總額", "小費", "支出", "淨收入", "工時", "時薪", "訂單數", "公里數", "天氣", ...platformHeaders, ...state.expenses, "備註"];
+      const headers = ["日期", "班別", "平台原始總額", "總額", "小費", "原始付款支出", "淨收入", "工時", "時薪", "訂單數", "公里數", "天氣", ...platformHeaders, ...state.expenses, "分月資訊", "備註"];
       const rows = state.entries
         .slice()
         .sort((a, b) => a.date.localeCompare(b.date))
         .map(entry => {
           const work = workMetrics(entry);
-          const hours = work.hours;
+          const allocationDetails = Object.entries(entry.expenses || {}).flatMap(([category, amount]) => {
+            const allocation = expenseAllocationFor(entry, category);
+            if (!allocation) return [];
+            const lastMonth = expenseAllocationMonth(allocation.startMonth, allocation.months - 1);
+            const regular = expenseAllocationAmount(amount, allocation.months, 0);
+            const finalAmount = expenseAllocationAmount(amount, allocation.months, allocation.months - 1);
+            return [`${category}：原始 ${money(amount)}；分 ${allocation.months} 個月；${allocation.startMonth.replace("-", "/")}～${lastMonth.replace("-", "/")}；每月 ${money(regular)}${finalAmount !== regular ? `；尾月 ${money(finalAmount)}` : ""}`];
+          }).join("｜");
           return [
             entry.date,
             entry.shift,
@@ -9969,7 +11664,7 @@
             entry.tips,
             entryExpenses(entry),
             entryNet(entry),
-            hours,
+            formatWorkDuration(work.workMinutes),
             hourlyRate(entryNet(entry), work.durationMs),
             entry.orders,
             entry.km,
@@ -9980,6 +11675,7 @@
               platformRate(name)
             ]),
             ...state.expenses.map(name => entry.expenses?.[name] || 0),
+            allocationDetails,
             entry.note || ""
           ];
         });
@@ -9995,37 +11691,161 @@
       URL.revokeObjectURL(url);
     }
 
-    function startRunNow() {
-      const entry = ensureEntryForDate();
+    function commitTodayWorkSession(nextEntry) {
+      const nextState = cloneStatePayload(state);
+      const index = nextState.entries.findIndex(item => item.id === nextEntry.id);
+      if (index >= 0) nextState.entries[index] = nextEntry;
+      else nextState.entries.push(nextEntry);
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        showToast("工時儲存失敗，原有紀錄未變更");
+        return false;
+      }
+      notifyRecordChanged(nextEntry.date, "work-session");
+      resetForm();
+      refreshToday();
+      return true;
+    }
+
+    function stoppedWorkEndMs(entry) {
+      const sessionEndMs = entry?.workSession?.status === "stopped"
+        ? timeValueMs(entry.workSession.endedAt)
+        : null;
+      if (sessionEndMs !== null) return sessionEndMs;
+      if (!normalizeDateKey(entry?.date) || !entry?.startTime || !entry?.endTime) return null;
+      const startMs = new Date(`${entry.date}T${entry.startTime}:00`).getTime();
+      let endMs = new Date(`${entry.date}T${entry.endTime}:00`).getTime();
+      if (!Number.isFinite(startMs) || !Number.isFinite(endMs)) return null;
+      if (endMs < startMs) endMs += workTimeUnits.dayMs;
+      return endMs;
+    }
+
+    function requestContinueWork() {
+      const entry = entryForDate();
+      if (!entry || workStatus(entry) !== "stopped") {
+        showToast("目前沒有可繼續的已收工時段");
+        return false;
+      }
+      if (!entry.startTime && decimalHoursToMinutes(entry.manualHours) > 0) {
+        pendingContinueWork = { type: "manual" };
+        els.continueWorkDialogTitle.textContent = "目前使用手動工時";
+        els.continueWorkDialogMessage.textContent = "要使用「再跑一段」，請先到工時設定切換為開始／結束時間。";
+        els.continueWorkDialogAccept.textContent = "前往工時設定";
+        els.continueWorkDialog.showModal();
+        return false;
+      }
+      if (entry.startTime && entry.endTime && decimalHoursToMinutes(entry.manualHours) > 0) {
+        pendingContinueWork = { type: "legacy-clock", entryId: entry.id };
+        els.continueWorkDialogTitle.textContent = "先確認工時輸入方式";
+        els.continueWorkDialogMessage.textContent = "這筆舊紀錄同時有兩種工時。確認使用開始／結束時間後，才可再跑一段；手動工時將被清除。";
+        els.continueWorkDialogAccept.textContent = "使用開始／結束";
+        els.continueWorkDialog.showModal();
+        return false;
+      }
+      const endMs = stoppedWorkEndMs(entry);
+      const nowMs = Date.now();
+      if (endMs === null || nowMs < endMs) {
+        showToast("最後收工時間無效，請先修改時間");
+        return false;
+      }
+      const totalBreakMinutes = continuedWorkBreakMinutes(entry.breakMinutes, endMs, nowMs);
+      const gapMinutes = totalBreakMinutes - Math.max(0, Math.round(Number(entry.breakMinutes || 0)));
+      pendingContinueWork = {
+        type: "continue",
+        entryId: entry.id,
+        date: entry.date,
+        endMs
+      };
+      els.continueWorkDialogTitle.textContent = "繼續今天的工作？";
+      els.continueWorkDialogMessage.textContent =
+        `從上次收工到現在的 ${formatWorkDuration(gapMinutes)}，會自動加入休息時間。`;
+      els.continueWorkDialogAccept.textContent = "再跑一段";
+      els.continueWorkDialog.showModal();
+      return true;
+    }
+
+    function continueTodayWork(binding) {
+      const existingEntry = entryForDate(binding?.date);
+      if (!existingEntry
+        || existingEntry.id !== binding?.entryId
+        || workStatus(existingEntry) !== "stopped"
+        || decimalHoursToMinutes(existingEntry.manualHours) > 0) {
+        showToast("工時狀態已變更，請重新確認");
+        return false;
+      }
+      const endMs = stoppedWorkEndMs(existingEntry);
       const now = new Date();
-      const priorDurationMs = entry.workSession?.status === "stopped"
-        ? workMetrics(entry).durationMs
-        : 0;
-      const stoppedGapMs = entry.workSession?.status === "stopped" && entry.workSession.endedAt
-        ? Math.max(0, now.getTime() - new Date(entry.workSession.endedAt).getTime())
-        : 0;
-      const priorBreakMs = entry.workSession?.status === "stopped"
-        ? Number(entry.workSession.accumulatedBreakMs || 0) + stoppedGapMs
-        : 0;
+      if (endMs === null || endMs !== binding.endMs || now.getTime() < endMs) {
+        showToast("最後收工時間已變更，請先檢查");
+        return false;
+      }
+      const entry = cloneStatePayload(existingEntry);
+      const previousWorkMs = workMetrics(entry, endMs, entry.date).durationMs;
+      const breakMinutes = continuedWorkBreakMinutes(entry.breakMinutes, endMs, now.getTime());
+      if (breakMinutes === null) {
+        showToast("目前時間早於最後收工時間，無法繼續");
+        return false;
+      }
+      const startedAtMs = timeValueMs(entry.workSession?.startedAt);
+      const fallbackStartedAt = new Date(`${entry.date}T${entry.startTime}:00`).getTime();
+      entry.endTime = "";
+      entry.breakMinutes = breakMinutes;
+      entry.manualHours = 0;
+      entry.workSession = {
+        status: "running",
+        startedAt: new Date(startedAtMs ?? fallbackStartedAt).toISOString(),
+        segmentStartedAt: now.toISOString(),
+        accumulatedActiveMs: previousWorkMs,
+        accumulatedBreakMs: breakMinutes * workTimeUnits.minuteMs,
+        pausedAt: null,
+        endedAt: null
+      };
+      return commitTodayWorkSession(entry);
+    }
+
+    function resolveContinueWorkAction() {
+      const action = pendingContinueWork;
+      pendingContinueWork = null;
+      if (!action) return;
+      if (action.type === "manual") {
+        setManualEntryExpanded(true, { revealWorkTime: true });
+        return;
+      }
+      if (action.type === "legacy-clock") {
+        const entry = entryForDate();
+        if (!entry || entry.id !== action.entryId) return;
+        syncManualWorkTimeInput(0);
+        setWorkTimeInputMode("clock", formData());
+        if (saveTodayWorkTimeFromForm()) {
+          showToast("已改用開始／結束時間，可再次選擇「再跑一段」");
+        }
+        return;
+      }
+      if (action.type === "continue") continueTodayWork(action);
+    }
+
+    function startRunNow() {
+      const existingEntry = entryForDate();
+      if (existingEntry && workStatus(existingEntry) !== "idle") return false;
+      const entry = existingEntry ? cloneStatePayload(existingEntry) : blankEntry();
+      const now = new Date();
       entry.startTime ||= currentTimeString();
       entry.endTime = "";
       entry.manualHours = 0;
       entry.workSession = {
         status: "running",
-        startedAt: entry.workSession?.startedAt || now.toISOString(),
+        startedAt: now.toISOString(),
         segmentStartedAt: now.toISOString(),
-        accumulatedActiveMs: priorDurationMs,
-        accumulatedBreakMs: priorBreakMs,
+        accumulatedActiveMs: 0,
+        accumulatedBreakMs: 0,
         pausedAt: null,
         endedAt: null
       };
-      if (saveState()) notifyRecordChanged(entry.date, "work-session");
-      resetForm();
-      refreshToday();
+      commitTodayWorkSession(entry);
     }
 
     function pauseRunNow() {
-      const entry = entryForDate();
+      const existingEntry = entryForDate();
+      const entry = existingEntry ? cloneStatePayload(existingEntry) : null;
       if (!entry || workStatus(entry) !== "running") return;
       const now = new Date();
       if (!entry.workSession) {
@@ -10043,13 +11863,12 @@
       entry.workSession.status = "paused";
       entry.workSession.pausedAt = now.toISOString();
       entry.workSession.segmentStartedAt = null;
-      if (saveState()) notifyRecordChanged(entry.date, "work-session");
-      resetForm();
-      refreshToday();
+      commitTodayWorkSession(entry);
     }
 
     function resumeRunNow() {
-      const entry = entryForDate();
+      const existingEntry = entryForDate();
+      const entry = existingEntry ? cloneStatePayload(existingEntry) : null;
       if (!entry?.workSession || entry.workSession.status !== "paused") return;
       const now = new Date();
       entry.workSession.accumulatedBreakMs = Number(entry.workSession.accumulatedBreakMs || 0)
@@ -10058,13 +11877,12 @@
       entry.workSession.segmentStartedAt = now.toISOString();
       entry.workSession.pausedAt = null;
       entry.breakMinutes = Math.floor(entry.workSession.accumulatedBreakMs / 60000);
-      if (saveState()) notifyRecordChanged(entry.date, "work-session");
-      resetForm();
-      refreshToday();
+      commitTodayWorkSession(entry);
     }
 
     function endRunNow() {
-      const entry = entryForDate();
+      const existingEntry = entryForDate();
+      const entry = existingEntry ? cloneStatePayload(existingEntry) : null;
       if (!entry || !["running", "paused"].includes(workStatus(entry))) return;
       const now = new Date();
       if (!entry.workSession) {
@@ -10091,9 +11909,7 @@
       entry.workSession.pausedAt = null;
       entry.endTime = currentTimeString();
       entry.breakMinutes = Math.floor(Number(entry.workSession.accumulatedBreakMs || 0) / 60000);
-      if (saveState()) notifyRecordChanged(entry.date, "work-session");
-      resetForm();
-      refreshToday();
+      commitTodayWorkSession(entry);
     }
 
     function restoreIncomeInput(input, platform, total) {
@@ -10378,6 +12194,69 @@
     els.pauseRun.addEventListener("click", pauseRunNow);
     els.resumeRun.addEventListener("click", resumeRunNow);
     els.endRun.addEventListener("click", endRunNow);
+    els.continueRun.addEventListener("click", requestContinueWork);
+    els.modifyWorkTime.addEventListener("click", () => setManualEntryExpanded(true, { revealWorkTime: true }));
+    els.workModeToggle.addEventListener("click", requestWorkTimeModeSwitch);
+    els.workModeDialog.addEventListener("cancel", event => {
+      event.preventDefault();
+      pendingWorkMode = "";
+      els.workModeDialog.close();
+    });
+    els.workModeDialogCancel.addEventListener("click", () => {
+      pendingWorkMode = "";
+      els.workModeDialog.close();
+    });
+    els.workModeDialogAccept.addEventListener("click", () => {
+      els.workModeDialog.close();
+      applyWorkTimeModeSwitch();
+    });
+    els.continueWorkDialog.addEventListener("cancel", event => {
+      event.preventDefault();
+      pendingContinueWork = null;
+      els.continueWorkDialog.close();
+    });
+    els.continueWorkDialogCancel.addEventListener("click", () => {
+      pendingContinueWork = null;
+      els.continueWorkDialog.close();
+    });
+    els.continueWorkDialogAccept.addEventListener("click", () => {
+      els.continueWorkDialog.close();
+      resolveContinueWorkAction();
+    });
+    els.workDetailsToggle.addEventListener("click", () => {
+      setWorkDetailsExpanded(els.workDetailsToggle.getAttribute("aria-expanded") !== "true");
+    });
+    els.manualEntryToggle.addEventListener("click", () => {
+      setManualEntryExpanded(els.manualEntryToggle.getAttribute("aria-expanded") !== "true");
+    });
+    els.missingWorkTimeDialog.addEventListener("cancel", () => {
+      pendingTodayRecordSave = null;
+    });
+    els.missingWorkAdd.addEventListener("click", () => {
+      pendingTodayRecordSave = null;
+      els.missingWorkTimeDialog.close();
+      setManualEntryExpanded(true, { revealWorkTime: true });
+    });
+    els.missingWorkLater.addEventListener("click", () => {
+      const shouldSave = pendingTodayRecordSave;
+      pendingTodayRecordSave = null;
+      els.missingWorkTimeDialog.close();
+      if (shouldSave) saveTodayDetailRecord({ allowMissingWorkTime: true });
+    });
+    els.weatherPermissionDialog.addEventListener("cancel", () => {
+      setWeatherAutoStatus("可繼續手動選擇天氣。");
+    });
+    els.weatherPermissionLater.addEventListener("click", () => {
+      saveWeatherAutoConsent("declined");
+      els.weatherPermissionDialog.close();
+      setWeatherAutoStatus("可手動選擇天氣，之後也能重新開啟自動偵測。");
+    });
+    els.weatherPermissionAllow.addEventListener("click", () => {
+      const saved = saveWeatherAutoConsent("granted");
+      els.weatherPermissionDialog.close();
+      if (saved) detectCurrentWeather({ manual: true });
+    });
+    els.detectWeather.addEventListener("click", () => offerAutomaticWeather({ manual: true }));
     els.toggleOverview.addEventListener("click", () => {
       overviewVisible = !overviewVisible;
       updateOverviewVisibility();
@@ -10441,6 +12320,10 @@
       const category = remove.dataset.calendarRemoveExpense;
       delete recordEditorState.draft.expenses?.[category];
       delete recordEditorState.draft.expenseNotes?.[category];
+      delete recordEditorState.draft.expenseAllocations?.[category];
+      if (recordEditorState.draft.expenseAllocations && !Object.keys(recordEditorState.draft.expenseAllocations).length) {
+        delete recordEditorState.draft.expenseAllocations;
+      }
       renderCalendarExpenseList();
       markRecordEditorDirty();
     });
@@ -10496,33 +12379,26 @@
     els.detailForm.addEventListener("submit", event => {
       event.preventDefault();
       if (recordEditorState.open) {
+        const manualPartsError = validateManualWorkTimeParts();
+        if (manualPartsError) {
+          setRecordEditorStatus(manualPartsError, "error");
+          return;
+        }
         commitCalendarRecord();
         return;
       }
-      const entry = formData();
-      const index = state.entries.findIndex(item => item.id === entry.id);
-      if (index >= 0) state.entries[index] = { ...state.entries[index], ...entry };
-      else {
-        const sameDateIndex = state.entries.findIndex(item => item.date === entry.date);
-        if (sameDateIndex >= 0) {
-          entry.id = state.entries[sameDateIndex].id;
-          state.entries[sameDateIndex] = { ...state.entries[sameDateIndex], ...entry };
-        } else {
-          state.entries.push(entry);
-        }
-      }
-      if (!saveState()) {
-        showToast("儲存失敗，請稍後再試");
-        return;
-      }
-      notifyRecordChanged(entry.date, "today-update");
-      renderAll();
-      resetForm();
+      saveTodayDetailRecord();
     });
 
     els.detailForm.addEventListener("input", event => {
       if (event.target.id === "date") syncDateCardDisplay(event.target);
+      if (["manualHoursPart", "manualMinutesPart"].includes(event.target.id)) {
+        syncManualWorkTimeParts();
+      }
       if (recordEditorState.open && event.target.id !== "date") markRecordEditorDirty();
+      if (["startTime", "endTime", "breakMinutes", "manualHoursPart", "manualMinutesPart"].includes(event.target.id)) {
+        scheduleTodayWorkTimeSave();
+      }
       updateQuickPreview();
     });
     els.detailForm.addEventListener("change", event => {
@@ -10531,14 +12407,26 @@
         renderIncomeInputs(event.target.value || todayString());
         renderRecentIncome(event.target.value || todayString());
       }
+      if (["startTime", "endTime", "breakMinutes", "manualHoursPart", "manualMinutesPart"].includes(event.target.id)) {
+        saveTodayWorkTimeFromForm();
+      }
       updateQuickPreview();
     });
     els.workTimeSection.addEventListener("toggle", event => {
+      els.workTimeToggle.setAttribute("aria-expanded", String(event.currentTarget.open));
       updateQuickPreview();
       if (!event.isTrusted) return;
       if (recordEditorState.open) return;
       state.settings.timeDetailsOpen = event.currentTarget.open;
       saveState();
+    });
+    els.expenseSection.addEventListener("toggle", event => {
+      els.expenseSectionToggle.setAttribute("aria-expanded", String(event.currentTarget.open));
+    });
+    els.otherDataSection.addEventListener("toggle", event => {
+      const expanded = event.currentTarget.open;
+      els.otherDataToggle.setAttribute("aria-expanded", String(expanded));
+      if (expanded) offerAutomaticWeather();
     });
     els.detailForm.addEventListener("click", event => {
       const button = event.target.closest("[data-detail-choice]");
@@ -10616,7 +12504,6 @@
     els.expenseInputs.addEventListener("click", event => {
       const quick = event.target.closest("[data-expense-quick]");
       const mode = event.target.closest("[data-expense-mode]");
-      const categoryToggle = event.target.closest("[data-expense-toggle-category]");
       const modeToggle = event.target.closest("[data-expense-toggle-mode]");
       const noteToggle = event.target.closest("[data-expense-toggle-note]");
       const recentAmount = event.target.closest("[data-expense-recent-amount]");
@@ -10625,17 +12512,11 @@
       const duration = event.target.closest("[data-expense-duration]");
       const saveButton = event.target.closest("#saveSmartExpense");
       if (quick) {
-        selectExpenseCategory(quick.dataset.expenseQuick, true);
+        selectExpenseCategory(quick.dataset.expenseQuick, true, true);
         return;
       }
       if (mode) {
         selectExpenseMode(mode.dataset.expenseMode);
-        return;
-      }
-      if (categoryToggle) {
-        expenseDraft.categoryOpen = true;
-        renderExpenseForm();
-        window.requestAnimationFrame(() => document.getElementById("smartExpenseCategory")?.focus());
         return;
       }
       if (modeToggle) {
@@ -10815,6 +12696,12 @@
     });
 
     document.getElementById("view-settings").addEventListener("change", event => {
+      const displaySizeInput = event.target.closest("[data-display-size-option]");
+      if (displaySizeInput) {
+        saveDisplaySize(displaySizeInput);
+        return;
+      }
+
       const modeInput = event.target.closest("[data-platform-input-mode]");
       if (modeInput) {
         const profile = platformProfileById(modeInput.dataset.platformInputMode);
@@ -10865,6 +12752,11 @@
     });
 
     document.getElementById("view-settings").addEventListener("click", event => {
+      const systemStatusToggle = event.target.closest("#driverSystemStatusToggle");
+      if (systemStatusToggle) {
+        toggleDriverSystemStatus();
+        return;
+      }
       const platformButton = event.target.closest("[data-remove-platform]");
       const expenseButton = event.target.closest("[data-remove-expense]");
       if (platformButton) {
@@ -10883,6 +12775,7 @@
       }
     });
 
+    applyDisplaySize(state.settings.displaySize);
     renderBrandAttribution();
     renderEntryDateCard(todayString());
     renderAll();
