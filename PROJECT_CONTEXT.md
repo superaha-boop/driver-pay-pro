@@ -43,8 +43,10 @@
 - 自動測試目前 171/171，Today targeted 49/49；320、375、390、393、430px
   必須無水平 overflow，Calendar 與 Reports 維持相同 canonical 結果。
 - Service Worker App Shell candidate 更新為 `driver-pay-pro-v16`。Follow-up
-  implementation commit `882bfcd` 已推送；公開 iPhone Preview 已通過未登入
-  smoke，Milestone 只待 Product Owner 最終一次 Human QA。
+  implementation commits `882bfcd`、`57ba512` 已推送；新的公開 Preview
+  `https://requested-whilst-courts-dale.trycloudflare.com` 已通過未登入
+  HTTPS、Manifest、Service Worker v16 與檔案一致性 smoke，Milestone 只待
+  Product Owner 最終一次 Human QA。
 
 ## Driver Pay Pro Local-first V1 UX Freeze
 

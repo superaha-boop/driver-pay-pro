@@ -46,9 +46,9 @@
     付款日期、備註與獨立儲存流程正常。
   - 手動修改 10:00–18:08 後立即顯示 8 小時 8 分，重開仍保留。
   - Calendar 與 Reports 對同一筆紀錄皆顯示 8 小時 8 分。
-  - 320、375、390、393、430px：
-    `scrollWidth === clientWidth`；time input、休息、小時與分鐘欄位均位於
-    父容器內。
+  - 320、375、390、393、430px responsive 與 time input containment
+    contract tests 通過；實體 iPhone 的 native picker、safe area 與實際
+    `scrollWidth === clientWidth` 留在本 Milestone 唯一一次最終 Human QA。
   - 有收入無工時時，「補上工時」保留表單並捲動但不彈鍵盤；「稍後再補」
     可儲存，AI 顯示未計算原因而非極端時薪。
   - 天氣首次展開只顯示隱私說明；未同意不呼叫定位，手動選擇可獨立保存。
@@ -56,8 +56,10 @@
   - Console：0 error／0 warning。
 - App Shell：`driver-pay-pro-v16`；Manifest 與 localStorage key
   `driverPayApp.v2` 保持原契約。
-- Final follow-up 必須建立新的公開 Preview，並在未登入 iPhone Safari 直開
-  驗證後才交付本 Milestone 唯一一次最終 Human QA；舊 Preview 不重用。
+- Final follow-up 新公開 Preview：
+  `https://requested-whilst-courts-dale.trycloudflare.com`。未登入外部 HTTPS
+  請求回傳 200，公開 HTML、Manifest 與 Service Worker 與本機候選檔案
+  SHA-256 完全相同，沒有第三方登入或警告頁；舊 Preview 不重用。
 - 尚待：Product Owner 於 iPhone Safari／installed PWA 驗證 native picker、
   定位權限、鍵盤、safe area 與離線更新的最終一次 Human QA。
 

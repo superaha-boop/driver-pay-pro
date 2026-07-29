@@ -44,14 +44,22 @@ GitHub：`superaha-boop/driver-pay-pro`
   update-memory → notify，儲存失敗不會先污染畫面狀態。
 - `driverPayApp.v2`、WorkRecord schema、收入／支出公式、Calendar／Reports
   frozen UI 均未改變；舊 `manualHours` 不遷移、不批量改寫。
-- L1 evidence：171/171 Node、Today 49/49、lint 0 errors、320–430px、原生
-  time input 邊界、開始／暫停／繼續／收工、重開保留、Calendar／Reports
-  8 小時 8 分一致、Console 0 error／warning。
+- L1 evidence：`npm run release:check` Passed；171/171 Node、Today 49/49、
+  Calendar 38/38、Reports 44/44、lint 0 errors、responsive／原生 time input
+  contract、開始／暫停／繼續／收工、重開保留、Calendar／Reports 8 小時
+  8 分一致、桌面瀏覽器 Console 0 error／warning；`npm audit` 為
+  0 vulnerabilities。
 - Service Worker candidate：`driver-pay-pro-v16`。
 - Follow-up implementation commit：`882bfcd fix: complete Today workflow QA follow-up`，
   已推送至同名遠端功能分支。
-- Final follow-up 的 `release:check`、Preview URL 與單次 Product Owner Human
-  QA 狀態將於本次完成 Commit 後補入；舊 Preview 不作為本次驗收網址。
+- Final follow-up implementation commit：
+  `57ba512 fix: complete Milestone 1 final QA follow-up`，已推送至同名遠端
+  功能分支。
+- 本次新的公開 Preview：
+  `https://requested-whilst-courts-dale.trycloudflare.com`。未登入 HTTPS
+  請求回傳 200；公開 `index.html`、Manifest 與 Service Worker 的 SHA-256
+  均與目前分支相同，Service Worker 為 v16，沒有登入或警告頁。這是暫時
+  tunnel，Human QA 期間開發用 Mac 必須保持開機與連線。
 - 下一步只剩 Product Owner 執行本 Milestone 最終一次 Human QA。通過前不
   宣告 Milestone Done，也不合併 main 或部署 Production。
 
