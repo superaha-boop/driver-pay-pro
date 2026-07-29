@@ -41,13 +41,14 @@ function extractFunction(name) {
   throw new Error(`${name}() 結尾不完整`);
 }
 
-test("工作工時與工作明細使用同一水平容器及完整按鈕語意", () => {
+test("工作狀態卡移除重複主工時並保留完整明細按鈕語意", () => {
   const section = html.slice(html.indexOf('id="homeWorkCard"'), html.indexOf('id="sharedIncomePanelAnchor"'));
   assert.match(section, /class="work-time-overview"/);
-  assert.match(section, /id="workPrimaryTime"/);
+  assert.doesNotMatch(section, /id="workPrimaryTime"/);
   assert.match(section, /id="workDetailsToggle"[^>]*aria-expanded="false"[^>]*aria-controls="workMetrics"/);
   assert.match(section, /aria-label="工作明細，已收合"/);
   assert.match(html, /\.work-details-toggle\s*\{[\s\S]*?min-height:\s*44px/);
+  assert.match(extractFunction("renderStats"), /今日實際工時[\s\S]*?formatHours\(todaySummary\.hours\)/);
 });
 
 test("工作明細控制同步 expanded、可讀標籤與加減號", () => {
@@ -121,6 +122,34 @@ test("工時只顯示一種輸入方式且切換前需要確認", () => {
   assert.match(apply, /saveTodayWorkTimeFromForm\(\)/);
   assert.match(apply, /previousValues/);
   assert.doesNotMatch(apply, /saveState\(\)/);
+});
+
+test("手動模式隱藏重複即時摘要，時間模式保留單一計算結果", () => {
+  const detail = html.slice(html.indexOf('id="workTimeSection"'), html.indexOf('id="expenseSection"'));
+  const setMode = extractFunction("setWorkTimeInputMode");
+  const liveUi = extractFunction("updateWorkTimeUi");
+  assert.match(detail, /id="workLiveSummary"[\s\S]*?<span>計算工時<\/span>/);
+  assert.match(setMode, /els\.workLiveSummary\.classList\.toggle\("hidden", isManual\)/);
+  assert.match(liveUi, /formatWorkDuration\(work\.workMinutes\)/);
+  assert.doesNotMatch(detail, /<span>今日工時<\/span>/);
+});
+
+test("支出快捷與類別方式控制採精簡同列按鈕且保留完整選項", () => {
+  const source = extractFunction("renderExpenseForm");
+  assert.match(source, /class="expense-choice-row"/);
+  assert.match(source, /data-expense-toggle-category[\s\S]*?aria-label="支出類別，/);
+  assert.match(source, /data-expense-toggle-mode[\s\S]*?aria-label="支出方式，/);
+  assert.match(source, /id="smartExpenseCategory" aria-label="完整支出類別"/);
+  assert.match(source, /expenseCategoryOptionsMarkup\(\)/);
+  assert.match(source, /data-expense-mode/);
+  assert.match(source, /aria-label="\$\{escapeAttr\(expenseShortcutLabel\(category\)\)\}"/);
+  assert.doesNotMatch(source, /expense-compact-row-label|expense-compact-row-action|>更改<|>修改</);
+  assert.match(html, /\.expense-quick-button\s*\{[\s\S]*?min-height:\s*46px/);
+  assert.match(html, /\.expense-choice-button\s*\{[\s\S]*?min-height:\s*48px/);
+  assert.match(html, /\.expense-choice-row\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(html, /\.expense-quick-button\.active::after\s*\{[\s\S]*?content:\s*"✓"/);
+  assert.match(extractFunction("selectExpenseCategory"), /if \(!preserveDraft\)/);
+  assert.match(html, /selectExpenseCategory\(quick\.dataset\.expenseQuick, true, true\)/);
 });
 
 test("新增支出使用獨立交易儲存且防止重複提交", () => {

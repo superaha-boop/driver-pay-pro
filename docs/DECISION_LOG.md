@@ -576,3 +576,26 @@
   - 不把完整支出留在其他資料。
   - 不同時顯示兩套可生效的工時欄位。
   - 不為本次建立多段工作陣列或 migration。
+
+## D-037
+
+- Date: 2026-07-29
+- Decision:
+  1. Product Owner 已確認 Milestone 1 Final Human QA 通過；新的 Today 細節
+     Sprint 在 Homepage Detail Human QA 前不 merge main、不 Production。
+  2. 綠色摘要是正式工時的唯一高階顯示；工作狀態卡只保留 status、工作明細
+     與下一步操作。
+  3. manual 模式不顯示第二份工時摘要；clock 模式只保留一次共用格式結果。
+  4. 支出快捷維持至少 44px；類別與方式使用同列兩個值即入口的 button。
+  5. 快捷分類切換保留草稿金額、日期、方式與備註，並沿用完整既有選項及
+     persistence。
+  6. `driverPayApp.v2`、WorkRecord schema、canonical calculations 與下游
+     Calendar／Reports／AI／CSV 不變。
+- Reason: 移除沒有新增資訊的重複工時與支出標籤，可降低首頁高度，且不需要
+  變更資料或公式。
+- Impact: Today 顯示／草稿互動、tests、docs 與 App Shell v17 更新；其他頁面、
+  schema、migration、main 與 Production 不變。
+- Rejected alternatives:
+  - 不以隱藏 canonical 工時或刪除完整支出功能換取高度。
+  - 不建立第二套簡化類別或支出方式資料來源。
+  - 不讓快捷分類切換清空尚未儲存的其他支出內容。

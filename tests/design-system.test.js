@@ -10,7 +10,7 @@ const serviceWorker = fs.readFileSync(new URL("../sw.js", `file://${__filename}`
 test("主程式與展示頁共用同一份 Design System 樣式", () => {
   assert.match(html, /<link rel="stylesheet" href="styles\/design-system\.css">/);
   assert.match(showcase, /<link rel="stylesheet" href="styles\/design-system\.css">/);
-  assert.match(serviceWorker, /driver-pay-pro-v16/);
+  assert.match(serviceWorker, /driver-pay-pro-v17/);
   assert.match(serviceWorker, /"\.\/styles\/design-system\.css"/);
 });
 

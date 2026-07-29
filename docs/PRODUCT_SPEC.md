@@ -58,6 +58,9 @@ Purpose: capture and monitor the current working day.
 Primary responsibilities:
 
 - Show today's income, actual work time, hourly rate, and goal progress.
+- Treat the core green summary as the only high-level display of today's actual work
+  time. The work-status card owns only status, work-detail disclosure, and the next
+  work action; it must not repeat the same duration.
 - Start, pause, resume, and end today's work session.
 - Enter or correct today's platform income.
 - Add today's expenses.
@@ -65,6 +68,12 @@ Primary responsibilities:
 - Provide immediate save and work-status feedback.
 - Keep work time, expense entry, and supporting data as three independent collapsed
   sections in the same Today form: "工時設定", "新增支出", and "其他資料".
+- In manual work-time mode, the hour and minute inputs are the only editable duration
+  display. In clock mode, show one calculated result using the canonical duration
+  formatter.
+- Keep expense shortcuts compact and preserve the current draft when a shortcut is
+  selected. The category and expense-mode values act as the two direct selection
+  buttons and continue to open the complete existing option sources.
 - Work time uses one derived input mode at a time: complete clock fields take
   precedence; otherwise legacy manual hours are used. Switching modes requires
   confirmation before clearing the inactive mode's values.

@@ -10,6 +10,9 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 - Branch：`codex/v1-1-m1-today-workflow`；base：
   `8041e84591c76b16582e41403ae7267f5fd1bc90`。
+- Product Owner 已確認 Milestone 1 Final Human QA 全部通過；舊的 Final
+  Preview tunnel 已停止。本次在同一功能分支進行 Homepage Detail
+  去重複與版面精簡，新的 Human QA 前不 merge main、不 Production deploy。
 - 根本原因：Today 表單保留舊 `workSession`，且舊 `workMetrics()` 先採用
   `manualHours`／session，導致手動修正開始與結束時間後，畫面與報表仍讀取
   舊計時值。
@@ -19,13 +22,16 @@ GitHub：`superaha-boop/driver-pay-pro`
 - 新增 `decimalHoursToMinutes()`、`minutesToHourMinuteParts()`、
   `validateWorkTimeRange()`、`calculateWorkMinutes()` 與
   `formatWorkDuration()`；Today、Calendar、Reports、AI、CSV 共用同一出口。
-- Today 手動工時 UI 改為小時／分鐘欄位；工作狀態只保留一個自然語言主
-  工時，並與 44px「工作明細」控制同列。收工後「修改工作時間」會先展開，
-  再依 reduced-motion 安全捲動至工時設定，不會 focus time input 或彈出鍵盤。
+- Today 手動工時 UI 使用小時／分鐘欄位；綠色摘要是正式工時唯一高階顯示，
+  工作狀態卡只保留 status、44px「工作明細」與下一步操作。manual 模式
+  不再顯示第二份摘要，clock 模式保留一次 `formatWorkDuration()` 結果。
 - 每日紀錄固定為三個獨立收合區塊：「工時設定／新增支出／其他資料」。
   完整智慧支出元件已從「其他資料」恢復為獨立區塊，保留快捷類別、完整類別、
   一次／固定／分月預覽、付款日期、備註與獨立 `儲存支出`；持久化使用
   clone → validate → persist/read-back，失敗不污染既有 state。
+- 支出快捷按鈕縮為 46px 且使用選中勾號；支出類別與方式改為同列 48px
+  真正按鈕，VoiceOver 朗讀目前值。快捷切換保留未儲存的金額、日期、方式
+  與備註，完整 legacy／自訂類別來源不變。
 - 工時一次只顯示 clock 或 manual 一種輸入；模式由現有欄位推導，不新增
   durable mode 欄位。切換前顯示清除範圍，確認後才交易式保存；舊雙值資料
   仍優先使用 clock 且不靜默清除。
@@ -44,24 +50,26 @@ GitHub：`superaha-boop/driver-pay-pro`
   update-memory → notify，儲存失敗不會先污染畫面狀態。
 - `driverPayApp.v2`、WorkRecord schema、收入／支出公式、Calendar／Reports
   frozen UI 均未改變；舊 `manualHours` 不遷移、不批量改寫。
-- L1 evidence：`npm run release:check` Passed；171/171 Node、Today 49/49、
+- L1 evidence：`npm run release:check` Passed；173/173 Node、Today 51/51、
   Calendar 38/38、Reports 44/44、lint 0 errors、responsive／原生 time input
   contract、開始／暫停／繼續／收工、重開保留、Calendar／Reports 8 小時
   8 分一致、桌面瀏覽器 Console 0 error／warning；`npm audit` 為
   0 vulnerabilities。
-- Service Worker candidate：`driver-pay-pro-v16`。
+- Service Worker candidate：`driver-pay-pro-v17`。
 - Follow-up implementation commit：`882bfcd fix: complete Today workflow QA follow-up`，
   已推送至同名遠端功能分支。
 - Final follow-up implementation commit：
   `57ba512 fix: complete Milestone 1 final QA follow-up`，已推送至同名遠端
   功能分支。
-- 本次新的公開 Preview：
-  `https://requested-whilst-courts-dale.trycloudflare.com`。未登入 HTTPS
-  請求回傳 200；公開 `index.html`、Manifest 與 Service Worker 的 SHA-256
-  均與目前分支相同，Service Worker 為 v16，沒有登入或警告頁。這是暫時
-  tunnel，Human QA 期間開發用 Mac 必須保持開機與連線。
-- 下一步只剩 Product Owner 執行本 Milestone 最終一次 Human QA。通過前不
-  宣告 Milestone Done，也不合併 main 或部署 Production。
+- Homepage Detail 公開 Preview：
+  `https://cord-diagnosis-quite-cancel.trycloudflare.com`。未登入外部 HTTPS
+  回傳 200；公開 `index.html`、Manifest、Service Worker SHA-256 與本機
+  候選完全一致，Service Worker 為 v17。390px
+  `scrollWidth === clientWidth`、支出雙按鈕同列、Console 0 error／warning，
+  沒有登入或警告頁。這是暫時 tunnel，Human QA 期間開發用 Mac 必須保持
+  開機與連線。
+- 下一步只進行 Homepage Detail Human QA；通過前不合併 main、不部署
+  Production。
 
 ---
 

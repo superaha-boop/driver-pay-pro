@@ -27,12 +27,15 @@
 
 ## V1.1 Milestone 1 — Today／Work-Time／QA Follow-up
 
-- `npm run test:today`：49/49，涵蓋 stale session 修正、正常／無休息／跨午夜、
+- Product Owner 已確認 Milestone 1 Final Human QA 通過；舊 Preview tunnel
+  已停止。本次 Homepage Detail 只需要新的公開 L2／一次細節 Human QA。
+- `npm run test:today`：51/51，涵蓋 stale session 修正、正常／無休息／跨午夜、
   break validation、不完整時間、舊小數工時轉換、整數分鐘、自然語言格式、
   zero-hour hourly rate、Today 同列明細、reduced-motion 捲動、未填工時提醒、
   三個獨立收合區塊、工時模式確認、9 小時 10 分＝550 分鐘、續跑休息累加、
-  支出防重複與 transactional persistence、天氣權限／映射／手動覆蓋及 CSV。
-- `npm test`：171/171；Calendar、Reports、AI 與 integration regression 全部
+  manual／clock 顯示去重複、支出同列選擇按鈕、快捷草稿保留、支出防重複
+  與 transactional persistence、天氣權限／映射／手動覆蓋及 CSV。
+- `npm test`：173/173；Calendar、Reports、AI 與 integration regression 全部
   保持通過。
 - 共用時薪界線：0～9 分鐘不計算；10 分鐘且時薪不高於 NT$2,000 可計算；
   超過 NT$2,000 標記異常，不參與 AI 正常洞察、百分比或排班建議。
@@ -42,26 +45,26 @@
     會提示先切換。
   - clock 模式「再跑一段」保留原始開始時間、清空結束時間並把收工空檔加入
     休息；不建立第二筆日期紀錄。
-  - 「新增支出」與「其他資料」獨立收合；快捷／完整類別、三種支出方式、
-    付款日期、備註與獨立儲存流程正常。
+  - 「新增支出」與「其他資料」獨立收合；46px 快捷、同列類別／方式按鈕、
+    完整類別、三種支出方式、付款日期、備註與獨立儲存流程正常。
+  - 快捷切換後 `$1,234`、日期、分月方式與備註草稿保持不變。
   - 手動修改 10:00–18:08 後立即顯示 8 小時 8 分，重開仍保留。
   - Calendar 與 Reports 對同一筆紀錄皆顯示 8 小時 8 分。
-  - 320、375、390、393、430px responsive 與 time input containment
-    contract tests 通過；實體 iPhone 的 native picker、safe area 與實際
-    `scrollWidth === clientWidth` 留在本 Milestone 唯一一次最終 Human QA。
+  - 320、375、390、393、430px 皆為 `scrollWidth === clientWidth`；支出
+    兩個按鈕保持同列、快捷 46px、選擇按鈕 48px、工作明細 44px。
   - 有收入無工時時，「補上工時」保留表單並捲動但不彈鍵盤；「稍後再補」
     可儲存，AI 顯示未計算原因而非極端時薪。
   - 天氣首次展開只顯示隱私說明；未同意不呼叫定位，手動選擇可獨立保存。
     自動定位成功、iOS 權限拒絕及 installed-PWA 權限行為留給最終一次真機 QA。
   - Console：0 error／0 warning。
-- App Shell：`driver-pay-pro-v16`；Manifest 與 localStorage key
+- App Shell：`driver-pay-pro-v17`；Manifest 與 localStorage key
   `driverPayApp.v2` 保持原契約。
-- Final follow-up 新公開 Preview：
-  `https://requested-whilst-courts-dale.trycloudflare.com`。未登入外部 HTTPS
-  請求回傳 200，公開 HTML、Manifest 與 Service Worker 與本機候選檔案
-  SHA-256 完全相同，沒有第三方登入或警告頁；舊 Preview 不重用。
-- 尚待：Product Owner 於 iPhone Safari／installed PWA 驗證 native picker、
-  定位權限、鍵盤、safe area 與離線更新的最終一次 Human QA。
+- Homepage Detail 新公開 Preview：
+  `https://cord-diagnosis-quite-cancel.trycloudflare.com`；未登入外部 HTTPS
+  200、HTML／Manifest／Service Worker SHA-256 與本機一致、Service Worker
+  v17、390px 無 overflow、Console 0 error／warning，且沒有登入或警告頁。
+- 尚待：Product Owner 於 iPhone Safari／installed PWA 驗證本次細節去重複、
+  支出操作、safe area 與離線更新。
 
 ## Local-first V1 Release Candidate
 

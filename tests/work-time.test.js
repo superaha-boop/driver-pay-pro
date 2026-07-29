@@ -318,12 +318,13 @@ test("每日紀錄核心表單預設展開且其他資料預設收合", () => {
   assert.match(html, /id="otherDataToggle"[^>]*aria-expanded="false"/);
 });
 
-test("Today 主工時與工作明細位於同一行且不重複狀態文字", () => {
+test("Today 工作狀態卡不再重複主工時且保留工作明細", () => {
   assert.match(html, /class="work-time-overview"/);
-  assert.match(html, /id="workPrimaryTime"/);
+  assert.doesNotMatch(html, /id="workPrimaryTime"/);
   assert.match(html, /id="workDetailsToggle"[^>]*aria-expanded="false"[^>]*aria-controls="workMetrics"/);
   const controls = html.slice(html.indexOf("function updateWorkControls("), html.indexOf("function updateCurrentWeather("));
-  assert.match(controls, /els\.workPrimaryTime\.textContent = formatWorkDuration\(actualMinutes\)/);
+  assert.doesNotMatch(controls, /workPrimaryTime/);
+  assert.match(controls, /els\.workActual\.textContent = formatWorkDuration\(actualMinutes\)/);
   assert.doesNotMatch(controls, /今日工時|已工作/);
   assert.doesNotMatch(html, /els\.workActual\.textContent = clockDuration/);
 });

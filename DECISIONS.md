@@ -593,3 +593,39 @@ manual 會產生兩個互相競爭的答案。將輸入模式互斥、切換改�
   deployment，須先完成本 Milestone 唯一一次 Final Human QA。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-036](docs/DECISION_LOG.md#d-036)。
+
+## D-037 — Today 顯示責任去重複與支出控制精簡
+
+- Date: 2026-07-29
+
+### 決策
+
+1. Product Owner 已確認 V1.1 Milestone 1 Final Human QA 通過；後續低風險
+   Today 細節 Sprint 可在同一功能分支繼續，但新的 Homepage Detail Human
+   QA 通過前不得合併 `main` 或部署 Production。
+2. Today 綠色摘要卡是今日正式工時的唯一高階顯示。工作狀態卡只負責狀態、
+   工作明細與下一步操作，不再顯示第二份主工時。
+3. manual 工時以小時／分鐘輸入作唯一主要顯示，不再顯示重複摘要；clock
+   工時保留一次使用 `formatWorkDuration()` 的計算結果。
+4. 新增支出的快捷按鈕縮短但維持至少 44px；類別與支出方式改為同列兩個
+   真正按鈕，按鈕本身同時顯示目前值與完整選項入口。
+5. 快捷分類切換必須保留尚未儲存的金額、日期、支出方式與備註；完整類別、
+   legacy／自訂類別、三種支出方式與獨立支出 persistence 均保持原來源。
+6. `driverPayApp.v2`、WorkRecord schema、canonical calculation、Calendar、
+   Reports、AI 與 CSV 契約均不變，不需要 migration。
+
+### 原因
+
+Today 同時在綠色摘要、工作狀態與 manual 輸入下方重複顯示同一工時，增加
+視覺高度卻沒有提供新的操作資訊。支出類別與方式也各自以標籤、目前值及
+修改文字重複表達。將責任集中在摘要、狀態與輸入控制本身，可以降低高度，
+同時保留所有既有功能與資料相容性。
+
+### 影響範圍
+
+- 僅修改 Today 的顯示結構、支出草稿互動、contract tests、文件與 App Shell
+  cache v17。
+- 不修改工時、收入或支出公式，不修改任何 durable schema，不修改
+  Calendar／Reports／AI／Driver UI，不合併 `main`，不部署 Production。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-037](docs/DECISION_LOG.md#d-037)。

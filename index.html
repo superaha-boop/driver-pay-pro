@@ -1539,22 +1539,11 @@
       background: #edf2f5;
     }
 
-    .work-primary-time {
-      min-width: 0;
-      display: block;
-      color: var(--text);
-      font-size: 21px;
-      font-weight: 700;
-      line-height: 1.25;
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-    }
-
     .work-time-overview {
       min-width: 0;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-end;
       gap: 12px;
     }
 
@@ -1897,7 +1886,7 @@
 
     .smart-expense-primary {
       display: grid;
-      gap: 16px;
+      gap: 12px;
     }
 
     .expense-section-label {
@@ -1915,13 +1904,14 @@
     }
 
     .expense-quick-button {
+      position: relative;
       min-width: 0;
-      min-height: 60px;
-      padding: 6px 4px;
-      display: grid;
-      place-items: center;
-      align-content: center;
-      gap: 3px;
+      min-height: 46px;
+      padding: 5px 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
       border: 1px solid #dce4df;
       border-radius: 14px;
       color: #33413a;
@@ -1935,6 +1925,17 @@
       color: #087653;
       border-color: #15966f;
       background: #eaf7f1;
+      box-shadow: inset 0 0 0 1px #15966f;
+    }
+
+    .expense-quick-button.active::after {
+      position: absolute;
+      top: 3px;
+      right: 5px;
+      content: "✓";
+      font-size: 10px;
+      font-weight: 800;
+      line-height: 1;
     }
 
     .expense-quick-button span {
@@ -1945,8 +1946,9 @@
     }
 
     .expense-quick-icon {
-      width: 21px;
-      height: 21px;
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
       color: #087653;
       fill: none;
       stroke: currentColor;
@@ -2007,15 +2009,22 @@
       gap: 6px;
     }
 
-    .expense-compact-row {
-      width: 100%;
+    .expense-choice-row {
       min-width: 0;
-      min-height: 54px;
-      padding: 0 14px;
       display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .expense-choice-button {
+      min-width: 0;
+      width: 100%;
+      min-height: 48px;
+      padding: 0 12px;
+      display: flex;
       align-items: center;
+      justify-content: space-between;
+      gap: 8px;
       border: 1px solid #dce4df;
       border-radius: 14px;
       color: #17211d;
@@ -2023,28 +2032,40 @@
       text-align: left;
     }
 
-    .expense-compact-row-label {
-      color: #68736e;
-      font-size: 13px;
-      font-weight: 650;
-    }
-
-    .expense-compact-row strong {
+    .expense-choice-button strong {
       min-width: 0;
       overflow: hidden;
       color: #203128;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 750;
-      text-align: right;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
-    .expense-compact-row-action {
+    .expense-choice-chevron {
+      flex: 0 0 auto;
       color: #087653;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 750;
-      white-space: nowrap;
+    }
+
+    .expense-choice-panel {
+      min-width: 0;
+    }
+
+    .expense-choice-panel select {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      min-height: 52px;
+      padding-inline: 13px;
+      border: 1px solid #dce4df;
+      border-radius: 13px;
+      color: #17211d;
+      background: #fafcfb;
+      font-size: 16px;
+      font-weight: 650;
+      box-sizing: border-box;
     }
 
     .expense-mode-option {
@@ -2064,10 +2085,6 @@
       color: #087653;
       border-color: #15966f;
       background: #e3f5ed;
-    }
-
-    .expense-compact-row + .expense-mode-options {
-      margin-top: 8px;
     }
 
     .date-card {
@@ -5244,7 +5261,6 @@
             <strong id="workStatusText" data-status="idle">尚未開始</strong>
           </div>
           <div class="work-time-overview">
-            <strong class="work-primary-time" id="workPrimaryTime" aria-live="polite">0 分鐘</strong>
             <button class="work-details-toggle" id="workDetailsToggle" type="button" aria-expanded="false" aria-controls="workMetrics" aria-label="工作明細，已收合">
               <span>工作明細</span>
               <span class="work-details-symbol" aria-hidden="true">＋</span>
@@ -5360,8 +5376,8 @@
                   </div>
                   <p class="work-mode-notice hidden" id="workModeNotice"></p>
                   <button class="button secondary work-mode-toggle" id="workModeToggle" type="button">改用手動工時</button>
-                  <div class="work-live-summary" aria-live="polite">
-                    <span>今日工時</span>
+                  <div class="work-live-summary" id="workLiveSummary" aria-live="polite">
+                    <span>計算工時</span>
                     <strong id="workLiveValue">等待設定</strong>
                   </div>
                   <p class="ds-save-status today-save-status" id="todaySaveStatus" role="status" aria-live="polite" aria-atomic="true"></p>
@@ -5840,7 +5856,7 @@
     });
     const storageKey = "driverPayApp.v2";
     const lastValidStorageKey = `${storageKey}.lastValid`;
-    const appShellCacheName = "driver-pay-pro-v16";
+    const appShellCacheName = "driver-pay-pro-v17";
     const defaultPlatforms = ["Uber", "LINE GO", "Yoxi", "55688", "大都會", "台灣大車隊", "路邊客", "自訂"];
     const defaultPlatformIds = {
       "Uber": "platform-uber",
@@ -6040,6 +6056,7 @@
       weatherAutoStatus: document.getElementById("weatherAutoStatus"),
       workCollapsedPrimary: document.getElementById("workCollapsedPrimary"),
       workCollapsedSecondary: document.getElementById("workCollapsedSecondary"),
+      workLiveSummary: document.getElementById("workLiveSummary"),
       workLiveValue: document.getElementById("workLiveValue"),
       entryId: document.getElementById("entryId"),
       formTitle: document.getElementById("formTitle"),
@@ -6083,7 +6100,6 @@
       continueRun: document.getElementById("continueRun"),
       modifyWorkTime: document.getElementById("modifyWorkTime"),
       workStatusText: document.getElementById("workStatusText"),
-      workPrimaryTime: document.getElementById("workPrimaryTime"),
       workDetailsToggle: document.getElementById("workDetailsToggle"),
       workMetrics: document.getElementById("workMetrics"),
       workTotal: document.getElementById("workTotal"),
@@ -7842,7 +7858,7 @@
             <span class="expense-section-label">快捷新增</span>
             <div class="expense-quick-actions" role="group" aria-label="快捷新增支出">
               ${shortcuts.map(category => `
-                <button class="expense-quick-button${expenseDraft.category === category ? " active" : ""}" type="button" data-expense-quick="${escapeAttr(category)}" aria-pressed="${String(expenseDraft.category === category)}">
+                <button class="expense-quick-button${expenseDraft.category === category ? " active" : ""}" type="button" data-expense-quick="${escapeAttr(category)}" aria-label="${escapeAttr(expenseShortcutLabel(category))}" aria-pressed="${String(expenseDraft.category === category)}">
                   ${expenseQuickIcon(expenseQuickIconType(category))}
                   <span>${escapeHtml(expenseShortcutLabel(category))}</span>
                 </button>
@@ -7851,20 +7867,27 @@
           </section>
 
           <div class="smart-expense-primary">
-            ${expenseDraft.category && !expenseDraft.categoryOpen ? `
-              <button class="expense-compact-row" type="button" data-expense-toggle-category aria-expanded="false">
-                <span class="expense-compact-row-label">支出類別</span>
-                <strong>${escapeHtml(expenseDraft.category)}</strong>
-                <span class="expense-compact-row-action">更改</span>
+            <div class="expense-choice-row">
+              <button class="expense-choice-button" type="button" data-expense-toggle-category aria-expanded="${String(expenseDraft.categoryOpen)}" aria-label="支出類別，${escapeAttr(expenseDraft.category || "尚未選擇")}">
+                <strong>${escapeHtml(expenseDraft.category || "選擇類別")}</strong>
+                <span class="expense-choice-chevron" aria-hidden="true">▾</span>
               </button>
-            ` : `
-              <label class="smart-expense-field">支出類別
-                <select id="smartExpenseCategory" aria-label="支出類別">
+              <button class="expense-choice-button" type="button" data-expense-toggle-mode aria-expanded="${String(expenseDraft.modeOpen)}" aria-label="支出方式，${escapeAttr(expenseModeLabel())}">
+                <strong>${escapeHtml(expenseModeLabel())}</strong>
+                <span class="expense-choice-chevron" aria-hidden="true">▾</span>
+              </button>
+            </div>
+            ${expenseDraft.categoryOpen ? `
+              <div class="expense-choice-panel">
+                <select id="smartExpenseCategory" aria-label="完整支出類別">
                   <option value="">選擇支出類別</option>
                   ${expenseCategoryOptionsMarkup()}
                 </select>
-              </label>
-            `}
+              </div>
+            ` : ""}
+            <div class="expense-mode-options"${expenseDraft.modeOpen ? "" : " hidden"} role="group" aria-label="支出方式">
+              ${modes.map(([value, label]) => `<button class="expense-mode-option${expenseDraft.mode === value ? " active" : ""}" type="button" data-expense-mode="${value}" aria-pressed="${String(expenseDraft.mode === value)}">${label}</button>`).join("")}
+            </div>
             <label class="smart-expense-field">金額
               <span class="expense-amount-wrap">
                 <span class="expense-amount-prefix" aria-hidden="true">$</span>
@@ -7879,16 +7902,6 @@
                 </div>
               </div>
             ` : ""}
-            <div>
-              <button class="expense-compact-row" type="button" data-expense-toggle-mode aria-expanded="${String(expenseDraft.modeOpen)}">
-                <span class="expense-compact-row-label">支出方式</span>
-                <strong>${escapeHtml(expenseModeLabel())}</strong>
-                <span class="expense-compact-row-action">修改</span>
-              </button>
-              <div class="expense-mode-options"${expenseDraft.modeOpen ? "" : " hidden"} role="group" aria-label="支出方式">
-                ${modes.map(([value, label]) => `<button class="expense-mode-option${expenseDraft.mode === value ? " active" : ""}" type="button" data-expense-mode="${value}" aria-pressed="${String(expenseDraft.mode === value)}">${label}</button>`).join("")}
-              </div>
-            </div>
           </div>
 
           ${expenseDraft.mode === "recurring" ? recurringExpenseMarkup(amount) : ""}
@@ -7942,29 +7955,31 @@
       }
     }
 
-    function selectExpenseCategory(category, focusAmount = false) {
+    function selectExpenseCategory(category, focusAmount = false, preserveDraft = false) {
       const sameCategory = expenseDraft.category === category;
       const currentNote = expenseDraft.note;
       const currentNoteOpen = expenseDraft.noteOpen;
       expenseDraft.category = category;
-      expenseDraft.mode = suggestedExpenseMode(category);
-      const months = suggestedExpenseMonths(category);
-      expenseDraft.durationChoice = String(months);
-      expenseDraft.customMonths = months;
-      expenseDraft.startMonth = expenseDraft.paymentDate.slice(0, 7);
-      expenseDraft.recurringStartMonth = expenseDraft.paymentDate.slice(0, 7);
-      expenseDraft.recurringStartMonthChanged = false;
-      expenseDraft.recurringDay = Number(expenseDraft.paymentDate.slice(-2));
-      expenseDraft.startMonthChanged = false;
-      expenseDraft.advancedOpen = false;
+      if (!preserveDraft) {
+        expenseDraft.mode = suggestedExpenseMode(category);
+        const months = suggestedExpenseMonths(category);
+        expenseDraft.durationChoice = String(months);
+        expenseDraft.customMonths = months;
+        expenseDraft.startMonth = expenseDraft.paymentDate.slice(0, 7);
+        expenseDraft.recurringStartMonth = expenseDraft.paymentDate.slice(0, 7);
+        expenseDraft.recurringStartMonthChanged = false;
+        expenseDraft.recurringDay = Number(expenseDraft.paymentDate.slice(-2));
+        expenseDraft.startMonthChanged = false;
+        expenseDraft.advancedOpen = false;
+        expenseDraft.note = sameCategory ? currentNote : existingExpenseNote(category, expenseDraft.paymentDate);
+        expenseDraft.noteOpen = sameCategory ? currentNoteOpen : false;
+        const existingAmount = existingExpenseAmount(category, expenseDraft.paymentDate);
+        expenseDraft.amount = existingAmount ? String(existingAmount) : "";
+      }
       expenseDraft.categoryOpen = false;
       expenseDraft.modeOpen = false;
-      expenseDraft.note = sameCategory ? currentNote : existingExpenseNote(category, expenseDraft.paymentDate);
-      expenseDraft.noteOpen = sameCategory ? currentNoteOpen : false;
       expenseDraft.status = "";
       expenseDraft.statusType = "";
-      const existingAmount = existingExpenseAmount(category, expenseDraft.paymentDate);
-      expenseDraft.amount = existingAmount ? String(existingAmount) : "";
       renderExpenseForm();
       if (focusAmount) {
         window.requestAnimationFrame(() => {
@@ -9756,7 +9771,6 @@
       const actualMinutes = details.workMinutes;
       const elapsedMinutes = Math.max(0, Math.round(details.elapsedMs / workTimeUnits.minuteMs));
       const breakMinutes = Math.max(0, Math.round(details.breakMs / workTimeUnits.minuteMs));
-      els.workPrimaryTime.textContent = formatWorkDuration(actualMinutes);
       els.workTotal.textContent = formatWorkDuration(elapsedMinutes);
       els.workBreak.textContent = formatWorkDuration(breakMinutes);
       els.workActual.textContent = formatWorkDuration(actualMinutes);
@@ -10296,6 +10310,7 @@
       const isManual = workTimeInputMode === "manual";
       els.clockWorkFields.classList.toggle("hidden", isManual);
       els.manualWorkFields.classList.toggle("hidden", !isManual);
+      els.workLiveSummary.classList.toggle("hidden", isManual);
       els.workModeToggle.textContent = isManual ? "改用開始／結束時間" : "改用手動工時";
       const hasLegacyConflict = Boolean(entry?.startTime && entry?.endTime)
         && decimalHoursToMinutes(entry?.manualHours) > 0;
@@ -11802,7 +11817,7 @@
       const duration = event.target.closest("[data-expense-duration]");
       const saveButton = event.target.closest("#saveSmartExpense");
       if (quick) {
-        selectExpenseCategory(quick.dataset.expenseQuick, true);
+        selectExpenseCategory(quick.dataset.expenseQuick, true, true);
         return;
       }
       if (mode) {
@@ -11810,13 +11825,17 @@
         return;
       }
       if (categoryToggle) {
-        expenseDraft.categoryOpen = true;
+        expenseDraft.categoryOpen = !expenseDraft.categoryOpen;
+        expenseDraft.modeOpen = false;
         renderExpenseForm();
-        window.requestAnimationFrame(() => document.getElementById("smartExpenseCategory")?.focus());
+        if (expenseDraft.categoryOpen) {
+          window.requestAnimationFrame(() => document.getElementById("smartExpenseCategory")?.focus());
+        }
         return;
       }
       if (modeToggle) {
         expenseDraft.modeOpen = !expenseDraft.modeOpen;
+        expenseDraft.categoryOpen = false;
         renderExpenseForm();
         return;
       }

@@ -24,8 +24,12 @@
   legacy `manualHours` 或 live session。
 - 新增共用轉換、驗證與自然語言格式函式；Today、Calendar、Reports、AI、
   CSV 與平均時薪共用 `workMetrics()`。
-- Today 工作狀態改為單一主工時與預設收合明細；手動新增區預設收合，手動
-  工時改為小時／分鐘欄位。
+- Product Owner 已確認 Milestone 1 Final Human QA 通過。
+- Today 綠色摘要改為正式工時唯一高階顯示；工作狀態卡只保留 status、
+  工作明細與下一步操作，不再重複主工時。
+- manual 模式只顯示小時／分鐘輸入；clock 模式只保留一次共用格式計算結果。
+- 支出快捷按鈕縮短但維持 44px 以上；類別與方式使用同列兩個目前值按鈕，
+  並保留完整選項及快捷切換前的草稿內容。
 - Human QA follow-up 將主工時與 44px 工作明細控制固定同列；修改工作時間
   會展開並安全捲動，不自動 focus 或彈出鍵盤。
 - 每日紀錄使用三個獨立收合區塊：「工時設定／新增支出／其他資料」；完整
@@ -42,8 +46,8 @@
   手動值優先。
 - Today 工時欄位改為 transactional auto-save，成功 persistence 後才更新
   記憶體與通知 dependent views。
-- `test:today` 增為 49 項；全套測試增為 171 項。
-- Service Worker App Shell candidate 更新為 `driver-pay-pro-v16`。
+- `test:today` 增為 51 項；全套測試增為 173 項。
+- Service Worker App Shell candidate 更新為 `driver-pay-pro-v17`。
 - `driverPayApp.v2` 與 WorkRecord schema 未變更，舊資料不遷移、不批量改寫。
 
 ### Local-first V1 Release Candidate
