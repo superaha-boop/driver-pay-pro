@@ -63,6 +63,13 @@ Primary responsibilities:
 - Add today's expenses.
 - Record today's shift, weather, orders, distance, and note.
 - Provide immediate save and work-status feedback.
+- Keep income and work time in the first form level; place supporting fields in the
+  same form's collapsed "其他資料" section without deleting hidden values.
+- When income exists without valid work time, offer a non-blocking path to add work
+  time or save for later; incomplete work time must not produce an hourly rate.
+- Treat automatic weather as optional Today-only progressive enhancement: explain
+  the one-time location use, never persist precise coordinates, and always preserve
+  the manual and offline record flow.
 
 Today must not become:
 

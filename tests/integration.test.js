@@ -15,7 +15,7 @@ test("Today 與 Calendar 只有成功 persistence 才發出 committed record not
   );
   assert.match(
     html,
-    /if \(!saveState\(\)\) \{[\s\S]*?showToast\("儲存失敗，請稍後再試"\);[\s\S]*?return;[\s\S]*?\}\s*notifyRecordChanged\(entry\.date, "today-update"\)/
+    /if \(!persistStatePayload\(nextState, \{ updateMemory: true \}\)\) \{[\s\S]*?showToast\("儲存失敗，請稍後再試"\);[\s\S]*?return false;[\s\S]*?\}\s*notifyRecordChanged\(entry\.date, "today-update"\)/
   );
   assert.equal((html.match(/window\.addEventListener\("driverpay:recordchange", handleRecordChanged\)/g) || []).length, 1);
 });
@@ -68,7 +68,7 @@ test("五個主分頁與 session context 保持既有契約", () => {
 });
 
 test("Local-first V1 App Shell、Manifest 與 release source 保持安全", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v14"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v15"/);
   assert.match(serviceWorker, /"\.\/index\.html"/);
   assert.match(serviceWorker, /"\.\/styles\/design-system\.css"/);
   assert.equal(manifest.start_url, "./");

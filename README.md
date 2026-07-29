@@ -5,6 +5,14 @@ Driver Pay Pro 是為多元計程車與職業駕駛設計的手機優先收入�
 Driver Pay Pro Local-first V1 已通過完整 L1、公開 L2 與 Product Owner L3；
 V1 UX Freeze 已生效。產品仍維持本機優先，沒有登入、雲端備份或跨裝置同步。
 
+## 隱私
+
+主要工作紀錄只保存在目前瀏覽器的 `driverPayApp.v2`。今日自動天氣是可選功能：
+只有在使用者看過說明並同意後，App 才會取得一次性目前位置，並將座標送至
+Open-Meteo 查詢當下天氣。精確位置不會寫入每日紀錄或 localStorage；App
+只保存是否同意自動天氣的偏好。拒絕定位、離線或服務失敗時，收入與工時紀錄
+仍可完整使用，天氣可手動選擇。
+
 ## Project Documentation
 
 開始接手或修改專案時，建議依序閱讀：

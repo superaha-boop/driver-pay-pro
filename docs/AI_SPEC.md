@@ -1,8 +1,8 @@
 # Driver Pay Pro — AI Specification
 
-Version: 1.0
-Status: V1 Release Candidate
-Updated: 2026-07-26
+Version: 1.1
+Status: V1.1 Milestone 1 Candidate
+Updated: 2026-07-29
 
 ## Responsibility
 
@@ -26,6 +26,21 @@ persistence read、formatting 與 drill-down 基礎。禁止在 renderer 建立�
 `buildAIInsights()` 只把 canonical 結果轉為可讀洞察。每項建議必須包含可追溯
 依據、期間與資料充足度；資料不足、前期為零、正負跨越或讀取錯誤時，不顯示
 誤導百分比、`Infinity` 或 `NaN`。
+
+## Hourly-rate Data Quality
+
+AI 與 Reports 必須重用 `hourlyRateQuality()` 與 `recordDataQuality()`：
+
+- `complete`：有效工時至少 10 分鐘、收入與工時為 finite，且時薪大於 0、
+  不高於 NT$2,000。
+- `missing-work-time`：收入大於 0，但沒有有效工時。
+- `insufficient-work-time`：有效工時為 1～9 分鐘。
+- `abnormal-hourly-rate`：推算時薪高於 NT$2,000。
+- `invalid-time-range`：時間範圍不合法。
+
+不完整或異常資料保留原始 WorkRecord，但不得進入正常時薪、百分比、排行、
+星期／班別比較或排班建議。AI 必須顯示分析期間、紀錄數、有效工時與未計算
+原因，不得以 UI clamp 隱藏問題。
 
 ## State and Refresh
 

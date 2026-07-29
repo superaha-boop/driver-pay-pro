@@ -25,25 +25,32 @@
 執行一次。高風險資料、同步、Service Worker 或 iOS 特有變更仍須即時提高
 驗證層級。
 
-## V1.1 Milestone 1 — Today／Work-Time
+## V1.1 Milestone 1 — Today／Work-Time／QA Follow-up
 
-- `npm run test:today`：30/30，涵蓋 stale session 修正、正常／無休息／跨午夜、
+- `npm run test:today`：42/42，涵蓋 stale session 修正、正常／無休息／跨午夜、
   break validation、不完整時間、舊小數工時轉換、整數分鐘、自然語言格式、
-  zero-hour hourly rate、Today 收合 UI、transactional persistence 與 CSV。
-- `npm test`：150/150；Calendar、Reports、AI 與 integration regression 全部
+  zero-hour hourly rate、Today 同列明細、reduced-motion 捲動、未填工時提醒、
+  精簡表單、天氣權限／映射／手動覆蓋、transactional persistence 與 CSV。
+- `npm test`：164/164；Calendar、Reports、AI 與 integration regression 全部
   保持通過。
+- 共用時薪界線：0～9 分鐘不計算；10 分鐘且時薪不高於 NT$2,000 可計算；
+  超過 NT$2,000 標記異常，不參與 AI 正常洞察、百分比或排班建議。
 - 真實瀏覽器隔離 origin：
   - start → pause → resume → end 狀態與主要操作正確。
   - 手動修改 10:00–18:08 後立即顯示 8 小時 8 分，重開仍保留。
   - Calendar 與 Reports 對同一筆紀錄皆顯示 8 小時 8 分。
-  - 320、390、393、430px：
+  - 320、375、390、393、430px：
     `scrollWidth === clientWidth`；time input、休息、小時與分鐘欄位均位於
     父容器內。
+  - 有收入無工時時，「補上工時」保留表單並捲動但不彈鍵盤；「稍後再補」
+    可儲存，AI 顯示未計算原因而非極端時薪。
+  - 天氣首次展開只顯示隱私說明；未同意不呼叫定位，手動選擇可獨立保存。
+    自動定位成功、iOS 權限拒絕及 installed-PWA 權限行為留給最終一次真機 QA。
   - Console：0 error／0 warning。
-- App Shell：`driver-pay-pro-v14`；Manifest 與 localStorage key
+- App Shell：`driver-pay-pro-v15`；Manifest 與 localStorage key
   `driverPayApp.v2` 保持原契約。
-- 尚待：公開 iPhone Safari Preview、installed PWA、native picker、鍵盤、
-  safe area 與離線更新 Human QA。
+- 尚待：公開 iPhone Safari Preview、installed PWA、native picker、定位權限、
+  鍵盤、safe area 與離線更新的最終一次 Human QA。
 
 ## Local-first V1 Release Candidate
 

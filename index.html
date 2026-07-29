@@ -1540,43 +1540,49 @@
     }
 
     .work-primary-time {
+      min-width: 0;
       display: block;
       color: var(--text);
       font-size: 21px;
       font-weight: 700;
       line-height: 1.25;
       font-variant-numeric: tabular-nums;
+      white-space: nowrap;
     }
 
-    .work-details {
+    .work-time-overview {
       min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
     }
 
-    .work-details > summary {
-      width: fit-content;
+    .work-details-toggle {
+      min-width: 0;
+      flex: 0 0 auto;
       min-height: 44px;
-      display: inline-flex;
+      padding: 0 2px 0 10px;
+      display: flex;
       align-items: center;
+      gap: 6px;
+      border: 0;
+      border-radius: 10px;
       color: var(--muted);
+      background: transparent;
       font-size: 14px;
       font-weight: 650;
       cursor: pointer;
-      list-style: none;
     }
 
-    .work-details > summary::-webkit-details-marker {
-      display: none;
+    .work-details-toggle:focus-visible {
+      outline: 3px solid rgba(21, 150, 111, .2);
+      outline-offset: 1px;
     }
 
-    .work-details > summary::after {
-      content: "＋";
-      margin-left: 6px;
+    .work-details-symbol {
       color: var(--brand-strong);
       font-size: 16px;
-    }
-
-    .work-details[open] > summary::after {
-      content: "－";
     }
 
     .work-metrics {
@@ -4174,6 +4180,7 @@
       position: relative;
       margin-bottom: 0;
       border-radius: 18px;
+      scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 18px);
     }
 
     .details-panel .detail-section::before {
@@ -4192,6 +4199,40 @@
 
     .details-panel .other-section::before {
       background: #bd9564;
+    }
+
+    .other-data-expense {
+      grid-column: 1 / -1;
+      min-width: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .other-data-expense > h4 {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .weather-auto-control {
+      min-width: 0;
+      display: grid;
+      gap: 4px;
+    }
+
+    .weather-detect-button {
+      width: fit-content;
+      max-width: 100%;
+      padding-inline: 14px;
+    }
+
+    .weather-auto-status {
+      min-height: 18px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
     }
 
     .details-panel .detail-section summary {
@@ -5185,17 +5226,20 @@
               </svg>
               <span>今日工作狀態</span>
             </span>
-            <strong id="workStatusText" data-status="idle">未開始</strong>
+            <strong id="workStatusText" data-status="idle">尚未開始</strong>
           </div>
-          <strong class="work-primary-time" id="workPrimaryTime" aria-live="polite">今天尚未開始工作</strong>
-          <details class="work-details" id="workDetails">
-            <summary>工作明細</summary>
-            <div class="work-metrics" id="workMetrics" aria-label="今日工時計算">
-              <div><span>總經過時間</span><strong id="workTotal">0分鐘</strong></div>
-              <div><span>休息時間</span><strong id="workBreak">0分鐘</strong></div>
-              <div><span>實際工作時間</span><strong id="workActual">0分鐘</strong></div>
-            </div>
-          </details>
+          <div class="work-time-overview">
+            <strong class="work-primary-time" id="workPrimaryTime" aria-live="polite">0 分鐘</strong>
+            <button class="work-details-toggle" id="workDetailsToggle" type="button" aria-expanded="false" aria-controls="workMetrics" aria-label="工作明細，已收合">
+              <span>工作明細</span>
+              <span class="work-details-symbol" aria-hidden="true">＋</span>
+            </button>
+          </div>
+          <div class="work-metrics hidden" id="workMetrics" aria-label="今日工時計算">
+            <div><span>總經過時間</span><strong id="workTotal">0 分鐘</strong></div>
+            <div><span>休息時間</span><strong id="workBreak">0 分鐘</strong></div>
+            <div><span>實際工作時間</span><strong id="workActual">0 分鐘</strong></div>
+          </div>
           <div class="work-actions">
             <button class="button primary" id="startRun" type="button">開始工作</button>
             <button class="button secondary hidden" id="pauseRun" type="button">暫停休息</button>
@@ -5229,15 +5273,15 @@
         <span id="sharedDetailPanelAnchor" hidden></span>
         <div class="panel details-panel" id="sharedDetailPanel">
           <div class="panel-head">
-            <button class="manual-entry-toggle" id="manualEntryToggle" type="button" aria-expanded="false" aria-controls="manualEntryContent">
-              <span id="formTitle">手動新增紀錄</span>
+            <button class="manual-entry-toggle" id="manualEntryToggle" type="button" aria-expanded="true" aria-controls="manualEntryContent">
+              <span id="formTitle">每日紀錄</span>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="m6 9 6 6 6-6"></path>
               </svg>
             </button>
             <button class="button secondary hidden" id="cancelEdit" type="button">取消編輯</button>
           </div>
-          <div class="panel-body hidden" id="manualEntryContent">
+          <div class="panel-body" id="manualEntryContent">
             <form id="detailForm">
               <div class="fields quick-fields">
                 <div class="date-card-host" id="entryDateCard"></div>
@@ -5300,20 +5344,8 @@
                   <p class="ds-save-status today-save-status" id="todaySaveStatus" role="status" aria-live="polite" aria-atomic="true"></p>
                 </div>
               </details>
-              <details class="collapsible detail-section expense-section" id="expenseSection">
-                <summary>
-                  <span class="section-heading detail-summary-title">
-                    <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                      <path d="M4 2v20l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2V2l-2 2-2-2-2 2-2-2-2 2-2-2-2 2Z"></path>
-                      <path d="M10 8h6M10 12h6M10 16h3"></path>
-                    </svg>
-                    <span>新增支出</span>
-                  </span>
-                </summary>
-                <div class="collapsible-body" id="expenseInputs"></div>
-              </details>
-              <details class="collapsible detail-section other-section">
-                <summary>
+              <details class="collapsible detail-section other-section" id="otherDataSection">
+                <summary id="otherDataToggle" aria-expanded="false" aria-controls="otherDataContent">
                   <span class="section-heading detail-summary-title">
                     <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                       <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5Z"></path>
@@ -5322,7 +5354,17 @@
                     <span>其他資料</span>
                   </span>
                 </summary>
-                <div class="collapsible-body fields">
+                <div class="collapsible-body fields" id="otherDataContent">
+                  <section class="other-data-expense" id="expenseSection" aria-labelledby="expenseSectionTitle">
+                    <h4 class="section-heading" id="expenseSectionTitle">
+                      <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M4 2v20l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2V2l-2 2-2-2-2 2-2-2-2 2-2-2-2 2Z"></path>
+                        <path d="M10 8h6M10 12h6M10 16h3"></path>
+                      </svg>
+                      <span>新增支出</span>
+                    </h4>
+                    <div id="expenseInputs"></div>
+                  </section>
                   <label>小費
                     <input type="number" inputmode="numeric" id="tips" min="0" step="1" value="0">
                   </label>
@@ -5347,15 +5389,21 @@
                   </label>
                   <div class="direct-choice-field">
                     <span class="direct-choice-label">天氣</span>
+                    <div class="weather-auto-control">
+                      <button class="button secondary weather-detect-button" id="detectWeather" type="button">自動偵測天氣</button>
+                      <p class="weather-auto-status" id="weatherAutoStatus" role="status" aria-live="polite"></p>
+                    </div>
                     <div class="direct-choice-options" role="group" aria-label="選擇天氣">
                       <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="晴天">晴天</button>
+                      <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="多雲">多雲</button>
                       <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="陰天">陰天</button>
                       <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="雨天">雨天</button>
                       <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="大雨">大雨</button>
+                      <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="雷雨">雷雨</button>
                       <button class="direct-choice" type="button" data-detail-choice="weather" data-choice-value="其他">其他</button>
                     </div>
                     <select class="choice-value-control" id="weather" aria-hidden="true" tabindex="-1">
-                      <option value="" disabled selected>請選擇</option><option>晴天</option><option>陰天</option><option>雨天</option><option>大雨</option><option>其他</option>
+                      <option value="" disabled selected>請選擇</option><option>晴天</option><option>多雲</option><option>陰天</option><option>雨天</option><option>大雨</option><option>雷雨</option><option>其他</option>
                     </select>
                   </div>
                   <label style="grid-column: 1 / -1;">備註
@@ -5712,6 +5760,28 @@
     </div>
   </dialog>
 
+  <dialog class="record-editor-confirm" id="missingWorkTimeDialog" aria-labelledby="missingWorkTimeTitle">
+    <form method="dialog" class="record-editor-confirm__body">
+      <h2 class="ds-card-title" id="missingWorkTimeTitle">要不要順便記一下工時？</h2>
+      <p class="ds-secondary">這樣時薪才準確。</p>
+      <div class="record-editor-confirm__actions">
+        <button class="ds-button ds-button--secondary" id="missingWorkLater" type="button">稍後再補</button>
+        <button class="ds-button ds-button--primary" id="missingWorkAdd" type="button">補上工時</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="record-editor-confirm" id="weatherPermissionDialog" aria-labelledby="weatherPermissionTitle">
+    <form method="dialog" class="record-editor-confirm__body">
+      <h2 class="ds-card-title" id="weatherPermissionTitle">自動帶入目前天氣</h2>
+      <p class="ds-secondary">允許定位後，可自動帶入目前天氣；位置只用於取得天氣，不會儲存在每日紀錄中。</p>
+      <div class="record-editor-confirm__actions">
+        <button class="ds-button ds-button--secondary" id="weatherPermissionLater" type="button">暫時不要</button>
+        <button class="ds-button ds-button--primary" id="weatherPermissionAllow" type="button">允許並自動帶入</button>
+      </div>
+    </form>
+  </dialog>
+
   <script>
     const brandAttribution = Object.freeze({
       productName: "Driver Pay Pro",
@@ -5723,7 +5793,7 @@
     });
     const storageKey = "driverPayApp.v2";
     const lastValidStorageKey = `${storageKey}.lastValid`;
-    const appShellCacheName = "driver-pay-pro-v13";
+    const appShellCacheName = "driver-pay-pro-v15";
     const defaultPlatforms = ["Uber", "LINE GO", "Yoxi", "55688", "大都會", "台灣大車隊", "路邊客", "自訂"];
     const defaultPlatformIds = {
       "Uber": "platform-uber",
@@ -5744,6 +5814,10 @@
       hourMs: 3600000,
       dayMs: 86400000
     });
+    const MIN_VALID_WORK_MINUTES = 10;
+    const MAX_REASONABLE_HOURLY_RATE = 2000;
+    const WEATHER_SERVICE_URL = "https://api.open-meteo.com/v1/forecast";
+    const WEATHER_CACHE_TTL_MS = 30 * 60 * 1000;
     const maxPlatformIncome = 99999999;
     const defaultExpenses = ["油錢/電費", "洗車", "停車費", "保養", "車租/車貸", "保險", "平台抽成", "罰單", "其他"];
     const expenseCategoryGroups = [
@@ -5822,6 +5896,11 @@
     let lastIncomeAddition = null;
     let todayWorkSaveTimer = 0;
     let todayWorkStatusTimer = 0;
+    let pendingTodayRecordSave = null;
+    let weatherDetectionPromise = null;
+    let weatherManualOverride = false;
+    let weatherSuggestionCache = null;
+    const weatherDetectionAttemptedDates = new Set();
     let calendarState = createCalendarState(todayString());
     let calendarTodayTimer = 0;
     let calendarGesture = null;
@@ -5880,8 +5959,18 @@
       recordEditorConfirmMessage: document.getElementById("recordEditorConfirmMessage"),
       recordEditorConfirmCancel: document.getElementById("recordEditorConfirmCancel"),
       recordEditorConfirmAccept: document.getElementById("recordEditorConfirmAccept"),
+      missingWorkTimeDialog: document.getElementById("missingWorkTimeDialog"),
+      missingWorkLater: document.getElementById("missingWorkLater"),
+      missingWorkAdd: document.getElementById("missingWorkAdd"),
+      weatherPermissionDialog: document.getElementById("weatherPermissionDialog"),
+      weatherPermissionLater: document.getElementById("weatherPermissionLater"),
+      weatherPermissionAllow: document.getElementById("weatherPermissionAllow"),
       calendarExpenseList: document.getElementById("calendarExpenseList"),
       workTimeSection: document.getElementById("workTimeSection"),
+      otherDataSection: document.getElementById("otherDataSection"),
+      otherDataToggle: document.getElementById("otherDataToggle"),
+      detectWeather: document.getElementById("detectWeather"),
+      weatherAutoStatus: document.getElementById("weatherAutoStatus"),
       workCollapsedPrimary: document.getElementById("workCollapsedPrimary"),
       workCollapsedSecondary: document.getElementById("workCollapsedSecondary"),
       workLiveValue: document.getElementById("workLiveValue"),
@@ -5926,6 +6015,7 @@
       endRun: document.getElementById("endRun"),
       workStatusText: document.getElementById("workStatusText"),
       workPrimaryTime: document.getElementById("workPrimaryTime"),
+      workDetailsToggle: document.getElementById("workDetailsToggle"),
       workMetrics: document.getElementById("workMetrics"),
       workTotal: document.getElementById("workTotal"),
       workBreak: document.getElementById("workBreak"),
@@ -6053,6 +6143,9 @@
         monthlyGoal: Number(settings.monthlyGoal || 0),
         dailyGoal: Number(settings.dailyGoal || 0),
         timeDetailsOpen: Boolean(settings.timeDetailsOpen),
+        weatherAutoConsent: ["granted", "declined"].includes(settings.weatherAutoConsent)
+          ? settings.weatherAutoConsent
+          : "",
         calendarMonth: normalizeMonthKey(settings.calendarMonth),
         reportMonth: normalizeMonthKey(settings.reportMonth),
         lastReportView: normalizeReportView(settings.lastReportView),
@@ -6589,8 +6682,8 @@
 
     function formatWorkDuration(value) {
       const { hours, minutes: minutePart } = minutesToHourMinuteParts(value);
-      if (!hours) return `${minutePart}分鐘`;
-      return minutePart ? `${hours}小時${minutePart}分` : `${hours}小時`;
+      if (!hours) return `${minutePart} 分鐘`;
+      return minutePart ? `${hours} 小時 ${minutePart} 分` : `${hours} 小時`;
     }
 
     function clockWorkDurationMs(entry) {
@@ -6650,14 +6743,53 @@
       return {
         durationMs,
         workMinutes,
-        hours: workMinutes / 60
+        hours: workMinutes / 60,
+        source: clockResult.valid && clockResult.complete
+          ? "clock"
+          : manualMinutes > 0
+            ? "manual"
+            : sessionDurationMs > 0
+              ? "session"
+              : "none",
+        validationCode: clockResult.complete && !clockResult.valid
+          ? "invalid-time-range"
+          : workMinutes > 0
+            ? "complete"
+            : "missing-work-time"
       };
     }
 
+    function hourlyRateQuality(netIncome, workMinutes, validationCode = "") {
+      const income = Number(netIncome);
+      const minutesValue = Number(workMinutes);
+      if (validationCode === "invalid-time-range") {
+        return { status: "invalid-time-range", hourlyRate: null, workMinutes: 0 };
+      }
+      if (!Number.isFinite(minutesValue) || minutesValue <= 0) {
+        return { status: "missing-work-time", hourlyRate: null, workMinutes: 0 };
+      }
+      const roundedMinutes = Math.max(0, Math.round(minutesValue));
+      if (roundedMinutes < MIN_VALID_WORK_MINUTES) {
+        return { status: "insufficient-work-time", hourlyRate: null, workMinutes: roundedMinutes };
+      }
+      if (!Number.isFinite(income)) {
+        return { status: "abnormal-hourly-rate", hourlyRate: null, workMinutes: roundedMinutes };
+      }
+      const calculatedRate = income / (roundedMinutes / 60);
+      if (!Number.isFinite(calculatedRate) || calculatedRate <= 0 || calculatedRate > MAX_REASONABLE_HOURLY_RATE) {
+        return {
+          status: "abnormal-hourly-rate",
+          hourlyRate: null,
+          calculatedRate: Number.isFinite(calculatedRate) ? calculatedRate : null,
+          workMinutes: roundedMinutes
+        };
+      }
+      return { status: "complete", hourlyRate: calculatedRate, workMinutes: roundedMinutes };
+    }
+
     function hourlyRate(netIncome, durationMs) {
-      const safeDurationMs = nonNegativeNumber(durationMs);
-      if (safeDurationMs < workTimeUnits.minuteMs) return 0;
-      return finiteNumber(netIncome) / (safeDurationMs / workTimeUnits.hourMs);
+      const workMinutes = Math.round(nonNegativeNumber(durationMs) / workTimeUnits.minuteMs);
+      return hourlyRateQuality(netIncome, workMinutes).hourlyRate || 0;
     }
 
     function minutes(time) {
@@ -6760,6 +6892,13 @@
       return { total, tips, expenses, durationMs, hours, orders, net, hourly: hourlyRate(net, durationMs) };
     }
 
+    function recordDataQuality(entry) {
+      const work = workMetrics(entry || {});
+      const range = validateWorkTimeRange(entry || {});
+      const validationCode = range.complete && !range.valid ? "invalid-time-range" : work.validationCode;
+      return hourlyRateQuality(entryNet(entry || {}), work.workMinutes, validationCode);
+    }
+
     function isWorkDayRecord(entry, derived = null) {
       if (!entry || !normalizeDateKey(entry.date)) return false;
       const values = derived || {
@@ -6825,8 +6964,17 @@
       const monthRecords = sharedAnalytics.getRecordsInRange(source, monthRange);
       const daySummaries = [...sharedAnalytics.summarizeRecordsByDate(monthRecords).values()];
       const missingWorkDates = daySummaries
-        .filter(day => day.aggregate.totalIncome > 0 && !day.aggregate.validWorkDuration)
+        .filter(day => day.aggregate.totalIncome > 0 && day.aggregate.hourlyRateStatus === "missing-work-time")
         .map(day => day.date);
+      const insufficientWorkDates = daySummaries
+        .filter(day => day.aggregate.totalIncome > 0 && day.aggregate.hourlyRateStatus === "insufficient-work-time")
+        .map(day => day.date);
+      const abnormalHourlyRateDates = daySummaries
+        .filter(day => day.aggregate.totalIncome > 0 && day.aggregate.hourlyRateStatus === "abnormal-hourly-rate")
+        .map(day => day.date);
+      const invalidTimeRangeDates = monthRecords
+        .filter(entry => recordDataQuality(entry).status === "invalid-time-range")
+        .map(entry => entry.date);
       const negativeNetDates = daySummaries
         .filter(day => day.aggregate.netIncome < 0)
         .map(day => day.date);
@@ -6843,6 +6991,9 @@
       const uniqueDates = values => [...new Set(values)].sort();
       const missingDates = uniqueDates([
         ...missingWorkDates,
+        ...insufficientWorkDates,
+        ...abnormalHourlyRateDates,
+        ...invalidTimeRangeDates,
         ...incompleteLegacyDates,
         ...invalidAmountDates,
         ...invalidPlatformDates
@@ -6852,6 +7003,9 @@
         invalidAmountDates: uniqueDates(invalidAmountDates),
         invalidPlatformDates: uniqueDates(invalidPlatformDates),
         missingWorkDates: uniqueDates(missingWorkDates),
+        insufficientWorkDates: uniqueDates(insufficientWorkDates),
+        abnormalHourlyRateDates: uniqueDates(abnormalHourlyRateDates),
+        invalidTimeRangeDates: uniqueDates(invalidTimeRangeDates),
         negativeNetDates: uniqueDates(negativeNetDates),
         incompleteLegacyDates: uniqueDates(incompleteLegacyDates),
         missingDates,
@@ -6908,6 +7062,14 @@
       return { view, ...options };
     }
 
+    function hourlyRateStatusMessage(status) {
+      if (status === "insufficient-work-time") return "工時資料不足，暫不計算時薪";
+      if (status === "abnormal-hourly-rate") return "時薪資料可能異常，請檢查收入與工時紀錄";
+      if (status === "invalid-time-range") return "工作時間範圍無效，請檢查工時紀錄";
+      if (status === "missing-work-time") return "尚未記錄有效工時，暫不計算時薪";
+      return "";
+    }
+
     function buildAIInsights(input) {
       const {
         currentWeek,
@@ -6955,6 +7117,32 @@
           evidence: `${reportDateLabel(date)}有收入但沒有有效工時；本月共 ${dataQuality.missingWorkDates.length} 天。`,
           period: sharedAnalytics.getMonthLabel(ranges.monthRange),
           sufficiency: "資料不完整",
+          target: aiInsightTarget("calendar", { date }),
+          accessibleName: `前往月曆檢查 ${formatCalendarFullDate(date)}`
+        });
+      }
+
+      if (dataQuality.insufficientWorkDates.length) {
+        const date = dataQuality.insufficientWorkDates[0];
+        addRecommendation({
+          title: "工時資料不足，暫不計算時薪",
+          action: "請確認這一天的開始、結束與休息時間是否完整。",
+          evidence: `${reportDateLabel(date)}的有效工時少於 ${MIN_VALID_WORK_MINUTES} 分鐘；不以極短工時產生營運建議。`,
+          period: sharedAnalytics.getMonthLabel(ranges.monthRange),
+          sufficiency: "工時資料不足",
+          target: aiInsightTarget("calendar", { date }),
+          accessibleName: `前往月曆檢查 ${formatCalendarFullDate(date)}`
+        });
+      }
+
+      if (dataQuality.abnormalHourlyRateDates.length) {
+        const date = dataQuality.abnormalHourlyRateDates[0];
+        addRecommendation({
+          title: "時薪資料可能異常",
+          action: "請檢查收入與工時紀錄；異常值不會用來產生排班或表現建議。",
+          evidence: `${reportDateLabel(date)}的推算時薪超過資料品質上限 ${money(MAX_REASONABLE_HOURLY_RATE)}／小時。`,
+          period: sharedAnalytics.getMonthLabel(ranges.monthRange),
+          sufficiency: "異常資料已排除",
           target: aiInsightTarget("calendar", { date }),
           accessibleName: `前往月曆檢查 ${formatCalendarFullDate(date)}`
         });
@@ -7040,18 +7228,18 @@
         }
         monthlyInsights.push({
           title: "本月淨收入概況",
-          action: currentMonth.validWorkDuration
+          action: currentMonth.validHourlyRate
             ? `本月平均時薪 ${money(currentMonth.averageHourlyIncome)}，總工時 ${formatReportDuration(currentMonth.totalWorkDuration)}。`
-            : "目前沒有足夠工時，暫不解讀平均時薪。",
+            : hourlyRateStatusMessage(currentMonth.hourlyRateStatus),
           evidence: `截至目前淨收入 ${money(currentMonth.netIncome)}；${comparisonText}`,
           period: sharedAnalytics.getMonthLabel(ranges.monthRange),
-          sufficiency: `${currentMonth.workDays} 個有效工作日`,
+          sufficiency: `${currentMonth.validHourlyRecordCount} 筆有效時薪紀錄・有效工時 ${formatReportDuration(currentMonth.totalWorkDuration)}`,
           target: aiInsightTarget("reports", { reportView: "month" }),
           accessibleName: "前往月報查看本月淨收入"
         });
 
         let changeSource = "資料不足以判定";
-        if (previousMonth.validWorkDuration && currentMonth.validWorkDuration && previousMonth.hasRecords) {
+        if (previousMonth.validHourlyRate && currentMonth.validHourlyRate && previousMonth.hasRecords) {
           const workDelta = sharedAnalytics.compareReportMetric(
             currentMonth.totalWorkDuration,
             previousMonth.totalWorkDuration,
@@ -7107,6 +7295,27 @@
         action: "前往月曆補齊或校正這一天的工時。",
         target: aiInsightTarget("calendar", { date })
       }));
+      dataQuality.insufficientWorkDates.forEach(date => addReminder({
+        severity: "建議檢查",
+        date,
+        reason: "工時資料不足，暫不計算時薪。",
+        action: `有效工時未滿 ${MIN_VALID_WORK_MINUTES} 分鐘；請前往月曆核對。`,
+        target: aiInsightTarget("calendar", { date })
+      }));
+      dataQuality.abnormalHourlyRateDates.forEach(date => addReminder({
+        severity: "需要處理",
+        date,
+        reason: "時薪資料可能異常，請檢查收入與工時紀錄。",
+        action: "此異常值不會用於營運或排班建議。",
+        target: aiInsightTarget("calendar", { date })
+      }));
+      dataQuality.invalidTimeRangeDates.forEach(date => addReminder({
+        severity: "需要處理",
+        date,
+        reason: "工作時間範圍無效。",
+        action: "請前往月曆修正開始、結束或休息時間。",
+        target: aiInsightTarget("calendar", { date })
+      }));
       dataQuality.negativeNetDates.forEach(date => addReminder({
         severity: "建議檢查",
         date,
@@ -7153,6 +7362,9 @@
           period: ranges.monthRange,
           workDays: currentMonth.workDays,
           recordCount: currentMonth.recordCount,
+          validHourlyRecordCount: currentMonth.validHourlyRecordCount,
+          validWorkDuration: currentMonth.totalWorkDuration,
+          hourlyRateStatus: currentMonth.hourlyRateStatus,
           missingDataCount: dataQuality.issueCount,
           sufficient: currentMonth.workDays >= 2,
           trendPointCount: monthlyTrend.length
@@ -7236,7 +7448,9 @@
         els.aiAnalysisMetadata.innerHTML = `
           <strong>分析依據</strong><br>
           根據 ${escapeHtml(formatCalendarFullDate(metadata.period.start))}～${escapeHtml(formatCalendarFullDate(metadata.period.end))}，
-          共 ${metadata.workDays} 個有效工作日、${metadata.recordCount} 筆紀錄。
+          共 ${metadata.workDays} 個工作日、${metadata.recordCount} 筆紀錄；
+          ${metadata.validHourlyRecordCount} 筆可計算時薪，有效工時 ${escapeHtml(formatReportDuration(metadata.validWorkDuration))}。
+          ${metadata.hourlyRateStatus === "complete" ? "" : `${escapeHtml(hourlyRateStatusMessage(metadata.hourlyRateStatus))}。`}
           ${metadata.missingDataCount ? `有 ${metadata.missingDataCount} 項資料需要檢查。` : "資料未發現需要處理的問題。"}
           最後更新 ${escapeHtml(generatedAt)}。${offline ? "目前離線，分析仍使用此裝置已儲存的資料。" : ""}
         `;
@@ -7816,8 +8030,6 @@
       expenseDraft = createExpenseDraft(paymentDate);
       renderAll();
       renderExpenseForm();
-      const section = document.getElementById("expenseSection");
-      if (section) section.open = false;
       showToast(`已儲存 ${category} ${money(amount)}`);
     }
 
@@ -8540,6 +8752,19 @@
     function aggregateReport(records, range) {
       const periodRecords = getRecordsInRange(records, range);
       const summary = summarize(periodRecords);
+      const workMinutes = Math.round(summary.durationMs / workTimeUnits.minuteMs);
+      const hourlyRecordQualities = periodRecords
+        .filter(record => entryTotal(record) > 0)
+        .map(record => recordDataQuality(record));
+      const blockingHourlyStatus = [
+        "invalid-time-range",
+        "missing-work-time",
+        "insufficient-work-time",
+        "abnormal-hourly-rate"
+      ].find(status => hourlyRecordQualities.some(quality => quality.status === status));
+      const hourlyQuality = blockingHourlyStatus
+        ? { status: blockingHourlyStatus, hourlyRate: null, workMinutes }
+        : hourlyRateQuality(summary.net, workMinutes);
       const recordsByDate = new Map();
       const platformTotals = {};
       periodRecords.forEach(record => {
@@ -8564,7 +8789,10 @@
         workDays,
         totalWorkDuration: summary.durationMs,
         validWorkDuration: summary.durationMs > 0,
-        averageHourlyIncome: summary.durationMs > 0 ? summary.hourly : null,
+        validHourlyRate: hourlyQuality.status === "complete",
+        hourlyRateStatus: hourlyQuality.status,
+        averageHourlyIncome: hourlyQuality.hourlyRate,
+        validHourlyRecordCount: hourlyRecordQualities.filter(quality => quality.status === "complete").length,
         platformTotals
       };
     }
@@ -8726,8 +8954,8 @@
           previousHasData: previous.hasRecords
         }),
         averageHourlyIncome: compareReportMetric(current.averageHourlyIncome, previous.averageHourlyIncome, {
-          currentHasData: current.validWorkDuration,
-          previousHasData: previous.validWorkDuration
+          currentHasData: current.validHourlyRate,
+          previousHasData: previous.validHourlyRate
         })
       };
       if (mode === "month") {
@@ -8829,7 +9057,7 @@
         result.highestHourly = pick(
           day => day.aggregate.averageHourlyIncome,
           "max",
-          day => day.aggregate.validWorkDuration
+          day => day.aggregate.validHourlyRate
         );
       }
       return result;
@@ -8850,6 +9078,8 @@
       buildMonthlyWeeklyNetTrend,
       findImportantReportDates,
       summarizeRecordsByDate,
+      hourlyRateQuality,
+      recordDataQuality,
       normalizePlatformKey,
       aggregatePlatformIncome
     });
@@ -9414,12 +9644,20 @@
       return { ...work, breakMs, elapsedMs };
     }
 
+    function setWorkDetailsExpanded(expanded) {
+      const isExpanded = Boolean(expanded);
+      els.workMetrics.classList.toggle("hidden", !isExpanded);
+      els.workDetailsToggle.setAttribute("aria-expanded", String(isExpanded));
+      els.workDetailsToggle.setAttribute("aria-label", `工作明細，${isExpanded ? "已展開" : "已收合"}`);
+      els.workDetailsToggle.querySelector(".work-details-symbol").textContent = isExpanded ? "－" : "＋";
+    }
+
     function updateWorkControls() {
       const entry = entryForDate();
       const status = workStatus(entry);
       const details = sessionDetails(entry);
       const labels = {
-        idle: "未開始",
+        idle: "尚未開始",
         running: "工作中",
         paused: "已暫停",
         stopped: "已收工"
@@ -9429,11 +9667,7 @@
       const actualMinutes = details.workMinutes;
       const elapsedMinutes = Math.max(0, Math.round(details.elapsedMs / workTimeUnits.minuteMs));
       const breakMinutes = Math.max(0, Math.round(details.breakMs / workTimeUnits.minuteMs));
-      els.workPrimaryTime.textContent = status === "idle"
-        ? "今天尚未開始工作"
-        : status === "stopped"
-          ? `今日工時 ${formatWorkDuration(actualMinutes)}`
-          : `已工作 ${formatWorkDuration(actualMinutes)}`;
+      els.workPrimaryTime.textContent = formatWorkDuration(actualMinutes);
       els.workTotal.textContent = formatWorkDuration(elapsedMinutes);
       els.workBreak.textContent = formatWorkDuration(breakMinutes);
       els.workActual.textContent = formatWorkDuration(actualMinutes);
@@ -9444,8 +9678,143 @@
       els.endRun.classList.toggle("hidden", !["running", "paused"].includes(status));
     }
 
-    function updateCurrentWeather(weather) {
+    function mapWeatherCode(weatherCode) {
+      const code = Number(weatherCode);
+      if (!Number.isFinite(code)) return "其他";
+      if (code === 0) return "晴天";
+      if ([1, 2].includes(code)) return "多雲";
+      if ([3, 45, 48].includes(code)) return "陰天";
+      if ([95, 96, 99].includes(code)) return "雷雨";
+      if ([65, 67, 82].includes(code)) return "大雨";
+      if ((code >= 51 && code <= 63) || [66, 80, 81].includes(code)) return "雨天";
+      return "其他";
+    }
+
+    function setWeatherAutoStatus(message = "") {
+      if (!els.weatherAutoStatus) return;
+      els.weatherAutoStatus.textContent = message;
+    }
+
+    function weatherTargetDate() {
+      return normalizeDateKey(document.getElementById("date")?.value) || todayString();
+    }
+
+    function saveWeatherAutoConsent(value) {
+      const nextState = cloneStatePayload(state);
+      nextState.settings.weatherAutoConsent = value;
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        setWeatherAutoStatus("定位偏好未能儲存；仍可手動選擇天氣。");
+        return false;
+      }
+      return true;
+    }
+
+    function requestCurrentPositionOnce() {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error("geolocation-unavailable"));
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: false,
+          maximumAge: 15 * 60 * 1000,
+          timeout: 10000
+        });
+      });
+    }
+
+    async function fetchCurrentWeather(latitude, longitude) {
+      const url = new URL(WEATHER_SERVICE_URL);
+      url.searchParams.set("latitude", String(latitude));
+      url.searchParams.set("longitude", String(longitude));
+      url.searchParams.set("current", "weather_code");
+      url.searchParams.set("timezone", "Asia/Taipei");
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) throw new Error(`weather-http-${response.status}`);
+      const payload = await response.json();
+      return mapWeatherCode(payload?.current?.weather_code);
+    }
+
+    function detectCurrentWeather(options = {}) {
+      const { manual = false } = options;
+      const date = weatherTargetDate();
+      if (recordEditorState.open || date !== todayString()) {
+        setWeatherAutoStatus("歷史紀錄不會套用目前天氣，請手動選擇。");
+        return false;
+      }
+      if (weatherDetectionPromise) return weatherDetectionPromise;
+      if (!manual && weatherDetectionAttemptedDates.has(date)) return false;
+      weatherDetectionAttemptedDates.add(date);
+      if (weatherSuggestionCache?.date === date && weatherSuggestionCache.expiresAt > Date.now()) {
+        if (!weatherManualOverride || manual) {
+          updateCurrentWeather(weatherSuggestionCache.weather, { source: "auto" });
+          setWeatherAutoStatus(`已使用最近偵測：${weatherSuggestionCache.weather}`);
+        }
+        return true;
+      }
+      if (!navigator.onLine) {
+        setWeatherAutoStatus("目前離線，無法自動取得天氣；仍可手動選擇。");
+        return false;
+      }
+      setWeatherAutoStatus("正在取得目前天氣…");
+      els.detectWeather.disabled = true;
+      weatherDetectionPromise = (async () => {
+        try {
+          const position = await requestCurrentPositionOnce();
+          const weather = await fetchCurrentWeather(
+            position.coords.latitude,
+            position.coords.longitude
+          );
+          weatherSuggestionCache = {
+            date,
+            weather,
+            expiresAt: Date.now() + WEATHER_CACHE_TTL_MS
+          };
+          if (weatherTargetDate() !== date || weatherManualOverride && !manual) return false;
+          updateCurrentWeather(weather, { source: "auto" });
+          setWeatherAutoStatus(`已自動偵測：${weather}`);
+          return true;
+        } catch (error) {
+          const denied = Number(error?.code) === 1;
+          setWeatherAutoStatus(denied
+            ? "無法取得定位，可手動選擇天氣。"
+            : "暫時無法取得天氣，可手動選擇並繼續儲存。");
+          return false;
+        } finally {
+          weatherDetectionPromise = null;
+          els.detectWeather.disabled = false;
+        }
+      })();
+      return weatherDetectionPromise;
+    }
+
+    function offerAutomaticWeather(options = {}) {
+      const { manual = false } = options;
+      const date = weatherTargetDate();
+      if (recordEditorState.open || date !== todayString()) {
+        if (manual) setWeatherAutoStatus("歷史紀錄不會套用目前天氣，請手動選擇。");
+        return;
+      }
+      if (!manual && document.getElementById("weather")?.value) return;
+      if (state.settings.weatherAutoConsent === "granted") {
+        detectCurrentWeather({ manual });
+        return;
+      }
+      if (!manual && state.settings.weatherAutoConsent === "declined") {
+        setWeatherAutoStatus("可手動選擇天氣，或按「自動偵測天氣」重新開啟。");
+        return;
+      }
+      els.weatherPermissionDialog.showModal();
+      window.requestAnimationFrame(() => els.weatherPermissionLater.focus());
+    }
+
+    function updateCurrentWeather(weather, options = {}) {
       if (!weather) return;
+      const source = options.source === "auto" ? "auto" : "manual";
+      if (source === "manual") {
+        weatherManualOverride = true;
+        setWeatherAutoStatus(`已手動選擇：${weather}`);
+      }
       if (recordEditorState.open) {
         recordEditorState.draft.weather = weather;
         document.getElementById("weather").value = weather;
@@ -9796,9 +10165,19 @@
       const isExpanded = Boolean(expanded);
       els.manualEntryContent.classList.toggle("hidden", !isExpanded);
       els.manualEntryToggle.setAttribute("aria-expanded", String(isExpanded));
-      if (isExpanded && options.focusWorkTime) {
+      if (isExpanded && options.revealWorkTime) {
         els.workTimeSection.open = true;
-        window.requestAnimationFrame(() => document.getElementById("startTime")?.focus());
+        window.requestAnimationFrame(() => {
+          const rect = els.workTimeSection.getBoundingClientRect();
+          const visibleTop = Math.max(0, Number.parseFloat(getComputedStyle(els.workTimeSection).scrollMarginTop) || 0);
+          const fullyVisible = rect.top >= visibleTop && rect.bottom <= window.innerHeight;
+          if (fullyVisible) return;
+          const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          els.workTimeSection.scrollIntoView({
+            behavior: reduceMotion ? "auto" : "smooth",
+            block: "start"
+          });
+        });
       }
     }
 
@@ -9858,12 +10237,16 @@
       if (todayEntry) {
         fillEntryFields(todayEntry);
       }
-      els.formTitle.textContent = "手動新增紀錄";
+      els.formTitle.textContent = "每日紀錄";
       els.cancelEdit.classList.add("hidden");
       document.querySelectorAll("#detailForm details").forEach(details => details.open = false);
       els.workTimeSection.open = Boolean(state.settings.timeDetailsOpen);
-      setManualEntryExpanded(recordEditorState.open);
+      els.otherDataToggle.setAttribute("aria-expanded", "false");
+      setManualEntryExpanded(true);
+      setWorkDetailsExpanded(false);
       setTodaySaveStatus("");
+      weatherManualOverride = false;
+      setWeatherAutoStatus("");
       syncDetailChoiceButtons();
       updateQuickPreview();
     }
@@ -9900,8 +10283,16 @@
       const detailSections = document.querySelectorAll("#detailForm details");
       detailSections.forEach(details => details.open = false);
       detailSections[0].open = Boolean(entry.startTime || entry.endTime || entry.manualHours || entry.breakMinutes);
-      detailSections[1].open = entryExpenses(entry) > 0;
-      detailSections[2].open = Boolean(entry.orders || entry.km || entry.note || entry.weather || entry.shift);
+      detailSections[1].open = Boolean(
+        entryExpenses(entry) > 0
+        || entry.tips
+        || entry.orders
+        || entry.km
+        || entry.note
+        || entry.weather
+        || entry.shift
+      );
+      els.otherDataToggle.setAttribute("aria-expanded", String(detailSections[1].open));
       els.formTitle.textContent = "編輯紀錄";
       els.cancelEdit.classList.remove("hidden");
       updateQuickPreview();
@@ -10055,6 +10446,71 @@
       window.clearTimeout(todayWorkSaveTimer);
       setTodaySaveStatus("儲存中…", "saving");
       todayWorkSaveTimer = window.setTimeout(saveTodayWorkTimeFromForm, 350);
+    }
+
+    function showMissingWorkTimePrompt() {
+      pendingTodayRecordSave = true;
+      els.missingWorkTimeDialog.showModal();
+      window.requestAnimationFrame(() => els.missingWorkAdd.focus());
+    }
+
+    function saveTodayDetailRecord(options = {}) {
+      const { allowMissingWorkTime = false } = options;
+      const manualPartsError = validateManualWorkTimeParts();
+      if (manualPartsError) {
+        setTodaySaveStatus(manualPartsError, "error");
+        showToast(manualPartsError);
+        return false;
+      }
+      const draft = formData();
+      if (entryTotal(draft) <= 0) {
+        setTodaySaveStatus("請先輸入收入金額。", "error");
+        showToast("請先輸入收入金額");
+        els.sharedIncomePanel.scrollIntoView({
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+          block: "start"
+        });
+        return false;
+      }
+      const validationError = validateTodayWorkTime(draft);
+      if (validationError) {
+        setTodaySaveStatus(validationError, "error");
+        showToast(validationError);
+        return false;
+      }
+      const quality = recordDataQuality(draft);
+      if (!allowMissingWorkTime && quality.status === "missing-work-time") {
+        showMissingWorkTimePrompt();
+        return false;
+      }
+      const previous = state.entries.find(item => item.id === draft.id)
+        || state.entries.find(item => item.date === draft.date);
+      const entry = reconcileWorkSessionWithTimes({ ...(previous || {}), ...draft }, previous);
+      const nextState = cloneStatePayload(state);
+      const index = nextState.entries.findIndex(item => item.id === entry.id);
+      if (index >= 0) nextState.entries[index] = entry;
+      else {
+        const sameDateIndex = nextState.entries.findIndex(item => item.date === entry.date);
+        if (sameDateIndex >= 0) {
+          entry.id = nextState.entries[sameDateIndex].id;
+          nextState.entries[sameDateIndex] = entry;
+        } else {
+          nextState.entries.push(entry);
+        }
+      }
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        setTodaySaveStatus("儲存失敗，原有紀錄未變更", "error");
+        showToast("儲存失敗，請稍後再試");
+        return false;
+      }
+      notifyRecordChanged(entry.date, "today-update");
+      const missingWorkTime = quality.status === "missing-work-time";
+      renderAll();
+      resetForm();
+      if (missingWorkTime) {
+        setTodaySaveStatus("已儲存；工時尚未完成", "success");
+      }
+      return true;
     }
 
     function setRecordEditorStatus(message = "", type = "") {
@@ -10355,7 +10811,7 @@
 
     function handlePrimaryWorkAction() {
       if (workStatus(entryForDate()) === "stopped") {
-        setManualEntryExpanded(true, { focusWorkTime: true });
+        setManualEntryExpanded(true, { revealWorkTime: true });
         return;
       }
       startRunNow();
@@ -10755,9 +11211,40 @@
     els.pauseRun.addEventListener("click", pauseRunNow);
     els.resumeRun.addEventListener("click", resumeRunNow);
     els.endRun.addEventListener("click", endRunNow);
+    els.workDetailsToggle.addEventListener("click", () => {
+      setWorkDetailsExpanded(els.workDetailsToggle.getAttribute("aria-expanded") !== "true");
+    });
     els.manualEntryToggle.addEventListener("click", () => {
       setManualEntryExpanded(els.manualEntryToggle.getAttribute("aria-expanded") !== "true");
     });
+    els.missingWorkTimeDialog.addEventListener("cancel", () => {
+      pendingTodayRecordSave = null;
+    });
+    els.missingWorkAdd.addEventListener("click", () => {
+      pendingTodayRecordSave = null;
+      els.missingWorkTimeDialog.close();
+      setManualEntryExpanded(true, { revealWorkTime: true });
+    });
+    els.missingWorkLater.addEventListener("click", () => {
+      const shouldSave = pendingTodayRecordSave;
+      pendingTodayRecordSave = null;
+      els.missingWorkTimeDialog.close();
+      if (shouldSave) saveTodayDetailRecord({ allowMissingWorkTime: true });
+    });
+    els.weatherPermissionDialog.addEventListener("cancel", () => {
+      setWeatherAutoStatus("可繼續手動選擇天氣。");
+    });
+    els.weatherPermissionLater.addEventListener("click", () => {
+      saveWeatherAutoConsent("declined");
+      els.weatherPermissionDialog.close();
+      setWeatherAutoStatus("可手動選擇天氣，之後也能重新開啟自動偵測。");
+    });
+    els.weatherPermissionAllow.addEventListener("click", () => {
+      const saved = saveWeatherAutoConsent("granted");
+      els.weatherPermissionDialog.close();
+      if (saved) detectCurrentWeather({ manual: true });
+    });
+    els.detectWeather.addEventListener("click", () => offerAutomaticWeather({ manual: true }));
     els.toggleOverview.addEventListener("click", () => {
       overviewVisible = !overviewVisible;
       updateOverviewVisibility();
@@ -10884,41 +11371,7 @@
         commitCalendarRecord();
         return;
       }
-      const manualPartsError = validateManualWorkTimeParts();
-      if (manualPartsError) {
-        setTodaySaveStatus(manualPartsError, "error");
-        showToast(manualPartsError);
-        return;
-      }
-      const draft = formData();
-      const validationError = validateTodayWorkTime(draft);
-      if (validationError) {
-        setTodaySaveStatus(validationError, "error");
-        showToast(validationError);
-        return;
-      }
-      const previous = state.entries.find(item => item.id === draft.id)
-        || state.entries.find(item => item.date === draft.date);
-      const entry = reconcileWorkSessionWithTimes({ ...(previous || {}), ...draft }, previous);
-      const nextState = cloneStatePayload(state);
-      const index = nextState.entries.findIndex(item => item.id === entry.id);
-      if (index >= 0) nextState.entries[index] = entry;
-      else {
-        const sameDateIndex = nextState.entries.findIndex(item => item.date === entry.date);
-        if (sameDateIndex >= 0) {
-          entry.id = nextState.entries[sameDateIndex].id;
-          nextState.entries[sameDateIndex] = entry;
-        } else {
-          nextState.entries.push(entry);
-        }
-      }
-      if (!persistStatePayload(nextState, { updateMemory: true })) {
-        showToast("儲存失敗，請稍後再試");
-        return;
-      }
-      notifyRecordChanged(entry.date, "today-update");
-      renderAll();
-      resetForm();
+      saveTodayDetailRecord();
     });
 
     els.detailForm.addEventListener("input", event => {
@@ -10952,6 +11405,11 @@
       if (recordEditorState.open) return;
       state.settings.timeDetailsOpen = event.currentTarget.open;
       saveState();
+    });
+    els.otherDataSection.addEventListener("toggle", event => {
+      const expanded = event.currentTarget.open;
+      els.otherDataToggle.setAttribute("aria-expanded", String(expanded));
+      if (expanded) offerAutomaticWeather();
     });
     els.detailForm.addEventListener("click", event => {
       const button = event.target.closest("[data-detail-choice]");

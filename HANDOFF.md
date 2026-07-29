@@ -19,20 +19,30 @@ GitHub：`superaha-boop/driver-pay-pro`
 - 新增 `decimalHoursToMinutes()`、`minutesToHourMinuteParts()`、
   `validateWorkTimeRange()`、`calculateWorkMinutes()` 與
   `formatWorkDuration()`；Today、Calendar、Reports、AI、CSV 共用同一出口。
-- Today 手動工時 UI 改為小時／分鐘欄位；手動區與工作明細預設收合，工作
-  狀態只保留一個自然語言主工時。收工後「修改工作時間」會直接展開並聚焦
-  原生 time input。
+- Today 手動工時 UI 改為小時／分鐘欄位；工作狀態只保留一個自然語言主
+  工時，並與 44px「工作明細」控制同列。收工後「修改工作時間」會先展開，
+  再依 reduced-motion 安全捲動至工時設定，不會 focus time input 或彈出鍵盤。
+- 每日紀錄第一層固定為收入與工時；支出、小費、班別、訂單、公里、天氣與
+  備註位於預設收合的「其他資料」。收合只改 UI，不清除草稿或舊資料。
+- 明確儲存有收入但無有效工時的紀錄時，使用既有輕量 dialog 提供「補上工時」
+  或「稍後再補」；前者保留輸入並定位工時，後者允許儲存但不計算時薪。
+- `hourlyRateQuality()` 與 `recordDataQuality()` 是 Today、Reports、AI 共用
+  資料品質出口：少於 10 分鐘不計算，超過 NT$2,000／小時標記異常，原始
+  收入與工時不修改。
+- 自動天氣使用 Open-Meteo，無 API key。只有 Today 且使用者同意後才取得
+  一次性位置；精確位置不保存，session 建議快取 30 分鐘。拒絕、離線、
+  API 失敗及歷史補登均安全回到手動選擇，手動值優先。
 - Today 時間欄位自動儲存使用 clone → validate → persist/read-back →
   update-memory → notify，儲存失敗不會先污染畫面狀態。
 - `driverPayApp.v2`、WorkRecord schema、收入／支出公式、Calendar／Reports
   frozen UI 均未改變；舊 `manualHours` 不遷移、不批量改寫。
-- L1 evidence：150/150 Node、Today 30/30、lint 0 errors、320–430px、原生
+- L1 evidence：164/164 Node、Today 42/42、lint 0 errors、320–430px、原生
   time input 邊界、開始／暫停／繼續／收工、重開保留、Calendar／Reports
   8 小時 8 分一致、Console 0 error／warning。
-- Service Worker candidate：`driver-pay-pro-v14`。
+- Service Worker candidate：`driver-pay-pro-v15`。
 - 下一步：完成 `release:check`、Push 功能分支，建立未登入 iPhone Safari
-  可直接開啟的公開 Preview，交由 Product Owner 執行 Human QA。Human QA
-  通過前不宣告 Milestone Done。
+  可直接開啟的公開 Preview，交由 Product Owner 執行本 Milestone 最終一次
+  Human QA。通過前不宣告 Milestone Done，也不合併 main 或部署 Production。
 
 ---
 

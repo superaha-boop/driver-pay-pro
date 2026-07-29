@@ -81,12 +81,15 @@ const functionNames = [
   "clockWorkDurationMs",
   "sessionWorkDurationMs",
   "workMetrics",
+  "hourlyRateQuality",
   "hourlyRate",
   "platformRate",
   "platformNetAmount",
   "entryIncome",
   "entryExpenses",
   "entryTotal",
+  "entryNet",
+  "recordDataQuality",
   "summarize",
   "isWorkDayRecord",
   "weekStart",
@@ -135,7 +138,9 @@ const context = vm.createContext({
   workTimeUnits: Object.freeze({
     minuteMs: 60 * 1000,
     hourMs: 60 * 60 * 1000
-  })
+  }),
+  MIN_VALID_WORK_MINUTES: 10,
+  MAX_REASONABLE_HOURLY_RATE: 2000
 });
 vm.runInContext(
   `${functionNames.map(extractFunction).join("\n")}\n`
@@ -329,7 +334,7 @@ test("Reports 狀態不再讀寫 legacy localStorage 設定並保留唯讀介面
   assert.doesNotMatch(html.match(/<section id="view-reports"[\s\S]*?<\/section>\s*<section id="view-ai"/)?.[0] || "", /data-calendar-(?:add|edit|delete)/);
 });
 
-test("Local-first V1.1 App Shell 使用 Service Worker cache v14", () => {
-  assert.match(serviceWorker, /driver-pay-pro-v14/);
+test("Local-first V1.1 App Shell 使用 Service Worker cache v15", () => {
+  assert.match(serviceWorker, /driver-pay-pro-v15/);
   assert.doesNotMatch(serviceWorker, /driver-pay-pro-v11/);
 });

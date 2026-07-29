@@ -520,3 +520,33 @@
   - 不以 UI clamp 或最大值掩蓋 stale session。
   - 不新增 `workMinutes` durable 欄位或批量 migration。
   - 不為 Today 建立第二套工時計算。
+
+## D-035
+
+- Date: 2026-07-29
+- Decision:
+  1. Today、Reports 與 AI 共用 `hourlyRateQuality()`／
+     `recordDataQuality()`；固定狀態為 complete、missing、insufficient、
+     abnormal 與 invalid time range。
+  2. 最低有效工時 10 分鐘，合理時薪上限 NT$2,000／小時；只排除不可信
+     分析，不修改原始紀錄。
+  3. 有收入無有效工時的明確儲存提供「補上工時／稍後再補」，autosave
+     不重複提示，零工時不計算時薪。
+  4. 每日紀錄第一層只保留收入與工時；其餘欄位保留在同一表單的預設收合
+     「其他資料」。
+  5. Today 自動天氣使用 Open-Meteo 且無 API key；先取得使用者同意，再
+     使用一次性定位。精確位置不保存，結果只在 session 快取 30 分鐘。
+  6. 拒絕、離線、API 失敗與歷史日期回退手動，手動值優先。
+  7. `driverPayApp.v2` key 與 WorkRecord schema 不變；只相容加入
+     `settings.weatherAutoConsent`，不需要 migration。
+- Reason: 共用資料品質可防止極短或缺失工時生成誤導 AI 洞察；同時用明確
+  同意、一次性定位和完整 fallback，在簡化 Today 流程時維持 Privacy by
+  Default 與 Local-first。
+- Impact: Today workflow、shared hourly-rate quality、AI／Reports selectors、
+  tests 與 v15 App Shell 更新；Calendar／Reports frozen UI、Supabase、
+  正式資料、精確定位儲存、merge main 與 Production 不變。外部天氣與 iOS
+  權限長期覆蓋記錄於 TD-027。
+- Rejected alternatives:
+  - 不用 UI clamp 或魔術數字只隱藏極端時薪。
+  - 不建立第二套 AI／Reports 時薪判斷。
+  - 不把 API key、精確座標或持續定位加入前端與 localStorage。

@@ -69,6 +69,7 @@ const functionNames = [
   "clockWorkDurationMs",
   "sessionWorkDurationMs",
   "workMetrics",
+  "hourlyRateQuality",
   "hourlyRate",
   "minutes",
   "finiteNumber",
@@ -84,6 +85,8 @@ const context = vm.createContext({
     minuteMs: 60 * 1000,
     hourMs: 60 * 60 * 1000
   }),
+  MIN_VALID_WORK_MINUTES: 10,
+  MAX_REASONABLE_HOURLY_RATE: 2000,
   todayString: () => "2026-07-29",
   taipeiDateString: () => "2026-07-29"
 });
@@ -199,24 +202,24 @@ test("488 分鐘拆成 8 小時 8 分鐘", () => {
   );
 });
 
-test("0 分鐘顯示 0分鐘", () => {
-  assert.equal(context.workTime.formatWorkDuration(0), "0分鐘");
+test("0 分鐘顯示自然語言", () => {
+  assert.equal(context.workTime.formatWorkDuration(0), "0 分鐘");
 });
 
-test("20 分鐘顯示 20分鐘", () => {
-  assert.equal(context.workTime.formatWorkDuration(20), "20分鐘");
+test("20 分鐘顯示自然語言", () => {
+  assert.equal(context.workTime.formatWorkDuration(20), "20 分鐘");
 });
 
-test("60 分鐘顯示 1小時", () => {
-  assert.equal(context.workTime.formatWorkDuration(60), "1小時");
+test("60 分鐘顯示自然語言", () => {
+  assert.equal(context.workTime.formatWorkDuration(60), "1 小時");
 });
 
-test("80 分鐘顯示 1小時20分", () => {
-  assert.equal(context.workTime.formatWorkDuration(80), "1小時20分");
+test("80 分鐘顯示自然語言", () => {
+  assert.equal(context.workTime.formatWorkDuration(80), "1 小時 20 分");
 });
 
-test("488 分鐘顯示 8小時8分", () => {
-  assert.equal(context.workTime.formatWorkDuration(488), "8小時8分");
+test("488 分鐘顯示自然語言", () => {
+  assert.equal(context.workTime.formatWorkDuration(488), "8 小時 8 分");
 });
 
 test("有效開始與結束時間優先於舊手動工時", () => {
@@ -255,20 +258,40 @@ test("8 小時收入 4000 元平均時薪為 500", () => {
   assert.equal(context.workTime.hourlyRate(4000, 480 * 60 * 1000), 500);
 });
 
+test("少於 10 分鐘不計算時薪", () => {
+  assert.equal(context.workTime.hourlyRateQuality(1000, 9).status, "insufficient-work-time");
+  assert.equal(context.workTime.hourlyRate(1000, 9 * 60 * 1000), 0);
+});
+
+test("10 分鐘且時薪合理可以計算", () => {
+  assert.equal(context.workTime.hourlyRateQuality(300, 10).hourlyRate, 1800);
+});
+
+test("時薪超過 2000 元標記異常", () => {
+  const result = context.workTime.hourlyRateQuality(400, 10);
+  assert.equal(result.status, "abnormal-hourly-rate");
+  assert.equal(result.hourlyRate, null);
+});
+
 test("手動工時介面使用小時與分鐘欄位，不再使用小數鍵盤", () => {
   assert.match(html, /<input[^>]*inputmode="numeric"[^>]*id="manualHoursPart"[^>]*>/);
   assert.match(html, /<input[^>]*inputmode="numeric"[^>]*id="manualMinutesPart"[^>]*>/);
   assert.doesNotMatch(html, /id="manualHours"[^>]*inputmode="decimal"/);
 });
 
-test("手動新增紀錄預設收合且保留完整列點擊區", () => {
-  assert.match(html, /id="manualEntryToggle"[^>]*aria-expanded="false"/);
-  assert.match(html, /class="panel-body hidden"[^>]*id="manualEntryContent"/);
+test("每日紀錄核心表單預設展開且其他資料預設收合", () => {
+  assert.match(html, /id="manualEntryToggle"[^>]*aria-expanded="true"/);
+  assert.match(html, /class="panel-body"[^>]*id="manualEntryContent"/);
+  assert.match(html, /id="otherDataToggle"[^>]*aria-expanded="false"/);
 });
 
-test("Today 主工時採自然語言且不顯示秒數計時器", () => {
+test("Today 主工時與工作明細位於同一行且不重複狀態文字", () => {
+  assert.match(html, /class="work-time-overview"/);
   assert.match(html, /id="workPrimaryTime"/);
-  assert.match(html, /今天尚未開始工作/);
+  assert.match(html, /id="workDetailsToggle"[^>]*aria-expanded="false"[^>]*aria-controls="workMetrics"/);
+  const controls = html.slice(html.indexOf("function updateWorkControls("), html.indexOf("function updateCurrentWeather("));
+  assert.match(controls, /els\.workPrimaryTime\.textContent = formatWorkDuration\(actualMinutes\)/);
+  assert.doesNotMatch(controls, /今日工時|已工作/);
   assert.doesNotMatch(html, /els\.workActual\.textContent = clockDuration/);
 });
 

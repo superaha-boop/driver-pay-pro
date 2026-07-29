@@ -26,10 +26,20 @@
   CSV 與平均時薪共用 `workMetrics()`。
 - Today 工作狀態改為單一主工時與預設收合明細；手動新增區預設收合，手動
   工時改為小時／分鐘欄位。
+- Human QA follow-up 將主工時與 44px 工作明細控制固定同列；修改工作時間
+  會展開並安全捲動，不自動 focus 或彈出鍵盤。
+- 每日紀錄第一層精簡為收入與工時；支出及其他選填資料集中到預設收合的
+  「其他資料」，收合不清除既有值。
+- 有收入無有效工時時提供「補上工時／稍後再補」；共用資料品質規則排除
+  少於 10 分鐘或高於 NT$2,000／小時的異常時薪，AI 顯示原因而不輸出誤導
+  數字、比較或建議。
+- 新增使用者同意後的一次性自動天氣：Open-Meteo、無 API key、精確位置不
+  保存、session 快取 30 分鐘；拒絕／離線／失敗／歷史補登維持手動選擇，
+  手動值優先。
 - Today 工時欄位改為 transactional auto-save，成功 persistence 後才更新
   記憶體與通知 dependent views。
-- 新增 `test:today` 與 30 項工時回歸；全套測試增為 150 項。
-- Service Worker App Shell candidate 更新為 `driver-pay-pro-v14`。
+- `test:today` 增為 42 項；全套測試增為 164 項。
+- Service Worker App Shell candidate 更新為 `driver-pay-pro-v15`。
 - `driverPayApp.v2` 與 WorkRecord schema 未變更，舊資料不遷移、不批量改寫。
 
 ### Local-first V1 Release Candidate

@@ -514,3 +514,42 @@ L1 120/120、公開 L2、單次 Product Owner L3 與全部 Freeze Gate 已具備
   本決策範圍。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-034](docs/DECISION_LOG.md#d-034)。
+
+## D-035 — V1.1 Today Follow-up 共用資料品質與隱私優先天氣
+
+- Date: 2026-07-29
+
+### 決策
+
+1. Today、Reports 與 AI 共用 `hourlyRateQuality()` 與
+   `recordDataQuality()`；資料品質狀態固定為 `complete`、
+   `missing-work-time`、`insufficient-work-time`、
+   `abnormal-hourly-rate`、`invalid-time-range`。
+2. 有效工時至少 10 分鐘，合理時薪上限為 NT$2,000／小時。界線只控制
+   分析與提示，不限制、修改或刪除使用者原始收入與工時。
+3. 有收入但無有效工時的明確儲存流程提供「補上工時／稍後再補」；不得由
+   autosave 重複打擾，也不得用零工時計算時薪。
+4. 每日紀錄第一層只保留收入與工時；支出及其他選填資料使用同一表單，
+   集中於預設收合的「其他資料」。
+5. 自動天氣只限 Today，必須先說明並取得使用者同意，再取得一次性位置；
+   使用 Open-Meteo 公開 API，無 API key。精確位置不寫入 WorkRecord 或
+   localStorage，建議只在 session 記憶體快取 30 分鐘。
+6. 使用者拒絕定位、離線、外部服務失敗或編輯歷史日期時，完整回退手動選擇；
+   手動天氣永遠覆蓋自動建議。
+7. WorkRecord schema 與 `driverPayApp.v2` key 不變；僅在既有 settings
+   相容加入 `weatherAutoConsent`，不需要 migration。
+
+### 原因
+
+極短或缺失工時曾造成 AI 顯示失真的高時薪；同時，Today 的選填資料與明細
+操作占用核心流程空間。共用資料品質出口可避免頁面各自判斷，明確同意與
+一次性定位則在減少輸入步驟時維持 Local-first 與 Privacy by Default。
+
+### 影響範圍
+
+- 修改 Today workflow、AI／Reports 共用時薪有效性、測試與 App Shell cache。
+- Calendar／Reports frozen UI、正式資料、Supabase、同步、authentication、
+  WorkRecord schema、精確定位儲存與 Production 均不在本決策範圍。
+- Open-Meteo 與 iOS 定位權限的長期真機覆蓋記錄於 TD-027。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-035](docs/DECISION_LOG.md#d-035)。

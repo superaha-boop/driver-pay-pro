@@ -17,13 +17,26 @@
   更新記憶體並發出一次 committed-record notification。開始／暫停／繼續／
   收工與原生 time picker 共用相同欄位。
 - Today 工作狀態只顯示一個自然語言主工時，詳細經過／休息／實際工時預設
-  收合；手動新增紀錄亦預設收合。手動工時改為「小時＋分鐘」，不再要求輸入
-  小數。
+  收合，工時與 44px「工作明細」控制固定同列。手動工時改為「小時＋分鐘」，
+  不再要求輸入小數；每日紀錄第一層只保留收入與工時，支出及其他選填資料
+  集中於預設收合的「其他資料」。
+- 有收入但沒有有效工時時，明確儲存流程會提供「補上工時／稍後再補」；選擇
+  稍後再補仍保留紀錄，但 Today、Reports 與 AI 均不計算該筆時薪。
+- 共用資料品質狀態固定為 `complete`、`missing-work-time`、
+  `insufficient-work-time`、`abnormal-hourly-rate` 與
+  `invalid-time-range`。最低有效工時為 10 分鐘；高於 NT$2,000／小時只視為
+  待檢查資料，不修改原始紀錄，也不產生正常 AI 建議或比較。
+- 今日天氣採使用者明確同意後的一次性定位，透過 Open-Meteo（無 API key）
+  取得 `weather_code` 並映射為既有有限分類。精確經緯度不寫入 WorkRecord
+  或 localStorage；只保存 `settings.weatherAutoConsent` 偏好，建議結果僅在
+  session 記憶體快取 30 分鐘。拒絕、離線或服務失敗時保留完整手動流程；
+  歷史補登永不套用目前天氣，手動值永遠優先。
 - `driverPayApp.v2` 與 WorkRecord schema 均未更名或遷移；`manualHours` 只保留
-  作舊資料相容欄位，`workMinutes` 是衍生值而非新儲存欄位。
-- 自動測試目前 150/150，Today targeted 30/30；320、390、393、430px 無水平
-  overflow，Calendar 與 Reports 同一筆 8 小時 8 分紀錄顯示一致。
-- Service Worker App Shell candidate 更新為 `driver-pay-pro-v14`。本
+  作舊資料相容欄位，`workMinutes` 是衍生值而非新儲存欄位；僅相容擴充上述
+  settings 偏好，不需要 migration。
+- 自動測試目前 164/164，Today targeted 42/42；320、375、390、393、430px
+  必須無水平 overflow，Calendar 與 Reports 維持相同 canonical 結果。
+- Service Worker App Shell candidate 更新為 `driver-pay-pro-v15`。本
   Milestone 尚待公開 iPhone Preview 與 Product Owner Human QA。
 
 ## Driver Pay Pro Local-first V1 UX Freeze

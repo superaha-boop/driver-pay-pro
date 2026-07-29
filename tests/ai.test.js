@@ -86,12 +86,15 @@ const functionNames = [
   "clockWorkDurationMs",
   "sessionWorkDurationMs",
   "workMetrics",
+  "hourlyRateQuality",
   "hourlyRate",
   "platformRate",
   "platformNetAmount",
   "entryIncome",
   "entryExpenses",
   "entryTotal",
+  "entryNet",
+  "recordDataQuality",
   "summarize",
   "isWorkDayRecord",
   "weekStart",
@@ -126,6 +129,7 @@ const functionNames = [
   "buildAIDataQuality",
   "buildAiAnalysisContext",
   "aiInsightTarget",
+  "hourlyRateStatusMessage",
   "buildAIInsights"
 ];
 const sharedAnalyticsSource = html.match(
@@ -158,7 +162,9 @@ const context = vm.createContext({
   workTimeUnits: Object.freeze({
     minuteMs: 60 * 1000,
     hourMs: 60 * 60 * 1000
-  })
+  }),
+  MIN_VALID_WORK_MINUTES: 10,
+  MAX_REASONABLE_HOURLY_RATE: 2000
 });
 vm.runInContext(
   `${functionNames.map(extractFunction).join("\n")}\n`
@@ -267,4 +273,62 @@ test("AI UI 維持三個主要區塊並提供精確日期與報表導覽", () =>
   assert.match(html, /data-ai-report-view/);
   assert.match(html, /driverpay:recordchange/);
   assert.match(html, /離線・使用本機資料/);
+});
+
+test("AI 與 Reports 共用最低 10 分鐘及 2000 元時薪上限", () => {
+  const monthRange = context.ai.sharedAnalytics.getLocalMonthRange("2026-07");
+  for (const [minutes, expected] of [[0, "missing-work-time"], [2, "insufficient-work-time"], [9, "insufficient-work-time"]]) {
+    const aggregate = context.ai.sharedAnalytics.aggregateReport([{
+      date: "2026-07-26",
+      incomes: { Uber: 1000 },
+      manualHours: minutes / 60
+    }], monthRange);
+    assert.equal(aggregate.hourlyRateStatus, expected);
+    assert.equal(aggregate.averageHourlyIncome, null);
+  }
+
+  const valid = context.ai.sharedAnalytics.aggregateReport([{
+    date: "2026-07-26",
+    incomes: { Uber: 1000 },
+    manualHours: 0.5
+  }], monthRange);
+  assert.equal(valid.hourlyRateStatus, "complete");
+  assert.equal(valid.averageHourlyIncome, 2000);
+
+  const abnormal = context.ai.sharedAnalytics.aggregateReport([{
+    date: "2026-07-26",
+    incomes: { Uber: 1100 },
+    manualHours: 0.5
+  }], monthRange);
+  assert.equal(abnormal.hourlyRateStatus, "abnormal-hourly-rate");
+  assert.equal(abnormal.averageHourlyIncome, null);
+});
+
+test("AI 對異常時薪顯示檢查提示且不產生正常表現結論", () => {
+  const originalEntries = state.entries;
+  state.entries = [{
+    date: "2026-07-26",
+    incomes: { Uber: 1100 },
+    expenses: {},
+    manualHours: 0.5
+  }];
+  const source = context.ai.buildAiAnalysisContext();
+  const insights = context.ai.buildAIInsights({
+    currentWeek: source.currentWeek,
+    previousWeek: source.previousWeek,
+    weekComparison: source.weekComparison,
+    currentMonth: source.monthAggregate,
+    previousMonth: source.previousMonthAggregate,
+    monthComparison: source.monthComparison,
+    platformMonth: source.monthPlatformAggregate,
+    importantDates: source.importantDates,
+    monthlyTrend: source.monthlyTrend,
+    dataQuality: source.dataQuality,
+    goalState: source.goalState,
+    ranges: source.ranges
+  });
+  state.entries = originalEntries;
+  const output = JSON.stringify(insights);
+  assert.match(output, /時薪資料可能異常/);
+  assert.doesNotMatch(output, /表現非常好|本月平均時薪.*2,200/);
 });

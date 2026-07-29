@@ -87,12 +87,15 @@ const functionNames = [
   "clockWorkDurationMs",
   "sessionWorkDurationMs",
   "workMetrics",
+  "hourlyRateQuality",
   "hourlyRate",
   "platformRate",
   "platformNetAmount",
   "entryIncome",
   "entryExpenses",
   "entryTotal",
+  "entryNet",
+  "recordDataQuality",
   "summarize",
   "isWorkDayRecord",
   "weekStart",
@@ -139,7 +142,9 @@ const context = vm.createContext({
   workTimeUnits: Object.freeze({
     minuteMs: 60 * 1000,
     hourMs: 60 * 60 * 1000
-  })
+  }),
+  MIN_VALID_WORK_MINUTES: 10,
+  MAX_REASONABLE_HOURLY_RATE: 2000
 });
 vm.runInContext(
   `${functionNames.map(extractFunction).join("\n")}\n`
@@ -199,7 +204,9 @@ test("Weekly Final Regression 使用完整七天、canonical KPI 與期間平均
   assert.equal(summary.netIncome, 10040);
   assert.equal(summary.workDays, 7);
   assert.equal(summary.totalWorkDuration, 23 * 60 * 60 * 1000);
-  assert.equal(summary.averageHourlyIncome, 10040 / 23);
+  assert.equal(summary.averageHourlyIncome, null);
+  assert.equal(summary.hourlyRateStatus, "missing-work-time");
+  assert.equal(summary.validHourlyRate, false);
 
   const trend = reports.buildWeeklyNetTrend(fixture.weeklyCurrent, range);
   assert.equal(trend.length, 7);
@@ -367,6 +374,6 @@ test("Reports Accessibility、responsive 與 PWA Freeze Candidate 契約完整",
   assert.match(html, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(html, /\.reports-platform-row[\s\S]*?grid-template-columns: minmax\(0, 1fr\) auto/);
   assert.doesNotMatch(reportsSection, /平台效率|最佳平台|平台時薪|<img[^>]+platform/);
-  assert.match(serviceWorker, /driver-pay-pro-v14/);
-  assert.doesNotMatch(serviceWorker, /driver-pay-pro-v15/);
+  assert.match(serviceWorker, /driver-pay-pro-v15/);
+  assert.doesNotMatch(serviceWorker, /driver-pay-pro-v16/);
 });
