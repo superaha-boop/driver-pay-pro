@@ -1,6 +1,6 @@
 # Driver Pay Pro — Product Specification
 
-Version: 1.0
+Version: 1.1
 
 Status: Approved product architecture baseline
 
@@ -269,7 +269,9 @@ The current canonical local storage key is:
 
 `driverPayApp.v2`
 
-The current top-level state contains platforms, expense categories, entries, and settings. This Sprint does not change that structure.
+The current top-level state contains platforms, expense categories, entries, and settings.
+WorkRecord may optionally contain `expenseAllocations[category] = { months, startMonth }`;
+records without it remain one-time expenses.
 
 ### 6.2 Canonical values
 
@@ -279,7 +281,9 @@ Canonical calculations:
 
 - Recognized platform income: each platform amount after its configured platform rate.
 - Total income: recognized platform income plus tips.
-- Total expenses: sum of the record's expense amounts.
+- Calendar record expenses: sum of the original payment amounts on the WorkRecord.
+- Reports and AI expenses: `reportExpenseSummary()` derives allocated monthly costs
+  when valid optional metadata exists; otherwise it uses the original one-time payment.
 - Net income: total income minus total expenses.
 - Actual work duration: integer derived `workMinutes`, converted to milliseconds at
   the shared aggregation boundary. Complete valid start/end/break fields take
@@ -294,7 +298,8 @@ The current canonical implementation functions are `entryIncome`, `entryTotal`, 
 ### 6.3 Data safety
 
 - Do not rename or clear `driverPayApp.v2`.
-- Do not change the data model without an approved migration and rollback plan.
+- Do not change the data model without an approved migration and rollback plan, except
+  the explicitly approved optional `expenseAllocations` compatibility extension.
 - Do not delete or normalize historical user data merely to simplify UI work.
 - Input-mode changes must not change the final daily platform total.
 - Current storage is browser-local and does not sync across devices.

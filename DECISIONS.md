@@ -629,3 +629,39 @@ Today 同時在綠色摘要、工作狀態與 manual 輸入下方重複顯示同
   Calendar／Reports／AI／Driver UI，不合併 `main`，不部署 Production。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-037](docs/DECISION_LOG.md#d-037)。
+
+## D-038 — 支出分月採可選 WorkRecord metadata 與衍生成本
+
+- Date: 2026-07-29
+
+### 決策
+
+1. Product Owner 明確授權 WorkRecord 僅增加可選
+   `expenseAllocations[category] = { months, startMonth }`；原始
+   `expenses[category]`、`driverPayApp.v2` key 與其他欄位不變。
+2. 舊紀錄或缺少有效 allocation 的分類一律視為一次支出，不批量改寫、不
+   migration。切回一次支出或刪除分類時同步移除對應 metadata。
+3. Calendar 與原始付款紀錄持續使用 `entryExpenses()`；Reports／AI 透過
+   `reportExpenseSummary()` 將原始金額依月份衍生，不能整除的尾差由最後
+   一個月吸收。
+4. 為讓週／月趨勢與期間 KPI 可重現，每月衍生成本以該台北月份第一天作為
+   report-only accounting anchor；不建立 WorkRecord，也不改變 Calendar。
+5. CSV 保留原始付款日期、金額與分類欄，並增加可讀的分月期間、月份數、
+   一般月額與尾月金額。
+6. 本 Sprint 完成後只 Push 功能分支與提供 Public Preview；不 merge
+   `main`、不 Production deploy。
+
+### 原因
+
+只保存原始金額無法在 App 重開後還原月份數與開始月份。可選且分類級的
+metadata 是支援修改、刪除、尾差與舊資料相容所需的最小擴充，不需要複製
+十二筆紀錄或批量遷移。
+
+### 影響範圍
+
+- Today 支出 UI、WorkRecord 可選 metadata、Reports／AI canonical expense
+  selector、CSV、tests、文件與 App Shell v18。
+- 收入、工時、平台、其他 WorkRecord 欄位、Supabase、同步、正式資料、
+  Calendar UI、main 與 Production 不變。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-038](docs/DECISION_LOG.md#d-038)。

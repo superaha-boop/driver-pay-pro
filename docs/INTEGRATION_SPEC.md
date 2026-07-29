@@ -9,7 +9,7 @@ Updated: 2026-07-26
 ```text
 driverPayApp.v2
   → validated persistence read
-  → canonical WorkRecord calculations
+  → canonical WorkRecord calculations / reportExpenseSummary
   → sharedAnalytics
   → Today / Calendar / Reports / AI
 ```
@@ -42,7 +42,8 @@ Today or Calendar successful write
 ## Offline and Data Safety
 
 - Local-first；沒有網路仍可讀取與執行核准的本機流程。
-- 主 key 固定為 `driverPayApp.v2`，WorkRecord schema 不變。
+- 主 key 固定為 `driverPayApp.v2`；唯一核准的相容擴充是可選
+  `expenseAllocations[category] = { months, startMonth }`。
 - 損壞或讀取失敗時不得清除原始 payload。
-- Service Worker V1 candidate cache 為 `driver-pay-pro-v13`。
+- Service Worker V1.1 expense candidate cache 為 `driver-pay-pro-v18`。
 - 沒有 Supabase、authentication、cloud sync、migration 或外部 AI。

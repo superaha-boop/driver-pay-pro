@@ -4,6 +4,20 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
+## Today Expense UX Batch 2 — Current Candidate
+
+- Homepage Detail Human QA 已通過；本批只處理支出操作與分月成本，仍在
+  `codex/v1-1-m1-today-workflow`，完成後不 merge main、不 Production。
+- 支出類別改為唯一原生 select；快捷仍寫入同一 draft，沒有第二份 state。
+- WorkRecord 只增加可選
+  `expenseAllocations[category] = { months, startMonth }`。原始付款仍在
+  `expenses[category]`，舊紀錄缺欄位時視為一次支出，無 migration。
+- Calendar 使用原始付款；Reports／AI 使用 `reportExpenseSummary()` 的分月
+  衍生成本，尾差由最後月吸收。CSV 同時保留原始付款與分月資訊。
+- 付款日期與備註同列；400px 以下日期縮為「今天・7月29日」等短格式。
+- App Shell candidate 為 `driver-pay-pro-v18`；唯一一次 Expense UX Human
+  QA 前只提供 Public Preview。
+
 ## V1.1 Milestone 1 — Today Workflow and Work-Time Unification
 
 - 工作分支：`codex/v1-1-m1-today-workflow`，基準為最新
@@ -532,7 +546,10 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 
 - 第一層依序顯示油錢、停車費、洗車快捷新增、支出類別、金額、三段式支出方式、付款日期與單一儲存按鈕。
 - 使用者文字固定為「一次支出」、「每月固定」、「分月計算」，不使用會計術語。
-- 一次支出沿用既有 `entry.expenses[category]` 儲存方式；每月固定與分月計算目前只提供前端狀態與即時計算預覽，不持久化規則，也不改變月報算法。
+- 一次支出沿用既有 `entry.expenses[category]` 儲存方式；分月計算只以可選
+  `expenseAllocations[category] = { months, startMonth }` 保存必要規則。
+  Calendar 保留原始付款口徑，Reports／AI 使用衍生後的每月成本；舊紀錄
+  沒有 allocation 時仍視為一次支出。
 - 分月計算自訂期間限制 2～60 個月；不能整除時由最後一個月補齊差額。
 
 ### 月曆與報表
@@ -589,7 +606,9 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 - 首頁核心卡放大並整合今日目標。
 - 首頁獨立天氣列已移除；「其他資料」內班別與天氣已改為直接選取、自動儲存。
 - 「更新今日紀錄」與新增支出付款日期已改為共用的完整置中日期卡。
-- 新增支出已加入三個快捷按鈕與一次支出、每月固定、分月計算三種前端模式；固定／分月規則尚未持久化。
+- 新增支出已加入三個快捷按鈕與一次支出、每月固定、分月計算；本次
+  Expense UX Batch 2 已讓分月計算保存可選 allocation metadata，重新載入
+  後仍可由 Reports／AI 依月份重算，原始付款紀錄保持一筆。
 - 週報週期已改為精簡日期格式。
 - 週報手機版月份明細已改為單一外層卡片內的精簡每日清單。
 - 手機清單只顯示有收入的平台，無收入日顯示「尚無收入紀錄」。
@@ -619,7 +638,9 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 3. Calendar 已 UX Freeze；一般視覺偏好與新想法加入 Backlog，不直接修改。
 4. 每次 Calendar、PWA 或原生 input 相關發布仍需實體 iPhone Safari 與 installed PWA 回歸。
 5. 未經使用者確認，不修改已凍結首頁或重新設計週報。
-6. 若要讓每月固定或分月計算真正影響未來月報，需另立資料 migration 與報表規格，不可直接複製未來月份資料。
+6. 分月支出已依 D-038 使用可選 metadata 與讀取層衍生方式完成，不建立未來
+   月份 WorkRecord，也不需要 migration；若未來要改變此資料契約，仍需另立
+   PRD 與相容方案。
 
 ### QA 分級
 

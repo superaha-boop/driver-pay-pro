@@ -2032,6 +2032,15 @@
       text-align: left;
     }
 
+    select.expense-choice-button {
+      padding-right: 34px;
+      font-size: 15px;
+      font-weight: 750;
+      line-height: 1.2;
+      appearance: auto;
+      -webkit-appearance: menulist;
+    }
+
     .expense-choice-button strong {
       min-width: 0;
       overflow: hidden;
@@ -2047,25 +2056,6 @@
       color: #087653;
       font-size: 14px;
       font-weight: 750;
-    }
-
-    .expense-choice-panel {
-      min-width: 0;
-    }
-
-    .expense-choice-panel select {
-      width: 100%;
-      min-width: 0;
-      max-width: 100%;
-      min-height: 52px;
-      padding-inline: 13px;
-      border: 1px solid #dce4df;
-      border-radius: 13px;
-      color: #17211d;
-      background: #fafcfb;
-      font-size: 16px;
-      font-weight: 650;
-      box-sizing: border-box;
     }
 
     .expense-mode-option {
@@ -2416,15 +2406,43 @@
       gap: 9px;
     }
 
+    .expense-date-note-row {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 13fr) minmax(0, 7fr);
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .expense-date-note-row .date-card-host,
+    .expense-date-note-row .date-card {
+      min-width: 0;
+      height: 100%;
+    }
+
+    @media (max-width: 400px) {
+      .expense-date-note-row .date-card-value.compact-mobile-date {
+        font-size: 0;
+      }
+
+      .expense-date-note-row .date-card-value.compact-mobile-date::after {
+        content: attr(data-short-date);
+        font-size: 17px;
+        font-weight: 700;
+      }
+    }
+
     .expense-note-toggle {
-      width: fit-content;
+      width: 100%;
       min-height: 44px;
-      padding: 0 2px;
+      padding: 0 10px;
+      border: 1px solid #dce4df;
+      border-radius: 15px;
       color: #087653;
-      background: transparent;
+      background: #fafcfb;
       font-size: 14px;
       font-weight: 750;
-      text-align: left;
+      text-align: center;
     }
 
     .expense-note-field {
@@ -5856,7 +5874,7 @@
     });
     const storageKey = "driverPayApp.v2";
     const lastValidStorageKey = `${storageKey}.lastValid`;
-    const appShellCacheName = "driver-pay-pro-v17";
+    const appShellCacheName = "driver-pay-pro-v18";
     const defaultPlatforms = ["Uber", "LINE GO", "Yoxi", "55688", "大都會", "台灣大車隊", "路邊客", "自訂"];
     const defaultPlatformIds = {
       "Uber": "platform-uber",
@@ -6670,6 +6688,83 @@
 
     function entryExpenses(entry) {
       return Object.values(entry.expenses || {}).reduce((sum, val) => sum + Number(val || 0), 0);
+    }
+
+    function normalizeExpenseAllocation(value) {
+      if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+      const months = Math.floor(Number(value.months));
+      const startMonth = String(value.startMonth || "");
+      if (!Number.isFinite(months) || months < 2 || months > 60) return null;
+      if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(startMonth)) return null;
+      return { months, startMonth };
+    }
+
+    function expenseAllocationFor(entry, category) {
+      return normalizeExpenseAllocation(entry?.expenseAllocations?.[category]);
+    }
+
+    function expenseAllocationMonth(startMonth, offset) {
+      const match = /^(\d{4})-(\d{2})$/.exec(String(startMonth || ""));
+      if (!match) return "";
+      const monthIndex = Number(match[1]) * 12 + Number(match[2]) - 1 + Number(offset || 0);
+      const year = Math.floor(monthIndex / 12);
+      const month = monthIndex % 12 + 1;
+      return `${year}-${String(month).padStart(2, "0")}`;
+    }
+
+    function expenseAllocationAmount(amount, months, index) {
+      const total = Math.max(0, Math.round(Number(amount || 0)));
+      const count = Math.max(1, Math.floor(Number(months || 1)));
+      const position = Math.max(0, Math.floor(Number(index || 0)));
+      const regular = Math.floor(total / count);
+      return position === count - 1 ? total - regular * (count - 1) : regular;
+    }
+
+    function reportExpenseSummary(records, range) {
+      const source = Array.isArray(records) ? records : [];
+      const start = normalizeDateKey(range?.start);
+      const endExclusive = normalizeDateKey(range?.endExclusive);
+      const byDate = new Map();
+      if (!start || !endExclusive || start >= endExclusive) {
+        return { total: 0, byDate, occurrenceCount: 0 };
+      }
+      const add = (date, amount, sourceRecord, category, allocated) => {
+        if (date < start || date >= endExclusive) return;
+        const value = Math.max(0, Number(amount || 0));
+        if (!Number.isFinite(value)) return;
+        const current = byDate.get(date) || { date, total: 0, items: [] };
+        current.total += value;
+        current.items.push({ sourceRecord, category, amount: value, allocated });
+        byDate.set(date, current);
+      };
+      source.forEach(entry => {
+        const paymentDate = normalizeDateKey(entry?.date);
+        if (!paymentDate) return;
+        Object.entries(entry.expenses || {}).forEach(([category, rawAmount]) => {
+          const amount = Math.max(0, Number(rawAmount || 0));
+          if (!Number.isFinite(amount)) return;
+          const allocation = expenseAllocationFor(entry, category);
+          if (!allocation) {
+            add(paymentDate, amount, entry, category, false);
+            return;
+          }
+          for (let index = 0; index < allocation.months; index += 1) {
+            const month = expenseAllocationMonth(allocation.startMonth, index);
+            add(
+              `${month}-01`,
+              expenseAllocationAmount(amount, allocation.months, index),
+              entry,
+              category,
+              true
+            );
+          }
+        });
+      });
+      return {
+        total: [...byDate.values()].reduce((sum, day) => sum + day.total, 0),
+        byDate,
+        occurrenceCount: [...byDate.values()].reduce((sum, day) => sum + day.items.length, 0)
+      };
     }
 
     function entryTotal(entry) {
@@ -7555,13 +7650,20 @@
       return `${Number(match[1])}年${Number(match[2])}月${Number(match[3])}日`;
     }
 
-    function dateCardMarkup({ id, value, label, required = false, inlineToday = false }) {
+    function formatShortDate(dateString, includeToday = false) {
+      const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateString || "");
+      if (!match) return "選擇日期";
+      const date = `${Number(match[2])}月${Number(match[3])}日`;
+      return includeToday && dateString === todayString() ? `今天・${date}` : date;
+    }
+
+    function dateCardMarkup({ id, value, label, required = false, inlineToday = false, compactMobile = false }) {
       const isToday = value === todayString();
       const displayValue = inlineToday && isToday ? `今天・${formatFullDate(value)}` : formatFullDate(value);
       return `
         <label class="date-card${inlineToday ? " inline-date" : ""}" for="${escapeAttr(id)}">
           <span class="date-card-copy">
-            <strong class="date-card-value" data-date-display${inlineToday ? " data-date-inline" : ""}>${escapeHtml(displayValue)}</strong>
+            <strong class="date-card-value${compactMobile ? " compact-mobile-date" : ""}" data-date-display${inlineToday ? " data-date-inline" : ""}${compactMobile ? ` data-short-date="${escapeAttr(formatShortDate(value, inlineToday))}"` : ""}>${escapeHtml(displayValue)}</strong>
             ${inlineToday ? "" : `<small class="date-card-today" data-date-today${isToday ? "" : " hidden"}>今天</small>`}
           </span>
           <input type="date" id="${escapeAttr(id)}" value="${escapeAttr(value)}" aria-label="${escapeAttr(label)}"${required ? " required" : ""}>
@@ -7584,6 +7686,9 @@
         display.textContent = isInline && input.value === todayString()
           ? `今天・${formatFullDate(input.value)}`
           : formatFullDate(input.value);
+        if (display.classList.contains("compact-mobile-date")) {
+          display.dataset.shortDate = formatShortDate(input.value, isInline);
+        }
       }
       if (today) today.hidden = input.value !== todayString();
     }
@@ -7633,7 +7738,6 @@
         startMonth: safeDate.slice(0, 7),
         startMonthChanged: false,
         advancedOpen: false,
-        categoryOpen: false,
         modeOpen: false,
         noteOpen: false,
         note: "",
@@ -7683,7 +7787,7 @@
     }
 
     function expenseDurationText(months = selectedExpenseMonths()) {
-      return `算 ${months} 個月`;
+      return `分 ${months} 個月`;
     }
 
     function expenseMonthRange(startMonth = expenseDraft.startMonth, months = selectedExpenseMonths()) {
@@ -7716,6 +7820,14 @@
         ? recordEditorState.draft
         : entryForDate(date);
       return String(entry?.expenseNotes?.[category] || "").slice(0, 160);
+    }
+
+    function existingExpenseAllocation(category = expenseDraft.category, date = expenseDraft.paymentDate) {
+      if (!category || !date) return null;
+      const entry = recordEditorState.open && recordEditorState.date === date
+        ? recordEditorState.draft
+        : entryForDate(date);
+      return expenseAllocationFor(entry, category);
     }
 
     function recentExpenseAmounts(category = expenseDraft.category) {
@@ -7814,13 +7926,10 @@
         <section class="expense-suggestion-card" aria-live="polite">
           <div class="expense-suggestion-copy">
             <strong class="expense-suggestion-category" id="expenseSuggestionCategory">${escapeHtml(expenseDraft.category || "分月計算")}</strong>
-            <div>
-              <p class="expense-suggestion-label">系統建議</p>
-              <div class="expense-suggestion-duration"><span class="expense-suggestion-check" aria-hidden="true">✓</span><span id="expenseDurationText">${escapeHtml(expenseDurationText(months))}</span></div>
-            </div>
+            <div class="expense-suggestion-duration"><span id="expenseDurationText">${escapeHtml(expenseDurationText(months))}</span></div>
             <div class="expense-cost-preview">
-              <div><span>期間</span><strong id="expensePeriodText">${escapeHtml(expenseMonthRange(expenseDraft.startMonth, months))}</strong></div>
-              <div><span>每月成本</span><strong id="expenseMonthlyCost">${amount ? money(breakdown.monthly) : "輸入金額後顯示"}</strong></div>
+              <div><span>計算期間</span><strong id="expensePeriodText">${escapeHtml(expenseMonthRange(expenseDraft.startMonth, months))}</strong></div>
+              <div><span>每月成本</span><strong id="expenseMonthlyCost">${amount ? money(breakdown.monthly) : "輸入金額後即可計算"}</strong></div>
             </div>
             <p class="expense-remainder-note" id="expenseRemainderNote"${breakdown.hasRemainder ? "" : " hidden"}>最後一個月為 ${money(breakdown.lastMonth)}，確保總額一致。</p>
           </div>
@@ -7840,7 +7949,6 @@
             <input type="month" id="expenseStartMonth" value="${escapeAttr(expenseDraft.startMonth)}" aria-label="開始月份">
           </label>
         </div>
-        <p class="expense-model-note">目前先提供分月預覽；儲存仍只記入付款日期，月報尚不會分月計入。</p>
       `;
     }
 
@@ -7868,23 +7976,15 @@
 
           <div class="smart-expense-primary">
             <div class="expense-choice-row">
-              <button class="expense-choice-button" type="button" data-expense-toggle-category aria-expanded="${String(expenseDraft.categoryOpen)}" aria-label="支出類別，${escapeAttr(expenseDraft.category || "尚未選擇")}">
-                <strong>${escapeHtml(expenseDraft.category || "選擇類別")}</strong>
-                <span class="expense-choice-chevron" aria-hidden="true">▾</span>
-              </button>
+              <select class="expense-choice-button" id="smartExpenseCategory" aria-label="支出類別">
+                <option value="">選擇類別</option>
+                ${expenseCategoryOptionsMarkup()}
+              </select>
               <button class="expense-choice-button" type="button" data-expense-toggle-mode aria-expanded="${String(expenseDraft.modeOpen)}" aria-label="支出方式，${escapeAttr(expenseModeLabel())}">
                 <strong>${escapeHtml(expenseModeLabel())}</strong>
                 <span class="expense-choice-chevron" aria-hidden="true">▾</span>
               </button>
             </div>
-            ${expenseDraft.categoryOpen ? `
-              <div class="expense-choice-panel">
-                <select id="smartExpenseCategory" aria-label="完整支出類別">
-                  <option value="">選擇支出類別</option>
-                  ${expenseCategoryOptionsMarkup()}
-                </select>
-              </div>
-            ` : ""}
             <div class="expense-mode-options"${expenseDraft.modeOpen ? "" : " hidden"} role="group" aria-label="支出方式">
               ${modes.map(([value, label]) => `<button class="expense-mode-option${expenseDraft.mode === value ? " active" : ""}" type="button" data-expense-mode="${value}" aria-pressed="${String(expenseDraft.mode === value)}">${label}</button>`).join("")}
             </div>
@@ -7906,9 +8006,11 @@
 
           ${expenseDraft.mode === "recurring" ? recurringExpenseMarkup(amount) : ""}
           ${expenseDraft.mode === "allocated" ? allocatedExpenseMarkup(amount, months) : ""}
-          ${dateCardMarkup({ id: "smartExpenseDate", value: expenseDraft.paymentDate, label: "付款日期", inlineToday: true })}
+          <div class="expense-date-note-row">
+            ${dateCardMarkup({ id: "smartExpenseDate", value: expenseDraft.paymentDate, label: "付款日期", inlineToday: true, compactMobile: true })}
+            <button class="expense-note-toggle" type="button" data-expense-toggle-note aria-expanded="${String(expenseDraft.noteOpen)}">${expenseDraft.noteOpen ? "收起備註" : expenseDraft.note ? "備註 ✓" : "＋備註"}</button>
+          </div>
           <div class="expense-note-area">
-            <button class="expense-note-toggle" type="button" data-expense-toggle-note aria-expanded="${String(expenseDraft.noteOpen)}">${expenseDraft.noteOpen ? "－ 收起備註" : "＋ 加入備註"}</button>
             ${expenseDraft.noteOpen ? `
               <label class="expense-note-field">備註
                 <input type="text" id="smartExpenseNote" maxlength="160" value="${escapeAttr(expenseDraft.note)}" placeholder="輸入地點或補充說明" autocomplete="off">
@@ -7942,7 +8044,7 @@
       const breakdown = expenseAllocationBreakdown(amount, months);
       if (durationText) durationText.textContent = expenseDurationText(months);
       if (periodText) periodText.textContent = expenseMonthRange(expenseDraft.startMonth, months);
-      if (monthlyCost) monthlyCost.textContent = amount ? money(breakdown.monthly) : "輸入金額後顯示";
+      if (monthlyCost) monthlyCost.textContent = amount ? money(breakdown.monthly) : "輸入金額後即可計算";
       if (remainderNote) {
         remainderNote.hidden = !breakdown.hasRemainder;
         remainderNote.textContent = breakdown.hasRemainder ? `最後一個月為 ${money(breakdown.lastMonth)}，確保總額一致。` : "";
@@ -7961,11 +8063,17 @@
       const currentNoteOpen = expenseDraft.noteOpen;
       expenseDraft.category = category;
       if (!preserveDraft) {
-        expenseDraft.mode = suggestedExpenseMode(category);
-        const months = suggestedExpenseMonths(category);
-        expenseDraft.durationChoice = String(months);
+        const existingAmount = existingExpenseAmount(category, expenseDraft.paymentDate);
+        const savedAllocation = existingExpenseAllocation(category, expenseDraft.paymentDate);
+        expenseDraft.mode = savedAllocation
+          ? "allocated"
+          : existingAmount
+            ? "one_time"
+            : suggestedExpenseMode(category);
+        const months = savedAllocation?.months || suggestedExpenseMonths(category);
+        expenseDraft.durationChoice = [2, 3, 6, 12].includes(months) ? String(months) : "custom";
         expenseDraft.customMonths = months;
-        expenseDraft.startMonth = expenseDraft.paymentDate.slice(0, 7);
+        expenseDraft.startMonth = savedAllocation?.startMonth || expenseDraft.paymentDate.slice(0, 7);
         expenseDraft.recurringStartMonth = expenseDraft.paymentDate.slice(0, 7);
         expenseDraft.recurringStartMonthChanged = false;
         expenseDraft.recurringDay = Number(expenseDraft.paymentDate.slice(-2));
@@ -7973,10 +8081,8 @@
         expenseDraft.advancedOpen = false;
         expenseDraft.note = sameCategory ? currentNote : existingExpenseNote(category, expenseDraft.paymentDate);
         expenseDraft.noteOpen = sameCategory ? currentNoteOpen : false;
-        const existingAmount = existingExpenseAmount(category, expenseDraft.paymentDate);
         expenseDraft.amount = existingAmount ? String(existingAmount) : "";
       }
-      expenseDraft.categoryOpen = false;
       expenseDraft.modeOpen = false;
       expenseDraft.status = "";
       expenseDraft.statusType = "";
@@ -8094,6 +8200,16 @@
         draft.expenses ||= {};
         draft.expenseNotes ||= {};
         draft.expenses[category] = Math.round(amount);
+        if (expenseDraft.mode === "allocated") {
+          draft.expenseAllocations ||= {};
+          draft.expenseAllocations[category] = {
+            months: selectedExpenseMonths(),
+            startMonth: expenseDraft.startMonth
+          };
+        } else if (draft.expenseAllocations) {
+          delete draft.expenseAllocations[category];
+          if (!Object.keys(draft.expenseAllocations).length) delete draft.expenseAllocations;
+        }
         const note = String(expenseDraft.note || "").trim().slice(0, 160);
         if (note) draft.expenseNotes[category] = note;
         else delete draft.expenseNotes[category];
@@ -8114,6 +8230,16 @@
       }
       entry.expenses ||= {};
       entry.expenses[category] = amount;
+      if (expenseDraft.mode === "allocated") {
+        entry.expenseAllocations ||= {};
+        entry.expenseAllocations[category] = {
+          months: selectedExpenseMonths(),
+          startMonth: expenseDraft.startMonth
+        };
+      } else if (entry.expenseAllocations) {
+        delete entry.expenseAllocations[category];
+        if (!Object.keys(entry.expenseAllocations).length) delete entry.expenseAllocations;
+      }
       entry.expenseNotes ||= {};
       const note = String(expenseDraft.note || "").trim().slice(0, 160);
       if (note) entry.expenseNotes[category] = note;
@@ -8855,6 +8981,10 @@
     function aggregateReport(records, range) {
       const periodRecords = getRecordsInRange(records, range);
       const summary = summarize(periodRecords);
+      const expenseSummary = reportExpenseSummary(records, range);
+      summary.expenses = expenseSummary.total;
+      summary.net = summary.total - summary.expenses;
+      summary.hourly = hourlyRate(summary.net, summary.durationMs);
       const workMinutes = Math.round(summary.durationMs / workTimeUnits.minuteMs);
       const hourlyRecordQualities = periodRecords
         .filter(record => entryTotal(record) > 0)
@@ -8885,7 +9015,7 @@
         records: periodRecords,
         recordsByDate,
         recordCount: periodRecords.length,
-        hasRecords: periodRecords.length > 0,
+        hasRecords: periodRecords.length > 0 || expenseSummary.occurrenceCount > 0,
         totalIncome: summary.total,
         totalExpenses: summary.expenses,
         netIncome: summary.net,
@@ -9103,12 +9233,15 @@
     }
 
     function buildWeeklyNetTrend(records, range) {
-      const byDate = summarizeRecordsByDate(getRecordsInRange(records, range));
       return Array.from({ length: 7 }, (_, index) => {
         const dateKey = addLocalDays(range.start, index);
-        const day = byDate.get(dateKey);
-        const hasRecord = Boolean(day);
-        const value = day?.aggregate.netIncome || 0;
+        const aggregate = aggregateReport(records, {
+          start: dateKey,
+          end: dateKey,
+          endExclusive: addLocalDays(dateKey, 1)
+        });
+        const hasRecord = aggregate.hasRecords;
+        const value = aggregate.netIncome;
         return {
           dateKey,
           label: reportWeekdayLabel(dateKey),
@@ -9174,6 +9307,7 @@
       getWeekLabel,
       getMonthLabel,
       getRecordsInRange,
+      reportExpenseSummary,
       aggregateReport,
       compareReportMetric,
       compareReportPeriods,
@@ -10959,12 +11093,20 @@
 
     function exportCsv() {
       const platformHeaders = state.platforms.flatMap(name => [`${name}原始`, `${name}實拿`, `${name}比例%`]);
-      const headers = ["日期", "班別", "平台原始總額", "總額", "小費", "支出", "淨收入", "工時", "時薪", "訂單數", "公里數", "天氣", ...platformHeaders, ...state.expenses, "備註"];
+      const headers = ["日期", "班別", "平台原始總額", "總額", "小費", "原始付款支出", "淨收入", "工時", "時薪", "訂單數", "公里數", "天氣", ...platformHeaders, ...state.expenses, "分月資訊", "備註"];
       const rows = state.entries
         .slice()
         .sort((a, b) => a.date.localeCompare(b.date))
         .map(entry => {
           const work = workMetrics(entry);
+          const allocationDetails = Object.entries(entry.expenses || {}).flatMap(([category, amount]) => {
+            const allocation = expenseAllocationFor(entry, category);
+            if (!allocation) return [];
+            const lastMonth = expenseAllocationMonth(allocation.startMonth, allocation.months - 1);
+            const regular = expenseAllocationAmount(amount, allocation.months, 0);
+            const finalAmount = expenseAllocationAmount(amount, allocation.months, allocation.months - 1);
+            return [`${category}：原始 ${money(amount)}；分 ${allocation.months} 個月；${allocation.startMonth.replace("-", "/")}～${lastMonth.replace("-", "/")}；每月 ${money(regular)}${finalAmount !== regular ? `；尾月 ${money(finalAmount)}` : ""}`];
+          }).join("｜");
           return [
             entry.date,
             entry.shift,
@@ -10984,6 +11126,7 @@
               platformRate(name)
             ]),
             ...state.expenses.map(name => entry.expenses?.[name] || 0),
+            allocationDetails,
             entry.note || ""
           ];
         });
@@ -11628,6 +11771,10 @@
       const category = remove.dataset.calendarRemoveExpense;
       delete recordEditorState.draft.expenses?.[category];
       delete recordEditorState.draft.expenseNotes?.[category];
+      delete recordEditorState.draft.expenseAllocations?.[category];
+      if (recordEditorState.draft.expenseAllocations && !Object.keys(recordEditorState.draft.expenseAllocations).length) {
+        delete recordEditorState.draft.expenseAllocations;
+      }
       renderCalendarExpenseList();
       markRecordEditorDirty();
     });
@@ -11808,7 +11955,6 @@
     els.expenseInputs.addEventListener("click", event => {
       const quick = event.target.closest("[data-expense-quick]");
       const mode = event.target.closest("[data-expense-mode]");
-      const categoryToggle = event.target.closest("[data-expense-toggle-category]");
       const modeToggle = event.target.closest("[data-expense-toggle-mode]");
       const noteToggle = event.target.closest("[data-expense-toggle-note]");
       const recentAmount = event.target.closest("[data-expense-recent-amount]");
@@ -11824,18 +11970,8 @@
         selectExpenseMode(mode.dataset.expenseMode);
         return;
       }
-      if (categoryToggle) {
-        expenseDraft.categoryOpen = !expenseDraft.categoryOpen;
-        expenseDraft.modeOpen = false;
-        renderExpenseForm();
-        if (expenseDraft.categoryOpen) {
-          window.requestAnimationFrame(() => document.getElementById("smartExpenseCategory")?.focus());
-        }
-        return;
-      }
       if (modeToggle) {
         expenseDraft.modeOpen = !expenseDraft.modeOpen;
-        expenseDraft.categoryOpen = false;
         renderExpenseForm();
         return;
       }

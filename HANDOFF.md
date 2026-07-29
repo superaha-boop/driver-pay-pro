@@ -6,6 +6,30 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
+## Today Expense UX Batch 2 — Current Handoff
+
+- Branch：`codex/v1-1-m1-today-workflow`；base `1e21bfa`。
+- 類別控制改為單一原生 `#smartExpenseCategory`，移除第二層 select；
+  油錢／停車費／洗車快捷仍只更新同一 draft 且保留金額、日期、方式、備註。
+- 核准的唯一 schema 擴充為可選
+  `expenseAllocations[category] = { months, startMonth }`；原始
+  `expenses[category]`、其他 WorkRecord 欄位與 `driverPayApp.v2` key 不變。
+- `reportExpenseSummary()` 從原始付款衍生各月成本，最後月吸收尾差；
+  Reports／AI 共用，Calendar 保留付款日原始金額，CSV 增加分月資訊。
+- 一次支出保存時移除 allocation；Calendar 移除支出時同步移除；刪除整筆
+  WorkRecord 自然一併移除。舊紀錄無 allocation 時安全維持一次支出。
+- 分月卡片已移除預覽警語並精簡；日期／備註改同列，400px 以下使用短日期。
+- L1：`npm run release:check` Passed；183/183 Node、Today 53/53、AI 8/8、
+  Driver 5/5、Integration 16/16、Reports 45/45、Calendar 38/38。Lint
+  0 errors／10 既有 warnings，Production validation、Manifest、inline
+  JavaScript、Service Worker syntax、`git diff --check` 與 `npm audit`
+  0 vulnerabilities 均通過。
+- 真實瀏覽器 320、375、390、393、430px 均無水平 overflow；單一類別
+  select、分月重開保留、一次／分月切換、Calendar 原始付款、Reports／AI
+  分月成本及日期／備註同列已驗證。
+- App Shell candidate `driver-pay-pro-v18`。完成後只 Push 功能分支並建立
+  Public Preview；不 merge main、不 Production。
+
 ## V1.1 Milestone 1 — Current Handoff
 
 - Branch：`codex/v1-1-m1-today-workflow`；base：
@@ -1078,7 +1102,9 @@ Sprint 完成且通過適用驗證後，Codex 可以直接：
 - 每月固定提供每月金額、日期、開始月份及結束方式前端設定。
 - 分月計算提供 2、3、6、12、自訂月份、期間、每月成本與尾月補差預覽；自訂限制 2～60 個月。
 - 金額支援千分位、空值／0 時停用儲存，儲存後清空金額、保留日期、收合區塊並顯示提示。
-- 現有支出仍只寫入 `entry.expenses[category]`；固定與分月規則未持久化，也未修改月報算法或 `driverPayApp.v2` 結構。
+- 當時現有支出仍只寫入 `entry.expenses[category]`；固定與分月規則尚未
+  持久化，也未修改月報算法或 `driverPayApp.v2` 結構。此為歷史狀態，後續
+ 已由 D-038 核准的可選 `expenseAllocations` 相容擴充取代。
 
 本機備份：
 

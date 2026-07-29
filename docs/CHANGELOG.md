@@ -16,6 +16,15 @@
 
 ## Unreleased
 
+### Today Expense UX Batch 2
+
+- 支出類別改為單一直接原生選擇器，移除重複第二層 select。
+- 新增可選 `expenseAllocations` metadata，原始付款與 localStorage key 不變；
+  Reports／AI 使用分月成本，Calendar 保留原始付款。
+- CSV 同時匯出原始付款與分月資訊；切回一次支出或刪除支出會清理 allocation。
+- 精簡分月卡片，付款日期與備註同列，窄螢幕使用短日期。
+- App Shell candidate 更新為 `driver-pay-pro-v18`。
+
 ### V1.1 Milestone 1 — Today Workflow and Work-Time Unification
 
 - 修正 Today 手動變更開始／結束時間後仍沿用舊 `workSession` 工時的 P0

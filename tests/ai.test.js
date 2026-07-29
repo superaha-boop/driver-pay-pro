@@ -92,6 +92,11 @@ const functionNames = [
   "platformNetAmount",
   "entryIncome",
   "entryExpenses",
+  "normalizeExpenseAllocation",
+  "expenseAllocationFor",
+  "expenseAllocationMonth",
+  "expenseAllocationAmount",
+  "reportExpenseSummary",
   "entryTotal",
   "entryNet",
   "recordDataQuality",
@@ -213,6 +218,29 @@ test("同一份 fixture 的 AI 與 Reports 月彙總完全一致", () => {
     JSON.parse(JSON.stringify(aiContext.monthAggregate.range)),
     JSON.parse(JSON.stringify(reportsRange))
   );
+});
+
+test("AI 與 Reports 共用分月後的每月成本", () => {
+  const originalEntries = state.entries;
+  state.entries = [{
+    id: "insurance",
+    date: "2026-07-29",
+    incomes: {},
+    expenses: { 汽車保險: 12000 },
+    expenseAllocations: {
+      汽車保險: { months: 12, startMonth: "2026-07" }
+    }
+  }];
+  const source = context.ai.buildAiAnalysisContext();
+  const reportsAggregate = context.ai.sharedAnalytics.aggregateReport(
+    state.entries,
+    context.ai.sharedAnalytics.getLocalMonthRange("2026-07")
+  );
+  state.entries = originalEntries;
+  assert.equal(source.monthAggregate.totalExpenses, 1000);
+  assert.equal(source.monthAggregate.netIncome, -1000);
+  assert.equal(source.monthAggregate.totalExpenses, reportsAggregate.totalExpenses);
+  assert.equal(source.monthAggregate.netIncome, reportsAggregate.netIncome);
 });
 
 test("同一份 fixture 的 AI 與 Reports 平台彙總完全一致", () => {

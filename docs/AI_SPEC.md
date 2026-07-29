@@ -1,6 +1,6 @@
 # Driver Pay Pro — AI Specification
 
-Version: 1.1
+Version: 1.2
 Status: V1.1 Milestone 1 Candidate
 Updated: 2026-07-29
 
@@ -26,6 +26,9 @@ persistence read、formatting 與 drill-down 基礎。禁止在 renderer 建立�
 `buildAIInsights()` 只把 canonical 結果轉為可讀洞察。每項建議必須包含可追溯
 依據、期間與資料充足度；資料不足、前期為零、正負跨越或讀取錯誤時，不顯示
 誤導百分比、`Infinity` 或 `NaN`。
+
+分月支出必須沿用 Reports 的 `reportExpenseSummary()`；AI 本月成本、淨收入
+與平均時薪使用分月後成本，不得使用付款日原始總額另算一套結果。
 
 ## Hourly-rate Data Quality
 

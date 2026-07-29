@@ -137,19 +137,39 @@ test("手動模式隱藏重複即時摘要，時間模式保留單一計算結�
 test("支出快捷與類別方式控制採精簡同列按鈕且保留完整選項", () => {
   const source = extractFunction("renderExpenseForm");
   assert.match(source, /class="expense-choice-row"/);
-  assert.match(source, /data-expense-toggle-category[\s\S]*?aria-label="支出類別，/);
+  assert.match(source, /<select class="expense-choice-button" id="smartExpenseCategory" aria-label="支出類別">/);
   assert.match(source, /data-expense-toggle-mode[\s\S]*?aria-label="支出方式，/);
-  assert.match(source, /id="smartExpenseCategory" aria-label="完整支出類別"/);
   assert.match(source, /expenseCategoryOptionsMarkup\(\)/);
+  assert.doesNotMatch(source, /expense-choice-panel|data-expense-toggle-category/);
   assert.match(source, /data-expense-mode/);
   assert.match(source, /aria-label="\$\{escapeAttr\(expenseShortcutLabel\(category\)\)\}"/);
   assert.doesNotMatch(source, /expense-compact-row-label|expense-compact-row-action|>更改<|>修改</);
   assert.match(html, /\.expense-quick-button\s*\{[\s\S]*?min-height:\s*46px/);
   assert.match(html, /\.expense-choice-button\s*\{[\s\S]*?min-height:\s*48px/);
+  assert.match(html, /select\.expense-choice-button\s*\{[\s\S]*?-webkit-appearance:\s*menulist/);
   assert.match(html, /\.expense-choice-row\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(html, /\.expense-quick-button\.active::after\s*\{[\s\S]*?content:\s*"✓"/);
   assert.match(extractFunction("selectExpenseCategory"), /if \(!preserveDraft\)/);
   assert.match(html, /selectExpenseCategory\(quick\.dataset\.expenseQuick, true, true\)/);
+});
+
+test("付款日期與備註同列且備註輸入只在展開後出現", () => {
+  const source = extractFunction("renderExpenseForm");
+  assert.match(source, /class="expense-date-note-row"[\s\S]*?smartExpenseDate[\s\S]*?data-expense-toggle-note/);
+  assert.match(source, /expenseDraft\.noteOpen \? `[\s\S]*?id="smartExpenseNote"/);
+  assert.match(html, /\.expense-date-note-row\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 13fr\) minmax\(0, 7fr\)/);
+  assert.match(html, /\.expense-note-toggle\s*\{[\s\S]*?min-height:\s*44px/);
+});
+
+test("分月卡片移除預覽警語並保留精簡摘要", () => {
+  const source = extractFunction("allocatedExpenseMarkup");
+  assert.match(source, /expenseSuggestionCategory/);
+  assert.match(source, /expenseDurationText/);
+  assert.match(source, /expenseMonthRange/);
+  assert.match(source, /expenseMonthlyCost/);
+  assert.match(source, /expenseDraft\.advancedOpen \? "收合" : "修改"/);
+  assert.doesNotMatch(source, /系統建議|目前先提供分月預覽|月報尚不會分月計入/);
+  assert.match(source, /輸入金額後即可計算/);
 });
 
 test("新增支出使用獨立交易儲存且防止重複提交", () => {

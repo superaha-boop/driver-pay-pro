@@ -87,6 +87,11 @@ const functionNames = [
   "platformNetAmount",
   "entryIncome",
   "entryExpenses",
+  "normalizeExpenseAllocation",
+  "expenseAllocationFor",
+  "expenseAllocationMonth",
+  "expenseAllocationAmount",
+  "reportExpenseSummary",
   "entryTotal",
   "entryNet",
   "recordDataQuality",
@@ -199,6 +204,25 @@ test("共用 aggregator 正確計算收入、支出、淨收入、工時與工�
   assert.equal(aggregate.workDays, 2);
   assert.equal(aggregate.totalWorkDuration, 13.5 * 60 * 60 * 1000);
   assert.equal(aggregate.averageHourlyIncome, 6250 / 13.5);
+});
+
+test("月報以分月成本計算且 Calendar 原始付款值維持不變", () => {
+  const allocated = {
+    ...record("2026-07-29", 0, 0, 0),
+    expenses: { 汽車保險: 12000 },
+    expenseAllocations: {
+      汽車保險: { months: 12, startMonth: "2026-07" }
+    }
+  };
+  const july = reports.aggregateReport([allocated], reports.getLocalMonthRange("2026-07"));
+  const august = reports.aggregateReport([allocated], reports.getLocalMonthRange("2026-08"));
+  assert.equal(reports.entryExpenses(allocated), 12000);
+  assert.equal(july.totalExpenses, 1000);
+  assert.equal(july.netIncome, -1000);
+  assert.equal(august.totalExpenses, 1000);
+  assert.equal(august.netIncome, -1000);
+  assert.equal(august.recordCount, 0);
+  assert.equal(august.hasRecords, true);
 });
 
 test("零工時平均時薪使用不可用狀態，不產生 Infinity 或 NaN", () => {
@@ -334,7 +358,7 @@ test("Reports 狀態不再讀寫 legacy localStorage 設定並保留唯讀介面
   assert.doesNotMatch(html.match(/<section id="view-reports"[\s\S]*?<\/section>\s*<section id="view-ai"/)?.[0] || "", /data-calendar-(?:add|edit|delete)/);
 });
 
-test("Local-first V1.1 App Shell 使用 Service Worker cache v17", () => {
-  assert.match(serviceWorker, /driver-pay-pro-v17/);
+test("Local-first V1.1 App Shell 使用 Service Worker cache v18", () => {
+  assert.match(serviceWorker, /driver-pay-pro-v18/);
   assert.doesNotMatch(serviceWorker, /driver-pay-pro-v11/);
 });

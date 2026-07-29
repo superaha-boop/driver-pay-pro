@@ -25,6 +25,24 @@
 執行一次。高風險資料、同步、Service Worker 或 iOS 特有變更仍須即時提高
 驗證層級。
 
+## Today Expense UX Batch 2
+
+- 新增 `tests/expense-allocation.test.js`，涵蓋 legacy WorkRecord、重開保存、
+  一次／分月切換、金額／月份／開始月重算、刪除同步、Calendar／Reports／
+  AI／CSV 口徑與尾差總額。
+- 瀏覽器隔離 origin 驗證 $12,000／12 個月：月報與 AI 為 $1,000，
+  Calendar 付款日仍為 $12,000；重新載入後月份、開始月、金額與備註保留。
+- 快捷分類切換保留金額、日期、分月方式與備註；類別 DOM 只有一個 select。
+- 320、375、390、393、430px 均 `scrollWidth === clientWidth`；320px 使用
+  「今天・7月29日」且不與備註按鈕重疊。
+- `npm run release:check`：Passed；183/183 Node、Today 53/53、AI 8/8、
+  Driver 5/5、Integration 16/16、Reports 45/45、Calendar 38/38。
+- Lint：0 errors／10 既有 warnings；inline JavaScript、Service Worker、
+  Manifest、static build／Production validation 與 `git diff --check` Passed。
+  `npm audit`：0 vulnerabilities。
+- App Shell candidate：`driver-pay-pro-v18`。尚待唯一一次 Expense UX
+  iPhone Safari／installed PWA Human QA。
+
 ## V1.1 Milestone 1 — Today／Work-Time／QA Follow-up
 
 - Product Owner 已確認 Milestone 1 Final Human QA 通過；舊 Preview tunnel

@@ -599,3 +599,26 @@
   - 不以隱藏 canonical 工時或刪除完整支出功能換取高度。
   - 不建立第二套簡化類別或支出方式資料來源。
   - 不讓快捷分類切換清空尚未儲存的其他支出內容。
+
+## D-038
+
+- Date: 2026-07-29
+- Decision:
+  1. WorkRecord 只相容增加可選
+     `expenseAllocations[category] = { months, startMonth }`；原始
+     `expenses[category]` 與 `driverPayApp.v2` key 不變。
+  2. 缺少有效 allocation 的舊紀錄視為一次支出；切回一次支出、移除分類或
+     刪除紀錄時同步移除 metadata，不批量 migration。
+  3. Calendar 保留原始付款；Reports／AI 共用 `reportExpenseSummary()` 依月
+     衍生成本，尾差由最後月吸收。
+  4. 月成本以該台北月份第一天作 report-only accounting anchor，使週／月
+     期間與趨勢加總一致，但不建立或改寫 WorkRecord。
+  5. CSV 同時輸出原始付款與分月資訊；App Shell 更新為 v18。
+- Reason: 真正分月必須在重開 App 後仍知道月份數與開始月份；可選分類級
+  metadata 是不複製未來紀錄、不改原始付款且相容舊資料的最小方案。
+- Impact: Today expense、Reports／AI canonical expense、CSV、tests、docs 與
+  v18；其他資料模型、Calendar UI、Supabase、main、Production 不變。
+- Rejected alternatives:
+  - 不把規則只留在 UI draft。
+  - 不複製十二筆 WorkRecord。
+  - 不建立第二個 localStorage key 或批量重寫舊資料。
