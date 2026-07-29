@@ -318,10 +318,10 @@ test("每日紀錄核心表單預設展開且其他資料預設收合", () => {
   assert.match(html, /id="otherDataToggle"[^>]*aria-expanded="false"/);
 });
 
-test("Today 工作狀態卡不再重複主工時且保留工作明細", () => {
-  assert.match(html, /class="work-time-overview"/);
+test("Today 工作狀態卡以整條標題列控制同一份工作明細", () => {
   assert.doesNotMatch(html, /id="workPrimaryTime"/);
-  assert.match(html, /id="workDetailsToggle"[^>]*aria-expanded="false"[^>]*aria-controls="workMetrics"/);
+  assert.match(html, /<button class="work-status-row" id="workDetailsToggle"[^>]*aria-expanded="false"[^>]*aria-controls="workMetrics"/);
+  assert.doesNotMatch(html, /class="work-time-overview"|class="work-details-toggle"|>工作明細</);
   const controls = html.slice(html.indexOf("function updateWorkControls("), html.indexOf("function updateCurrentWeather("));
   assert.doesNotMatch(controls, /workPrimaryTime/);
   assert.match(controls, /els\.workActual\.textContent = formatWorkDuration\(actualMinutes\)/);

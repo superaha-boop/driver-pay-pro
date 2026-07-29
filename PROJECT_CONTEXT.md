@@ -4,7 +4,20 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## Today Expense UX Batch 2 — Current Candidate
+## Today Work Status Header — Current Candidate
+
+- 工作分支：`codex/v1-1-m1-today-workflow`；base `e0b3dc9`。Expense UX
+  Human QA 已由 Product Owner 確認 Passed。
+- `#workDetailsToggle` 改為「今日工作狀態」整條 44px 原生 button；圖示、
+  標題、中間空白、狀態與 chevron 共用同一展開入口。
+- 原獨立「工作明細 ＋」列與空白高度已移除；`#workMetrics`、
+  `setWorkDetailsExpanded()` 與原 `aria-expanded` state 繼續沿用。
+- 工作操作與明細內容都在 toggle button 外，不會冒泡改變展開狀態。狀態
+  更新只同步 accessible name，不會重設展開 state 或清除工時草稿。
+- App Shell candidate 為 `driver-pay-pro-v19`；完成後只 Push 功能分支與
+  Public Preview，不 merge main、不 Production。
+
+## Today Expense UX Batch 2 — Human QA Passed
 
 - Homepage Detail Human QA 已通過；本批只處理支出操作與分月成本，仍在
   `codex/v1-1-m1-today-workflow`，完成後不 merge main、不 Production。
@@ -15,8 +28,8 @@
 - Calendar 使用原始付款；Reports／AI 使用 `reportExpenseSummary()` 的分月
   衍生成本，尾差由最後月吸收。CSV 同時保留原始付款與分月資訊。
 - 付款日期與備註同列；400px 以下日期縮為「今天・7月29日」等短格式。
-- App Shell candidate 為 `driver-pay-pro-v18`；唯一一次 Expense UX Human
-  QA 前只提供 Public Preview。
+- App Shell candidate 為 `driver-pay-pro-v18`；Product Owner 已確認
+  Expense UX Human QA Passed，臨時 Public Preview 已停止。
 
 ## V1.1 Milestone 1 — Today Workflow and Work-Time Unification
 

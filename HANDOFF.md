@@ -6,7 +6,27 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
-## Today Expense UX Batch 2 — Current Handoff
+## Today Work Status Header — Current Handoff
+
+- Branch：`codex/v1-1-m1-today-workflow`；base `e0b3dc9`。Expense UX Human
+  QA：Passed。
+- 工作狀態卡最上方 `#workDetailsToggle` 是唯一明細 disclosure：原生 button、
+  44px、`aria-expanded`／`aria-controls="workMetrics"`、動態狀態朗讀與
+  Lucide-style chevron。
+- 原 `.work-time-overview` 與可見「工作明細 ＋」獨立列已移除；繼續沿用
+  同一 `#workMetrics`、同一 `setWorkDetailsExpanded()` 與同一 state。
+- 開始、暫停、繼續、收工、再跑一段、修改時間及明細內容均在 toggle 外，
+  不會誤觸 disclosure；狀態／計時更新不改變展開 state。
+- L1：`npm run release:check` Passed；185/185 Node、Today 55/55、AI 8/8、
+  Driver 5/5、Integration 16/16、Reports 45/45、Calendar 38/38。Lint
+  0 errors／10 既有 warnings；inline JavaScript、Service Worker、Manifest、
+  static build、`git diff --check` 與 `npm audit` 0 vulnerabilities 均通過。
+- 真實瀏覽器驗證整排四個區域、所有 work-session 狀態、操作按鈕隔離、
+  accessible name、Console 0 error／warning 與 320～430px 無 overflow。
+- App Shell candidate `driver-pay-pro-v19`。完成後只 Push 功能分支並建立
+  Public Preview；不 merge main、不 Production。
+
+## Today Expense UX Batch 2 — Human QA Passed
 
 - Branch：`codex/v1-1-m1-today-workflow`；base `1e21bfa`。
 - 類別控制改為單一原生 `#smartExpenseCategory`，移除第二層 select；
@@ -27,8 +47,8 @@ GitHub：`superaha-boop/driver-pay-pro`
 - 真實瀏覽器 320、375、390、393、430px 均無水平 overflow；單一類別
   select、分月重開保留、一次／分月切換、Calendar 原始付款、Reports／AI
   分月成本及日期／備註同列已驗證。
-- App Shell candidate `driver-pay-pro-v18`。完成後只 Push 功能分支並建立
-  Public Preview；不 merge main、不 Production。
+- App Shell candidate `driver-pay-pro-v18`。Product Owner 已確認 Expense UX
+  Human QA Passed；臨時 Public Preview 已停止，未 merge main、未 Production。
 
 ## V1.1 Milestone 1 — Current Handoff
 

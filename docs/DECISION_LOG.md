@@ -622,3 +622,26 @@
   - 不把規則只留在 UI draft。
   - 不複製十二筆 WorkRecord。
   - 不建立第二個 localStorage key 或批量重寫舊資料。
+
+## D-039
+
+- Date: 2026-07-29
+- Decision:
+  1. Expense UX Human QA 已 Passed；新的 Today work-status header Sprint
+     仍只 Push 功能分支與 Preview，不 merge main、不 Production。
+  2. `#workDetailsToggle` 改為「今日工作狀態」整條 44px 原生 button，包含
+     圖示、標題、空白、狀態與 chevron。
+  3. 移除獨立「工作明細 ＋」列，沿用同一 `#workMetrics`、
+     `setWorkDetailsExpanded()` 與 `aria-expanded` state。
+  4. 工作操作與明細內容保持 toggle 外的事件範圍；狀態更新只同步
+     accessible name，不重設 disclosure。
+  5. 不修改工時計算、狀態機、WorkRecord、`expenseAllocations`、
+     `driverPayApp.v2` 或下游功能。
+- Reason: 放大 disclosure 點擊範圍並移除沒有資訊價值的空白列，可改善單手
+  操作與垂直效率，且不需要第二份 state 或資料變更。
+- Impact: Today work-status presentation、tests、docs 與 App Shell v19；其他
+  UI、資料、main 與 Production 不變。
+- Rejected alternatives:
+  - 不保留第二個「工作明細」入口。
+  - 不把工作操作包進 disclosure button。
+  - 不建立新 modal、頁面、鉛筆或 Quick Edit。

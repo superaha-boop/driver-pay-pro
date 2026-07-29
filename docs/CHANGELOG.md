@@ -16,6 +16,13 @@
 
 ## Unreleased
 
+### Today Work Status Header
+
+- 將「今日工作狀態」整條 44px 標題列改為現有工作明細的唯一展開入口。
+- 移除獨立「工作明細 ＋」列；狀態 badge 與 chevron 留在同一列。
+- 工作操作與明細內容維持 toggle 外的獨立事件範圍，不修改工時或狀態邏輯。
+- App Shell candidate 更新為 `driver-pay-pro-v19`。
+
 ### Today Expense UX Batch 2
 
 - 支出類別改為單一直接原生選擇器，移除重複第二層 select。
@@ -24,6 +31,7 @@
 - CSV 同時匯出原始付款與分月資訊；切回一次支出或刪除支出會清理 allocation。
 - 精簡分月卡片，付款日期與備註同列，窄螢幕使用短日期。
 - App Shell candidate 更新為 `driver-pay-pro-v18`。
+- Product Owner 已確認 Expense UX Human QA Passed。
 
 ### V1.1 Milestone 1 — Today Workflow and Work-Time Unification
 

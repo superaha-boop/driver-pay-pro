@@ -25,7 +25,26 @@
 執行一次。高風險資料、同步、Service Worker 或 iOS 特有變更仍須即時提高
 驗證層級。
 
-## Today Expense UX Batch 2
+## Today Work Status Header
+
+- Contract tests 驗證整條原生 button、唯一 `aria-expanded` state、正確
+  `aria-controls`、動態狀態 accessible name、44px focusable target、
+  chevron 與操作按鈕事件隔離。
+- 真實瀏覽器已驗證標題文字、中間空白、狀態 badge 與 chevron 四個位置都
+  可切換同一 `#workMetrics`；再次點擊可收合。
+- 開始、暫停、繼續、收工、再跑一段與修改時間均不改變明細展開狀態；
+  idle、running、paused、stopped 與 continue 後共用相同標題控制。
+- 320、375、390、393、430px 均無水平 overflow；標題、狀態、chevron
+  完整，收合時標題與操作列只保留既有 7px grid gap。
+- `npm run release:check`：Passed；185/185 Node、Today 55/55、AI 8/8、
+  Driver 5/5、Integration 16/16、Reports 45/45、Calendar 38/38。
+- Lint：0 errors／10 既有 warnings；inline JavaScript、Service Worker、
+  Manifest、static build、Console 0 error／warning 與 `git diff --check`
+  Passed；`npm audit` 為 0 vulnerabilities。
+- App Shell candidate：`driver-pay-pro-v19`。尚待一次 Work Status Header
+  iPhone Safari／installed PWA Human QA。
+
+## Today Expense UX Batch 2 — Human QA Passed
 
 - 新增 `tests/expense-allocation.test.js`，涵蓋 legacy WorkRecord、重開保存、
   一次／分月切換、金額／月份／開始月重算、刪除同步、Calendar／Reports／
@@ -40,8 +59,8 @@
 - Lint：0 errors／10 既有 warnings；inline JavaScript、Service Worker、
   Manifest、static build／Production validation 與 `git diff --check` Passed。
   `npm audit`：0 vulnerabilities。
-- App Shell candidate：`driver-pay-pro-v18`。尚待唯一一次 Expense UX
-  iPhone Safari／installed PWA Human QA。
+- App Shell candidate：`driver-pay-pro-v18`。Product Owner 已確認 Expense UX
+  Human QA Passed；臨時 Preview 已停止。
 
 ## V1.1 Milestone 1 — Today／Work-Time／QA Follow-up
 

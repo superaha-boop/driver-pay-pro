@@ -45,5 +45,6 @@ Today or Calendar successful write
 - 主 key 固定為 `driverPayApp.v2`；唯一核准的相容擴充是可選
   `expenseAllocations[category] = { months, startMonth }`。
 - 損壞或讀取失敗時不得清除原始 payload。
-- Service Worker V1.1 expense candidate cache 為 `driver-pay-pro-v18`。
+- Service Worker V1.1 Today work-status candidate cache 為
+  `driver-pay-pro-v19`。
 - 沒有 Supabase、authentication、cloud sync、migration 或外部 AI。

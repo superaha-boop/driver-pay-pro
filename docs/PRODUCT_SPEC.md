@@ -61,6 +61,9 @@ Primary responsibilities:
 - Treat the core green summary as the only high-level display of today's actual work
   time. The work-status card owns only status, work-detail disclosure, and the next
   work action; it must not repeat the same duration.
+- Use the complete work-status header row as the single disclosure control for the
+  existing work details. The native button keeps status and chevron in the same
+  44px row; work actions and detail content remain outside its event boundary.
 - Start, pause, resume, and end today's work session.
 - Enter or correct today's platform income.
 - Add today's expenses.

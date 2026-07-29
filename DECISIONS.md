@@ -665,3 +665,35 @@ metadata 是支援修改、刪除、尾差與舊資料相容所需的最小擴�
   Calendar UI、main 與 Production 不變。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-038](docs/DECISION_LOG.md#d-038)。
+
+## D-039 — 今日工作狀態整條標題列控制工作明細
+
+- Date: 2026-07-29
+
+### 決策
+
+1. Product Owner 已確認 Expense UX Human QA Passed；後續小型 Today
+   work-status Sprint 仍在同一功能分支進行，不 merge main、不 Production。
+2. 原 `#workDetailsToggle` 改為「今日工作狀態」整條原生 button，包含圖示、
+   標題、中間空白、狀態 badge 與 chevron，觸控高度至少 44px。
+3. 移除獨立「工作明細 ＋」列；繼續沿用同一 `#workMetrics`、
+   `setWorkDetailsExpanded()` 與 `aria-expanded` state，不建立第二套明細。
+4. 工作操作與明細內容位於 toggle 外；狀態或計時更新只同步 accessible
+   name，不改變展開 state，也不清除工時草稿。
+5. 本 Sprint 不修改 canonical work-time、狀態機、WorkRecord、
+   `expenseAllocations`、`driverPayApp.v2` 或任何下游資料。
+
+### 原因
+
+獨立「工作明細」列只有右側小控制，浪費一整行高度並縮小單手操作範圍。
+把 disclosure 語意集中到既有標題列，可在不改資料與狀態邏輯下提供完整
+44px 點擊面積、鍵盤與 VoiceOver 語意。
+
+### 影響範圍
+
+- 僅修改 Today 工作狀態卡 presentation／disclosure、tests、docs 與 App
+  Shell v19。
+- 工時計算、工作狀態機、收入、支出、Calendar／Reports／AI／CSV、
+  schema、Supabase、main 與 Production 不變。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-039](docs/DECISION_LOG.md#d-039)。

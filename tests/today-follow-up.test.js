@@ -41,22 +41,51 @@ function extractFunction(name) {
   throw new Error(`${name}() 結尾不完整`);
 }
 
-test("工作狀態卡移除重複主工時並保留完整明細按鈕語意", () => {
+test("今日工作狀態整條標題列是唯一工作明細控制", () => {
   const section = html.slice(html.indexOf('id="homeWorkCard"'), html.indexOf('id="sharedIncomePanelAnchor"'));
-  assert.match(section, /class="work-time-overview"/);
   assert.doesNotMatch(section, /id="workPrimaryTime"/);
-  assert.match(section, /id="workDetailsToggle"[^>]*aria-expanded="false"[^>]*aria-controls="workMetrics"/);
-  assert.match(section, /aria-label="工作明細，已收合"/);
-  assert.match(html, /\.work-details-toggle\s*\{[\s\S]*?min-height:\s*44px/);
+  assert.match(section, /<button class="work-status-row" id="workDetailsToggle"[^>]*aria-expanded="false"[^>]*aria-controls="workMetrics"/);
+  assert.match(section, /aria-label="今日工作狀態，尚未開始，工作明細已收合，按兩下展開"/);
+  assert.match(section, /class="home-heading" id="workStatusTitle"/);
+  assert.match(section, /class="work-status-meta"[\s\S]*?id="workStatusText"[\s\S]*?class="work-details-chevron"/);
+  assert.doesNotMatch(section, /class="work-time-overview"|class="work-details-toggle"|>工作明細</);
+  assert.match(html, /\.work-status-row\s*\{[\s\S]*?width:\s*100%[\s\S]*?min-height:\s*44px/);
+  assert.match(html, /\.work-status-row:focus-visible\s*\{/);
   assert.match(extractFunction("renderStats"), /今日實際工時[\s\S]*?formatHours\(todaySummary\.hours\)/);
 });
 
-test("工作明細控制同步 expanded、可讀標籤與加減號", () => {
+test("工作狀態標題列同步 expanded、狀態朗讀與 chevron", () => {
   const source = extractFunction("setWorkDetailsExpanded");
+  const a11y = extractFunction("syncWorkDetailsToggleA11y");
+  const controls = extractFunction("updateWorkControls");
   assert.match(source, /aria-expanded/);
-  assert.match(source, /工作明細，\$\{isExpanded \? "已展開" : "已收合"\}/);
-  assert.match(source, /isExpanded \? "－" : "＋"/);
+  assert.match(source, /syncWorkDetailsToggleA11y\(\)/);
+  assert.match(a11y, /今日工作狀態，\$\{statusLabel\}，工作明細\$\{isExpanded \? "已展開，按兩下收合" : "已收合，按兩下展開"\}/);
+  assert.match(controls, /els\.workStatusText\.dataset\.status = status;[\s\S]*?syncWorkDetailsToggleA11y\(\)/);
+  assert.match(html, /\.work-status-row\[aria-expanded="true"\] \.work-details-chevron/);
+  assert.doesNotMatch(html, /work-details-symbol|工作明細<\/span>/);
   assert.doesNotMatch(source, /workMinutes|durationMs|saveState|persistStatePayload/);
+});
+
+test("工作操作與明細內容不會冒泡觸發標題列切換", () => {
+  const section = html.slice(html.indexOf('id="homeWorkCard"'), html.indexOf('id="sharedIncomePanelAnchor"'));
+  const listeners = html.slice(
+    html.indexOf('els.workDetailsToggle.addEventListener'),
+    html.indexOf('els.manualEntryToggle.addEventListener')
+  );
+  assert.match(section, /<\/button>\s*<div class="work-metrics hidden" id="workMetrics"/);
+  assert.match(section, /<\/div>\s*<div class="work-actions">/);
+  assert.match(listeners, /els\.workDetailsToggle\.addEventListener\("click"/);
+  assert.doesNotMatch(listeners, /homeWorkCard|workMetrics|startRun|pauseRun|resumeRun|endRun|continueRun|modifyWorkTime/);
+  assert.doesNotMatch(html, /els\.homeWorkCard\.addEventListener\("click"/);
+});
+
+test("原生標題列按鈕提供 Enter、Space 與單一展開 state", () => {
+  const section = html.slice(html.indexOf('id="homeWorkCard"'), html.indexOf('id="sharedIncomePanelAnchor"'));
+  assert.match(section, /<button class="work-status-row" id="workDetailsToggle" type="button"/);
+  assert.equal((html.match(/id="workDetailsToggle"/g) || []).length, 1);
+  assert.equal((html.match(/aria-controls="workMetrics"/g) || []).length, 1);
+  assert.doesNotMatch(html, /let workDetailsExpanded|const workDetailsExpanded|workDetailsState/);
 });
 
 test("修改工作時間在展開後才定位且不自動聚焦", () => {
