@@ -406,6 +406,11 @@ Reports must not depend on AI aggregation helpers. AI and Reports should eventua
 
 ## 22. Accessibility
 
+- Reports 閱讀文字與 AI 共用 Driver 的 `settings.aiReportsReadingSize`，
+  標準／舒適／大字必須同步套用到標籤、期間、比較、趨勢、平台文字、
+  圖表文字替代與狀態訊息；主要 KPI 金額不大幅放大。
+- 文字大小切換只改 presentation，不得改變 selector、圖表資料、期間或
+  aggregation；長期間、平台名稱與金額必須可換行或安全重排，不以裁切處理。
 - The report switcher uses `role="tablist"`, each control uses `role="tab"` and `aria-selected`, and panels use linked `role="tabpanel"`.
 - Arrow-key tab navigation follows the standard horizontal tab pattern.
 - All controls meet 44×44px touch targets and show focus.

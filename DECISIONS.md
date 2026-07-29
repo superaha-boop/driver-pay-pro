@@ -697,3 +697,36 @@ metadata 是支援修改、刪除、尾差與舊資料相容所需的最小擴�
   schema、Supabase、main 與 Production 不變。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-039](docs/DECISION_LOG.md#d-039)。
+
+## D-040 — AI 與 Reports 共用單一閱讀文字大小設定
+
+- Date: 2026-07-29
+
+### 決策
+
+1. Driver「顯示設定」新增標準／舒適／大字三個原生 radio，唯一 durable
+   source 為可選 `settings.aiReportsReadingSize`。
+2. 舊資料缺少欄位或出現未知值時使用 `standard`，不批量改寫、不 migration。
+3. 切換後立即更新 `<html data-ai-reports-reading-size>` 並交易式保存；失敗
+   必須回復前一視覺與 setting。
+4. AI 與 Reports 共用同一組 reading CSS variables；放大內文、次要文字、
+   行高、閱讀間距與圖表標籤，主標題和主要 KPI 只維持或輕微調整。
+5. Today、Calendar、一般 Driver、Bottom Navigation、canonical analytics、
+   WorkRecord、`expenseAllocations` 與 `driverPayApp.v2` key 不變。
+6. 本 Sprint 只 Push 功能分支與提供 Public Preview；不 merge `main`、不
+   Production deploy。
+
+### 原因
+
+AI 長文與 Reports 次要標籤在手機上需要較彈性的閱讀尺度，但瀏覽器 zoom 或
+頁面各自的字級 state 會放大操作控制、增加 overflow 並造成設定分歧。單一
+持久偏好配合共享 typography tokens，可在不改資料和計算的前提下提供一致
+且可回復的閱讀體驗。
+
+### 影響範圍
+
+- Driver 顯示設定、AI／Reports presentation、tests、docs 與 App Shell v20。
+- Today、Calendar、其他 Driver 設定、Bottom Navigation、資料公式、CSV、
+  schema、Supabase、main 與 Production 不變。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-040](docs/DECISION_LOG.md#d-040)。

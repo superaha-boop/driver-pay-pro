@@ -16,6 +16,15 @@
 
 ## Unreleased
 
+### AI／報表閱讀文字大小
+
+- Driver 新增「顯示設定」，提供標準／舒適／大字三個立即生效的閱讀層級。
+- AI 與 Reports 共用 `settings.aiReportsReadingSize` 及同一組 CSS reading
+  tokens；舊資料安全回退標準，不增加第二份頁面 state。
+- 放大閱讀內文、次要資訊、行高、段落間距與 Reports 圖表標籤；主要 KPI、
+  Today、Calendar、一般 Driver 與 Bottom Navigation 維持原尺寸。
+- App Shell candidate 更新為 `driver-pay-pro-v20`。
+
 ### Today Work Status Header
 
 - 將「今日工作狀態」整條 44px 標題列改為現有工作明細的唯一展開入口。

@@ -4,6 +4,20 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
+## AI／報表閱讀文字大小 — Current Candidate
+
+- 工作分支：`codex/v1-1-m1-today-workflow`；base `d7571dc`。本 Sprint 只新增
+  AI／Reports 的閱讀層級設定，不 merge `main`、不 Production deploy。
+- Driver「顯示設定」提供標準／舒適／大字三個原生 radio。唯一來源為可選
+  `settings.aiReportsReadingSize`；舊資料或未知值回退 `standard`。
+- 切換後立即以 `<html data-ai-reports-reading-size>` 和共用 CSS variables
+  更新 AI／Reports，並交易式寫回 `driverPayApp.v2`；失敗會回復前一設定。
+- 主要 KPI 與頁面主標題不大幅放大；內文、次要文字、行高、閱讀間距及
+  Reports 圖表標籤依層級調整。Today、Calendar、一般 Driver、Bottom
+  Navigation 與 canonical calculations 不受影響。
+- App Shell candidate 為 `driver-pay-pro-v20`；完成後只 Push 功能分支並
+  提供 Public Preview。
+
 ## Today Work Status Header — Current Candidate
 
 - 工作分支：`codex/v1-1-m1-today-workflow`；base `e0b3dc9`。Expense UX

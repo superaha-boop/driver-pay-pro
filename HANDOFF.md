@@ -6,6 +6,30 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
+## AI／報表閱讀文字大小 — Current Handoff
+
+- Branch：`codex/v1-1-m1-today-workflow`；base `d7571dc`。
+- Driver 新增「顯示設定 → AI／報表文字大小」，固定標準／舒適／大字三個
+  原生 radio；變更即時生效、自動儲存，不增加確認或儲存按鈕。
+- 唯一 durable source 是可選 `settings.aiReportsReadingSize`，存於既有
+  `driverPayApp.v2`。舊 payload 缺欄位或值無效時為 `standard`，不修改
+  WorkRecord、`expenseAllocations` 或其他資料。
+- `<html data-ai-reports-reading-size>` 控制 AI／Reports 共用閱讀 tokens。
+  AI 長文、證據、分析依據及 Reports 標籤、趨勢、比較、平台文字與空狀態
+  會分層調整；主要 KPI 金額與頁面標題保持原視覺尺度。
+- 設定 UI、Today、Calendar、一般 Driver、Bottom Navigation、analytics、
+  CSV 與資料公式不受閱讀層級影響。
+- L1：`npm run release:check` Passed；196/196 Node、Today 55/55、AI 19/19、
+  Driver 16/16、Integration 16/16、Reports 56/56、Calendar 38/38。Lint
+  0 errors／10 既有 warnings；inline JavaScript、Service Worker、Manifest、
+  static build、`git diff --check` 與 `npm audit` 0 vulnerabilities 均通過。
+- 真實 Chrome mobile emulation 驗證三個模式、鍵盤 Arrow 操作、重開保留、
+  離線保存、fallback、圖表文字更新、主要 KPI 尺寸穩定、Console 0
+  error／warning；320／375／390／393／430px 的 AI 與 Reports 共 30 組
+  均無水平 overflow。
+- App Shell candidate `driver-pay-pro-v20`。完成後只 Push 功能分支與建立
+  Public Preview；不 merge main、不 Production。
+
 ## Today Work Status Header — Current Handoff
 
 - Branch：`codex/v1-1-m1-today-workflow`；base `e0b3dc9`。Expense UX Human

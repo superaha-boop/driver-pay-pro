@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-ai-reports-reading-size="standard">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -28,7 +28,64 @@
       --coral: var(--color-legacy-coral);
       --danger: var(--color-danger);
       --shadow: var(--shadow-card);
+      --reading-ai-body-size: 14px;
+      --reading-ai-detail-size: 13px;
+      --reading-ai-small-size: 12px;
+      --reading-ai-micro-size: 11px;
+      --reading-ai-section-title-size: 18px;
+      --reading-ai-item-title-size: 15px;
+      --reading-ai-value-size: 15px;
+      --reading-report-body-size: var(--font-size-secondary);
+      --reading-report-caption-size: var(--font-size-caption);
+      --reading-report-value-size: var(--font-size-body);
+      --reading-report-title-size: var(--font-size-card-title);
+      --reading-body-line-height: 1.55;
+      --reading-small-line-height: 1.6;
+      --reading-card-padding: 16px;
+      --reading-card-gap: 12px;
+      --reading-list-gap: 9px;
+      --reading-item-gap: 5px;
       font-family: var(--font-family-sans);
+    }
+
+    html[data-ai-reports-reading-size="comfort"] {
+      --reading-ai-body-size: 15px;
+      --reading-ai-detail-size: 14px;
+      --reading-ai-small-size: 13px;
+      --reading-ai-micro-size: 12px;
+      --reading-ai-section-title-size: 19px;
+      --reading-ai-item-title-size: 16px;
+      --reading-ai-value-size: 16px;
+      --reading-report-body-size: 15px;
+      --reading-report-caption-size: 14px;
+      --reading-report-value-size: 17px;
+      --reading-report-title-size: 18px;
+      --reading-body-line-height: 1.62;
+      --reading-small-line-height: 1.65;
+      --reading-card-padding: 17px;
+      --reading-card-gap: 14px;
+      --reading-list-gap: 11px;
+      --reading-item-gap: 6px;
+    }
+
+    html[data-ai-reports-reading-size="large"] {
+      --reading-ai-body-size: 16px;
+      --reading-ai-detail-size: 15px;
+      --reading-ai-small-size: 14px;
+      --reading-ai-micro-size: 13px;
+      --reading-ai-section-title-size: 20px;
+      --reading-ai-item-title-size: 17px;
+      --reading-ai-value-size: 17px;
+      --reading-report-body-size: 16px;
+      --reading-report-caption-size: 15px;
+      --reading-report-value-size: 18px;
+      --reading-report-title-size: 19px;
+      --reading-body-line-height: 1.7;
+      --reading-small-line-height: 1.72;
+      --reading-card-padding: 18px;
+      --reading-card-gap: 16px;
+      --reading-list-gap: 13px;
+      --reading-item-gap: 7px;
     }
 
     * { box-sizing: border-box; }
@@ -2662,14 +2719,14 @@
     .reports-period-title span {
       display: block;
       color: var(--color-text-tertiary);
-      font: var(--font-weight-medium) var(--font-size-caption)/var(--line-height-caption) var(--font-family-sans);
+      font: var(--font-weight-medium) var(--reading-report-caption-size)/var(--reading-small-line-height) var(--font-family-sans);
     }
 
     .reports-period-title h3 {
       margin: 1px 0 0;
       overflow: hidden;
       color: var(--color-text-primary);
-      font: var(--font-weight-bold) var(--font-size-card-title)/var(--line-height-title) var(--font-family-sans);
+      font: var(--font-weight-bold) var(--reading-report-title-size)/var(--line-height-title) var(--font-family-sans);
       font-variant-numeric: tabular-nums;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -2713,7 +2770,7 @@
     .reports-kpi-label,
     .reports-secondary-kpi span {
       color: var(--color-text-secondary);
-      font: var(--font-weight-regular) var(--font-size-caption)/var(--line-height-caption) var(--font-family-sans);
+      font: var(--font-weight-regular) var(--reading-report-caption-size)/var(--reading-small-line-height) var(--font-family-sans);
     }
 
     .reports-primary-kpi strong {
@@ -2752,13 +2809,13 @@
     .reports-secondary-kpi strong {
       overflow-wrap: anywhere;
       color: var(--color-text-primary);
-      font: var(--font-weight-semibold) var(--font-size-body)/var(--line-height-title) var(--font-family-sans);
+      font: var(--font-weight-semibold) var(--reading-report-value-size)/var(--line-height-title) var(--font-family-sans);
       font-variant-numeric: tabular-nums;
     }
 
     .reports-section {
       min-width: 0;
-      padding: var(--spacing-4);
+      padding: var(--reading-card-padding);
       border: var(--border-default);
       border-radius: var(--radius-card);
       background: var(--color-surface);
@@ -2767,7 +2824,7 @@
     .reports-section h4 {
       margin: 0 0 var(--spacing-3);
       color: var(--color-text-primary);
-      font: var(--font-weight-semibold) var(--font-size-card-title)/var(--line-height-title) var(--font-family-sans);
+      font: var(--font-weight-semibold) var(--reading-report-title-size)/var(--line-height-title) var(--font-family-sans);
     }
 
     .reports-comparison-list,
@@ -2805,14 +2862,16 @@
     .reports-important-list span {
       min-width: 0;
       color: var(--color-text-secondary);
-      font-size: var(--font-size-secondary);
+      font-size: var(--reading-report-body-size);
+      line-height: var(--reading-body-line-height);
     }
 
     .reports-comparison-list strong,
     .reports-important-list strong {
       flex: 0 0 auto;
       color: var(--color-text-primary);
-      font-size: var(--font-size-secondary);
+      font-size: var(--reading-report-body-size);
+      line-height: var(--reading-body-line-height);
       font-variant-numeric: tabular-nums;
       text-align: right;
     }
@@ -2840,7 +2899,8 @@
     .reports-trend-label,
     .reports-trend-value {
       color: var(--color-text-secondary);
-      font-size: var(--font-size-caption);
+      font-size: var(--reading-report-caption-size);
+      line-height: var(--reading-small-line-height);
       font-variant-numeric: tabular-nums;
     }
 
@@ -2905,8 +2965,8 @@
       border-radius: var(--radius-sm);
       color: var(--color-text-secondary);
       background: var(--color-surface-secondary);
-      font-size: var(--font-size-caption);
-      line-height: var(--line-height-caption);
+      font-size: var(--reading-report-caption-size);
+      line-height: var(--reading-small-line-height);
     }
 
     .reports-goal-progress {
@@ -2920,7 +2980,8 @@
       justify-content: space-between;
       gap: var(--spacing-3);
       color: var(--color-text-secondary);
-      font-size: var(--font-size-secondary);
+      font-size: var(--reading-report-body-size);
+      line-height: var(--reading-body-line-height);
     }
 
     .reports-goal-meta strong {
@@ -2978,7 +3039,8 @@
 
     .reports-platform-total span {
       color: var(--color-text-secondary);
-      font-size: var(--font-size-caption);
+      font-size: var(--reading-report-caption-size);
+      line-height: var(--reading-small-line-height);
     }
 
     .reports-platform-total strong {
@@ -3024,7 +3086,7 @@
       flex: 0 0 auto;
       width: 24px;
       color: var(--color-text-tertiary);
-      font-size: var(--font-size-caption);
+      font-size: var(--reading-report-caption-size);
       font-variant-numeric: tabular-nums;
     }
 
@@ -3032,7 +3094,7 @@
       min-width: 0;
       overflow: hidden;
       color: var(--color-text-primary);
-      font-size: var(--font-size-secondary);
+      font-size: var(--reading-report-body-size);
       font-weight: var(--font-weight-semibold);
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -3049,13 +3111,13 @@
 
     .reports-platform-values strong {
       color: var(--color-text-primary);
-      font-size: var(--font-size-secondary);
+      font-size: var(--reading-report-body-size);
     }
 
     .reports-platform-values span {
       min-width: 42px;
       color: var(--color-text-secondary);
-      font-size: var(--font-size-caption);
+      font-size: var(--reading-report-caption-size);
       text-align: right;
     }
 
@@ -3084,8 +3146,8 @@
       border-radius: var(--radius-sm);
       color: var(--color-text-secondary);
       background: var(--color-surface-secondary);
-      font-size: var(--font-size-caption);
-      line-height: var(--line-height-caption);
+      font-size: var(--reading-report-caption-size);
+      line-height: var(--reading-small-line-height);
     }
 
     .reports-important-action {
@@ -3115,6 +3177,32 @@
     .reports-important-action strong {
       flex: 0 0 auto;
       text-align: right;
+    }
+
+    .reports-page .report-switcher button,
+    .reports-page .reports-platform-period button,
+    .reports-page .reports-current-button {
+      font-size: var(--reading-report-body-size);
+    }
+
+    .reports-page .ds-empty-state .ds-card-title {
+      font-size: var(--reading-report-value-size);
+      line-height: var(--reading-body-line-height);
+    }
+
+    .reports-page .ds-empty-state .ds-secondary {
+      font-size: var(--reading-report-body-size);
+      line-height: var(--reading-body-line-height);
+    }
+
+    html[data-ai-reports-reading-size="comfort"] .reports-comparison-list strong,
+    html[data-ai-reports-reading-size="large"] .reports-comparison-list strong,
+    html[data-ai-reports-reading-size="comfort"] .reports-important-list strong,
+    html[data-ai-reports-reading-size="large"] .reports-important-list strong {
+      min-width: 0;
+      max-width: 60%;
+      flex-shrink: 1;
+      overflow-wrap: anywhere;
     }
 
     .month-summary-grid {
@@ -3415,7 +3503,7 @@
     .ai-dashboard {
       min-width: 0;
       display: grid;
-      gap: 12px;
+      gap: var(--reading-card-gap);
     }
 
     .ai-page-intro {
@@ -3432,13 +3520,13 @@
     .ai-page-intro p {
       margin: 5px 0 0;
       color: #68736e;
-      font-size: 14px;
-      line-height: 1.5;
+      font-size: var(--reading-ai-body-size);
+      line-height: var(--reading-body-line-height);
     }
 
     .ai-insight-card {
       min-width: 0;
-      padding: 16px;
+      padding: var(--reading-card-padding);
       border: 1px solid var(--line);
       border-radius: 18px;
       background: #fff;
@@ -3453,7 +3541,7 @@
     }
 
     .ai-section-head {
-      margin-bottom: 12px;
+      margin-bottom: var(--reading-card-gap);
       display: flex;
       align-items: baseline;
       justify-content: space-between;
@@ -3463,7 +3551,7 @@
     .ai-section-head h3 {
       margin: 0;
       color: #17211b;
-      font-size: 18px;
+      font-size: var(--reading-ai-section-title-size);
     }
 
     .ai-insight-card.primary .ai-section-head h3 {
@@ -3472,7 +3560,7 @@
 
     .ai-section-kicker {
       color: #7e8982;
-      font-size: 12px;
+      font-size: var(--reading-ai-small-size);
       white-space: nowrap;
     }
 
@@ -3485,7 +3573,7 @@
       margin: 0;
       padding: 0;
       display: grid;
-      gap: 9px;
+      gap: var(--reading-list-gap);
       list-style: none;
     }
 
@@ -3493,8 +3581,8 @@
     .ai-alert-list li {
       position: relative;
       padding-left: 14px;
-      font-size: 14px;
-      line-height: 1.55;
+      font-size: var(--reading-ai-body-size);
+      line-height: var(--reading-body-line-height);
     }
 
     .ai-advice-list li::before,
@@ -3517,8 +3605,8 @@
     .ai-empty-state {
       margin: 0;
       color: #7e8982;
-      font-size: 14px;
-      line-height: 1.6;
+      font-size: var(--reading-ai-body-size);
+      line-height: var(--reading-small-line-height);
     }
 
     .ai-insight-card.primary .ai-empty-state {
@@ -3529,18 +3617,18 @@
       margin: 0;
       padding: 0;
       display: grid;
-      gap: 12px;
+      gap: var(--reading-card-gap);
       list-style: none;
     }
 
     .ai-insight-item {
       min-width: 0;
       display: grid;
-      gap: 5px;
+      gap: var(--reading-item-gap);
     }
 
     .ai-insight-item + .ai-insight-item {
-      padding-top: 12px;
+      padding-top: var(--reading-card-gap);
       border-top: 1px solid #edf1ef;
     }
 
@@ -3551,8 +3639,8 @@
     .ai-insight-item h4 {
       margin: 0;
       color: #203128;
-      font-size: 15px;
-      line-height: 1.4;
+      font-size: var(--reading-ai-item-title-size);
+      line-height: var(--reading-body-line-height);
     }
 
     .ai-insight-card.primary .ai-insight-item h4 {
@@ -3562,8 +3650,8 @@
     .ai-insight-item p {
       margin: 0;
       color: #68736e;
-      font-size: 13px;
-      line-height: 1.55;
+      font-size: var(--reading-ai-detail-size);
+      line-height: var(--reading-body-line-height);
     }
 
     .ai-insight-card.primary .ai-insight-item p {
@@ -3582,7 +3670,7 @@
       color: var(--brand-strong);
       background: transparent;
       border: 0;
-      font-size: 13px;
+      font-size: var(--reading-ai-detail-size);
       font-weight: 650;
     }
 
@@ -3592,15 +3680,15 @@
 
     .ai-reminder-severity {
       color: #68736e;
-      font-size: 12px;
+      font-size: var(--reading-ai-small-size);
       font-weight: 700;
     }
 
     .ai-analysis-meta {
       padding: 2px 4px 6px;
       color: #68736e;
-      font-size: 12px;
-      line-height: 1.6;
+      font-size: var(--reading-ai-small-size);
+      line-height: var(--reading-small-line-height);
     }
 
     .ai-analysis-meta strong {
@@ -3616,7 +3704,7 @@
       border-radius: 999px;
       color: #506159;
       background: #edf3ef;
-      font-size: 11px;
+      font-size: var(--reading-ai-micro-size);
       font-weight: 650;
     }
 
@@ -3637,14 +3725,14 @@
 
     .ai-metric span {
       color: #7e8982;
-      font-size: 12px;
+      font-size: var(--reading-ai-small-size);
     }
 
     .ai-metric strong {
       min-width: 0;
       color: #203128;
-      font-size: 15px;
-      line-height: 1.35;
+      font-size: var(--reading-ai-value-size);
+      line-height: var(--reading-body-line-height);
       overflow-wrap: anywhere;
     }
 
@@ -3673,6 +3761,7 @@
     .ai-platform-row strong {
       min-width: 0;
       color: #203128;
+      font-size: var(--reading-ai-body-size);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -3680,6 +3769,7 @@
 
     .ai-platform-amount {
       color: #203128;
+      font-size: var(--reading-ai-body-size);
       font-weight: 650;
       white-space: nowrap;
     }
@@ -3687,6 +3777,7 @@
     .ai-platform-share {
       min-width: 38px;
       color: #7e8982;
+      font-size: var(--reading-ai-small-size);
       text-align: right;
       white-space: nowrap;
     }
@@ -3696,8 +3787,8 @@
       padding-top: 11px;
       color: #68736e;
       border-top: 1px solid #edf1ef;
-      font-size: 13px;
-      line-height: 1.6;
+      font-size: var(--reading-ai-detail-size);
+      line-height: var(--reading-small-line-height);
     }
 
     @media (min-width: 700px) {
@@ -3859,6 +3950,76 @@
       font-size: 18px;
     }
 
+    .reading-size-fieldset {
+      min-inline-size: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .reading-size-fieldset legend {
+      margin-bottom: 10px;
+      color: #203128;
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .reading-size-options {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .reading-size-choice {
+      position: relative;
+      min-width: 0;
+      min-height: 44px;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid #d7dfda;
+      border-radius: 12px;
+      color: #506159;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 650;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .reading-size-choice:has(input:checked) {
+      color: var(--brand-strong);
+      border-color: rgba(21, 150, 111, .42);
+      background: var(--brand-soft);
+    }
+
+    .reading-size-choice:has(input:focus-visible) {
+      outline: 3px solid rgba(21, 150, 111, .22);
+      outline-offset: 2px;
+    }
+
+    .reading-size-choice input {
+      width: 18px;
+      min-width: 18px;
+      height: 18px;
+      min-height: 18px;
+      margin: 0;
+      accent-color: var(--brand);
+    }
+
+    .reading-size-choice span {
+      min-width: 0;
+      white-space: nowrap;
+    }
+
+    .reading-size-status {
+      min-height: 20px;
+      margin: 10px 0 0;
+    }
+
     @media (min-width: 700px) {
       .driver-dashboard {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3866,6 +4027,46 @@
 
       .driver-page-intro,
       .driver-safety-note {
+        grid-column: 1 / -1;
+      }
+    }
+
+    html[data-ai-reports-reading-size="comfort"] .reports-period-title h3,
+    html[data-ai-reports-reading-size="large"] .reports-period-title h3,
+    html[data-ai-reports-reading-size="comfort"] .reports-platform-name,
+    html[data-ai-reports-reading-size="large"] .reports-platform-name,
+    html[data-ai-reports-reading-size="comfort"] .ai-platform-row strong,
+    html[data-ai-reports-reading-size="large"] .ai-platform-row strong {
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 350px) {
+      html[data-ai-reports-reading-size="large"] .reports-trend-row {
+        grid-template-columns: auto minmax(0, 1fr);
+      }
+
+      html[data-ai-reports-reading-size="large"] .reports-trend-label {
+        grid-column: 1;
+      }
+
+      html[data-ai-reports-reading-size="large"] .reports-trend-value {
+        grid-column: 2;
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+
+      html[data-ai-reports-reading-size="large"] .reports-trend-visual {
+        grid-column: 1 / -1;
+      }
+
+      html[data-ai-reports-reading-size="large"] .ai-platform-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+      }
+
+      html[data-ai-reports-reading-size="large"] .ai-platform-row strong {
         grid-column: 1 / -1;
       }
     }
@@ -5671,6 +5872,32 @@
         <div class="layout">
           <div class="panel">
             <div class="panel-head">
+              <h3>顯示設定</h3>
+            </div>
+            <div class="panel-body">
+              <fieldset class="reading-size-fieldset">
+                <legend>AI／報表文字大小</legend>
+                <div class="reading-size-options">
+                  <label class="reading-size-choice">
+                    <input type="radio" name="aiReportsReadingSize" value="standard" data-ai-reports-reading-size checked>
+                    <span>標準</span>
+                  </label>
+                  <label class="reading-size-choice">
+                    <input type="radio" name="aiReportsReadingSize" value="comfort" data-ai-reports-reading-size>
+                    <span>舒適</span>
+                  </label>
+                  <label class="reading-size-choice">
+                    <input type="radio" name="aiReportsReadingSize" value="large" data-ai-reports-reading-size>
+                    <span>大字</span>
+                  </label>
+                </div>
+              </fieldset>
+              <p class="ds-save-status reading-size-status" id="aiReportsReadingSizeStatus" role="status" aria-live="polite"></p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
               <h3>快捷支出設定</h3>
             </div>
             <div class="panel-body">
@@ -5884,7 +6111,12 @@
     });
     const storageKey = "driverPayApp.v2";
     const lastValidStorageKey = `${storageKey}.lastValid`;
-    const appShellCacheName = "driver-pay-pro-v19";
+    const appShellCacheName = "driver-pay-pro-v20";
+    const aiReportsReadingSizeLabels = Object.freeze({
+      standard: "標準",
+      comfort: "舒適",
+      large: "大字"
+    });
     const defaultPlatforms = ["Uber", "LINE GO", "Yoxi", "55688", "大都會", "台灣大車隊", "路邊客", "自訂"];
     const defaultPlatformIds = {
       "Uber": "platform-uber",
@@ -5981,6 +6213,8 @@
     let expenseSaveInProgress = false;
     let expenseToastTimer = 0;
     let expenseShortcutStatus = "";
+    let aiReportsReadingSizeStatus = "";
+    let aiReportsReadingSizeStatusType = "";
     let driverGoalSaveTimer = 0;
     let driverGoalStatus = "";
     let driverGoalStatusType = "";
@@ -6112,6 +6346,7 @@
       aiMonthInsights: document.getElementById("aiMonthInsights"),
       aiAlerts: document.getElementById("aiAlerts"),
       aiAnalysisMetadata: document.getElementById("aiAnalysisMetadata"),
+      aiReportsReadingSizeStatus: document.getElementById("aiReportsReadingSizeStatus"),
       driverGoalStatus: document.getElementById("driverGoalStatus"),
       driverDataStatus: document.getElementById("driverDataStatus"),
       driverAppStatus: document.getElementById("driverAppStatus"),
@@ -6262,10 +6497,21 @@
         calendarMonth: normalizeMonthKey(settings.calendarMonth),
         reportMonth: normalizeMonthKey(settings.reportMonth),
         lastReportView: normalizeReportView(settings.lastReportView),
+        aiReportsReadingSize: normalizeAIReportsReadingSize(settings.aiReportsReadingSize),
         expenseShortcuts: normalizeExpenseShortcuts(settings.expenseShortcuts),
         platformProfiles: normalizePlatformProfiles(settings, platforms),
         platformRates
       };
+    }
+
+    function normalizeAIReportsReadingSize(value) {
+      return Object.hasOwn(aiReportsReadingSizeLabels, value) ? value : "standard";
+    }
+
+    function applyAIReportsReadingSize(value) {
+      const normalized = normalizeAIReportsReadingSize(value);
+      document.documentElement.dataset.aiReportsReadingSize = normalized;
+      return normalized;
     }
 
     function normalizeMonthKey(value, fallback = currentMonth()) {
@@ -9811,6 +10057,13 @@
         `;
       }
       if (els.expenseShortcutStatus) els.expenseShortcutStatus.textContent = expenseShortcutStatus;
+      document.querySelectorAll("[data-ai-reports-reading-size]").forEach(input => {
+        input.checked = input.value === normalizeAIReportsReadingSize(state.settings.aiReportsReadingSize);
+      });
+      if (els.aiReportsReadingSizeStatus) {
+        els.aiReportsReadingSizeStatus.textContent = aiReportsReadingSizeStatus;
+        els.aiReportsReadingSizeStatus.dataset.status = aiReportsReadingSizeStatusType;
+      }
       document.getElementById("monthlyGoal").value = state.settings.monthlyGoal || "";
       const dailyGoalInput = document.getElementById("dailyGoal");
       if (dailyGoalInput && document.activeElement !== dailyGoalInput) {
@@ -9821,6 +10074,41 @@
         els.driverGoalStatus.dataset.status = driverGoalStatusType;
       }
       renderDriverStatus();
+    }
+
+    function setAIReportsReadingSizeStatus(message, type = "") {
+      aiReportsReadingSizeStatus = message;
+      aiReportsReadingSizeStatusType = type;
+      if (!els.aiReportsReadingSizeStatus) return;
+      els.aiReportsReadingSizeStatus.textContent = message;
+      els.aiReportsReadingSizeStatus.dataset.status = type;
+    }
+
+    function saveAIReportsReadingSize(input) {
+      const previous = normalizeAIReportsReadingSize(state.settings.aiReportsReadingSize);
+      const next = normalizeAIReportsReadingSize(input?.value);
+      if (next === previous) {
+        applyAIReportsReadingSize(next);
+        setAIReportsReadingSizeStatus("已儲存在此裝置", navigator.onLine ? "saved" : "offline");
+        return true;
+      }
+
+      const nextState = cloneStatePayload(state);
+      nextState.settings.aiReportsReadingSize = next;
+      applyAIReportsReadingSize(next);
+      setAIReportsReadingSizeStatus("儲存中…", "saving");
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        applyAIReportsReadingSize(previous);
+        renderSettings();
+        setAIReportsReadingSizeStatus("儲存失敗，已保留原本設定。", "error");
+        return false;
+      }
+
+      setAIReportsReadingSizeStatus(
+        navigator.onLine ? `已套用「${aiReportsReadingSizeLabels[next]}」` : `已離線套用「${aiReportsReadingSizeLabels[next]}」`,
+        navigator.onLine ? "saved" : "offline"
+      );
+      return true;
     }
 
     function chip(name, type) {
@@ -12166,6 +12454,12 @@
     });
 
     document.getElementById("view-settings").addEventListener("change", event => {
+      const readingSizeInput = event.target.closest("[data-ai-reports-reading-size]");
+      if (readingSizeInput) {
+        saveAIReportsReadingSize(readingSizeInput);
+        return;
+      }
+
       const modeInput = event.target.closest("[data-platform-input-mode]");
       if (modeInput) {
         const profile = platformProfileById(modeInput.dataset.platformInputMode);
@@ -12234,6 +12528,7 @@
       }
     });
 
+    applyAIReportsReadingSize(state.settings.aiReportsReadingSize);
     renderBrandAttribution();
     renderEntryDateCard(todayString());
     renderAll();

@@ -25,6 +25,27 @@
 執行一次。高風險資料、同步、Service Worker 或 iOS 特有變更仍須即時提高
 驗證層級。
 
+## AI／報表閱讀文字大小
+
+- `tests/reading-size.test.js` 覆蓋三個固定 radio、原生語意、44px target、
+  舊資料 fallback、單一 settings source、交易式保存、首次 render 前套用、
+  AI／Reports 共用 tokens、主要 KPI 不大幅放大與其他頁面隔離。
+- AI、Reports、Driver 專項測試都會包含 reading-size contract；全部 Node
+  tests 也會執行同一份測試。
+- 瀏覽器矩陣需驗證標準／舒適／大字立即生效、重新載入保留、離線保存、
+  320／375／390／393／430px 無水平 overflow、Console 無錯誤，且 Today、
+  Calendar、Driver 設定控制與 Bottom Navigation 尺寸不變。
+- L1 實際結果：`release:check` Passed；196/196 Node、Today 55/55、
+  AI 19/19、Driver 16/16、Integration 16/16、Reports 56/56、
+  Calendar 38/38。Lint 0 errors／10 既有 warnings；`npm audit` 0
+  vulnerabilities。
+- Chrome mobile emulation 實際結果：三個模式的 AI／Reports typography
+  即時更新；AI 主標題與 Reports 主要 KPI 保持同尺寸；重新載入與離線保存
+  通過；Arrow 鍵更新 radio 與 root attribute；五個 viewport、兩頁、三模式
+  共 30 組均 `scrollWidth === clientWidth`，Console 0 error／warning。
+- App Shell candidate：`driver-pay-pro-v20`。本小型 Sprint 只做 L1、公開
+  L2 與一次指定 Human QA，不重複完整 L3。
+
 ## Today Work Status Header
 
 - Contract tests 驗證整條原生 button、唯一 `aria-expanded` state、正確

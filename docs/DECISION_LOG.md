@@ -645,3 +645,25 @@
   - 不保留第二個「工作明細」入口。
   - 不把工作操作包進 disclosure button。
   - 不建立新 modal、頁面、鉛筆或 Quick Edit。
+
+## D-040
+
+- Date: 2026-07-29
+- Decision:
+  1. Driver 新增標準／舒適／大字三個 `AI／報表文字大小` radio。
+  2. 唯一來源為可選 `settings.aiReportsReadingSize`；缺欄位或未知值回退
+     `standard`，不 migration。
+  3. 切換即時以 `<html data-ai-reports-reading-size>` 套用共用 AI／Reports
+     reading tokens，並交易式寫入既有 `driverPayApp.v2`。
+  4. 只調整閱讀內文、次要文字、行高、間距與圖表標籤；主要 KPI 與頁面主
+     標題不大幅放大，其他頁面與設定控制不受影響。
+  5. 本 Sprint 不 merge main、不 Production deploy。
+- Reason: 一個持久偏好和一套 presentation tokens 可提升長文與報表標籤
+  可讀性，同時避免 zoom、頁面各自 state、重複元件及資料邏輯分歧。
+- Impact: Driver display settings、AI／Reports presentation、tests、docs 與
+  App Shell v20；WorkRecord、`expenseAllocations`、canonical calculations、
+  CSV、Supabase、Today、Calendar、main 與 Production 不變。
+- Rejected alternatives:
+  - 不使用 zoom 或 transform scale。
+  - 不在 AI 與 Reports 各自建立 setting 或 component copy。
+  - 不讓閱讀偏好改變主要 KPI、Bottom Navigation 或資料計算。
