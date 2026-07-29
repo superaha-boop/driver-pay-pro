@@ -1,6 +1,6 @@
 # Driver Pay Pro — Codex Instructions
 
-Version: 1.7
+Version: 1.8
 
 ## Project Documentation
 
@@ -157,6 +157,9 @@ Version: 1.7
 - AI 必須重用 `sharedAnalytics` 與 Reports canonical period、calculation、
   comparison、trend、Important Dates、platform、persistence、formatting 及
   drill-down 基礎；完整契約以 `docs/AI_SPEC.md` 為準。
+- 全 App 顯示偏好固定使用可選 `settings.displaySize` 與 root
+  `data-display-size`；合法新欄位優先，缺少時才相容讀取舊
+  `aiReportsReadingSize`。不得新增頁面專用字級設定、zoom 或 scale。
 - Driver 只管理既有跨日設定與衍生的本機／App 狀態；每日目標必須與 Today
   共用 `state.settings.dailyGoal`，不得新增另一份來源。
 - Driver 不得新增每日紀錄、雲端狀態或不可靠的最後更新時間；完整契約以

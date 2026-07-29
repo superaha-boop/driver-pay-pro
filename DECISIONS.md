@@ -766,3 +766,42 @@ AI 長文與 Reports 次要標籤在手機上需要較彈性的閱讀尺度，�
   `driverPayApp.v2`、Supabase、main 或 Production。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-041](docs/DECISION_LOG.md#d-041)。
+
+## D-042 — 全 App 顯示大小、Driver 系統狀態與 Calendar 共用日期基線
+
+- Date: 2026-07-29
+
+### 決策
+
+1. D-040 的 AI／Reports 專用閱讀設定升級為全 App「顯示大小」。唯一
+   canonical durable source 是可選 `settings.displaySize`；合法新欄位優先，
+   缺少時才讀取合法 `settings.aiReportsReadingSize`，其餘回退 `standard`。
+2. 執行期與新寫入只使用 `displaySize`；root 使用 `data-display-size`。
+   標準保留既有比例，舒適一般內文約 16px，大字約 18px。Today、Calendar、
+   Reports、AI、Driver 與 Bottom Navigation 重用同一 Design System tokens，
+   不使用 zoom、scale 或頁面專用 setting。
+3. Driver 原資料狀態與 App 狀態合併為置底單一「系統狀態」disclosure；
+   正常預設收合，讀取／storage 異常顯示「需要注意」並可自動展開一次。
+4. Calendar 所有日期共用 34px day slot，320px 使用 32px；透明 border
+   保留相同 geometry。Today 只切換該 slot 的外框／背景，不使用位移補丁，
+   不修改 cell 高度、Heat、Selected、Today button 或資料互動。
+5. App Shell 更新為 `driver-pay-pro-v22`。本階段只 Push 功能分支並提供
+   Public Preview；只有收到指定 Final Human QA 與 Release Candidate 核准
+   後才能 merge `main` 與 Production deploy。
+
+### 原因
+
+閱讀偏好若只影響 AI／Reports，使用者在其他主要頁面仍會遇到相同小字；
+同一 global token hierarchy 能提高一致性又保持 KPI 層級。Driver 狀態卡
+重複且佔用上方空間，合併 disclosure 可保留資訊並降低日常干擾。Today 圓圈
+若只有今天擁有額外高度，會造成日期基線下沉；所有日期共享同一槽位才能從
+根本消除偏移。
+
+### 影響範圍
+
+- 全域 presentation tokens、Driver system-status presentation、Calendar day
+  geometry、tests、docs 與 PWA cache。
+- 不修改 WorkRecord、canonical calculations、`expenseAllocations`、
+  `driverPayApp.v2` key、Supabase、main 或 Production。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-042](docs/DECISION_LOG.md#d-042)。

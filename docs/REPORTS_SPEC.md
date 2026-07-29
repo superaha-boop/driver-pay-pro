@@ -406,7 +406,7 @@ Reports must not depend on AI aggregation helpers. AI and Reports should eventua
 
 ## 22. Accessibility
 
-- Reports 閱讀文字與 AI 共用 Driver 的 `settings.aiReportsReadingSize`，
+- Reports 閱讀文字與 AI 共用 Driver 的 canonical `settings.displaySize`，
   標準／舒適／大字必須同步套用到標籤、期間、比較、趨勢、平台文字、
   圖表文字替代與狀態訊息；主要 KPI 金額不大幅放大。
 - 文字大小切換只改 presentation，不得改變 selector、圖表資料、期間或

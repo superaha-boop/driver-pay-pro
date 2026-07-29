@@ -692,3 +692,26 @@
   - 不使用小圓點、短橫線、文字或額外圖示。
   - 不建立第二個 Today state 或按鈕。
   - 不以整格深色、厚框、陰影或動畫增加辨識度。
+
+## D-042
+
+- Date: 2026-07-29
+- Decision:
+  1. 將 D-040 的 AI／Reports 閱讀偏好升級為全 App `settings.displaySize`；
+     缺少新欄位時才相容讀取合法 `aiReportsReadingSize`。
+  2. `data-display-size` 與 Design System tokens 同步控制 Today、Calendar、
+     Reports、AI、Driver、表單與 Bottom Navigation；不使用 zoom／scale。
+  3. Driver 的資料狀態與 App 狀態合併為置底單一 disclosure；正常預設收合，
+     讀取或 storage 異常顯示「需要注意」。
+  4. Calendar 所有日期共用 34px day slot（320px 為 32px），Today 只改該
+     slot 外觀，不使用 margin／position／translate 位移。
+  5. App Shell 更新為 v22；Final Human QA／RC 核准前不 merge main、不
+     Production deploy。
+- Reason: 單一跨頁顯示層級可避免頁面設定分歧；合併狀態降低 Driver 垂直
+  噪音；共用日期 geometry 從根本修正 Today 下沉。
+- Impact: presentation、Driver disclosure、Calendar day geometry、tests、
+  docs 與 v22；資料、公式、storage key、schema、main、Production 不變。
+- Rejected alternatives:
+  - 不保留第二套頁面字級偏好。
+  - 不使用 CSS zoom、transform scale 或整頁複製。
+  - 不用負 margin、translate 或縮小 cell 掩蓋 Calendar 對齊問題。

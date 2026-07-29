@@ -6,7 +6,32 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
-## Calendar Today 日期標記 — Current Handoff
+## V1.1 最終顯示體驗與 Calendar 對齊 — Current Handoff
+
+- Branch：`codex/v1-1-m1-today-workflow`；base `8badf1946184aaa0644d020517cb2016407dda16`。
+- 全 App 顯示偏好 canonical source 是可選 `settings.displaySize`，合法值為
+  `standard`／`comfort`／`large`。讀取時相容舊 `aiReportsReadingSize`，
+  但 normalize 後與新寫入只保留 `displaySize`。
+- Root 使用 `data-display-size`；全域 typography tokens 位於
+  `styles/design-system.css`。AI／Reports 既有分層 token 轉接同一模式，
+  Today、Calendar、Driver、表單控制與 Bottom Navigation 也同步套用。
+- Driver 只保留一個置底 `#driverSystemStatusDetails` disclosure；整條原生
+  button 具 `aria-expanded`／`aria-controls`、44px 以上 target、focus state
+  與正常／需要注意 badge。舊 `driverDataStatus`／`driverAppStatus` 已移除。
+- Calendar `.calendar-date__day` 對所有日期固定為 34×34px（320px 為
+  32×32px），透明 border 保留相同 geometry；Today 只切換 border／背景。
+  同列七日的 day center 實測完全一致。
+- `npm run release:check` Passed：207/207 Node、Today 55/55、AI 24/24、
+  Driver 24/24、Integration 16/16、Reports 61/61、Calendar 41/41；lint
+  0 errors／10 既有 warnings，npm audit 0 vulnerabilities。
+- 真實 Chrome mobile emulation：三模式 × 五頁 × 五寬度共 75 組無水平
+  overflow，Console 0 error／warning；顯示偏好重載保留，Manifest 與
+  Service Worker 控制正常，已產出 23 張 QA 截圖。
+- App Shell candidate：`driver-pay-pro-v22`。需完成完整 release check、
+  Public Preview 與一次 V1.1 Final Display and Calendar Human QA；不得提前
+  merge main 或 Production。
+
+## Calendar Today 日期標記 — Prior Handoff
 
 - Branch：`codex/v1-1-m1-today-workflow`；base `49ef956`。AI／Reports
   Reading Size Human QA：Passed。
@@ -29,7 +54,7 @@ GitHub：`superaha-boop/driver-pay-pro`
 - App Shell candidate：`driver-pay-pro-v21`。完成後只 Push 功能分支與
   Public Preview；Final Human QA 通過前不 merge main、不 Production。
 
-## AI／報表閱讀文字大小 — Human QA Passed
+## AI／報表閱讀文字大小 — Superseded by Global Display Size
 
 - Branch：`codex/v1-1-m1-today-workflow`；base `d7571dc`。
 - Driver 新增「顯示設定 → AI／報表文字大小」，固定標準／舒適／大字三個

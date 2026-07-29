@@ -56,8 +56,10 @@ AI 與 Reports 必須重用 `hourlyRateQuality()` 與 `recordDataQuality()`：
 ## Accessibility and Safety
 
 - 三個主要區塊維持清楚標題、可讀證據與螢幕閱讀器描述。
-- AI 閱讀文字重用 Driver 的 `settings.aiReportsReadingSize`。只分層調整
-  內文、次要文字、行高與閱讀間距；頁面主標題與主要數值不得大幅放大。
+- AI 閱讀文字重用 Driver 的 canonical `settings.displaySize`。舊
+  `settings.aiReportsReadingSize` 只可作缺少新欄位時的讀取 fallback。
+  只分層調整內文、次要文字、行高與閱讀間距；頁面主標題與主要數值不得
+  大幅放大。
 - 深連結具備明確目的，且不自動開啟 Editor。
 - AI 所有操作維持唯讀，沒有儲存按鈕、聊天輸入或外部資料傳送。
 

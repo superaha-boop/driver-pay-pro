@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant" data-ai-reports-reading-size="standard">
+<html lang="zh-Hant" data-display-size="standard">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -9,6 +9,21 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="format-detection" content="telephone=no">
+  <script>
+    (() => {
+      try {
+        const payload = JSON.parse(localStorage.getItem("driverPayApp.v2") || "null");
+        const settings = payload?.settings || {};
+        const hasDisplaySize = Object.prototype.hasOwnProperty.call(settings, "displaySize");
+        const candidate = hasDisplaySize ? settings.displaySize : settings.aiReportsReadingSize;
+        document.documentElement.dataset.displaySize = ["standard", "comfort", "large"].includes(candidate)
+          ? candidate
+          : "standard";
+      } catch {
+        document.documentElement.dataset.displaySize = "standard";
+      }
+    })();
+  </script>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/driver-pay-pro-icon-512.png" type="image/png">
   <link rel="apple-touch-icon" sizes="192x192" href="assets/driver-pay-pro-icon-192.png">
@@ -48,19 +63,19 @@
       font-family: var(--font-family-sans);
     }
 
-    html[data-ai-reports-reading-size="comfort"] {
-      --reading-ai-body-size: 15px;
+    html[data-display-size="comfort"] {
+      --reading-ai-body-size: 16px;
       --reading-ai-detail-size: 14px;
-      --reading-ai-small-size: 13px;
-      --reading-ai-micro-size: 12px;
+      --reading-ai-small-size: 14px;
+      --reading-ai-micro-size: 13px;
       --reading-ai-section-title-size: 19px;
       --reading-ai-item-title-size: 16px;
       --reading-ai-value-size: 16px;
-      --reading-report-body-size: 15px;
+      --reading-report-body-size: 16px;
       --reading-report-caption-size: 14px;
       --reading-report-value-size: 17px;
       --reading-report-title-size: 18px;
-      --reading-body-line-height: 1.62;
+      --reading-body-line-height: 1.65;
       --reading-small-line-height: 1.65;
       --reading-card-padding: 17px;
       --reading-card-gap: 14px;
@@ -68,19 +83,19 @@
       --reading-item-gap: 6px;
     }
 
-    html[data-ai-reports-reading-size="large"] {
-      --reading-ai-body-size: 16px;
-      --reading-ai-detail-size: 15px;
-      --reading-ai-small-size: 14px;
-      --reading-ai-micro-size: 13px;
+    html[data-display-size="large"] {
+      --reading-ai-body-size: 18px;
+      --reading-ai-detail-size: 16px;
+      --reading-ai-small-size: 16px;
+      --reading-ai-micro-size: 14px;
       --reading-ai-section-title-size: 20px;
-      --reading-ai-item-title-size: 17px;
-      --reading-ai-value-size: 17px;
-      --reading-report-body-size: 16px;
-      --reading-report-caption-size: 15px;
+      --reading-ai-item-title-size: 18px;
+      --reading-ai-value-size: 18px;
+      --reading-report-body-size: 18px;
+      --reading-report-caption-size: 16px;
       --reading-report-value-size: 18px;
       --reading-report-title-size: 19px;
-      --reading-body-line-height: 1.7;
+      --reading-body-line-height: 1.72;
       --reading-small-line-height: 1.72;
       --reading-card-padding: 18px;
       --reading-card-gap: 16px;
@@ -3195,10 +3210,10 @@
       line-height: var(--reading-body-line-height);
     }
 
-    html[data-ai-reports-reading-size="comfort"] .reports-comparison-list strong,
-    html[data-ai-reports-reading-size="large"] .reports-comparison-list strong,
-    html[data-ai-reports-reading-size="comfort"] .reports-important-list strong,
-    html[data-ai-reports-reading-size="large"] .reports-important-list strong {
+    html[data-display-size="comfort"] .reports-comparison-list strong,
+    html[data-display-size="large"] .reports-comparison-list strong,
+    html[data-display-size="comfort"] .reports-important-list strong,
+    html[data-display-size="large"] .reports-important-list strong {
       min-width: 0;
       max-width: 60%;
       flex-shrink: 1;
@@ -3938,6 +3953,90 @@
       overflow-wrap: anywhere;
     }
 
+    .driver-system-status {
+      margin-top: 12px;
+      padding: 0;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    .driver-system-status-toggle {
+      width: 100%;
+      min-width: 0;
+      min-height: 56px;
+      padding: 10px 16px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 10px;
+      color: inherit;
+      background: transparent;
+      text-align: left;
+    }
+
+    .driver-system-status-toggle:focus-visible {
+      outline: 3px solid var(--color-focus-ring);
+      outline-offset: -3px;
+    }
+
+    .driver-system-status-heading {
+      min-width: 0;
+      display: grid;
+      gap: 2px;
+    }
+
+    .driver-system-status-heading h3 {
+      margin: 0;
+    }
+
+    .driver-system-status-badge {
+      min-width: 0;
+      padding: 4px 8px;
+      border-radius: var(--radius-pill);
+      color: var(--color-success);
+      background: var(--color-success-soft);
+      font-size: var(--display-secondary-size);
+      font-weight: var(--font-weight-semibold);
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .driver-system-status-badge[data-status="warning"] {
+      color: var(--color-warning);
+      background: var(--color-warning-soft);
+    }
+
+    .driver-system-status-chevron {
+      width: 20px;
+      height: 20px;
+      display: block;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform var(--motion-fast) var(--ease-standard);
+    }
+
+    .driver-system-status-toggle[aria-expanded="true"] .driver-system-status-chevron {
+      transform: rotate(180deg);
+    }
+
+    .driver-system-status-content {
+      padding: 0 16px 16px;
+      border-top: 1px solid var(--color-border-subtle);
+    }
+
+    .driver-system-status-content[hidden] {
+      display: none;
+    }
+
+    .driver-system-status-content .driver-safety-note {
+      margin: 14px 0 4px;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+    }
+
     .driver-safety-note {
       padding: 16px;
       border-radius: 18px;
@@ -4020,23 +4119,124 @@
       margin: 10px 0 0;
     }
 
+    .nav button,
+    .nav button:hover {
+      font-size: var(--display-nav-label-size);
+    }
+
+    html:not([data-display-size="standard"]) #view-today :is(
+      .income-unit,
+      .work-metrics strong,
+      .direct-choice,
+      .expense-quick-button,
+      .expense-mode-option,
+      .expense-end-option,
+      .expense-modify-button,
+      .expense-duration-option,
+      .expense-recent-pill,
+      .expense-note-toggle,
+      .app-toast,
+      .app-toast-action
+    ),
+    html:not([data-display-size="standard"]) #view-settings :is(
+      .reading-size-choice,
+      .panel-body label,
+      .panel-body button:not(.income-add-button),
+      .panel-body select,
+      .panel-body input:not(#dailyGoal)
+    ) {
+      font-size: var(--display-body-size);
+      line-height: var(--display-body-line-height);
+    }
+
+    html:not([data-display-size="standard"]) #view-today :is(
+      .work-status-row strong,
+      .direct-choice-label,
+      .smart-expense-field,
+      .expense-recent-label,
+      .expense-note-field,
+      .expense-form-status
+    ),
+    html:not([data-display-size="standard"]) #view-settings :is(
+      .driver-page-intro p,
+      .driver-overview-card p,
+      .driver-safety-note p,
+      .driver-goal-input,
+      .driver-status-list dt,
+      .driver-status-list dd,
+      .expense-shortcut-settings-note
+    ) {
+      color: var(--display-secondary-color);
+      font-size: var(--display-secondary-size);
+      line-height: var(--display-body-line-height);
+    }
+
+    html:not([data-display-size="standard"]) #view-today :is(
+      .work-metrics span,
+      .recent-record small,
+      .date-card-today,
+      .expense-model-note,
+      .expense-remainder-note,
+      .expense-suggestion-label,
+      .expense-existing-hint
+    ) {
+      color: var(--display-secondary-color);
+      font-size: var(--display-caption-size);
+      line-height: var(--display-body-line-height);
+    }
+
+    html:not([data-display-size="standard"]) #view-today :is(
+      input[type="date"],
+      input[type="time"],
+      select,
+      textarea,
+      .smart-expense-field input:not(.expense-amount-input),
+      .expense-note-field input
+    ) {
+      font-size: var(--display-control-size);
+    }
+
+    html:not([data-display-size="standard"]) #view-calendar :is(
+      .calendar-record-weekday,
+      .calendar-record-context,
+      .calendar-platform-row span,
+      .calendar-note,
+      .calendar-month-summary-item span
+    ) {
+      color: var(--display-secondary-color);
+      font-size: var(--display-secondary-size);
+      line-height: var(--display-body-line-height);
+    }
+
+    html:not([data-display-size="standard"]) #view-calendar :is(
+      .calendar-record-edit,
+      .calendar-empty-action,
+      .record-editor-content label,
+      .record-editor-content input,
+      .record-editor-content select,
+      .record-editor-content textarea,
+      .record-editor-content button:not(.ds-icon-button)
+    ) {
+      font-size: var(--display-control-size);
+    }
+
     @media (min-width: 700px) {
       .driver-dashboard {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .driver-page-intro,
-      .driver-safety-note {
+      .driver-goal-card {
         grid-column: 1 / -1;
       }
     }
 
-    html[data-ai-reports-reading-size="comfort"] .reports-period-title h3,
-    html[data-ai-reports-reading-size="large"] .reports-period-title h3,
-    html[data-ai-reports-reading-size="comfort"] .reports-platform-name,
-    html[data-ai-reports-reading-size="large"] .reports-platform-name,
-    html[data-ai-reports-reading-size="comfort"] .ai-platform-row strong,
-    html[data-ai-reports-reading-size="large"] .ai-platform-row strong {
+    html[data-display-size="comfort"] .reports-period-title h3,
+    html[data-display-size="large"] .reports-period-title h3,
+    html[data-display-size="comfort"] .reports-platform-name,
+    html[data-display-size="large"] .reports-platform-name,
+    html[data-display-size="comfort"] .ai-platform-row strong,
+    html[data-display-size="large"] .ai-platform-row strong {
       overflow: visible;
       text-overflow: clip;
       white-space: normal;
@@ -4044,29 +4244,29 @@
     }
 
     @media (max-width: 350px) {
-      html[data-ai-reports-reading-size="large"] .reports-trend-row {
+      html[data-display-size="large"] .reports-trend-row {
         grid-template-columns: auto minmax(0, 1fr);
       }
 
-      html[data-ai-reports-reading-size="large"] .reports-trend-label {
+      html[data-display-size="large"] .reports-trend-label {
         grid-column: 1;
       }
 
-      html[data-ai-reports-reading-size="large"] .reports-trend-value {
+      html[data-display-size="large"] .reports-trend-value {
         grid-column: 2;
         min-width: 0;
         overflow-wrap: anywhere;
       }
 
-      html[data-ai-reports-reading-size="large"] .reports-trend-visual {
+      html[data-display-size="large"] .reports-trend-visual {
         grid-column: 1 / -1;
       }
 
-      html[data-ai-reports-reading-size="large"] .ai-platform-row {
+      html[data-display-size="large"] .ai-platform-row {
         grid-template-columns: minmax(0, 1fr) auto;
       }
 
-      html[data-ai-reports-reading-size="large"] .ai-platform-row strong {
+      html[data-display-size="large"] .ai-platform-row strong {
         grid-column: 1 / -1;
       }
     }
@@ -4862,6 +5062,7 @@
     }
 
     .calendar-date {
+      --calendar-day-marker-size: 34px;
       position: relative;
       min-width: 0;
       min-height: 58px;
@@ -4869,7 +5070,7 @@
       border: 1px solid transparent;
       border-radius: var(--radius-sm);
       display: grid;
-      grid-template-rows: auto auto 1fr;
+      grid-template-rows: var(--calendar-day-marker-size) auto 1fr;
       align-items: start;
       justify-items: center;
       gap: 1px;
@@ -4917,7 +5118,7 @@
     }
 
     .calendar-date[aria-current="date"][aria-selected="true"] {
-      background: var(--color-brand-subtle);
+      background: transparent;
       border-color: transparent;
     }
 
@@ -4931,21 +5132,21 @@
     }
 
     .calendar-date__day {
-      font-size: var(--font-size-body);
-      line-height: 1.15;
-    }
-
-    .calendar-date[aria-current="date"] .calendar-date__day {
-      width: 30px;
-      height: 30px;
-      border: 2px solid var(--color-brand-pressed);
+      width: var(--calendar-day-marker-size);
+      height: var(--calendar-day-marker-size);
+      border: 2px solid transparent;
       border-radius: var(--radius-pill);
       display: grid;
       place-items: center;
       box-sizing: border-box;
+      font-size: var(--display-calendar-date-size);
+      line-height: 1;
+    }
+
+    .calendar-date[aria-current="date"] .calendar-date__day {
+      border: 2px solid var(--color-brand-pressed);
       color: var(--color-brand-pressed);
       font-weight: var(--font-weight-semibold);
-      line-height: 1;
     }
 
     .calendar-date[aria-current="date"][aria-selected="true"] .calendar-date__day {
@@ -4956,7 +5157,7 @@
 
     .calendar-date__amount {
       color: var(--color-text-secondary);
-      font-size: 11px;
+      font-size: var(--display-calendar-amount-size);
       font-weight: var(--font-weight-semibold);
       line-height: 1.1;
     }
@@ -5346,15 +5547,16 @@
       }
 
       .calendar-date {
+        --calendar-day-marker-size: 32px;
         min-height: 54px;
       }
 
       .calendar-date__day {
-        font-size: 15px;
+        font-size: var(--display-calendar-date-size);
       }
 
       .calendar-date__amount {
-        font-size: 10px;
+        font-size: max(10px, var(--display-calendar-amount-size));
       }
 
       .calendar-record-card {
@@ -5842,7 +6044,7 @@
         <div class="driver-dashboard">
           <header class="driver-page-intro">
             <h2>Driver</h2>
-            <p>管理此裝置的收入目標、資料與 App 狀態。</p>
+            <p>管理此裝置的收入目標、顯示方式與常用設定。</p>
           </header>
 
           <section class="driver-overview-card driver-goal-card" aria-labelledby="driverGoalTitle">
@@ -5856,32 +6058,12 @@
               <span class="driver-goal-control"><span aria-hidden="true">NT$</span><input type="number" id="dailyGoal"
                 min="0" max="99999999" step="100" inputmode="numeric" placeholder="例如：3000"></span>
             </label>
-            <p class="ds-save-status" id="driverGoalStatus" role="status" aria-live="polite"></p>
+            <p class="ds-save-status" id="driverGoalStatus" data-status="idle" role="status" aria-live="polite"></p>
           </section>
 
-          <section class="driver-overview-card" aria-labelledby="driverDataTitle">
-            <div>
-              <span class="driver-card-kicker">資料狀態</span>
-              <h3 id="driverDataTitle">此裝置的工作紀錄</h3>
-            </div>
-            <dl class="driver-status-list" id="driverDataStatus"></dl>
-          </section>
-
-          <section class="driver-overview-card" aria-labelledby="driverAppTitle">
-            <div>
-              <span class="driver-card-kicker">App 狀態</span>
-              <h3 id="driverAppTitle">Driver Pay Pro</h3>
-            </div>
-            <dl class="driver-status-list" id="driverAppStatus"></dl>
-          </section>
-
-          <section class="driver-safety-note" aria-labelledby="driverSafetyTitle">
-            <h3 id="driverSafetyTitle">資料保存在這台裝置</h3>
-            <p>目前沒有跨裝置同步或雲端備份。清除 Safari 網站資料可能會刪除工作紀錄；離線時仍可使用已快取的 App。</p>
-          </section>
         </div>
 
-        <h2 class="driver-settings-heading">其他設定</h2>
+        <h2 class="driver-settings-heading">常用設定</h2>
         <div class="layout">
           <div class="panel">
             <div class="panel-head">
@@ -5889,23 +6071,23 @@
             </div>
             <div class="panel-body">
               <fieldset class="reading-size-fieldset">
-                <legend>AI／報表文字大小</legend>
+                <legend>顯示大小</legend>
                 <div class="reading-size-options">
                   <label class="reading-size-choice">
-                    <input type="radio" name="aiReportsReadingSize" value="standard" data-ai-reports-reading-size checked>
+                    <input type="radio" name="displaySize" value="standard" data-display-size-option checked>
                     <span>標準</span>
                   </label>
                   <label class="reading-size-choice">
-                    <input type="radio" name="aiReportsReadingSize" value="comfort" data-ai-reports-reading-size>
+                    <input type="radio" name="displaySize" value="comfort" data-display-size-option>
                     <span>舒適</span>
                   </label>
                   <label class="reading-size-choice">
-                    <input type="radio" name="aiReportsReadingSize" value="large" data-ai-reports-reading-size>
+                    <input type="radio" name="displaySize" value="large" data-display-size-option>
                     <span>大字</span>
                   </label>
                 </div>
               </fieldset>
-              <p class="ds-save-status reading-size-status" id="aiReportsReadingSizeStatus" role="status" aria-live="polite"></p>
+              <p class="ds-save-status reading-size-status" id="displaySizeStatus" data-status="idle" role="status" aria-live="polite"></p>
             </div>
           </div>
 
@@ -6002,6 +6184,27 @@
             </button>
           </div>
         </div>
+
+        <section class="driver-overview-card driver-system-status" aria-labelledby="driverSystemStatusTitle">
+          <button class="driver-system-status-toggle" id="driverSystemStatusToggle" type="button"
+            aria-expanded="false" aria-controls="driverSystemStatusContent">
+            <span class="driver-system-status-heading">
+              <span class="driver-card-kicker">系統狀態</span>
+              <h3 id="driverSystemStatusTitle">此裝置與 App</h3>
+            </span>
+            <span class="driver-system-status-badge" id="driverSystemStatusBadge">正常</span>
+            <svg class="driver-system-status-chevron" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m6 9 6 6 6-6"></path>
+            </svg>
+          </button>
+          <div class="driver-system-status-content" id="driverSystemStatusContent" hidden>
+            <aside class="driver-safety-note" aria-labelledby="driverSafetyTitle">
+              <h3 id="driverSafetyTitle">資料保存在這台裝置</h3>
+              <p>目前沒有跨裝置同步或雲端備份。清除 Safari 網站資料可能會刪除工作紀錄；離線時仍可使用已快取的 App。</p>
+            </aside>
+            <dl class="driver-status-list" id="driverSystemStatusDetails"></dl>
+          </div>
+        </section>
       </section>
 
       <section id="view-about" class="view about-view hidden" aria-labelledby="aboutProductName">
@@ -6124,8 +6327,8 @@
     });
     const storageKey = "driverPayApp.v2";
     const lastValidStorageKey = `${storageKey}.lastValid`;
-    const appShellCacheName = "driver-pay-pro-v21";
-    const aiReportsReadingSizeLabels = Object.freeze({
+    const appShellCacheName = "driver-pay-pro-v22";
+    const displaySizeLabels = Object.freeze({
       standard: "標準",
       comfort: "舒適",
       large: "大字"
@@ -6226,8 +6429,10 @@
     let expenseSaveInProgress = false;
     let expenseToastTimer = 0;
     let expenseShortcutStatus = "";
-    let aiReportsReadingSizeStatus = "";
-    let aiReportsReadingSizeStatusType = "";
+    let displaySizeStatus = "";
+    let displaySizeStatusType = "";
+    let systemStatusExpanded = Boolean(stateLoadError);
+    let systemStatusAutoOpened = Boolean(stateLoadError);
     let driverGoalSaveTimer = 0;
     let driverGoalStatus = "";
     let driverGoalStatusType = "";
@@ -6359,10 +6564,12 @@
       aiMonthInsights: document.getElementById("aiMonthInsights"),
       aiAlerts: document.getElementById("aiAlerts"),
       aiAnalysisMetadata: document.getElementById("aiAnalysisMetadata"),
-      aiReportsReadingSizeStatus: document.getElementById("aiReportsReadingSizeStatus"),
+      displaySizeStatus: document.getElementById("displaySizeStatus"),
       driverGoalStatus: document.getElementById("driverGoalStatus"),
-      driverDataStatus: document.getElementById("driverDataStatus"),
-      driverAppStatus: document.getElementById("driverAppStatus"),
+      driverSystemStatusToggle: document.getElementById("driverSystemStatusToggle"),
+      driverSystemStatusBadge: document.getElementById("driverSystemStatusBadge"),
+      driverSystemStatusContent: document.getElementById("driverSystemStatusContent"),
+      driverSystemStatusDetails: document.getElementById("driverSystemStatusDetails"),
       platformChips: document.getElementById("platformChips"),
       platformInputModeSettings: document.getElementById("platformInputModeSettings"),
       platformRateInputs: document.getElementById("platformRateInputs"),
@@ -6496,11 +6703,15 @@
 
     function normalizeSettings(settings = {}, platforms = defaultPlatforms) {
       const platformRates = { ...defaultPlatformRates, ...(settings.platformRates || {}) };
+      const { aiReportsReadingSize: legacyReadingSize, ...retainedSettings } = settings;
+      const displaySizeSource = Object.hasOwn(settings, "displaySize")
+        ? settings.displaySize
+        : legacyReadingSize;
       platforms.forEach(name => {
         if (!Number(platformRates[name])) platformRates[name] = 100;
       });
       return {
-        ...settings,
+        ...retainedSettings,
         monthlyGoal: Number(settings.monthlyGoal || 0),
         dailyGoal: Number(settings.dailyGoal || 0),
         timeDetailsOpen: Boolean(settings.timeDetailsOpen),
@@ -6510,20 +6721,20 @@
         calendarMonth: normalizeMonthKey(settings.calendarMonth),
         reportMonth: normalizeMonthKey(settings.reportMonth),
         lastReportView: normalizeReportView(settings.lastReportView),
-        aiReportsReadingSize: normalizeAIReportsReadingSize(settings.aiReportsReadingSize),
+        displaySize: normalizeDisplaySize(displaySizeSource),
         expenseShortcuts: normalizeExpenseShortcuts(settings.expenseShortcuts),
         platformProfiles: normalizePlatformProfiles(settings, platforms),
         platformRates
       };
     }
 
-    function normalizeAIReportsReadingSize(value) {
-      return Object.hasOwn(aiReportsReadingSizeLabels, value) ? value : "standard";
+    function normalizeDisplaySize(value) {
+      return Object.hasOwn(displaySizeLabels, value) ? value : "standard";
     }
 
-    function applyAIReportsReadingSize(value) {
-      const normalized = normalizeAIReportsReadingSize(value);
-      document.documentElement.dataset.aiReportsReadingSize = normalized;
+    function applyDisplaySize(value) {
+      const normalized = normalizeDisplaySize(value);
+      document.documentElement.dataset.displaySize = normalized;
       return normalized;
     }
 
@@ -9954,8 +10165,24 @@
       const offlineAvailable = "serviceWorker" in navigator ? "已啟用 App Shell" : "瀏覽器不支援";
       const standalone = window.matchMedia?.("(display-mode: standalone)")?.matches
         || navigator.standalone === true;
-      if (els.driverDataStatus) {
-        els.driverDataStatus.innerHTML = [
+      const storageStatus = driverLocalStorageStatus();
+      const needsAttention = Boolean(stateLoadError) || ["讀取錯誤", "無法存取"].includes(storageStatus);
+      if (needsAttention && !systemStatusAutoOpened) {
+        systemStatusExpanded = true;
+        systemStatusAutoOpened = true;
+      }
+      if (els.driverSystemStatusBadge) {
+        els.driverSystemStatusBadge.textContent = needsAttention ? "需要注意" : "正常";
+        els.driverSystemStatusBadge.dataset.status = needsAttention ? "warning" : "normal";
+      }
+      if (els.driverSystemStatusToggle) {
+        els.driverSystemStatusToggle.setAttribute("aria-expanded", String(systemStatusExpanded));
+      }
+      if (els.driverSystemStatusContent) {
+        els.driverSystemStatusContent.hidden = !systemStatusExpanded;
+      }
+      if (els.driverSystemStatusDetails) {
+        els.driverSystemStatusDetails.innerHTML = [
           driverStatusRow("本機紀錄總數", `${state.entries.length} 筆`),
           driverStatusRow("最早紀錄", firstDate ? formatCalendarFullDate(firstDate) : "尚無紀錄"),
           driverStatusRow("最新紀錄", latestDate ? formatCalendarFullDate(latestDate) : "尚無紀錄"),
@@ -9963,11 +10190,7 @@
           driverStatusRow("Local-first", "僅此裝置"),
           driverStatusRow("離線可用", offlineAvailable),
           driverStatusRow("資料讀取", stateLoadError ? "有錯誤" : "正常"),
-          driverStatusRow(storageKey, driverLocalStorageStatus())
-        ].join("");
-      }
-      if (els.driverAppStatus) {
-        els.driverAppStatus.innerHTML = [
+          driverStatusRow(storageKey, storageStatus),
           driverStatusRow("App", brandAttribution.productName),
           driverStatusRow("版本里程碑", "Local-first V1"),
           driverStatusRow("App Shell", appShellCacheName),
@@ -9976,6 +10199,12 @@
           driverStatusRow("更新狀態", "啟動時自動檢查")
         ].join("");
       }
+    }
+
+    function toggleDriverSystemStatus() {
+      systemStatusExpanded = !systemStatusExpanded;
+      renderDriverStatus();
+      els.driverSystemStatusToggle?.focus();
     }
 
     function setDriverGoalStatus(message, type = "") {
@@ -10069,12 +10298,12 @@
         `;
       }
       if (els.expenseShortcutStatus) els.expenseShortcutStatus.textContent = expenseShortcutStatus;
-      document.querySelectorAll("[data-ai-reports-reading-size]").forEach(input => {
-        input.checked = input.value === normalizeAIReportsReadingSize(state.settings.aiReportsReadingSize);
+      document.querySelectorAll("[data-display-size-option]").forEach(input => {
+        input.checked = input.value === normalizeDisplaySize(state.settings.displaySize);
       });
-      if (els.aiReportsReadingSizeStatus) {
-        els.aiReportsReadingSizeStatus.textContent = aiReportsReadingSizeStatus;
-        els.aiReportsReadingSizeStatus.dataset.status = aiReportsReadingSizeStatusType;
+      if (els.displaySizeStatus) {
+        els.displaySizeStatus.textContent = displaySizeStatus;
+        els.displaySizeStatus.dataset.status = displaySizeStatusType || "idle";
       }
       document.getElementById("monthlyGoal").value = state.settings.monthlyGoal || "";
       const dailyGoalInput = document.getElementById("dailyGoal");
@@ -10083,41 +10312,42 @@
       }
       if (els.driverGoalStatus) {
         els.driverGoalStatus.textContent = driverGoalStatus;
-        els.driverGoalStatus.dataset.status = driverGoalStatusType;
+        els.driverGoalStatus.dataset.status = driverGoalStatusType || "idle";
       }
       renderDriverStatus();
     }
 
-    function setAIReportsReadingSizeStatus(message, type = "") {
-      aiReportsReadingSizeStatus = message;
-      aiReportsReadingSizeStatusType = type;
-      if (!els.aiReportsReadingSizeStatus) return;
-      els.aiReportsReadingSizeStatus.textContent = message;
-      els.aiReportsReadingSizeStatus.dataset.status = type;
+    function setDisplaySizeStatus(message, type = "") {
+      displaySizeStatus = message;
+      displaySizeStatusType = type;
+      if (!els.displaySizeStatus) return;
+      els.displaySizeStatus.textContent = message;
+      els.displaySizeStatus.dataset.status = type;
     }
 
-    function saveAIReportsReadingSize(input) {
-      const previous = normalizeAIReportsReadingSize(state.settings.aiReportsReadingSize);
-      const next = normalizeAIReportsReadingSize(input?.value);
+    function saveDisplaySize(input) {
+      const previous = normalizeDisplaySize(state.settings.displaySize);
+      const next = normalizeDisplaySize(input?.value);
       if (next === previous) {
-        applyAIReportsReadingSize(next);
-        setAIReportsReadingSizeStatus("已儲存在此裝置", navigator.onLine ? "saved" : "offline");
+        applyDisplaySize(next);
+        setDisplaySizeStatus("已儲存在此裝置", navigator.onLine ? "saved" : "offline");
         return true;
       }
 
       const nextState = cloneStatePayload(state);
-      nextState.settings.aiReportsReadingSize = next;
-      applyAIReportsReadingSize(next);
-      setAIReportsReadingSizeStatus("儲存中…", "saving");
+      delete nextState.settings.aiReportsReadingSize;
+      nextState.settings.displaySize = next;
+      applyDisplaySize(next);
+      setDisplaySizeStatus("儲存中…", "saving");
       if (!persistStatePayload(nextState, { updateMemory: true })) {
-        applyAIReportsReadingSize(previous);
+        applyDisplaySize(previous);
         renderSettings();
-        setAIReportsReadingSizeStatus("儲存失敗，已保留原本設定。", "error");
+        setDisplaySizeStatus("儲存失敗，已保留原本設定。", "error");
         return false;
       }
 
-      setAIReportsReadingSizeStatus(
-        navigator.onLine ? `已套用「${aiReportsReadingSizeLabels[next]}」` : `已離線套用「${aiReportsReadingSizeLabels[next]}」`,
+      setDisplaySizeStatus(
+        navigator.onLine ? `已套用「${displaySizeLabels[next]}」` : `已離線套用「${displaySizeLabels[next]}」`,
         navigator.onLine ? "saved" : "offline"
       );
       return true;
@@ -12466,9 +12696,9 @@
     });
 
     document.getElementById("view-settings").addEventListener("change", event => {
-      const readingSizeInput = event.target.closest("[data-ai-reports-reading-size]");
-      if (readingSizeInput) {
-        saveAIReportsReadingSize(readingSizeInput);
+      const displaySizeInput = event.target.closest("[data-display-size-option]");
+      if (displaySizeInput) {
+        saveDisplaySize(displaySizeInput);
         return;
       }
 
@@ -12522,6 +12752,11 @@
     });
 
     document.getElementById("view-settings").addEventListener("click", event => {
+      const systemStatusToggle = event.target.closest("#driverSystemStatusToggle");
+      if (systemStatusToggle) {
+        toggleDriverSystemStatus();
+        return;
+      }
       const platformButton = event.target.closest("[data-remove-platform]");
       const expenseButton = event.target.closest("[data-remove-expense]");
       if (platformButton) {
@@ -12540,7 +12775,7 @@
       }
     });
 
-    applyAIReportsReadingSize(state.settings.aiReportsReadingSize);
+    applyDisplaySize(state.settings.displaySize);
     renderBrandAttribution();
     renderEntryDateCard(todayString());
     renderAll();

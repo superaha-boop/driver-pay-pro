@@ -16,6 +16,18 @@
 
 ## Unreleased
 
+### V1.1 Final Display and Calendar Alignment
+
+- 將原 AI／報表閱讀設定升級為全 App「顯示大小」，標準／舒適／大字共同
+  套用 Today、Calendar、Reports、AI、Driver 與 Bottom Navigation。
+- 新 canonical 偏好為可選 `settings.displaySize`；合法新值優先，缺欄位時
+  相容舊 `settings.aiReportsReadingSize`，不 migration、不改 storage key。
+- Driver 的資料與 App 狀態合併為置底「系統狀態」disclosure；正常預設收合，
+  異常顯示「需要注意」。
+- Calendar 所有日期共用固定 34px day slot（320px 為 32px），Today 圓圈
+  與同列日期完全同基線，不改日期格高度或資料互動。
+- App Shell candidate 更新為 `driver-pay-pro-v22`。
+
 ### Calendar Today 日期標記
 
 - 以 30px、2px 品牌深綠日期圓圈取代 Today 下方 4px 小圓點。

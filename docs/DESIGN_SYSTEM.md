@@ -1,7 +1,7 @@
 # Driver Pay Pro Design System
 
-Version: 1.0
-更新日期：2026-07-25
+Version: 1.1
+更新日期：2026-07-29
 
 ## 文件定位
 
@@ -67,6 +67,22 @@ styles/design-system.css
 | `.ds-numeric` | 金額、時數、百分比與 KPI |
 
 使用 Apple system font stack，不下載或提交字型。主要數字加 `.ds-numeric` 以啟用 `tabular-nums`。同一畫面避免大量 Display 數字競爭注意力。
+
+#### Global display size
+
+Driver 的「顯示大小」以 `<html data-display-size>` 控制全 App 同一套分層
+typography，不使用 `zoom` 或 `transform: scale()`：
+
+- `standard`：保留既有產品比例。
+- `comfort`：一般閱讀內文約 16px，次要文字與圖表標籤同步提高可讀性。
+- `large`：一般閱讀內文約 18px，表單與操作文字不得低於 18px；主要 KPI
+  與頁面主標題只維持或小幅調整。
+
+實作 token 包含 `--display-body-size`、`--display-secondary-size`、
+`--display-caption-size`、`--display-control-size`、
+`--display-calendar-date-size`、`--display-calendar-amount-size`、
+`--display-nav-label-size` 與 `--display-body-line-height`。所有主要頁面必須
+重用這組 token，不得建立頁面專用顯示偏好。
 
 ### Semantic colors
 

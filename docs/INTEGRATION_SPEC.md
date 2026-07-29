@@ -1,8 +1,8 @@
 # Driver Pay Pro — Local-first V1 Integration Specification
 
-Version: 1.0
-Status: V1 Release Candidate
-Updated: 2026-07-26
+Version: 1.1
+Status: V1.1 Release Candidate
+Updated: 2026-07-29
 
 ## Canonical Flow
 
@@ -44,10 +44,9 @@ Today or Calendar successful write
 - Local-first；沒有網路仍可讀取與執行核准的本機流程。
 - 主 key 固定為 `driverPayApp.v2`；唯一核准的相容擴充是可選
   `expenseAllocations[category] = { months, startMonth }`。
-- 跨日顯示偏好可在既有 settings 中加入可選
-  `aiReportsReadingSize = "standard" | "comfort" | "large"`；缺欄位或無效值
-  一律回退 `standard`，不得寫入 WorkRecord。
+- 跨日顯示偏好使用既有 settings 中可選
+  `displaySize = "standard" | "comfort" | "large"`；新欄位缺少時可相容讀取
+  合法 `aiReportsReadingSize`，無效值回退 `standard`，不得寫入 WorkRecord。
 - 損壞或讀取失敗時不得清除原始 payload。
-- Service Worker V1.1 Calendar Today marker candidate cache 為
-  `driver-pay-pro-v21`。
+- Service Worker V1.1 final display candidate cache 為 `driver-pay-pro-v22`。
 - 沒有 Supabase、authentication、cloud sync、migration 或外部 AI。

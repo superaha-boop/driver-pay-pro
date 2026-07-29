@@ -3,15 +3,10 @@ const fs = require("node:fs");
 const test = require("node:test");
 
 const html = fs.readFileSync(new URL("../index.html", `file://${__filename}`), "utf8");
+const designSystem = fs.readFileSync(new URL("../styles/design-system.css", `file://${__filename}`), "utf8");
 const serviceWorker = fs.readFileSync(new URL("../sw.js", `file://${__filename}`), "utf8");
 const driverSection = html.match(
   /<section id="view-settings"[\s\S]*?<\/section>\s*<section id="view-about"/
-)?.[0] || "";
-const aiSection = html.match(
-  /<section id="view-ai"[\s\S]*?<\/section>\s*<section id="view-settings"/
-)?.[0] || "";
-const reportsSection = html.match(
-  /<section id="view-reports"[\s\S]*?<\/section>\s*<section id="view-ai"/
 )?.[0] || "";
 
 function extractFunction(name) {
@@ -45,114 +40,132 @@ function extractFunction(name) {
   throw new Error(`${name}() 結尾不完整`);
 }
 
-test("Driver 只提供標準、舒適、大字三個 AI／報表閱讀選項", () => {
+test("Driver 只提供標準、舒適、大字三個全域顯示選項", () => {
   const inputs = [...driverSection.matchAll(
-    /<input type="radio" name="aiReportsReadingSize" value="([^"]+)" data-ai-reports-reading-size/g
+    /<input type="radio" name="displaySize" value="([^"]+)" data-display-size-option/g
   )].map(match => match[1]);
   assert.deepEqual(inputs, ["standard", "comfort", "large"]);
-  assert.match(driverSection, />顯示設定</);
-  assert.match(driverSection, /<legend>AI／報表文字大小<\/legend>/);
-  assert.match(driverSection, />標準</);
-  assert.match(driverSection, />舒適</);
-  assert.match(driverSection, />大字</);
-  assert.match(driverSection, /id="aiReportsReadingSizeStatus" role="status" aria-live="polite"/);
-  assert.doesNotMatch(driverSection, /儲存文字大小|套用文字大小|確認文字大小/);
+  assert.match(driverSection, /<legend>顯示大小<\/legend>/);
+  assert.match(driverSection, /id="displaySizeStatus"[\s\S]*?role="status" aria-live="polite"/);
+  assert.doesNotMatch(driverSection, /AI／報表文字大小/);
 });
 
-test("閱讀選項具備原生 radio 語意、鍵盤操作、可見焦點與 44px 觸控目標", () => {
+test("顯示選項具備 radio 語意、可見焦點與 44px 觸控目標", () => {
+  assert.equal((driverSection.match(/name="displaySize"/g) || []).length, 3);
   assert.match(html, /\.reading-size-choice\s*\{[\s\S]*?min-height: 44px/);
   assert.match(html, /\.reading-size-choice:has\(input:focus-visible\)/);
   assert.match(html, /\.reading-size-choice:has\(input:checked\)/);
-  assert.match(html, /\.reading-size-choice input\s*\{[\s\S]*?accent-color: var\(--brand\)/);
-  assert.equal((driverSection.match(/name="aiReportsReadingSize"/g) || []).length, 3);
 });
 
-test("舊資料與未知值安全回退標準，三個合法值保持不變", () => {
-  const source = extractFunction("normalizeAIReportsReadingSize");
+test("normalizeDisplaySize 只接受三個合法值", () => {
+  const source = extractFunction("normalizeDisplaySize");
   const normalize = Function(
-    "aiReportsReadingSizeLabels",
-    `${source}; return normalizeAIReportsReadingSize;`
+    "displaySizeLabels",
+    `${source}; return normalizeDisplaySize;`
   )({ standard: "標準", comfort: "舒適", large: "大字" });
   assert.equal(normalize(undefined), "standard");
-  assert.equal(normalize(null), "standard");
   assert.equal(normalize("unknown"), "standard");
   assert.equal(normalize("standard"), "standard");
   assert.equal(normalize("comfort"), "comfort");
   assert.equal(normalize("large"), "large");
-  assert.match(extractFunction("normalizeSettings"), /aiReportsReadingSize: normalizeAIReportsReadingSize\(settings\.aiReportsReadingSize\)/);
 });
 
-test("設定沿用 driverPayApp.v2 並以單一 settings 欄位交易式自動儲存", () => {
-  const save = extractFunction("saveAIReportsReadingSize");
+test("新 displaySize 存在時優先，缺少時才讀舊 aiReportsReadingSize", () => {
+  const normalizeSettings = extractFunction("normalizeSettings");
+  assert.match(normalizeSettings, /Object\.hasOwn\(settings, "displaySize"\)/);
+  assert.match(normalizeSettings, /\? settings\.displaySize\s*:\s*legacyReadingSize/);
+  assert.match(normalizeSettings, /displaySize: normalizeDisplaySize\(displaySizeSource\)/);
+  assert.match(normalizeSettings, /const \{ aiReportsReadingSize: legacyReadingSize, \.\.\.retainedSettings \} = settings/);
+});
+
+test("執行期與新寫入只使用 canonical settings.displaySize", () => {
+  const save = extractFunction("saveDisplaySize");
   assert.match(html, /const storageKey = "driverPayApp\.v2"/);
-  assert.match(save, /nextState\.settings\.aiReportsReadingSize = next/);
+  assert.match(save, /nextState\.settings\.displaySize = next/);
+  assert.match(save, /delete nextState\.settings\.aiReportsReadingSize/);
   assert.match(save, /persistStatePayload\(nextState, \{ updateMemory: true \}\)/);
-  assert.match(save, /applyAIReportsReadingSize\(next\)/);
-  assert.match(save, /applyAIReportsReadingSize\(previous\)/);
-  assert.match(save, /儲存失敗，已保留原本設定/);
+  assert.match(save, /applyDisplaySize\(next\)/);
+  assert.match(save, /applyDisplaySize\(previous\)/);
   assert.doesNotMatch(save, /WorkRecord|expenseAllocations|migration|Supabase/);
 });
 
-test("重新載入會在首次 render 前套用保存設定且不產生字級閃動", () => {
-  assert.match(html, /<html lang="zh-Hant" data-ai-reports-reading-size="standard">/);
-  assert.match(html, /applyAIReportsReadingSize\(state\.settings\.aiReportsReadingSize\);\s*renderBrandAttribution\(\);\s*renderEntryDateCard/);
-  assert.match(extractFunction("applyAIReportsReadingSize"), /document\.documentElement\.dataset\.aiReportsReadingSize = normalized/);
+test("首次繪製前會讀取新欄位並相容舊欄位", () => {
+  assert.match(html, /<html lang="zh-Hant" data-display-size="standard">/);
+  assert.match(html, /const hasDisplaySize = Object\.prototype\.hasOwnProperty\.call\(settings, "displaySize"\)/);
+  assert.match(html, /const candidate = hasDisplaySize \? settings\.displaySize : settings\.aiReportsReadingSize/);
+  assert.match(html, /applyDisplaySize\(state\.settings\.displaySize\);\s*renderBrandAttribution\(\)/);
+  assert.match(extractFunction("applyDisplaySize"), /document\.documentElement\.dataset\.displaySize = normalized/);
 });
 
-test("AI 與 Reports 共用同一組閱讀 token，不使用 zoom、scale 或複製元件", () => {
+test("Design System 提供三模式全域 typography token 且不使用縮放", () => {
   for (const mode of ["comfort", "large"]) {
-    assert.match(html, new RegExp(`html\\[data-ai-reports-reading-size="${mode}"\\]`));
+    assert.match(designSystem, new RegExp(`html\\[data-display-size="${mode}"\\]`));
   }
-  assert.match(html, /\.ai-insight-card\s*\{[\s\S]*?padding: var\(--reading-card-padding\)/);
-  assert.match(html, /\.ai-insight-item p\s*\{[\s\S]*?font-size: var\(--reading-ai-detail-size\)/);
-  assert.match(html, /\.reports-section\s*\{[\s\S]*?padding: var\(--reading-card-padding\)/);
-  assert.match(html, /\.reports-trend-label,[\s\S]*?font-size: var\(--reading-report-caption-size\)/);
-  const readingRules = [...html.matchAll(
-    /html\[data-ai-reports-reading-size="(?:comfort|large)"\]\s*\{([\s\S]*?)\}/g
+  for (const token of [
+    "display-body-size",
+    "display-secondary-size",
+    "display-control-size",
+    "display-calendar-date-size",
+    "display-nav-label-size"
+  ]) {
+    assert.match(designSystem, new RegExp(`--${token}:`));
+  }
+  const displayRules = [...designSystem.matchAll(
+    /html\[data-display-size="(?:comfort|large)"\]\s*\{([\s\S]*?)\}/g
   )].map(match => match[1]).join("\n");
-  assert.doesNotMatch(readingRules, /\bzoom\s*:|transform\s*:\s*scale/);
+  assert.doesNotMatch(displayRules, /\bzoom\s*:|transform\s*:\s*scale/);
 });
 
-test("AI 閱讀內容分層放大，主頁標題不會跟著大幅放大", () => {
-  assert.match(aiSection, /class="ai-dashboard"/);
-  assert.match(html, /\.ai-page-intro h2\s*\{[\s\S]*?font-size: 26px/);
-  assert.match(html, /\.ai-section-head h3\s*\{[\s\S]*?font-size: var\(--reading-ai-section-title-size\)/);
+test("舒適與大字的一般閱讀層級分別使用 16px 與 18px", () => {
+  assert.match(designSystem, /data-display-size="comfort"[\s\S]*?--display-body-size: 16px/);
+  assert.match(designSystem, /data-display-size="large"[\s\S]*?--display-body-size: 18px/);
+  assert.match(designSystem, /data-display-size="large"[\s\S]*?--display-control-size: 18px/);
+});
+
+test("Today 內容、欄位與操作共用全域顯示 token", () => {
+  assert.match(html, /#view-today :is\([\s\S]*?\.income-unit[\s\S]*?font-size: var\(--display-body-size\)/);
+  assert.match(html, /#view-today :is\([\s\S]*?input\[type="date"\][\s\S]*?font-size: var\(--display-control-size\)/);
+  assert.doesNotMatch(extractFunction("workMetrics"), /displaySize|reading-size/);
+});
+
+test("Calendar 日期與工作紀錄文字共用全域顯示 token", () => {
+  assert.match(html, /\.calendar-date__day\s*\{[\s\S]*?font-size: var\(--display-calendar-date-size\)/);
+  assert.match(html, /\.calendar-date__amount\s*\{[\s\S]*?font-size: var\(--display-calendar-amount-size\)/);
+  assert.match(html, /#view-calendar :is\([\s\S]*?\.calendar-record-weekday[\s\S]*?font-size: var\(--display-secondary-size\)/);
+});
+
+test("Reports 文字、圖表標籤與空狀態重用閱讀 token", () => {
+  assert.match(html, /\.reports-page \.report-switcher button,[\s\S]*?font-size: var\(--reading-report-body-size\)/);
+  assert.match(html, /\.reports-trend-label,[\s\S]*?font-size: var\(--reading-report-caption-size\)/);
+  assert.match(html, /\.reports-page \.ds-empty-state \.ds-secondary[\s\S]*?var\(--reading-report-body-size\)/);
+});
+
+test("AI 依標準、舒適與大字維持分層閱讀比例", () => {
+  assert.match(html, /--reading-ai-body-size: 14px/);
+  assert.match(html, /data-display-size="comfort"[\s\S]*?--reading-ai-body-size: 16px[\s\S]*?--reading-ai-detail-size: 14px/);
+  assert.match(html, /data-display-size="large"[\s\S]*?--reading-ai-body-size: 18px[\s\S]*?--reading-ai-detail-size: 16px/);
   assert.match(html, /\.ai-advice-list li,[\s\S]*?font-size: var\(--reading-ai-body-size\)/);
-  assert.match(html, /\.ai-analysis-meta\s*\{[\s\S]*?font-size: var\(--reading-ai-small-size\)/);
-  assert.match(html, /\.ai-platform-summary\s*\{[\s\S]*?font-size: var\(--reading-ai-detail-size\)/);
 });
 
-test("Reports 標籤、圖表與空狀態共用設定，主要 KPI 數字維持原尺寸", () => {
-  assert.match(reportsSection, /class="reports-page ds-page-container"/);
-  assert.match(html, /\.reports-primary-kpi strong\s*\{[\s\S]*?clamp\(21px, 6vw, 28px\)/);
-  assert.match(html, /\.reports-platform-total strong\s*\{[\s\S]*?clamp\(24px, 7vw, 32px\)/);
-  assert.match(html, /\.reports-kpi-label,[\s\S]*?var\(--reading-report-caption-size\)/);
-  assert.match(html, /\.reports-page \.ds-empty-state \.ds-secondary\s*\{[\s\S]*?var\(--reading-report-body-size\)/);
-  assert.match(html, /\.reports-trend-value[\s\S]*?var\(--reading-report-caption-size\)/);
+test("Driver 與 Bottom Navigation 套用同一顯示模式", () => {
+  assert.match(html, /#view-settings :is\([\s\S]*?\.driver-page-intro p[\s\S]*?font-size: var\(--display-secondary-size\)/);
+  assert.match(html, /\.nav button,[\s\S]*?font-size: var\(--display-nav-label-size\)/);
 });
 
-test("大字模式在 320px 對趨勢與平台列提供安全重排且不截斷長名稱", () => {
-  assert.match(html, /@media \(max-width: 350px\)[\s\S]*?data-ai-reports-reading-size="large"[\s\S]*?reports-trend-row/);
-  assert.match(html, /data-ai-reports-reading-size="large"[\s\S]*?ai-platform-row strong\s*\{[\s\S]*?grid-column: 1 \/ -1/);
-  assert.match(html, /data-ai-reports-reading-size="large"\] \.reports-platform-name[\s\S]*?white-space: normal/);
-  assert.match(html, /\.reports-comparison-list strong[\s\S]*?overflow-wrap: anywhere/);
+test("大字模式保留 320px 趨勢與平台列安全重排", () => {
+  assert.match(html, /@media \(max-width: 350px\)[\s\S]*?data-display-size="large"[\s\S]*?reports-trend-row/);
+  assert.match(html, /data-display-size="large"[\s\S]*?ai-platform-row strong\s*\{[\s\S]*?grid-column: 1 \/ -1/);
+  assert.match(html, /data-display-size="large"\] \.reports-platform-name[\s\S]*?white-space: normal/);
 });
 
-test("閱讀設定不進入 Today、Calendar、Bottom Navigation 或資料計算", () => {
-  const todaySection = html.match(
-    /<section id="view-today"[\s\S]*?<\/section>\s*<section id="view-calendar"/
-  )?.[0] || "";
-  const calendarSection = html.match(
-    /<section id="view-calendar"[\s\S]*?<\/section>\s*<section id="view-reports"/
-  )?.[0] || "";
-  assert.doesNotMatch(todaySection, /reading-size|aiReportsReadingSize/);
-  assert.doesNotMatch(calendarSection, /reading-size|aiReportsReadingSize/);
-  assert.doesNotMatch(html.match(/<nav class="nav"[\s\S]*?<\/nav>/)?.[0] || "", /reading-size|aiReportsReadingSize/);
-  assert.doesNotMatch(extractFunction("aggregateReport"), /aiReportsReadingSize|reading-size/);
-  assert.doesNotMatch(extractFunction("reportExpenseSummary"), /aiReportsReadingSize|reading-size/);
+test("顯示大小不進入 canonical 計算或 WorkRecord", () => {
+  for (const name of ["aggregateReport", "reportExpenseSummary", "workMetrics"]) {
+    const source = extractFunction(name);
+    assert.doesNotMatch(source, /displaySize|reading-size|aiReportsReadingSize/);
+  }
 });
 
-test("HTML／CSS／JavaScript 變更同步更新 App Shell cache", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v21"/);
-  assert.match(html, /const appShellCacheName = "driver-pay-pro-v21"/);
+test("HTML、CSS 與 JavaScript 變更同步更新 App Shell cache", () => {
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v22"/);
+  assert.match(html, /const appShellCacheName = "driver-pay-pro-v22"/);
 });

@@ -1,8 +1,8 @@
 # Driver Pay Pro Design Kit
 
-Version: 1.1
+Version: 1.2
 
-更新日期：2026-07-25
+更新日期：2026-07-29
 
 ## 文件定位
 
@@ -78,6 +78,10 @@ Design System 採漸進式導入；本文件不授權一次性重寫首頁、月
 - 支援 PWA standalone。
 - 高頻操作優先放在第一屏。
 - 不可為塞入內容而全面縮小文字與按鈕。
+- 全 App 顯示大小只提供標準／舒適／大字一個跨頁偏好；不得以 zoom、
+  transform scale 或頁面各自設定取代分層 typography。
+- 大字模式的一般內文與表單文字以約 18px 為目標，但頁面主標題、主要 KPI
+  與 Lucide 圖示只維持或小幅調整，避免破壞資訊層級。
 - 主要驗收寬度為 320px、390px 與桌面 1024px。
 - 固定底部導覽不得遮住內容或忽略 `safe-area-inset-bottom`。
 

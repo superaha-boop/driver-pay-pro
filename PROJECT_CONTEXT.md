@@ -4,7 +4,36 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## Calendar Today 日期標記 — Current Candidate
+## V1.1 最終顯示體驗與 Calendar 對齊 — Current Candidate
+
+- 工作分支：`codex/v1-1-m1-today-workflow`；base `8badf1946184aaa0644d020517cb2016407dda16`。
+- Driver「顯示大小」固定提供標準／舒適／大字，canonical durable source
+  改為可選 `settings.displaySize`。合法新欄位優先；缺少時相容讀取合法
+  `settings.aiReportsReadingSize`；未知值回退 `standard`。執行期與新寫入
+  只使用 `displaySize`，不改 `driverPayApp.v2` key 或 WorkRecord。
+- `<html data-display-size>` 與 `styles/design-system.css` 共用 tokens 套用
+  Today、Calendar、Reports、AI、Driver 與 Bottom Navigation。標準維持既有
+  視覺；舒適一般內文 16px；大字一般內文 18px；主要 KPI 與主標題只維持或
+  小幅調整，不使用 zoom／scale。
+- Driver 原「資料狀態」與「App 狀態」合併為置底的「系統狀態」。正常時
+  預設收合；讀取或 storage 異常時顯示「需要注意」並可自動展開一次；展開
+  內容只使用既有可驗證資料。
+- Calendar 所有日期數字共用 34px 固定 day slot（320px 為 32px）；Today
+  只改該槽位的外框／實心狀態，不使用 margin、position 或 translate 位移。
+  日期格高度、Heat、Selected、Today button、Work Record Card 與資料邏輯
+  保持不變。
+- L1 已通過：207/207 Node、Today 55/55、AI 24/24、Driver 24/24、
+  Integration 16/16、Reports 61/61、Calendar 41/41；release check、lint
+  0 errors、inline JavaScript、Service Worker、Manifest、static validation、
+  `git diff --check` 與 npm audit 0 vulnerabilities。
+- Chrome mobile emulation 的 3 模式 × 5 頁 × 320／375／390／393／430px
+  共 75 組均無水平 overflow；Console 0 error／warning。390px 同列七個
+  day slot 的 `top`、34px 高度與垂直中心完全一致。
+- App Shell candidate 為 `driver-pay-pro-v22`。本階段只 Push 功能分支與
+  Public Preview；收到指定 V1.1 Final Human QA／Release Candidate 核准前
+  不 merge `main`、不 Production deploy。
+
+## Calendar Today 日期標記 — Prior Candidate
 
 - 工作分支：`codex/v1-1-m1-today-workflow`；base `49ef956`。AI／Reports
   Reading Size Human QA 已由 Product Owner 確認 Passed。
@@ -24,7 +53,7 @@
   Public Preview；Final Calendar Today Marker Human QA 通過前不 merge
   `main`、不 Production deploy。
 
-## AI／報表閱讀文字大小 — Human QA Passed
+## AI／報表閱讀文字大小 — Superseded by Global Display Size
 
 - 工作分支：`codex/v1-1-m1-today-workflow`；base `d7571dc`。本 Sprint 只新增
   AI／Reports 的閱讀層級設定，不 merge `main`、不 Production deploy。

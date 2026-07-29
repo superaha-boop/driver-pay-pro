@@ -46,6 +46,16 @@
   --line-height-caption: 1.35;
   --letter-spacing-tight: -0.02em;
   --letter-spacing-normal: 0;
+  --display-body-size: 14px;
+  --display-secondary-size: 13px;
+  --display-caption-size: 12px;
+  --display-control-size: 16px;
+  --display-button-size: 16px;
+  --display-calendar-date-size: 16px;
+  --display-calendar-amount-size: 11px;
+  --display-nav-label-size: 14px;
+  --display-body-line-height: 1.55;
+  --display-secondary-color: var(--color-text-secondary);
 
   /* Brand */
   --color-brand: #15966f;
@@ -127,6 +137,36 @@
   --safe-area-right: env(safe-area-inset-right, 0px);
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --safe-area-left: env(safe-area-inset-left, 0px);
+}
+
+html[data-display-size="comfort"] {
+  --display-body-size: 16px;
+  --display-secondary-size: 14px;
+  --display-caption-size: 13px;
+  --display-control-size: 16px;
+  --display-button-size: 16px;
+  --display-calendar-date-size: 17px;
+  --display-calendar-amount-size: 12px;
+  --display-nav-label-size: 15px;
+  --display-body-line-height: 1.65;
+  --display-secondary-color: #506159;
+}
+
+html[data-display-size="large"] {
+  --font-size-body: 18px;
+  --font-size-secondary: 16px;
+  --font-size-caption: 14px;
+  --font-size-button: 18px;
+  --display-body-size: 18px;
+  --display-secondary-size: 16px;
+  --display-caption-size: 14px;
+  --display-control-size: 18px;
+  --display-button-size: 18px;
+  --display-calendar-date-size: 18px;
+  --display-calendar-amount-size: 13px;
+  --display-nav-label-size: 16px;
+  --display-body-line-height: 1.72;
+  --display-secondary-color: #46534c;
 }
 
 /* Typography primitives */

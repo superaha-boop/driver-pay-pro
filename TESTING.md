@@ -25,7 +25,31 @@
 執行一次。高風險資料、同步、Service Worker 或 iOS 特有變更仍須即時提高
 驗證層級。
 
-## Calendar Today 日期標記
+## V1.1 Final Display and Calendar Alignment
+
+- `tests/reading-size.test.js` 驗證三個全域 radio、`displaySize` canonical
+  source、舊 `aiReportsReadingSize` fallback、首次繪製、交易式保存、六個
+  UI 區域共用 tokens、16／18px 層級、320px 重排與計算隔離。
+- `tests/driver.test.js` 驗證單一置底系統狀態、正常收合、異常「需要注意」、
+  disclosure ARIA／focus／44px target，且不保留舊兩個 status container。
+- `tests/calendar.test.js` 驗證所有日期共用 34px day slot、320px 32px、
+  Today outline／solid、無 dot、無位移補丁、完整 cell target 與既有
+  Calendar state／mutation 回歸。
+- 瀏覽器矩陣固定為三模式 × 320／375／390／393／430px × Today／Calendar／
+  Reports／AI／Driver；每組必須 `scrollWidth === clientWidth`。
+- Calendar 同列所有 day slot 必須具有相同 `top`、`height` 與垂直中心；
+  Console 0 error／warning，Manifest 200，Service Worker v22 可控制頁面。
+- 實際 L1：207/207 Node、Today 55/55、AI 24/24、Driver 24/24、
+  Integration 16/16、Reports 61/61、Calendar 41/41；release check Passed，
+  lint 0 errors／10 既有 warnings，npm audit 0 vulnerabilities。
+- 實際 Chrome：75 組 responsive matrix 全部
+  `scrollWidth === clientWidth`；390px 同列七個日期的 day center 均為
+  `447.546875px`、高度 34px；Console 0 error／warning，Manifest 與
+  Service Worker 正常，顯示偏好重載後仍保留。
+- L2 必須提供未登入 iPhone Safari 可直接開啟的公開 HTTPS Preview。指定
+  Final Human QA／RC 核准前不得 merge main 或 Production deploy。
+
+## Calendar Today 日期標記（v21 歷史驗證）
 
 - `tests/calendar.test.js` 驗證原 4px Today dot 已移除、日期數字使用
   30px／2px 品牌圓圈、Today + Selected 使用實心圓與反差文字，且
@@ -49,7 +73,7 @@
 - App Shell candidate：`driver-pay-pro-v21`。本小型 Sprint 只做 L1、公開
   L2 與一次 Final Calendar Today Marker Human QA；不重複完整 L3。
 
-## AI／報表閱讀文字大小
+## AI／報表閱讀文字大小（已由全域顯示大小取代）
 
 - `tests/reading-size.test.js` 覆蓋三個固定 radio、原生語意、44px target、
   舊資料 fallback、單一 settings source、交易式保存、首次 render 前套用、
