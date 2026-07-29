@@ -730,3 +730,39 @@ AI 長文與 Reports 次要標籤在手機上需要較彈性的閱讀尺度，�
   schema、Supabase、main 與 Production 不變。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-040](docs/DECISION_LOG.md#d-040)。
+
+## D-041 — Calendar Today 日期改用日期圓圈標記
+
+- Date: 2026-07-29
+
+### 決策
+
+1. Product Owner 明確核准 Calendar V1.1 的 Today marker 小範圍 Freeze
+   例外；本次只修改今天日期標記，不重設 Calendar 其他狀態或版型。
+2. 今天未選取時，以 28～30px、2px 品牌深綠外框直接包住日期數字；不得
+   使用原本的小圓點、短橫線、文字、額外圖示或動畫。
+3. 今天被選取時，日期圓圈改為品牌深綠實心、文字使用反差色；日期格只
+   保留低干擾 surface，不再疊加強烈 cell border。
+4. Today 可與 Heat、Record、Adjacent Month 組合；外框／實心圓必須保持
+   清楚且只有一個 Today marker。
+5. `aria-current="date"` 只套用真正台北今天；既有 `aria-selected`、完整
+   日期格點擊範圍、canonical local-date、今天按鈕、deep link 與工作紀錄
+   卡片全部維持。
+6. App Shell 更新為 `driver-pay-pro-v21`。本階段只 Push 功能分支並提供
+   Public Preview；最終 Human QA 通過前不 merge `main`、不 Production。
+
+### 原因
+
+日期下方 4px 小圓點在 iPhone 上不易辨識，也可能讓使用者花時間判斷是否為
+資料符號。直接包住日期數字能在不增加格高或第二個控制的前提下，讓 Today
+身分更清楚。
+
+### 影響範圍
+
+- Calendar Today marker presentation、Accessibility contract、tests、docs 與
+  PWA cache。
+- 不修改其他日期、Heat 演算法、Calendar state／Editor、Today、Reports、
+  AI、Driver、WorkRecord、`expenseAllocations`、`settings.aiReportsReadingSize`、
+  `driverPayApp.v2`、Supabase、main 或 Production。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-041](docs/DECISION_LOG.md#d-041)。

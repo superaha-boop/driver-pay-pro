@@ -4,7 +4,27 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## AI／報表閱讀文字大小 — Current Candidate
+## Calendar Today 日期標記 — Current Candidate
+
+- 工作分支：`codex/v1-1-m1-today-workflow`；base `49ef956`。AI／Reports
+  Reading Size Human QA 已由 Product Owner 確認 Passed。
+- Calendar 今天未選取時以 30px、2px 品牌深綠外框包住日期數字；被選取時
+  改為品牌深綠實心圓與反差文字。原 4px 小圓點已移除，不使用短橫線、
+  文字、額外圖示或動畫。
+- 今天與 Heat／Record 可組合；日期格尺寸、44px 級操作範圍、其他日期
+  Selected、Heat 演算法、Today button、exact-date route 與 Work Record
+  Card 均保持原契約。
+- `aria-current="date"` 只套用真正台北今天，`aria-selected` 繼續表達選取。
+- L1 已通過：197/197 Node、Calendar 39/39、其他專項 regression、lint
+  0 errors、inline JavaScript、Service Worker、Manifest 與 static Production
+  validation。Chrome mobile emulation 的 320／375／390／393／430px、
+  selected／unselected、Heat、Today button、exact-date route、離線重載與
+  Console 均通過。
+- App Shell candidate 為 `driver-pay-pro-v21`。本階段只 Push 功能分支與
+  Public Preview；Final Calendar Today Marker Human QA 通過前不 merge
+  `main`、不 Production deploy。
+
+## AI／報表閱讀文字大小 — Human QA Passed
 
 - 工作分支：`codex/v1-1-m1-today-workflow`；base `d7571dc`。本 Sprint 只新增
   AI／Reports 的閱讀層級設定，不 merge `main`、不 Production deploy。
@@ -15,8 +35,9 @@
 - 主要 KPI 與頁面主標題不大幅放大；內文、次要文字、行高、閱讀間距及
   Reports 圖表標籤依層級調整。Today、Calendar、一般 Driver、Bottom
   Navigation 與 canonical calculations 不受影響。
-- App Shell candidate 為 `driver-pay-pro-v20`；完成後只 Push 功能分支並
-  提供 Public Preview。
+- App Shell candidate 為 `driver-pay-pro-v20`；Product Owner 已確認
+  AI／Reports Reading Size Human QA Passed，臨時 Preview 已停止，尚未
+  merge `main` 或 Production deploy。
 
 ## Today Work Status Header — Current Candidate
 

@@ -119,12 +119,12 @@ test("Reports error、offline、retry 與 read-only 保護保持分離", () => {
   );
 });
 
-test("平台 Accessibility、responsive 與 PWA v20 契約存在", () => {
+test("平台 Accessibility、responsive 與 PWA v21 契約存在", () => {
   assert.match(reportsSection, /role="tablist" aria-label="平台報表期間"/);
   assert.match(reportsSection, /role="tab" aria-selected="true"/);
   assert.match(html, /\.reports-platform-period button[\s\S]*?min-height: var\(--touch-target-min\)/);
   assert.match(html, /\.reports-platform-row[\s\S]*?grid-template-columns: minmax\(0, 1fr\) auto/);
   assert.match(html, /\.reports-platform-name[\s\S]*?text-overflow: ellipsis/);
   assert.match(html, /\.reports-important-action[\s\S]*?min-height: var\(--touch-target-min\)/);
-  assert.match(serviceWorker, /driver-pay-pro-v20/);
+  assert.match(serviceWorker, /driver-pay-pro-v21/);
 });

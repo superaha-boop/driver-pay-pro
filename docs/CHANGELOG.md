@@ -16,6 +16,15 @@
 
 ## Unreleased
 
+### Calendar Today 日期標記
+
+- 以 30px、2px 品牌深綠日期圓圈取代 Today 下方 4px 小圓點。
+- 今天未選取時使用透明圓形外框；今天被選取時使用深綠實心圓與反差文字，
+  並降低整格 Selected 視覺競爭。
+- 保留 Heat、其他日期 Selected、完整日期格點擊、`aria-current="date"`、
+  Today button、exact-date route 與 Work Record Card。
+- App Shell candidate 更新為 `driver-pay-pro-v21`。
+
 ### AI／報表閱讀文字大小
 
 - Driver 新增「顯示設定」，提供標準／舒適／大字三個立即生效的閱讀層級。
@@ -24,6 +33,7 @@
 - 放大閱讀內文、次要資訊、行高、段落間距與 Reports 圖表標籤；主要 KPI、
   Today、Calendar、一般 Driver 與 Bottom Navigation 維持原尺寸。
 - App Shell candidate 更新為 `driver-pay-pro-v20`。
+- Product Owner 已確認 AI／Reports Reading Size Human QA Passed。
 
 ### Today Work Status Header
 

@@ -387,6 +387,18 @@ test("Calendar Visual Polish 保留操作結構並建立清楚視覺層級", () 
   assert.match(html, /calendar-metric--primary[\s\S]*?calendar-metric--secondary/);
 });
 
+test("今天日期使用單一圓圈標記並保留完整日期格操作範圍", () => {
+  const renderer = extractFunction("renderCalendarGrid");
+  assert.doesNotMatch(html, /calendar-date__today-dot/);
+  assert.doesNotMatch(renderer, /today-dot|today-line/);
+  assert.match(html, /\.calendar-date\[aria-current="date"\] \.calendar-date__day[\s\S]*?width: 30px[\s\S]*?height: 30px[\s\S]*?border: 2px solid var\(--color-brand-pressed\)[\s\S]*?border-radius: var\(--radius-pill\)/);
+  assert.match(html, /\.calendar-date\[aria-current="date"\]\[aria-selected="true"\] \.calendar-date__day[\s\S]*?color: var\(--color-text-inverse\)[\s\S]*?background: var\(--color-brand-pressed\)/);
+  assert.match(html, /\.calendar-date\[aria-current="date"\]\[aria-selected="true"\][\s\S]*?background: var\(--color-brand-subtle\)[\s\S]*?border-color: transparent/);
+  assert.match(renderer, /\$\{isToday \? `aria-current="date"` : ""\}/);
+  assert.match(renderer, /<span class="calendar-date__day">\$\{cell\.day\}<\/span>/);
+  assert.match(html, /\.calendar-date[\s\S]*?min-height: 58px/);
+});
+
 test("鍵盤、ARIA、手勢與 reduced motion 契約存在", () => {
   assert.match(html, /role="gridcell"/);
   assert.match(html, /aria-selected="\$\{String\(isSelected\)\}"/);
@@ -413,8 +425,8 @@ test("Calendar session state 不寫入 durable storage 並支援 lifecycle refre
   assert.match(html, /scheduleCalendarMidnightRefresh/);
 });
 
-test("PWA App Shell 更新為簡短 v20 cache 且保留必要資源", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v20"/);
+test("PWA App Shell 更新為簡短 v21 cache 且保留必要資源", () => {
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v21"/);
   assert.match(serviceWorker, /"\.\/index\.html"/);
   assert.match(serviceWorker, /"\.\/styles\/design-system\.css"/);
   assert.match(serviceWorker, /keys\.filter\(key => key !== CACHE_NAME\)/);

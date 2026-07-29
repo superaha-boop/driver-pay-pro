@@ -4916,6 +4916,11 @@
       font-weight: var(--font-weight-semibold);
     }
 
+    .calendar-date[aria-current="date"][aria-selected="true"] {
+      background: var(--color-brand-subtle);
+      border-color: transparent;
+    }
+
     .calendar-date__day,
     .calendar-date__amount {
       max-width: 100%;
@@ -4930,6 +4935,25 @@
       line-height: 1.15;
     }
 
+    .calendar-date[aria-current="date"] .calendar-date__day {
+      width: 30px;
+      height: 30px;
+      border: 2px solid var(--color-brand-pressed);
+      border-radius: var(--radius-pill);
+      display: grid;
+      place-items: center;
+      box-sizing: border-box;
+      color: var(--color-brand-pressed);
+      font-weight: var(--font-weight-semibold);
+      line-height: 1;
+    }
+
+    .calendar-date[aria-current="date"][aria-selected="true"] .calendar-date__day {
+      color: var(--color-text-inverse);
+      background: var(--color-brand-pressed);
+      border-color: var(--color-brand-pressed);
+    }
+
     .calendar-date__amount {
       color: var(--color-text-secondary);
       font-size: 11px;
@@ -4939,17 +4963,6 @@
 
     .calendar-date[aria-selected="true"] .calendar-date__amount {
       color: var(--color-brand-pressed);
-    }
-
-    .calendar-date__today-dot {
-      position: absolute;
-      left: 50%;
-      bottom: 3px;
-      width: 4px;
-      height: 4px;
-      border-radius: var(--radius-pill);
-      background: var(--color-brand-pressed);
-      transform: translateX(-50%);
     }
 
     .calendar-record-card {
@@ -6111,7 +6124,7 @@
     });
     const storageKey = "driverPayApp.v2";
     const lastValidStorageKey = `${storageKey}.lastValid`;
-    const appShellCacheName = "driver-pay-pro-v20";
+    const appShellCacheName = "driver-pay-pro-v21";
     const aiReportsReadingSizeLabels = Object.freeze({
       standard: "標準",
       comfort: "舒適",
@@ -8796,7 +8809,6 @@
                 >
                   <span class="calendar-date__day">${cell.day}</span>
                   <span class="calendar-date__amount">${escapeHtml(amount)}</span>
-                  ${isToday ? `<span class="calendar-date__today-dot" aria-hidden="true"></span>` : ""}
                 </button>
               `;
             }).join("")}

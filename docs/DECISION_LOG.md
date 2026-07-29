@@ -667,3 +667,28 @@
   - 不使用 zoom 或 transform scale。
   - 不在 AI 與 Reports 各自建立 setting 或 component copy。
   - 不讓閱讀偏好改變主要 KPI、Bottom Navigation 或資料計算。
+
+## D-041
+
+- Date: 2026-07-29
+- Decision:
+  1. Calendar V1.1 Today marker 是經 Product Owner 核准的 Calendar Freeze
+     小範圍例外，只修改今天日期標記。
+  2. 今天未選取時使用 28～30px、2px 品牌深綠日期圓形外框；移除小圓點，
+     不使用短橫線、三點、文字、圖示或動畫。
+  3. 今天被選取時使用品牌深綠實心日期圓圈與反差文字；日期格只保留低干擾
+     surface，不疊加強烈 cell border。
+  4. Today 與 Heat／Record 可組合，但只有一個 Today marker；日期格尺寸與
+     觸控範圍保持不變。
+  5. `aria-current="date"`、`aria-selected`、台北 date-only、Today button、
+     exact-date route、Work Record Card 與其他 Calendar state 保持原契約。
+  6. App Shell 更新為 v21；Final Human QA 通過前不 merge main、不
+     Production deploy。
+- Reason: 原 4px 小圓點在 iPhone 上過小且容易被忽略；包住日期數字可在不
+  改月曆高度、熱度或操作模型下提供清楚的 Today 身分。
+- Impact: Calendar Today presentation、tests、docs 與 PWA cache；不修改資料、
+  計算、其他頁面、schema、localStorage、Supabase、main 或 Production。
+- Rejected alternatives:
+  - 不使用小圓點、短橫線、文字或額外圖示。
+  - 不建立第二個 Today state 或按鈕。
+  - 不以整格深色、厚框、陰影或動畫增加辨識度。

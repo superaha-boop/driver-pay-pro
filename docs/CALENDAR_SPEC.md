@@ -1,12 +1,13 @@
 # Driver Pay Pro — Calendar Interaction and Implementation Specification
 
-Version: 1.0
+Version: 1.1
 
 Status: Approved implementation specification
 
-Updated: 2026-07-25
+Updated: 2026-07-29
 
-Implementation status: Calendar V1 implemented and UX frozen
+Implementation status: Calendar V1 implemented and UX frozen；V1.1 Today marker
+release candidate awaiting final Human QA
 
 > This document is the primary implementation source for the Calendar redesign. It defines target behavior and records current repository constraints. It does not authorize changes outside an approved Calendar Implementation Sprint.
 
@@ -234,9 +235,9 @@ Selected has visual priority over Today, which has priority over Heat.
 | State | Date text | Amount text | Background | Border | Today indicator | Selected indicator | Contrast | Clickable | Can create | Accessible label | `aria-selected` | Disabled semantics |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | General current-month | Primary | None | Transparent | None | None | None | Normal | Yes | Only if past and empty | Full date, no record | `false` | Not disabled |
-| Today | Primary | Record rule | Heat/transparent | None | Small dot | None | Normal | Yes | No; Today empty links to Today | Full date, today, record/net state | `false` unless selected | `aria-current=date` |
+| Today | Brand/contrast | Record rule | Heat/transparent | None | 30px outlined circle around day number | None | Strong | Yes | No; Today empty links to Today | Full date, today, record/net state | `false` unless selected | `aria-current=date` |
 | Selected | Primary | Record rule | Brand-soft | Thin selected | If also today | Border + surface | Strong | Yes | Permission by date | Full date, selected, record/net state | `true` | Not disabled |
-| Today + Selected | Primary | Record rule | Selected wins | Thin selected | Small dot retained | Border + surface | Strong | Yes | No; Today rule | Full date, today, selected, record/net | `true` | `aria-current=date` |
+| Today + Selected | Inverse in day circle | Record rule | Quiet brand-subtle surface | None | 30px solid brand circle around day number | Solid day circle | Strong | Yes | No; Today rule | Full date, today, selected, record/net | `true` | `aria-current=date` |
 | Recorded + positive net | Primary | Compact positive | Heat 1–4 | None | If today | If selected | Normal | Yes | No; edit existing | Full date, record exists, full net | By selection | Not disabled |
 | Recorded + zero net | Primary | `—` | Transparent | None | If today | If selected | Normal | Yes | No; edit existing | Full date, record exists, net zero | By selection | Not disabled |
 | Recorded + negative net | Primary | Signed compact | Transparent | None | If today | If selected | Normal | Yes | No; edit existing | Full date, record exists, negative full net | By selection | Not disabled |
@@ -247,7 +248,7 @@ Selected has visual priority over Today, which has priority over Heat.
 | Loading | Placeholder | Placeholder | Muted stable | None | None | None | Non-text skeleton | No | No | Month data loading | `false` | `aria-busy=true`, `aria-disabled=true` |
 | Disabled/invalid | Disabled | None | Muted | None | None | None | Disabled token | No | No | Invalid date unavailable | `false` | `aria-disabled=true`; handler blocked |
 | Selected + Heat | Primary | Compact positive | Selected wins | Thin selected | If today | Border + surface | Strong | Yes | No; edit existing | Full date, selected, record, full net | `true` | Not disabled |
-| Today + Heat | Primary | Compact positive | Heat retained | None | Small dot | None unless selected | Normal | Yes | No; Today rule | Full date, today, record, full net | By selection | `aria-current=date` |
+| Today + Heat | Brand/contrast | Compact positive | Heat retained | None | 30px outlined circle around day number | None unless selected | Strong | Yes | No; Today rule | Full date, today, record, full net | By selection | `aria-current=date` |
 
 Date cells must not use red for future, zero, negative, or missing records. Negative net is factual data, not a validation error.
 
@@ -306,15 +307,25 @@ No legend is required in v1 because heat is a locating hint, not an analytical s
 ## 12. Today State
 
 - Today is a date identity, not the current selection.
-- Use a small dot or equivalent low-interruption shape below the date number.
+- Use a 28–30px circular outline directly around the date number when Today is not
+  selected.
+- When Today is selected, use a solid brand circle with inverse date text. The cell
+  may keep only a quiet brand-subtle surface and must not add another strong border.
 - Today may retain heat.
-- Do not use a large filled circle.
+- The circle must remain legible on every heat level and must not add a second Today
+  marker.
+- Do not use a dot, short line, three dots, text label, icon, shadow, or animation.
 - Today remains visible when Selected; Selected styling is dominant.
 - The accessible name explicitly says `今天`.
+- `aria-current="date"` appears only on the actual Taipei-local Today cell. The full
+  date cell remains the interactive target; the visual circle does not reduce its
+  touch area.
 
 ## 13. Selected State
 
 - Use `--border-selected` or its approved equivalent plus a brand-soft surface.
+- Today + Selected is the approved exception: the solid date circle is the primary
+  selected signal, with a quiet surface and no competing cell border.
 - Do not use a heavy shadow or large solid brand fill.
 - Do not rely on color alone.
 - Only one date is selected globally, even when its cell is outside `displayedMonth`.

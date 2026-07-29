@@ -25,6 +25,30 @@
 執行一次。高風險資料、同步、Service Worker 或 iOS 特有變更仍須即時提高
 驗證層級。
 
+## Calendar Today 日期標記
+
+- `tests/calendar.test.js` 驗證原 4px Today dot 已移除、日期數字使用
+  30px／2px 品牌圓圈、Today + Selected 使用實心圓與反差文字，且
+  `aria-current="date"` 只由既有 `isToday` 條件產生。
+- `npm run release:check`：Passed；197/197 Node、Today 55/55、AI 19/19、
+  Driver 16/16、Integration 16/16、Reports 56/56、Calendar 39/39。
+- Lint：0 errors／10 既有 warnings；inline JavaScript、Service Worker、
+  Manifest、static Production validation 與 `git diff --check` Passed；
+  `npm audit` 為 0 vulnerabilities。
+- 真實 Chrome mobile emulation 驗證台北 2026-07-29：
+  - Today 未選取為 30×30px 透明品牌外框；選取為 30×30px 品牌實心圓與
+    白色文字。
+  - Today + Heat 仍保留 heat surface，圓圈可辨識；Today + Selected 只保留
+    低干擾 brand-subtle cell surface，沒有第二個強烈 cell border。
+  - `aria-current="date"` 數量固定為 1；Today button、exact-date route、
+    Work Record Card、無紀錄與有紀錄狀態均正常。
+  - 320／375／390／393／430px 的 selected／unselected 共 10 組皆
+    `scrollWidth === clientWidth`，日期格維持既有 54／58px 高度。
+  - `driverPayApp.v2` 在 Calendar 導覽前後完全一致；Service Worker
+    `driver-pay-pro-v21` 離線重新載入通過；Console 0 error／0 warning。
+- App Shell candidate：`driver-pay-pro-v21`。本小型 Sprint 只做 L1、公開
+  L2 與一次 Final Calendar Today Marker Human QA；不重複完整 L3。
+
 ## AI／報表閱讀文字大小
 
 - `tests/reading-size.test.js` 覆蓋三個固定 radio、原生語意、44px target、

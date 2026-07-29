@@ -153,6 +153,6 @@ test("閱讀設定不進入 Today、Calendar、Bottom Navigation 或資料計算
 });
 
 test("HTML／CSS／JavaScript 變更同步更新 App Shell cache", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v20"/);
-  assert.match(html, /const appShellCacheName = "driver-pay-pro-v20"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v21"/);
+  assert.match(html, /const appShellCacheName = "driver-pay-pro-v21"/);
 });

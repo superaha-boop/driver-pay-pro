@@ -48,6 +48,6 @@ Today or Calendar successful write
   `aiReportsReadingSize = "standard" | "comfort" | "large"`；缺欄位或無效值
   一律回退 `standard`，不得寫入 WorkRecord。
 - 損壞或讀取失敗時不得清除原始 payload。
-- Service Worker V1.1 AI／Reports reading-size candidate cache 為
-  `driver-pay-pro-v20`。
+- Service Worker V1.1 Calendar Today marker candidate cache 為
+  `driver-pay-pro-v21`。
 - 沒有 Supabase、authentication、cloud sync、migration 或外部 AI。

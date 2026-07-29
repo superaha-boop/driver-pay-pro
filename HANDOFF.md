@@ -6,7 +6,30 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
-## AI／報表閱讀文字大小 — Current Handoff
+## Calendar Today 日期標記 — Current Handoff
+
+- Branch：`codex/v1-1-m1-today-workflow`；base `49ef956`。AI／Reports
+  Reading Size Human QA：Passed。
+- `renderCalendarGrid()` 沿用同一 `isToday` 與 `aria-current="date"`；
+  Today day number 改為 30px／2px 品牌深綠圓圈，未選取為透明外框，選取為
+  深綠實心與反差文字。
+- 原 `.calendar-date__today-dot` DOM／CSS 已移除。Today + Selected 只保留
+  低干擾 brand-subtle cell surface，不疊加強烈 cell border。
+- 其他日期、Selected、Heat levels、月份／日期 state、Today button、
+  exact-date route、Work Record Card、Editor、資料與 canonical calculations
+  不變。
+- L1：`npm run release:check` Passed；197/197 Node、Today 55/55、AI 19/19、
+  Driver 16/16、Integration 16/16、Reports 56/56、Calendar 39/39。Lint
+  0 errors／10 既有 warnings；inline JavaScript、Service Worker、Manifest、
+  static Production validation 與 `git diff --check` 均通過；`npm audit`
+  0 vulnerabilities。
+- 真實 Chrome mobile emulation 驗證 selected／unselected、Heat、Today
+  button、exact-date route、Work Record Card、storage read-only 與離線重載；
+  320／375／390／393／430px 均無水平 overflow，Console 0 error／warning。
+- App Shell candidate：`driver-pay-pro-v21`。完成後只 Push 功能分支與
+  Public Preview；Final Human QA 通過前不 merge main、不 Production。
+
+## AI／報表閱讀文字大小 — Human QA Passed
 
 - Branch：`codex/v1-1-m1-today-workflow`；base `d7571dc`。
 - Driver 新增「顯示設定 → AI／報表文字大小」，固定標準／舒適／大字三個
@@ -27,8 +50,9 @@ GitHub：`superaha-boop/driver-pay-pro`
   離線保存、fallback、圖表文字更新、主要 KPI 尺寸穩定、Console 0
   error／warning；320／375／390／393／430px 的 AI 與 Reports 共 30 組
   均無水平 overflow。
-- App Shell candidate `driver-pay-pro-v20`。完成後只 Push 功能分支與建立
-  Public Preview；不 merge main、不 Production。
+- App Shell candidate `driver-pay-pro-v20`。Product Owner 已確認
+  AI／Reports Reading Size Human QA Passed；Preview 已停止，尚未 merge
+  main 或 Production。
 
 ## Today Work Status Header — Current Handoff
 
