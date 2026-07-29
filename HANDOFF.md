@@ -40,9 +40,16 @@ GitHub：`superaha-boop/driver-pay-pro`
   time input 邊界、開始／暫停／繼續／收工、重開保留、Calendar／Reports
   8 小時 8 分一致、Console 0 error／warning。
 - Service Worker candidate：`driver-pay-pro-v15`。
-- 下一步：完成 `release:check`、Push 功能分支，建立未登入 iPhone Safari
-  可直接開啟的公開 Preview，交由 Product Owner 執行本 Milestone 最終一次
-  Human QA。通過前不宣告 Milestone Done，也不合併 main 或部署 Production。
+- Follow-up implementation commit：`882bfcd fix: complete Today workflow QA follow-up`，
+  已推送至同名遠端功能分支。
+- `release:check`、164/164 Node、全部專項、0-vulnerability audit、responsive、
+  Console、Manifest、Service Worker v15 與 Offline App Shell 已通過。
+- 公開 Preview：
+  `https://software-colorado-stated-perfectly.trycloudflare.com`；未登入新連線可
+  直接開啟，390px 無 overflow，Console 0 error／warning。這是臨時 tunnel，
+  開發用 Mac、4177 本機 server 與 tunnel 必須保持連線。
+- 下一步只剩 Product Owner 執行本 Milestone 最終一次 Human QA。通過前不
+  宣告 Milestone Done，也不合併 main 或部署 Production。
 
 ---
 

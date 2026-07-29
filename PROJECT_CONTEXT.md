@@ -36,8 +36,9 @@
   settings 偏好，不需要 migration。
 - 自動測試目前 164/164，Today targeted 42/42；320、375、390、393、430px
   必須無水平 overflow，Calendar 與 Reports 維持相同 canonical 結果。
-- Service Worker App Shell candidate 更新為 `driver-pay-pro-v15`。本
-  Milestone 尚待公開 iPhone Preview 與 Product Owner Human QA。
+- Service Worker App Shell candidate 更新為 `driver-pay-pro-v15`。Follow-up
+  implementation commit `882bfcd` 已推送；公開 iPhone Preview 已通過未登入
+  smoke，Milestone 只待 Product Owner 最終一次 Human QA。
 
 ## Driver Pay Pro Local-first V1 UX Freeze
 

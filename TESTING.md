@@ -49,8 +49,12 @@
   - Console：0 error／0 warning。
 - App Shell：`driver-pay-pro-v15`；Manifest 與 localStorage key
   `driverPayApp.v2` 保持原契約。
-- 尚待：公開 iPhone Safari Preview、installed PWA、native picker、定位權限、
-  鍵盤、safe area 與離線更新的最終一次 Human QA。
+- 公開 Preview：
+  `https://software-colorado-stated-perfectly.trycloudflare.com`；未登入新連線
+  直接開啟、390px 無 overflow、Manifest、Service Worker v15 與 Console
+  0 error／warning 已通過。
+- 尚待：Product Owner 於 iPhone Safari／installed PWA 驗證 native picker、
+  定位權限、鍵盤、safe area 與離線更新的最終一次 Human QA。
 
 ## Local-first V1 Release Candidate
 
