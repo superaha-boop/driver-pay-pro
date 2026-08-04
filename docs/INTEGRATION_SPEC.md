@@ -1,8 +1,8 @@
 # Driver Pay Pro — Local-first V1 Integration Specification
 
-Version: 1.1
+Version: 1.2
 Status: V1.1 Release Candidate
-Updated: 2026-07-29
+Updated: 2026-08-04
 
 ## Canonical Flow
 
@@ -38,6 +38,10 @@ Today or Calendar successful write
 - Driver：既有持久設定與本機 App 狀態。
 - AI／Reports 連到 Calendar 時保留 exact date，且不自動開啟 Editor。
 - Reports 與 Calendar session state 彼此獨立，不寫入 durable storage。
+- Calendar Record Editor 固定在月曆下方原地展開，並移動 Today 的同一份表單
+  DOM；不得建立全頁／Modal 複本或第二套 draft。
+- 時薪與平均時薪的唯一口徑是總收入 ÷ 有效工時；支出只影響淨收入與成本。
+- Reports 月支出分類與 AI 成本分析重用同一 `reportExpenseSummary()`。
 
 ## Offline and Data Safety
 
@@ -53,6 +57,5 @@ Today or Calendar successful write
 - Today、AI、Driver disclosure state is session-only UI state. It must not be added
   to `driverPayApp.v2`, WorkRecord, reports state, or analytics input.
 - 損壞或讀取失敗時不得清除原始 payload。
-- Service Worker Today Progress and Driver Simplification candidate cache 為
-  `driver-pay-pro-v24`。
+- Service Worker Expense／Calendar／KPI candidate cache 為 `driver-pay-pro-v25`。
 - 沒有 Supabase、authentication、cloud sync、migration 或外部 AI。

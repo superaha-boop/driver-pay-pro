@@ -51,7 +51,7 @@ test("今日工作狀態整條標題列是唯一工作明細控制", () => {
   assert.doesNotMatch(section, /class="work-time-overview"|class="work-details-toggle"|>工作明細</);
   assert.match(html, /\.work-status-row\s*\{[\s\S]*?width:\s*100%[\s\S]*?min-height:\s*44px/);
   assert.match(html, /\.work-status-row:focus-visible\s*\{/);
-  assert.match(extractFunction("renderStats"), /今日實際工時[\s\S]*?formatHours\(todaySummary\.hours\)/);
+  assert.match(extractFunction("renderStats"), /formatHours\(todaySummary\.hours\)[\s\S]*?今日工時/);
 });
 
 test("工作狀態標題列同步 expanded、狀態朗讀與 chevron", () => {

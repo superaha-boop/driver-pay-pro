@@ -138,7 +138,7 @@ function derived(entry) {
     expenses,
     net,
     durationMinutes: metrics.durationMs / 60_000,
-    hourly: regression.hourlyRate(net, metrics.durationMs)
+    hourly: regression.hourlyRate(total, metrics.durationMs)
   };
 }
 
@@ -170,7 +170,7 @@ test("Today、Calendar 與 Reports 的 canonical 計算符合固定預期", () =
 
   const sourceContracts = {
     renderStats: ["summarize"],
-    renderCalendarRecordCard: ["entryTotal", "entryExpenses", "entryNet", "workMetrics", "hourlyRate"],
+    renderCalendarRecordCard: ["entryTotal", "entryExpenses", "workMetrics", "hourlyRateDisplay"],
     renderWeeks: ["aggregateReport"],
     renderMonthReport: ["aggregateReport"]
   };

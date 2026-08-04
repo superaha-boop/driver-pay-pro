@@ -60,6 +60,7 @@
   --display-calendar-detail-size: 14px;
   --display-calendar-detail-secondary-size: 12px;
   --display-calendar-today-circle-size: 34px;
+  --display-calendar-row-height: 70px;
   --display-nav-label-size: 14px;
   --display-body-line-height: 1.55;
   --display-secondary-color: var(--color-text-secondary);
@@ -161,6 +162,7 @@ html[data-display-size="comfort"] {
   --display-calendar-detail-size: 17px;
   --display-calendar-detail-secondary-size: 15px;
   --display-calendar-today-circle-size: 36px;
+  --display-calendar-row-height: 76px;
   --display-nav-label-size: 15px;
   --display-body-line-height: 1.65;
   --display-secondary-color: #506159;
@@ -185,6 +187,7 @@ html[data-display-size="large"] {
   --display-calendar-detail-size: 22px;
   --display-calendar-detail-secondary-size: 19px;
   --display-calendar-today-circle-size: 40px;
+  --display-calendar-row-height: 84px;
   --display-nav-label-size: 17px;
   --display-body-line-height: 1.72;
   --display-secondary-color: #46534c;

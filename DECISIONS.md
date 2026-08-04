@@ -869,3 +869,40 @@ AI 長文與 Reports 次要標籤在手機上需要較彈性的閱讀尺度，�
   `settings.displaySize`、CSV、`driverPayApp.v2`、Supabase、main 或 Production。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-044](docs/DECISION_LOG.md#d-044)。
+
+## D-045 — 支出管理、Calendar 原地編輯與總收入時薪口徑
+
+- Date: 2026-08-04
+
+### 決策
+
+1. 月報支出分類重用 `reportExpenseSummary()`；油錢優先，其餘依月成本排序，
+   原地展開日期、金額與備註。分月支出的主數字是月成本，實際付款不同時才
+   額外顯示。
+2. Today 新增預設收合的今日支出清單；移除以既有日期＋類別為單位，交易式
+   保存後提供 5 秒復原，完整保留或恢復備註與 allocation。
+3. Calendar 過去紀錄使用收入／工時／支出／其他資料／更多操作五個原地
+   disclosure，移動唯一既有表單 DOM；取消全頁／Modal Editor、全域編輯與
+   固定巨大刪除按鈕。
+4. 所有時薪固定為總收入除以有效工時。支出繼續影響淨收入與成本，但不得
+   降低時薪；品質門檻、零工時及異常值仍由 canonical helper 處理。
+5. Calendar／Reports 重複內容標題移除，Calendar 垂直間距與顯示模式列高
+   精簡；Bottom Navigation 使用五頁一致的品牌 active state 及
+   `aria-current="page"`。Today KPI 改為置中主收入與等寬次要兩欄。
+6. App Shell 更新為 v25。Human QA 前只 Push 功能分支與 Public Preview，
+   不 merge `main`、不 Production deploy。
+
+### 原因
+
+支出核對、歷史修正與當前頁辨識都應在原上下文一次完成；跨頁或全頁編輯會
+增加垂直移動及操作成本。時薪是收入效率，需與成本後淨收入分開，才能讓 Today、
+Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
+
+### 影響範圍
+
+- Today／Calendar／Reports presentation、canonical expense summary、hourly
+  input、tests、docs 與 App Shell v25。
+- 不修改 `driverPayApp.v2`、WorkRecord、`expenseAllocations`、平台收入資料、
+  Manifest、Supabase、migration、main 或 Production。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-045](docs/DECISION_LOG.md#d-045)。

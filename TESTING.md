@@ -1,5 +1,28 @@
 # Driver Pay Pro Testing
 
+## Expense Management、Calendar Inline Editing 與 KPI Candidate
+
+- 新增 `tests/expense-calendar-kpi-integration.test.js`，覆蓋月報分類與分月／
+  實際付款口徑、Today 單筆移除＋5 秒復原、Calendar 五區原地 Editor、唯一
+  表單 DOM、更多操作刪除、重複標題、列高、Navigation active state、總收入
+  時薪口徑與 Today KPI 層級。
+- 瀏覽器 L2 必測：Today 新增／移除／即時復原；Calendar 歷史日期收入、工時、
+  支出、其他資料、更多操作逐區展開；Reports 月分類與每日明細；五個 Bottom
+  Navigation active state。
+- Responsive matrix：standard／comfort／large × 320／375／390／393／430px，
+  每頁需 `scrollWidth === clientWidth`，Calendar 70／76／84px 列高與 Bottom
+  Navigation safe area 不得回歸。
+- App Shell candidate：`driver-pay-pro-v25`；主 key `driverPayApp.v2`、WorkRecord
+  與 allocation schema 不變。完成 L1／L2 後只建立公開 Preview；L3 由唯一一次
+  iPhone Safari／installed PWA Human QA 完成。
+- 2026-08-04 實際結果：完整 Node 339/339、Today 80/80、AI 24/24、Driver
+  24/24、Integration 16/16、Reports 86/86、Calendar 66/66；`release:check`
+  全數通過，lint 0 errors／10 個既有 warnings，`npm audit` 0 vulnerabilities。
+  Browser 的 standard／comfort／large × Today／Calendar／Reports ×
+  320／375／390／393／430px 共 45 組全部無水平 overflow，active navigation
+  `aria-current` 正確，Console 0 error／warning。Calendar 新增支出、重新載入
+  保留、月報分類與原地明細展開均已完成端到端 smoke。
+
 更新日期：2026-08-04
 
 ## 基本規則

@@ -48,10 +48,12 @@ contract(2, "收合時收入與金額仍在 disclosure 外", () => {
   assert.match(source, /<strong class="today-income">\$\{money\(todaySummary\.total\)\}<\/strong>/);
   assert.ok(source.indexOf('class="today-income"') < source.indexOf('id="todayGoalDetails"'));
 });
-contract(3, "收合時實際工時與時薪仍在 disclosure 外", () => {
+contract(3, "收合時工時與動態時薪仍在 disclosure 外", () => {
   const source = functionSource("renderStats");
   assert.ok(source.indexOf('class="today-secondary"') < source.indexOf('id="todayGoalDetails"'));
-  assert.match(source, /今日實際工時[\s\S]*?目前時薪/);
+  assert.match(source, /今日工時/);
+  assert.match(source, /todayHourlyLabel/);
+  assert.match(source, /目前時薪[\s\S]*?平均時薪/);
 });
 contract(4, "只隱藏今日目標進度內容", () => {
   assert.match(functionSource("renderStats"), /id="todayGoalDetails"\$\{todayGoalExpanded \? "" : " hidden"\}/);
@@ -215,7 +217,10 @@ contract(50, "今天圓圈尺寸跟隨模式", () => {
   for (const size of ["34px", "36px", "40px"]) assert.match(designSystem, new RegExp(`--display-calendar-today-circle-size: ${size}`));
 });
 contract(51, "圓圈尺寸安全擴充而不裁切日期列", () => {
-  assert.match(html, /min-height: max\(58px, calc\(var\(--calendar-day-marker-size\) \+ 24px\)\)/);
+  assert.match(html, /min-height: var\(--display-calendar-row-height\)/);
+  for (const height of ["70px", "76px", "84px"]) {
+    assert.match(designSystem, new RegExp(`--display-calendar-row-height: ${height}`));
+  }
 });
 contract(52, "所有日期共用相同中心槽位", () => {
   assert.match(html, /grid-template-rows: var\(--calendar-day-marker-size\) auto 1fr/);

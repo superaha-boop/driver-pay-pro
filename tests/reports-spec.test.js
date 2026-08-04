@@ -33,7 +33,7 @@ test("Reports 導覽、期間與狀態契約完整", () => {
 });
 
 test("Reports KPI、比較、趨勢與平台定義共用 canonical contract", () => {
-  assert.match(reportsSpec, /Period net income ÷ period valid work hours/);
+  assert.match(reportsSpec, /Period total income ÷ period valid work hours/);
   assert.match(reportsSpec, /never the arithmetic average of daily hourly rates/);
   assert.match(reportsSpec, /Previous value is zero[\s\S]*no percentage/i);
   assert.match(reportsSpec, /Weekly: exactly seven daily net-income points/);
