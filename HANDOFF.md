@@ -6,10 +6,13 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
-## Today Progress and Driver Simplification — Current Handoff
+## V1.1 Production Release — Current Handoff
 
-- Branch：`codex/v1-1-m1-today-workflow`；base
-  `941cedf112c0566be9035fec67492a1e5b238bdb`。
+- Branch：`main`；merge commit `4282b378538e1fa99db67106aad8bb9c36560532`。
+- Production：`https://driver-pay-app.vercel.app`；Vercel deployment
+  `3HprP2dJgPG3PH75ksG6DRCV92AC`，狀態 `success / Deployment has completed`。
+- Product Owner 已確認 Human QA 通過；V1.1 Today Progress 與 Driver Simplification
+  已正式發布。
 - `#todayIncomeToggle` 維持整排原生 button，但 `todayGoalExpanded`／
   `todayGoalDisclosureDate` 只控制 `#todayGoalDetails`。收入金額、
   `.today-secondary` 的今日實際工時與目前時薪永遠顯示；跨台北日期重設收合。
@@ -23,11 +26,12 @@ GitHub：`superaha-boop/driver-pay-pro`
   `tests/today-progress-driver-simplification.test.js` 47 項契約；`release:check`
   通過，完整 Node 314/314、Today 55/55、Driver 24/24。Chrome 30 組 Today／
   Driver responsive matrix 無 overflow，Console 0，Manifest、Service Worker 與
-  offline reload 正常，`npm audit` 0 vulnerabilities。尚待 Public Preview 與
-  一次 iPhone Safari／installed PWA Human QA。
+  offline reload 正常，`npm audit` 0 vulnerabilities。Production 390px smoke
+  check 通過，Console 0，無水平 overflow。
 - 不修改 WorkRecord、收入／工時／支出公式、`expenseAllocations`、
-  `settings.displaySize`、`driverPayApp.v2`、Supabase、main 或 Production。
-- 預期狀態：`Ready for Today Progress and Driver Simplification Human QA`。
+  `settings.displaySize`、`driverPayApp.v2` 或 Supabase。
+- 發布後仍維持 Local-first V1 原則；未合併以外的功能分支、資料模型與正式資料
+  均未變更。
 
 ## Progressive Disclosure and Display Size — Superseded Handoff
 

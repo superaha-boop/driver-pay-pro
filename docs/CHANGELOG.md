@@ -16,6 +16,15 @@
 
 ## Unreleased
 
+### 2026-08-04 — V1.1 Production Release
+
+- Today Progress 與 Driver Simplification 已通過 Product Owner Human QA，合併至
+  `main` 並由 Vercel Production 部署。
+- Production：`https://driver-pay-app.vercel.app`；merge commit
+  `4282b378538e1fa99db67106aad8bb9c36560532`；Service Worker cache
+  `driver-pay-pro-v24`。
+- 正式站 390px smoke check 通過；無 Console error／warning、無水平 overflow。
+
 ### Today Progress and Driver Simplification
 
 - Today 綠色摘要固定顯示收入、今日實際工時與目前時薪；整排 disclosure 只

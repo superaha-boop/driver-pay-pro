@@ -4,11 +4,13 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## Today 目標進度與 Driver 精簡 — Current Candidate
+## V1.1 Production Release — Current State
 
-- 工作分支：`codex/v1-1-m1-today-workflow`；base
-  `941cedf112c0566be9035fec67492a1e5b238bdb`。Human QA 前不 merge
-  `main`、不 Production deploy。
+- 正式分支：`main`；merge commit
+  `4282b378538e1fa99db67106aad8bb9c36560532`。Product Owner 已確認 Human QA
+  通過，V1.1 Today Progress 與 Driver Simplification 已正式發布。
+- Production：`https://driver-pay-app.vercel.app`；Vercel deployment
+  `3HprP2dJgPG3PH75ksG6DRCV92AC`，狀態 `success / Deployment has completed`。
 - Today 綠色摘要的收入、今日實際工時與目前時薪固定顯示；整排 Header 只控制
   每日目標的未設定提示、達成百分比、尚差金額與進度條。目標 disclosure state
   僅存在 session，跨台北日期回到收合。
@@ -18,10 +20,10 @@
 - Driver Header 摘要固定為：常用設定無摘要、工作與收入設定「平台、支出」、
   資料與備份「備份、匯出」、App 與系統「正常／需要注意」。系統狀態只保留
   此裝置與 App、本機資料、離線功能、Service Worker 四項可靠狀態。
-- App Shell candidate 為 `driver-pay-pro-v24`。新增 47 項本 Sprint contract；
+- App Shell 為 `driver-pay-pro-v24`。新增 47 項本 Sprint contract；
   `release:check` 與完整 Node regression 314/314 已通過。Chrome 3 模式 ×
   Today／Driver × 5 寬度共 30 組無 overflow，Console 0 error／warning，離線
-  App Shell 正常；仍須一次 iPhone Safari／installed PWA Human QA。
+  App Shell 正常；Production 390px smoke check 通過且無水平 overflow。
 - 資料結構、canonical calculations、`settings.displaySize`、WorkRecord、
   `driverPayApp.v2`、Calendar、Reports、AI、CSV 與 Supabase 均未改動。
 
