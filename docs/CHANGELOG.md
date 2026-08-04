@@ -16,6 +16,13 @@
 
 ## Unreleased
 
+### 2026-08-04 — Expense、Hourly Rate、Calendar Read-only 與 KPI Sprint
+
+- 首頁綠色摘要卡保留兩段式 disclosure，收入成為主要視覺焦點，底部目標進度預設收合。
+- 週報補上支出分類摘要；時薪全 App 維持總收入除以有效工時。
+- Calendar 改為純唯讀工作紀錄摘要，Today 保持輸入與修改 owner；切回 Today 會重繪衍生摘要。
+- App Shell 更新為 `driver-pay-pro-v26`；localStorage key 與 WorkRecord schema 不變。
+
 ### 2026-08-04 — Expense Management、Calendar Inline Editing 與 KPI Production Release
 
 - 月報新增支出分類彙總與原地每日明細；油錢優先，分月成本與實際付款使用

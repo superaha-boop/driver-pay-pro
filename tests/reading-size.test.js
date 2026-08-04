@@ -168,5 +168,5 @@ test("顯示大小不進入 canonical 計算或 WorkRecord", () => {
 });
 
 test("HTML、CSS 與 JavaScript 變更同步更新 App Shell cache", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v25"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v26"/);
 });

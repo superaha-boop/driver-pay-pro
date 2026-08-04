@@ -793,3 +793,12 @@
      allocation、Manifest 與 Supabase 維持不變。
 - Verification: `npm run release:check`、339/339 Node tests、Production 390px
   五頁 Smoke QA、Manifest、Service Worker 與 Console 檢查全部通過。
+## D-047
+
+- Date: 2026-08-04
+- Decision:
+- Calendar 工作紀錄卡只負責查看歷史資料，不提供新增、編輯、刪除或支出 mutation；
+  Today 是每日紀錄的唯一輸入與修改 owner。
+- 全 App 時薪固定使用總收入除以有效工時，支出只影響淨收入與成本分析。
+- 週報與月報共用支出分類 selector；首頁目標進度只收合底部區域。
+- 本決策不改 `driverPayApp.v2`、WorkRecord schema、`expenseAllocations` 或 Supabase。

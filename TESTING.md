@@ -1,5 +1,15 @@
 # Driver Pay Pro Testing
 
+## Current Sprint — Expense、Hourly Rate、Calendar Read-only 與 KPI
+
+- Calendar 測試以唯讀摘要為準：不得出現 `data-calendar-add`、
+  `data-calendar-section`、支出編輯／刪除入口；Today 是唯一輸入／修改 owner。
+- 週報需驗證支出總和與支出分類摘要；月報分類與分月成本口徑保持不變。
+- Today、Calendar、Reports 與 AI 的時薪都必須使用總收入除以有效工時，支出不得降低
+  時薪；切頁回 Today 需重繪摘要且保留表單草稿。
+- 本候選 App Shell：`driver-pay-pro-v26`；本 Sprint 完成後才建立 Public Preview，
+  並只進行一次 iPhone Safari／installed PWA Human QA。
+
 ## Expense Management、Calendar Inline Editing 與 KPI Production Release
 
 - 新增 `tests/expense-calendar-kpi-integration.test.js`，覆蓋月報分類與分月／
