@@ -129,13 +129,11 @@ test("Calendar 不再存在全頁 Record Editor dialog", () => {
   assert.match(html, /id="recordEditorInline"/);
 });
 
-test("Calendar 五個區段全部為整排原地 disclosure", () => {
+test("Calendar 顯示精簡唯讀摘要，不提供分區編輯", () => {
   const source = extractFunction("renderCalendarRecordCard");
-  for (const section of ["income", "work", "expenses", "other", "more"]) {
-    assert.match(source, new RegExp(`sectionButton\\("${section}"`));
-  }
-  assert.match(source, /aria-expanded/);
-  assert.match(source, /aria-controls="recordEditorInline"/);
+  assert.match(source, /calendar-readonly-summary/);
+  assert.match(source, /calendarIncomeSummaryTitle/);
+  assert.doesNotMatch(source, /data-calendar-section|data-calendar-add|recordEditorSave|recordEditorDelete/);
 });
 
 test("Calendar 原地編輯重用 Today 的同一組表單 DOM", () => {
@@ -168,12 +166,9 @@ test("Calendar 支出移除立即持久化並可復原", () => {
   assert.match(source, /duration: 5000/);
 });
 
-test("Calendar 整天刪除只在更多操作並保留確認", () => {
-  assert.match(html, /data-section="more"[\s\S]*?record-editor-delete/);
-  const source = extractFunction("deleteCalendarRecord");
-  assert.match(source, /showRecordEditorConfirm/);
-  assert.match(source, /全部收入、工時、支出與其他資料/);
-  assert.match(source, /entries\.filter/);
+test("Calendar 不提供整天刪除操作", () => {
+  const renderer = extractFunction("renderCalendarRecordCard");
+  assert.doesNotMatch(renderer, /data-calendar-section|recordEditorDelete|更多操作/);
 });
 
 test("Calendar 與 Reports 移除重複 topbar 高度", () => {
@@ -213,6 +208,21 @@ test("Calendar 與 CSV 使用相同總收入時薪口徑", () => {
   assert.match(extractFunction("exportCsv"), /hourlyRate\(entryTotal\(entry\), work\.durationMs\)/);
 });
 
+test("週報支出分類重用 reportExpenseSummary 並顯示本週總和", () => {
+  const source = extractFunction("renderWeeks");
+  assert.match(source, /current\.totalExpenses/);
+  assert.match(source, /renderReportExpenseCategories\(current, "week"\)/);
+  const categoryRenderer = extractFunction("renderReportExpenseCategories");
+  assert.match(categoryRenderer, /current\.expenseSummary\.byCategory/);
+  assert.match(categoryRenderer, /本週.*支出分類/);
+});
+
+test("支出不會改變首頁與報表的總收入時薪口徑", () => {
+  assert.match(extractFunction("summarize"), /hourlyRate\(total, durationMs\)/);
+  assert.match(extractFunction("aggregateReport"), /hourlyRate\(summary\.total, summary\.durationMs\)/);
+  assert.doesNotMatch(extractFunction("hourlyRate"), /entryNet|entryExpenses/);
+});
+
 test("Calendar 時薪顯示沿用 canonical 品質門檻", () => {
   const source = extractFunction("hourlyRateDisplay");
   assert.match(source, /hourlyRateQuality\(totalIncome, workMinutes\)/);
@@ -224,8 +234,8 @@ test("Calendar 時薪顯示沿用 canonical 品質門檻", () => {
 test("Today KPI 主收入置中且次要 KPI 值在標籤上方", () => {
   const source = extractFunction("renderStats");
   assert.match(source, /today-income-copy/);
-  assert.match(source, /<div><strong>\$\{formatHours\(todaySummary\.hours\)\}<\/strong><span>今日工時<\/span><\/div>/);
-  assert.match(source, /<div><strong>\$\{money\(todaySummary\.hourly\)\}<\/strong><span>\$\{todayHourlyLabel\}<\/span><\/div>/);
+  assert.match(source, /<div><span>今日工時<\/span><strong>\$\{formatHours\(todaySummary\.hours\)\}<\/strong><\/div>/);
+  assert.match(source, /<div><span>\$\{todayHourlyLabel\}<\/span><strong>\$\{money\(todaySummary\.hourly\)\}<\/strong><\/div>/);
   assert.match(html, /\.today-income-copy[\s\S]*?justify-items: center/);
 });
 
@@ -238,6 +248,6 @@ test("Today KPI 依工作狀態切換目前與平均時薪標籤", () => {
 test("資料 key、schema 與 App Shell 只做核准範圍變更", () => {
   assert.match(html, /const storageKey = "driverPayApp\.v2"/);
   assert.match(html, /expenseAllocations/);
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v25"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v26"/);
   assert.doesNotMatch(html, /supabase|migration/i);
 });

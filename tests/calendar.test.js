@@ -276,31 +276,22 @@ test("Calendar render、月份導覽與日期選取本身保持唯讀", () => {
   ].map(extractFunction).join("\n");
   assert.doesNotMatch(readOnlyFunctions, /saveState|ensureEntryForDate|blankEntry|localStorage\.setItem/);
   assert.match(html, /selectedDate > calendarState\.today/);
-  assert.match(html, /data-calendar-add/);
-  assert.match(html, /data-calendar-edit/);
+  assert.doesNotMatch(extractFunction("renderCalendarRecordCard"), /data-calendar-add|data-calendar-section|recordEditor/);
 });
 
-test("Calendar mutation 使用同一組表單、草稿與明確 commit", () => {
-  assert.match(html, /id="sharedIncomePanel"/);
-  assert.match(html, /id="sharedDetailPanel"/);
-  assert.match(html, /els\.recordEditorContent\.append\(els\.sharedIncomePanel, els\.sharedDetailPanel\)/);
-  assert.match(html, /recordEditorState\.draft/);
-  assert.match(extractFunction("commitCalendarRecord"), /persistStatePayload\(nextState, \{ updateMemory: true \}\)/);
-  assert.match(extractFunction("requestRecordEditorClose"), /recordEditorState\.dirty/);
-  assert.match(extractFunction("requestRecordEditorClose"), /放棄尚未儲存的修改/);
+test("Calendar 工作紀錄卡只提供唯讀摘要", () => {
+  const renderer = extractFunction("renderCalendarRecordCard");
+  assert.match(renderer, /calendar-readonly-summary/);
+  assert.match(renderer, /calendarIncomeSummaryTitle/);
+  assert.match(renderer, /calendarWorkSummaryTitle/);
+  assert.match(renderer, /calendarExpenseSummaryTitle/);
+  assert.doesNotMatch(renderer, /data-calendar-add|data-calendar-section|recordEditorSave|recordEditorDelete/);
 });
 
-test("Calendar mutation 限制日期、驗證欄位並提供日期明確刪除確認", () => {
-  const opener = extractFunction("openCalendarRecordEditor");
-  const validator = extractFunction("validateCalendarRecord");
-  const deleter = extractFunction("deleteCalendarRecord");
-  assert.match(opener, /normalizedDate >= todayString\(\)/);
-  assert.match(validator, /entry\.date >= todayString\(\)/);
-  assert.match(validator, /開始與結束時間必須同時填寫/);
-  assert.match(validator, /休息時間不可超過總經過時間/);
-  assert.match(validator, /recordHasMeaningfulContent/);
-  assert.match(deleter, /formatCalendarFullDate\(recordEditorState\.date\)/);
-  assert.match(deleter, /無法復原/);
+test("Calendar 不提供新增、編輯或刪除資料入口", () => {
+  const calendarSection = html.match(/<section id="view-calendar"[\s\S]*?<section id="view-reports"/)?.[0] || "";
+  assert.doesNotMatch(calendarSection, /data-calendar-add|data-calendar-section|data-calendar-edit-expense|data-calendar-remove-expense/);
+  assert.match(calendarSection, /data-readonly="true"/);
 });
 
 test("本機儲存具備讀回驗證、最後有效快照與失敗回復", () => {
@@ -373,8 +364,8 @@ test("Work Record Card 重用 canonical calculations 且不顯示平台 Logo", (
   }
   assert.doesNotMatch(renderer, /<img|platform-logo|brand-color/i);
   assert.match(renderer, /formatHours\(duration\.hours\)/);
-  assert.match(renderer, /data-calendar-section/);
-  assert.match(renderer, /"income"[\s\S]*?"work"[\s\S]*?"expenses"[\s\S]*?"other"[\s\S]*?"more"/);
+  assert.match(renderer, /calendar-readonly-summary/);
+  assert.doesNotMatch(renderer, /data-calendar-section|data-calendar-add|data-calendar-edit/);
 });
 
 test("Calendar Visual Polish 保留操作結構並建立清楚視覺層級", () => {
@@ -384,8 +375,8 @@ test("Calendar Visual Polish 保留操作結構並建立清楚視覺層級", () 
   assert.match(html, /\.calendar-date[\s\S]*?min-height: var\(--display-calendar-row-height\)[\s\S]*?grid-template-rows: var\(--calendar-day-marker-size\) auto 1fr/);
   assert.match(html, /\.calendar-date__amount[\s\S]*?white-space: nowrap/);
   assert.match(html, /calendar-record-date[\s\S]*?calendar-record-weekday/);
-  assert.match(html, /calendar-inline-sections/);
-  assert.match(html, /calendar-inline-editor/);
+  assert.match(html, /calendar-readonly-summary/);
+  assert.match(html, /aria-label="月曆編輯功能未啟用"/);
 });
 
 test("今天日期使用單一圓圈標記並保留完整日期格操作範圍", () => {
@@ -444,8 +435,8 @@ test("Calendar session state 不寫入 durable storage 並支援 lifecycle refre
   assert.match(html, /scheduleCalendarMidnightRefresh/);
 });
 
-test("PWA App Shell 更新為簡短 v25 cache 且保留必要資源", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v25"/);
+test("PWA App Shell 更新為簡短 v26 cache 且保留必要資源", () => {
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v26"/);
   assert.match(serviceWorker, /"\.\/index\.html"/);
   assert.match(serviceWorker, /"\.\/styles\/design-system\.css"/);
   assert.match(serviceWorker, /keys\.filter\(key => key !== CACHE_NAME\)/);

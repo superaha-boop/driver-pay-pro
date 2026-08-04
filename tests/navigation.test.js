@@ -121,17 +121,23 @@ test("月曆與報表月份狀態互相獨立", () => {
   assert.match(html, /lastReportView: normalizeReportView\(settings\.lastReportView\)/);
 });
 
-test("Calendar 原地分區編輯保留摘要與所選日期上下文", () => {
+test("Calendar 只讀摘要保留日期上下文", () => {
   const calendarSection = html.match(/<section id="view-calendar"[\s\S]*?<\/section>\s*<section id="view-reports"/)?.[0] || "";
-  assert.match(html, /sectionButton\("income"[\s\S]*?sectionButton\("work"[\s\S]*?sectionButton\("expenses"[\s\S]*?sectionButton\("other"[\s\S]*?sectionButton\("more"/);
+  assert.match(html, /calendar-readonly-summary/);
   assert.match(html, /\.calendar-date[\s\S]*?min-height: var\(--display-calendar-row-height\)/);
   assert.doesNotMatch(calendarSection, /id="entryForm"|id="detailForm"/);
-  assert.match(html, /data-calendar-add/);
-  assert.match(html, /data-calendar-section/);
-  assert.match(html, /id="recordEditorInline"/);
-  assert.doesNotMatch(html, /id="recordEditorDialog"/);
-  assert.match(html, /moveSharedEditorToCalendar\(\)/);
-  assert.match(html, /els\.recordEditorContent\.append\(els\.sharedIncomePanel, els\.sharedDetailPanel\)/);
+  assert.doesNotMatch(calendarSection, /data-calendar-add|data-calendar-section|data-calendar-edit-expense|data-calendar-remove-expense/);
+  assert.match(html, /data-readonly="true"/);
+});
+
+test("切回 Today 會重繪衍生摘要但不重置輸入草稿", () => {
+  const source = extractFunction("setView");
+  assert.match(source, /if \(view === "today"\)/);
+  assert.match(source, /renderStats\(\)/);
+  assert.match(source, /renderRecentIncome\(\)/);
+  assert.match(source, /updateWorkControls\(\)/);
+  assert.match(source, /updateQuickPreview\(\)/);
+  assert.doesNotMatch(source, /resetForm\(\)/);
 });
 
 test("報表標題、空白狀態與平台排行符合定案文字", () => {

@@ -4,6 +4,18 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
+## Expense、Hourly Rate、Calendar Read-only 與 KPI — Current Sprint
+
+- 功能分支：`codex/expense-readonly-hourly-kpi-20260804`；目前尚未建立 commit，
+  `main` 與 Production 不變。
+- 本 Sprint 將首頁綠色摘要卡的收入設為最醒目焦點，目標進度只在下方 disclosure
+  展開；週報補上支出分類摘要；Calendar 工作紀錄卡改為純唯讀，Today 保持唯一
+  輸入／修改 owner；切回 Today 時只重繪衍生摘要，不重置輸入草稿。
+- 全 App 時薪維持 canonical `總收入 ÷ 有效工時`，支出只影響淨收入與成本分析。
+  `driverPayApp.v2`、WorkRecord、`expenseAllocations` 與現有資料均不變。
+- 本候選 App Shell cache 為 `driver-pay-pro-v26`；完成 L1 與 Public Preview 後，
+  只進行一次 iPhone Safari／installed PWA Human QA。
+
 ## Expense Management、Calendar Inline Editing 與 KPI — Production Release
 
 - 功能分支：`codex/expense-calendar-kpi-integration-20260804`；功能 commit

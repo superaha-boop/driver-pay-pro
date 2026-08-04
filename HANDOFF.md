@@ -4,6 +4,17 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
+## Expense、Hourly Rate、Calendar Read-only 與 KPI — In Progress
+
+- Branch：`codex/expense-readonly-hourly-kpi-20260804`，base `21a8d50`；working
+  tree 有本 Sprint 程式與測試變更，尚未 commit、push、merge 或 Production deploy。
+- Calendar 現在只輸出日期、收入、工時、時薪、支出與其他資料摘要；不提供新增、編輯、
+  分區 disclosure 或刪除入口。Today 保留每日紀錄的輸入與修改責任。
+- 週報新增與月報一致的支出分類 selector；時薪沿用總收入除以有效工時，沒有更動資料
+  schema 或 `driverPayApp.v2`。
+- `sw.js` cache 已升至 `driver-pay-pro-v26`。完成完整 release check 後建立未登入
+  iPhone Safari 可開啟的 Public Preview，Human QA 僅保留最後一次。
+
 ---
 
 ## Expense Management、Calendar Inline Editing 與 KPI — Production Handoff

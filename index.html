@@ -1485,7 +1485,7 @@
     .today-income {
       min-width: 0;
       overflow: hidden;
-      font-size: clamp(28px, 8vw, 38px);
+      font-size: clamp(34px, 10vw, 46px);
       line-height: 1;
       letter-spacing: -.04em;
       font-variant-numeric: tabular-nums;
@@ -1511,15 +1511,15 @@
       min-width: 0;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      text-align: center;
+      align-items: flex-start;
+      text-align: left;
     }
 
     .today-secondary span {
       display: block;
-      margin-top: 4px;
       color: rgba(255, 255, 255, .7);
       font-size: 13px;
+      line-height: 1.2;
     }
 
     .today-secondary strong {
@@ -1528,7 +1528,15 @@
       line-height: 1.12;
       letter-spacing: -.02em;
       font-variant-numeric: tabular-nums;
-      order: -1;
+      margin-top: 4px;
+    }
+
+    .today-income-toggle .app-chevron {
+      transition: transform var(--motion-normal) var(--ease-standard);
+    }
+
+    .today-summary.is-goal-expanded .today-income-toggle .app-chevron {
+      transform: rotate(180deg);
     }
 
     .today-goal-details {
@@ -5790,11 +5798,33 @@
     }
 
     .calendar-record-section {
-      margin-top: var(--spacing-5);
-      padding-top: var(--spacing-4);
+      margin-top: var(--spacing-3);
+      padding-top: var(--spacing-3);
       border-top: var(--border-subtle);
       display: grid;
-      gap: var(--spacing-3);
+      gap: var(--spacing-2);
+    }
+
+    .calendar-readonly-section:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .calendar-readonly-section h4 {
+      margin: 0;
+      color: var(--color-text-primary);
+      font-size: var(--display-calendar-detail-size);
+      line-height: var(--line-height-title);
+    }
+
+    .calendar-readonly-list {
+      display: grid;
+      gap: var(--spacing-1);
+    }
+
+    .calendar-readonly-section .ds-secondary {
+      margin: 0;
     }
 
     .calendar-platform-row,
@@ -6499,9 +6529,9 @@
           </div>
           <div class="calendar-grid" id="calendarGrid" role="grid" aria-labelledby="calendarMonthTitle"></div>
 
-          <article class="ds-card calendar-record-card" id="calendarRecordCard" aria-live="polite">
+          <article class="ds-card calendar-record-card" id="calendarRecordCard" data-readonly="true" aria-live="polite">
             <div id="calendarRecordContent"></div>
-            <section class="calendar-inline-editor" id="recordEditorInline" hidden aria-label="工作紀錄原地編輯">
+            <section class="calendar-inline-editor" id="recordEditorInline" hidden aria-hidden="true" aria-label="月曆編輯功能未啟用">
               <p class="ds-save-status record-editor-status" id="recordEditorStatus" role="status" aria-live="polite"></p>
               <div class="calendar-expense-list" id="calendarExpenseList" aria-label="已記錄支出"></div>
               <div class="record-editor-content" id="recordEditorContent"></div>
@@ -6926,7 +6956,7 @@
 
     const titles = {
       today: ["今日輸入", "每天花一分鐘記錄收入、工時與支出。"],
-      calendar: ["月曆", "查看、編輯與管理每日歷史紀錄。"],
+      calendar: ["月曆", "查看每日歷史紀錄。"],
       reports: ["報表", "查看週報、月報與平台收入統計。"],
       ai: ["AI 營運助理", "根據你的收入與工時紀錄提供分析"],
       settings: ["Driver Space", "調整平台、支出類別與收入目標。"]
@@ -8427,7 +8457,7 @@
           const lowest = importantDates.lowestNet;
           monthlyInsights.push({
             title: "本月重要日期",
-            action: "可從月報查看所有重要日期，或前往月曆核對單日紀錄。",
+            action: "可從月報查看所有重要日期；需要修改時請回到首頁每日紀錄。",
             evidence: `${highest ? `最高 ${reportDateLabel(highest.date)} ${money(highest.aggregate.netIncome)}` : ""}${highest && lowest ? "；" : ""}${lowest ? `最低 ${reportDateLabel(lowest.date)} ${money(lowest.aggregate.netIncome)}` : ""}。`,
             period: sharedAnalytics.getMonthLabel(ranges.monthRange),
             sufficiency: `${currentMonth.workDays} 個有效工作日`,
@@ -8450,15 +8480,15 @@
         severity: "需要處理",
         date,
         reason: "有收入但沒有有效工時。",
-        action: "前往月曆補齊或校正這一天的工時。",
-        target: aiInsightTarget("calendar", { date })
+        action: "回到首頁每日紀錄補齊或校正工時。",
+        target: aiInsightTarget("today")
       }));
       dataQuality.insufficientWorkDates.forEach(date => addReminder({
         severity: "建議檢查",
         date,
         reason: "工時資料不足，暫不計算時薪。",
-        action: `有效工時未滿 ${MIN_VALID_WORK_MINUTES} 分鐘；請前往月曆核對。`,
-        target: aiInsightTarget("calendar", { date })
+        action: `有效工時未滿 ${MIN_VALID_WORK_MINUTES} 分鐘；請回到首頁每日紀錄核對。`,
+        target: aiInsightTarget("today")
       }));
       dataQuality.abnormalHourlyRateDates.forEach(date => addReminder({
         severity: "需要處理",
@@ -8471,36 +8501,36 @@
         severity: "需要處理",
         date,
         reason: "工作時間範圍無效。",
-        action: "請前往月曆修正開始、結束或休息時間。",
-        target: aiInsightTarget("calendar", { date })
+        action: "請回到首頁每日紀錄修正開始、結束或休息時間。",
+        target: aiInsightTarget("today")
       }));
       dataQuality.negativeNetDates.forEach(date => addReminder({
         severity: "建議檢查",
         date,
         reason: "這一天的支出高於收入，淨收入為負。",
-        action: "前往月曆核對收入與支出。",
-        target: aiInsightTarget("calendar", { date })
+        action: "回到首頁每日紀錄核對收入與支出。",
+        target: aiInsightTarget("today")
       }));
       dataQuality.invalidAmountDates.forEach(date => addReminder({
         severity: "需要處理",
         date,
         reason: "收入或支出包含無效金額。",
-        action: "前往月曆檢查原始紀錄。",
-        target: aiInsightTarget("calendar", { date })
+        action: "回到首頁每日紀錄檢查原始紀錄。",
+        target: aiInsightTarget("today")
       }));
       dataQuality.invalidPlatformDates.forEach(date => addReminder({
         severity: "建議檢查",
         date,
         reason: "平台收入包含無法計算的值。",
-        action: "前往月曆核對平台收入。",
-        target: aiInsightTarget("calendar", { date })
+        action: "回到首頁每日紀錄核對平台收入。",
+        target: aiInsightTarget("today")
       }));
       dataQuality.incompleteLegacyDates.forEach(date => addReminder({
         severity: "建議檢查",
         date,
         reason: "舊工作紀錄的開始或結束時間不完整。",
-        action: "前往月曆補齊時間，或改用手動工時校正。",
-        target: aiInsightTarget("calendar", { date })
+        action: "回到首頁每日紀錄補齊時間，或改用手動工時校正。",
+        target: aiInsightTarget("today")
       }));
       if (dataQuality.invalidDateCount) {
         addReminder({
@@ -9540,9 +9570,9 @@
               <path d="m6 9 6 6 6-6"></path>
             </svg>
           </button>
-          <div class="today-secondary">
-            <div><strong>${formatHours(todaySummary.hours)}</strong><span>今日工時</span></div>
-            <div><strong>${money(todaySummary.hourly)}</strong><span>${todayHourlyLabel}</span></div>
+          <div class="today-secondary" aria-label="今日工時與時薪">
+            <div><span>今日工時</span><strong>${formatHours(todaySummary.hours)}</strong></div>
+            <div><span>${todayHourlyLabel}</span><strong>${money(todaySummary.hourly)}</strong></div>
           </div>
           <div class="today-goal-details" id="todayGoalDetails"${todayGoalExpanded ? "" : " hidden"}>
             <div class="today-goal" id="dailyGoalCard" aria-label="今日目標進度"></div>
@@ -9816,12 +9846,10 @@
           ? "你可以查看日期，但未來日期不能建立工作紀錄。"
           : isToday
             ? "回到今天即可開始工作或更新今日紀錄。"
-            : "新增後會儲存在此裝置，並立即更新月曆與報表。";
+            : "這裡只顯示歷史資料；請回到今天輸入或修改紀錄。";
         const action = isToday
           ? `<button class="ds-button ds-button--primary" type="button" data-calendar-go-today>前往今天</button>`
-          : !isFuture
-            ? `<button class="ds-button ds-button--primary" type="button" data-calendar-add>新增紀錄</button>`
-            : "";
+          : "";
         els.calendarRecordContent.innerHTML = `
           ${calendarRecordHeader()}
           <div class="ds-empty-state ds-empty-state--compact">
@@ -9839,31 +9867,51 @@
       const tips = finiteNumber(entry.tips);
       const weather = String(entry.weather || "").trim();
       const note = String(entry.note || "").trim();
-      const canEdit = selectedDate < calendarState.today;
-      const expandedSection = recordEditorState.open && recordEditorState.date === selectedDate
-        ? recordEditorState.activeSection
+      const platformRows = state.platforms
+        .map(name => [name, Number(entry.incomes?.[name] || 0)])
+        .filter(([, amount]) => amount > 0)
+        .map(([name, amount]) => `<div class="calendar-support-row"><span>${escapeHtml(name)}</span><strong>${money(platformNetAmount(name, amount))}</strong></div>`)
+        .join("");
+      const expenseRows = Object.entries(entry.expenses || {})
+        .filter(([, amount]) => Number(amount) > 0)
+        .map(([category, amount]) => `<div class="calendar-support-row"><span>${escapeHtml(category)}</span><strong>${money(amount)}</strong></div>`)
+        .join("");
+      const otherRows = [
+        tips > 0 ? `<div class="calendar-support-row"><span>小費</span><strong>${money(tips)}</strong></div>` : "",
+        entry.orders > 0 ? `<div class="calendar-support-row"><span>訂單數</span><strong>${number(entry.orders, 0)} 筆</strong></div>` : "",
+        entry.km > 0 ? `<div class="calendar-support-row"><span>公里數</span><strong>${number(entry.km, 1)} 公里</strong></div>` : "",
+        weather ? `<div class="calendar-support-row"><span>天氣</span><strong>${escapeHtml(weather)}</strong></div>` : "",
+        note ? `<div class="calendar-note">${escapeHtml(note)}</div>` : ""
+      ].filter(Boolean).join("");
+      const goToday = selectedDate !== calendarState.today
+        ? `<button class="ds-button ds-button--text" type="button" data-calendar-go-today>前往今天</button>`
         : "";
-      const sectionButton = (key, label, summary) => `
-        <button class="calendar-inline-section-toggle" type="button" data-calendar-section="${key}"
-          aria-expanded="${String(expandedSection === key)}" aria-controls="recordEditorInline">
-          <span>${label}</span>
-          <span class="calendar-inline-section-meta">
-            <strong>${summary}</strong>
-            <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
-          </span>
-        </button>`;
 
       els.calendarRecordContent.innerHTML = `
-        ${calendarRecordHeader(!canEdit
-          ? `<button class="ds-button ds-button--text" type="button" data-calendar-go-today>前往今天</button>`
-          : "")}
-        ${canEdit ? `<div class="calendar-inline-sections" aria-label="工作紀錄編輯區">
-          ${sectionButton("income", "收入", money(total))}
-          ${sectionButton("work", "工時", `${formatHours(duration.hours)}・${hourlyRateDisplay(total, duration.durationMs)}`)}
-          ${sectionButton("expenses", "支出", `${Object.values(entry.expenses || {}).filter(value => Number(value) > 0).length} 筆・${money(expenses)}`)}
-          ${sectionButton("other", "其他資料", weather || note || tips > 0 ? "已有紀錄" : "尚未填寫")}
-          ${sectionButton("more", "更多操作", "")}
-        </div>` : ""}
+        ${calendarRecordHeader(goToday)}
+        <div class="calendar-readonly-summary" aria-label="工作紀錄摘要">
+          <section class="calendar-record-section calendar-readonly-section" aria-labelledby="calendarIncomeSummaryTitle">
+            <h4 class="ds-card-title" id="calendarIncomeSummaryTitle">收入</h4>
+            <div class="calendar-metrics">
+              <div class="calendar-metric calendar-metric--primary"><span>總收入</span><strong>${money(total)}</strong></div>
+              <div class="calendar-metric calendar-metric--secondary"><span>時薪</span><strong>${hourlyRateDisplay(total, duration.durationMs)}</strong></div>
+            </div>
+            ${platformRows ? `<div class="calendar-readonly-list">${platformRows}</div>` : ""}
+          </section>
+          <section class="calendar-record-section calendar-readonly-section" aria-labelledby="calendarWorkSummaryTitle">
+            <h4 class="ds-card-title" id="calendarWorkSummaryTitle">工時</h4>
+            <div class="calendar-support-row"><span>實際工時</span><strong>${formatHours(duration.hours)}</strong></div>
+          </section>
+          <section class="calendar-record-section calendar-readonly-section" aria-labelledby="calendarExpenseSummaryTitle">
+            <h4 class="ds-card-title" id="calendarExpenseSummaryTitle">支出</h4>
+            <div class="calendar-support-row"><span>支出總和</span><strong>${money(expenses)}</strong></div>
+            ${expenseRows ? `<div class="calendar-readonly-list">${expenseRows}</div>` : `<p class="ds-secondary">無支出</p>`}
+          </section>
+          ${otherRows ? `<section class="calendar-record-section calendar-readonly-section" aria-labelledby="calendarOtherSummaryTitle">
+            <h4 class="ds-card-title" id="calendarOtherSummaryTitle">其他資料</h4>
+            <div class="calendar-readonly-list">${otherRows}</div>
+          </section>` : ""}
+        </div>
       `;
     }
 
@@ -10702,6 +10750,64 @@
       return notes.join("");
     }
 
+    function renderReportExpenseCategories(current, periodLabel) {
+      const expenseCategories = [...current.expenseSummary.byCategory.values()].sort((a, b) => {
+        const fuelNames = new Set(["油錢", "油錢／電費", "油錢/電費", "燃油", "充電費"]);
+        const aFuel = fuelNames.has(a.category);
+        const bFuel = fuelNames.has(b.category);
+        if (aFuel !== bFuel) return aFuel ? -1 : 1;
+        return b.total - a.total || a.category.localeCompare(b.category, "zh-Hant");
+      });
+      if (!expenseCategories.length) return "";
+      const titleId = `${periodLabel}ExpenseCategoryTitle`;
+      return `
+        <section class="reports-section reports-expense-categories" aria-labelledby="${titleId}">
+          <div class="reports-section-title-row">
+            <h4 id="${titleId}">${periodLabel === "week" ? "本週" : "本月"}支出分類</h4>
+            <strong>${money(current.totalExpenses)}</strong>
+          </div>
+          <div class="reports-expense-category-list">
+            ${expenseCategories.map(category => `
+              <details class="reports-expense-category">
+                <summary>
+                  <span>${escapeHtml(category.category)}</span>
+                  <span class="reports-expense-category-meta">
+                    <small>${category.occurrenceCount} 筆</small>
+                    <strong>${money(category.total)}</strong>
+                    <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <div class="reports-expense-detail-list">
+                  ${category.items
+                    .slice()
+                    .sort((a, b) => a.date.localeCompare(b.date))
+                    .map(item => `
+                      <div class="reports-expense-detail-row">
+                        <span>
+                          <strong>${escapeHtml(formatShortDate(item.date))}</strong>
+                          <small>${item.allocated
+                            ? `分月成本・原付款 ${escapeHtml(formatShortDate(item.sourceRecord.date))}`
+                            : "原始付款"}${item.sourceRecord.expenseNotes?.[category.category]
+                              ? `・${escapeHtml(item.sourceRecord.expenseNotes[category.category])}`
+                              : ""}</small>
+                        </span>
+                        <strong>${money(item.amount)}</strong>
+                      </div>
+                    `).join("")}
+                  ${category.actualPaymentTotal !== category.total ? `
+                    <div class="reports-expense-cost-comparison">
+                      <span><small>本期成本</small><strong>${money(category.total)}</strong></span>
+                      <span><small>本期實際付款</small><strong>${money(category.actualPaymentTotal)}</strong></span>
+                    </div>
+                  ` : ""}
+                </div>
+              </details>
+            `).join("")}
+          </div>
+        </section>
+      `;
+    }
+
     function renderWeeks() {
       if (!els.weeklyReportContent) return;
       const range = getLocalWeekRange(reportsState.selectedWeekAnchor);
@@ -10736,6 +10842,7 @@
           <div class="reports-secondary-kpi"><span>工作時間</span><strong>${formatReportDuration(current.totalWorkDuration)}</strong></div>
           <div class="reports-secondary-kpi"><span>平均時薪</span><strong>${current.averageHourlyIncome === null ? "—" : money(current.averageHourlyIncome)}</strong></div>
         </section>
+        ${renderReportExpenseCategories(current, "week")}
         ${renderReportComparison(comparison, "week")}
         ${renderReportTrend(trend, "每日淨收入", "weekTrendTitle")}
         ${renderImportantDates(important, "week")}
@@ -11703,6 +11810,14 @@
       els.viewSubtitle.textContent = titles[view][1];
       document.body.dataset.activeView = view;
       document.getElementById("newEntry").classList.toggle("hidden", view === "today");
+      if (view === "today") {
+        // Repaint the Today-owned summaries when returning from another view.
+        // Keep the active form draft intact; only derived/read-only regions refresh.
+        renderStats();
+        renderRecentIncome();
+        updateWorkControls();
+        updateQuickPreview();
+      }
       if (view === "reports") {
         setReportView(activeReportView);
         if (previousView === "calendar" && reportsState.returnContext) restoreReportsContext();
