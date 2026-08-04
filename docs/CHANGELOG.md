@@ -16,6 +16,21 @@
 
 ## Unreleased
 
+### Progressive Disclosure and Display Size Integration
+
+- Today 今日收入改為整排 disclosure；收合仍保留收入金額，展開才顯示目標
+  進度與補充資訊，session state 不寫入資料。
+- AI 預設只完整顯示本週重點；本月洞察、收入變化來源、資料與分析依據改為
+  原地收合列，仍重用原分析資料。
+- Driver 重整為常用設定、工作與收入設定、資料與備份、App 與系統四類；
+  About 與系統狀態合併，移除獨立 About route／row。
+- 顯示大小更新為 13／17／22px body 層級；Calendar 使用專用月份、星期、
+  日期、完整紀錄與 Today circle tokens，窄螢幕不反向縮小。
+- 全 App chevron 重用 20px／stroke-2 `.app-chevron`；新增 60 項 Sprint
+  contracts，App Shell candidate 更新為 `driver-pay-pro-v23`。
+- 更新開發工具的 transitive `brace-expansion` 5.0.8 → 5.0.9，修正 audit
+  報告的 high severity 問題；此套件不進入 App runtime bundle。
+
 ### V1.1 Final Display and Calendar Alignment
 
 - 將原 AI／報表閱讀設定升級為全 App「顯示大小」，標準／舒適／大字共同

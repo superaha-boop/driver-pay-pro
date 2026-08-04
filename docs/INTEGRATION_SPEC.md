@@ -47,6 +47,11 @@ Today or Calendar successful write
 - 跨日顯示偏好使用既有 settings 中可選
   `displaySize = "standard" | "comfort" | "large"`；新欄位缺少時可相容讀取
   合法 `aiReportsReadingSize`，無效值回退 `standard`，不得寫入 WorkRecord。
+- `displaySize` presentation tokens use body／secondary 13／12px (standard),
+  17／15px (comfort), and 22／19px (large). Calendar uses its own constrained
+  typography tokens so the seven-column grid remains stable.
+- Today、AI、Driver disclosure state is session-only UI state. It must not be added
+  to `driverPayApp.v2`, WorkRecord, reports state, or analytics input.
 - 損壞或讀取失敗時不得清除原始 payload。
-- Service Worker V1.1 final display candidate cache 為 `driver-pay-pro-v22`。
+- Service Worker Progressive Disclosure candidate cache 為 `driver-pay-pro-v23`。
 - 沒有 Supabase、authentication、cloud sync、migration 或外部 AI。

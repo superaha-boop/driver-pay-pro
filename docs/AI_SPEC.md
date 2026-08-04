@@ -1,16 +1,18 @@
 # Driver Pay Pro — AI Specification
 
-Version: 1.2
+Version: 1.3
 Status: V1.1 Milestone 1 Candidate
-Updated: 2026-07-29
+Updated: 2026-08-04
 
 ## Responsibility
 
-AI 是唯讀的本機營運分析頁。V1 固定提供三個主要區塊：
+AI 是唯讀的本機營運分析頁。V1.1 presentation 固定為一個首屏重點與三個
+詳細 disclosure：
 
-1. 營運建議
-2. 本月洞察
-3. 智慧提醒
+1. 本週重點（預設完整顯示）
+2. 本月洞察（預設收合）
+3. 收入變化來源（預設收合）
+4. 資料與分析依據（預設收合）
 
 AI 不建立、修改或刪除 WorkRecord，不使用外部模型或 API，也不宣稱雲端 AI。
 需要修正紀錄時，只能連到 Calendar 的確切日期；需要查看彙總時，只能連到
@@ -55,7 +57,10 @@ AI 與 Reports 必須重用 `hourlyRateQuality()` 與 `recordDataQuality()`：
 
 ## Accessibility and Safety
 
-- 三個主要區塊維持清楚標題、可讀證據與螢幕閱讀器描述。
+- 本週重點只顯示最優先的一項結論／行動；資料不足時只顯示單一簡短說明。
+  其他既有洞察仍在三個詳細 disclosure，不能刪除或另算。
+- 三個 disclosure 使用共用整排 button、`aria-expanded`、`aria-controls`、
+  20px chevron 與可見 focus；展開 state 只存在 session，不寫入資料。
 - AI 閱讀文字重用 Driver 的 canonical `settings.displaySize`。舊
   `settings.aiReportsReadingSize` 只可作缺少新欄位時的讀取 fallback。
   只分層調整內文、次要文字、行高與閱讀間距；頁面主標題與主要數值不得

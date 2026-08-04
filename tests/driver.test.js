@@ -4,7 +4,7 @@ const test = require("node:test");
 
 const html = fs.readFileSync(new URL("../index.html", `file://${__filename}`), "utf8");
 const driverSection = html.match(
-  /<section id="view-settings"[\s\S]*?<\/section>\s*<section id="view-about"/
+  /<section id="view-settings"[\s\S]*?<\/section>\s*<\/main>/
 )?.[0] || "";
 
 test("Driver 提供收入目標、顯示設定與單一系統狀態", () => {
@@ -40,24 +40,26 @@ test("Driver 狀態只顯示衍生資訊，不建立第二個 durable store", ()
   assert.equal(storageKeys.every(key => key === "driverPayApp.v2"), true);
 });
 
-test("系統狀態位於 Driver 最後且正常時預設收合", () => {
-  const aboutIndex = driverSection.indexOf('id="openAbout"');
-  const systemIndex = driverSection.indexOf('class="driver-overview-card driver-system-status"');
-  assert.ok(systemIndex > aboutIndex);
+test("App 與系統位於 Driver 最後且正常時預設收合", () => {
+  const dataIndex = driverSection.indexOf('id="driverDataToggle"');
+  const systemIndex = driverSection.indexOf('id="driverSystemStatusToggle"');
+  assert.ok(systemIndex > dataIndex);
   assert.match(driverSection, /id="driverSystemStatusToggle"[\s\S]*?aria-expanded="false"[\s\S]*?aria-controls="driverSystemStatusContent"/);
   assert.match(driverSection, /id="driverSystemStatusContent" hidden/);
+  assert.match(driverSection, /id="aboutAppVersion"/);
+  assert.match(driverSection, /id="driverSystemStatusDetails"/);
 });
 
 test("整條系統狀態標題可操作並具備狀態徽章與鍵盤語意", () => {
-  assert.match(driverSection, /<button class="driver-system-status-toggle"/);
+  assert.match(driverSection, /<button class="app-disclosure__trigger" id="driverSystemStatusToggle"/);
   assert.match(driverSection, /id="driverSystemStatusBadge">正常<\/span>/);
-  assert.match(html, /\.driver-system-status-toggle\s*\{[\s\S]*?min-height: 56px/);
-  assert.match(html, /\.driver-system-status-toggle:focus-visible/);
+  assert.match(html, /\.app-disclosure__trigger\s*\{[\s\S]*?min-height: 52px/);
+  assert.match(html, /\.app-disclosure__trigger:focus-visible/);
   assert.match(html, /function toggleDriverSystemStatus\(\)[\s\S]*?systemStatusExpanded = !systemStatusExpanded/);
 });
 
 test("讀取異常顯示需要注意並只自動展開一次", () => {
-  assert.match(html, /const needsAttention = Boolean\(stateLoadError\)/);
+  assert.match(html, /const needsAttention = Boolean\(stateLoadError \|\| lastPersistenceError \|\| pwaSetupError\)/);
   assert.match(html, /needsAttention \? "需要注意" : "正常"/);
   assert.match(html, /needsAttention && !systemStatusAutoOpened/);
   assert.match(html, /systemStatusAutoOpened = true/);
@@ -66,7 +68,8 @@ test("讀取異常顯示需要注意並只自動展開一次", () => {
 test("Driver 不新增全域刪除、重設、同步或登入操作", () => {
   assert.doesNotMatch(driverSection, /刪除全部資料|清除所有資料|一鍵重設|雲端同步|登入 Supabase|啟用備份/);
   assert.match(driverSection, /id="exportCsv"/);
-  assert.match(driverSection, /id="openAbout"/);
+  assert.doesNotMatch(driverSection, /id="openAbout"|id="view-about"/);
+  assert.match(driverSection, /id="aboutProductName"/);
 });
 
 test("Driver 目標與狀態元件符合手機觸控及窄寬度契約", () => {

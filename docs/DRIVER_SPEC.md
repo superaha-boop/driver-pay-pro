@@ -1,8 +1,8 @@
 # Driver Pay Pro — Driver Specification
 
-Version: 1.2
+Version: 1.3
 Status: V1.1 Candidate
-Updated: 2026-07-29
+Updated: 2026-08-04
 
 ## Responsibility
 
@@ -11,15 +11,24 @@ Driver 管理跨日持久設定與 App／本機資料狀態。它不得保存某
 
 ## V1 Scope
 
+Driver 第一層固定只有四個 disclosure：
+
+1. 常用設定（預設展開）：每日目標與顯示大小。
+2. 工作與收入設定（預設收合）：快速支出、平台、收入方式與目標。
+3. 資料與備份（預設收合）：Local-first 警告與 CSV 匯出。
+4. App 與系統（預設收合）：About、版本、作者與衍生系統狀態。
+
 - 每日目標：直接編輯既有 `state.settings.dailyGoal`，自動儲存；Today 與 Driver
   使用同一值。
 - 顯示設定：`顯示大小` 固定提供標準、舒適、大字，直接編輯可選
   `state.settings.displaySize` 並自動儲存；同一模式套用 Today、Calendar、
   Reports、AI、Driver 與 Bottom Navigation。
-- 平台設定、快速支出設定、工作紀錄卡片設定與 About：保留既有入口與責任。
-- 系統狀態：置於 Driver 最後，合併本機資料與 App 狀態；顯示可讀紀錄數、
+- 平台設定與快速支出設定保留既有責任；About 不再使用獨立 row／route，
+  直接位於「App 與系統」內容。
+- 系統狀態：位於「App 與系統」最後，合併本機資料與 App 狀態；顯示可讀紀錄數、
   可靠時才顯示日期範圍、儲存 key、讀取錯誤、Local-first V1、App Shell、
-  PWA／Safari、線上／離線與更新方式。正常預設收合，異常顯示「需要注意」。
+  PWA／Safari、線上／離線與更新方式。正常預設收合，真實讀取、儲存或
+  Service Worker 異常顯示「需要注意」並可自動展開一次。
 - 資料警告：資料只存在目前瀏覽器／裝置，沒有雲端備份或跨裝置同步；清除
   Safari／App 資料可能造成遺失。
 

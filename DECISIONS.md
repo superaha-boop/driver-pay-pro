@@ -805,3 +805,35 @@ AI 長文與 Reports 次要標籤在手機上需要較彈性的閱讀尺度，�
   `driverPayApp.v2` key、Supabase、main 或 Production。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-042](docs/DECISION_LOG.md#d-042)。
+
+## D-043 — Progressive Disclosure、核准字級與 Chevron 語意
+
+- Date: 2026-08-04
+
+### 決策
+
+1. Today 今日收入以整排 disclosure 顯示；金額永遠可見，進度資訊只在展開
+   後顯示，session state 不持久化。
+2. AI 首屏只完整顯示本週重點；本月洞察、收入變化來源與資料分析依據預設
+   收合，既有 analytics 與唯讀責任不變。
+3. Driver 第一層固定四類；About 與系統狀態合併至 App 與系統，移除獨立
+   About route／row 與獨立 system-status card。
+4. 全 App body／secondary 為 13／12、17／15、22／19px。Calendar 另用受控
+   token，日期 14／16／20px、Today circle 34／36／40px。
+5. `.app-chevron` 統一為 20px、stroke 2；左右只表示導覽，向下／上表示原地
+   收合／展開，一般動作不加箭頭。
+6. App Shell 更新為 v23；Human QA 核准前不 merge main、不 Production。
+
+### 原因
+
+在不增加資料與功能的前提下，以較少預設內容、更清楚字級差異及一致互動，
+降低司機快速查看時的閱讀壓力與誤觸風險。
+
+### 影響範圍
+
+- Today／AI／Driver presentation、global／Calendar typography tokens、Chevron、
+  Accessibility、tests、docs 與 PWA cache。
+- 不修改 WorkRecord、analytics、收入／工時／支出公式、CSV、storage key、
+  Supabase、main 或 Production。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-043](docs/DECISION_LOG.md#d-043)。

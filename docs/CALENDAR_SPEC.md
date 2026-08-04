@@ -1,13 +1,13 @@
 # Driver Pay Pro — Calendar Interaction and Implementation Specification
 
-Version: 1.1
+Version: 1.2
 
 Status: Approved implementation specification
 
-Updated: 2026-07-29
+Updated: 2026-08-04
 
-Implementation status: Calendar V1 implemented and UX frozen；V1.1 Today marker
-alignment release candidate awaiting final Human QA
+Implementation status: Calendar V1 implemented and UX frozen；V1.1 display-size
+typography candidate awaiting Progressive Disclosure and Display Size Human QA
 
 > This document is the primary implementation source for the Calendar redesign. It defines target behavior and records current repository constraints. It does not authorize changes outside an approved Calendar Implementation Sprint.
 
@@ -80,6 +80,19 @@ Rules:
 - Do not add a large KPI area above the calendar.
 - Use one Calendar surface; do not make seven columns of independent cards.
 - Do not place nested cards inside the Work Record Card.
+
+### Display-size typography contract
+
+- Month title: 18／20／22px.
+- Weekday: 12／14／16px.
+- Date: 14／16／20px.
+- Today button: 16／17／20px.
+- Work Record Card body: 14／17／22px；secondary: 12／15／19px.
+- Today circle: 34／36／40px.
+- Values correspond to standard／comfort／large and must be verified by computed
+  style. Mobile media queries must not make a larger mode smaller.
+- All seven dates in a row share the same marker slot and center; touch cells remain
+  at least 44px and the seven-column grid must not horizontally overflow.
 
 ## 6. Calendar State Model
 

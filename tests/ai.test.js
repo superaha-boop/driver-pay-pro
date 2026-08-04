@@ -151,8 +151,18 @@ const state = {
     monthlyGoal: 80000
   }
 };
+const fixtureNow = new Date(`${fixture.today}T12:00:00+08:00`);
+class FixtureDate extends Date {
+  constructor(...args) {
+    super(...(args.length ? args : [fixtureNow.getTime()]));
+  }
+
+  static now() {
+    return fixtureNow.getTime();
+  }
+}
 const context = vm.createContext({
-  Date,
+  Date: FixtureDate,
   Intl,
   Map,
   Math,
@@ -291,11 +301,13 @@ test("Insight Engine 輸出三個 V1 區塊、證據與分析依據", () => {
   }
 });
 
-test("AI UI 維持三個主要區塊並提供精確日期與報表導覽", () => {
+test("AI UI 預設只完整顯示本週重點，詳細分析保留精確導覽", () => {
   const aiSection = html.match(/<section id="view-ai"[\s\S]*?<\/section>\s*<section id="view-settings"/)?.[0] || "";
-  assert.match(aiSection, />營運建議</);
+  assert.match(aiSection, />本週重點</);
   assert.match(aiSection, />本月洞察</);
-  assert.match(aiSection, />智慧提醒</);
+  assert.match(aiSection, />收入變化來源</);
+  assert.match(aiSection, />資料與分析依據</);
+  assert.equal((aiSection.match(/class="app-disclosure__content"[^>]* hidden/g) || []).length, 3);
   assert.doesNotMatch(aiSection, />平台表現</);
   assert.match(html, /data-ai-calendar-date/);
   assert.match(html, /data-ai-report-view/);

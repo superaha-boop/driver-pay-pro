@@ -47,7 +47,7 @@ test("今日工作狀態整條標題列是唯一工作明細控制", () => {
   assert.match(section, /<button class="work-status-row" id="workDetailsToggle"[^>]*aria-expanded="false"[^>]*aria-controls="workMetrics"/);
   assert.match(section, /aria-label="今日工作狀態，尚未開始，工作明細已收合，按兩下展開"/);
   assert.match(section, /class="home-heading" id="workStatusTitle"/);
-  assert.match(section, /class="work-status-meta"[\s\S]*?id="workStatusText"[\s\S]*?class="work-details-chevron"/);
+  assert.match(section, /class="work-status-meta"[\s\S]*?id="workStatusText"[\s\S]*?class="work-details-chevron app-chevron app-chevron--disclosure"/);
   assert.doesNotMatch(section, /class="work-time-overview"|class="work-details-toggle"|>工作明細</);
   assert.match(html, /\.work-status-row\s*\{[\s\S]*?width:\s*100%[\s\S]*?min-height:\s*44px/);
   assert.match(html, /\.work-status-row:focus-visible\s*\{/);

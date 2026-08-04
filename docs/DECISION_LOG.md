@@ -715,3 +715,22 @@
   - 不保留第二套頁面字級偏好。
   - 不使用 CSS zoom、transform scale 或整頁複製。
   - 不用負 margin、translate 或縮小 cell 掩蓋 Calendar 對齊問題。
+
+## D-043
+
+- Date: 2026-08-04
+- Decision:
+  1. Today 今日收入改為整排 session-only disclosure；金額永遠顯示。
+  2. AI 首屏只完整顯示本週重點，三個詳細區預設收合，分析來源不變。
+  3. Driver 固定四類，About 與系統狀態合併至 App 與系統。
+  4. 全 App body／secondary 字級固定 13／12、17／15、22／19px；Calendar
+     日期 14／16／20px、Today circle 34／36／40px。
+  5. 全 App Chevron 重用 20px、stroke-2 元件及固定方向語意。
+  6. App Shell 更新為 v23；Human QA 前不 merge main、不 Production。
+- Reason: 以 Progressive Disclosure 與清楚的字級級差降低日常資訊壓力，
+  同時保留單手操作、既有資料與 canonical calculations。
+- Impact: Today／AI／Driver presentation、typography、Calendar、Chevron、tests、
+  docs 與 v23；資料模型、storage key、Supabase、main、Production 不變。
+- Rejected alternatives:
+  - 不持久化 disclosure state，不建立頁面專用字級或第四種尺寸。
+  - 不使用 zoom／scale、Unicode 箭頭、加減號或多層設定頁。

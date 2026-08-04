@@ -1,6 +1,6 @@
 # Driver Pay Pro Testing
 
-更新日期：2026-07-29
+更新日期：2026-08-04
 
 ## 基本規則
 
@@ -24,6 +24,22 @@
 小型 Sprint 原則上不重複執行完整 L3；大模組完成 Final Regression 後集中
 執行一次。高風險資料、同步、Service Worker 或 iOS 特有變更仍須即時提高
 驗證層級。
+
+## Progressive Disclosure and Display Size Candidate
+
+- `tests/progressive-disclosure.test.js` 有 60 項編號契約，直接覆蓋 Today 12、
+  AI 8、Driver 12、顯示大小 12、Calendar typography 10、Chevron 6。
+- 全部 Node regression 目前為 267/267；專項 Today、Calendar、Reports、AI、
+  Driver 與 Integration 仍必須各自通過。
+- 瀏覽器矩陣固定為 `standard／comfort／large` × Today／Calendar／Reports／
+  AI／Driver × 320／375／390／393／430px，共 75 組，逐組檢查
+  `scrollWidth === clientWidth` 與 Console。
+- Calendar 必須以 computed style 驗證 month 18／20／22、weekday 12／14／16、
+  date 14／16／20、Today button 16／17／20、detail 14／17／22、circle
+  34／36／40px，且同一 row 七個 day center 完全一致。
+- App Shell candidate 是 `driver-pay-pro-v23`；Manifest 與 `sw.js` 必須從
+  Public Preview 同源回傳成功。實體 iPhone Safari、installed PWA、offline、
+  VoiceOver 與 safe area 仍由一次 Human QA Gate 完成。
 
 ## V1.1 Final Display and Calendar Alignment
 

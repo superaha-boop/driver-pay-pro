@@ -1,6 +1,6 @@
 # Driver Pay Pro — Codex Instructions
 
-Version: 1.8
+Version: 1.9
 
 ## Project Documentation
 
@@ -86,6 +86,24 @@ Version: 1.8
 - 避免厚重 gradient、border 與 shadow，不為視覺效果犧牲可讀性或速度。
 - 現有頁面採漸進式遷移；不得因 Design System 存在就一次性重寫凍結頁面。
 - 完整 token、primitive、表單與 showcase 規格請讀取 `docs/DESIGN_SYSTEM.md`。
+
+## Progressive Disclosure and Display Size Rules
+
+- Today、AI 與 Driver 的原地展開必須重用同一 disclosure 行為：整排至少
+  44px、原生 button、`aria-expanded`、`aria-controls`、可見 focus，且
+  內部控制項不得誤觸收合。
+- Chevron 語意固定：向右表示進入另一頁或下一層；向下表示原地展開；向上
+  表示原地收合；一般立即動作不加 Chevron。SVG 必須重用 `.app-chevron`，
+  20px、stroke 2，不使用 Unicode、加減號或鉛筆代替。
+- Driver 固定以「常用設定／工作與收入設定／資料與備份／App 與系統」四個
+  第一層分類呈現；常用設定預設展開，其餘預設收合。About 與系統狀態只在
+  「App 與系統」內，不建立獨立 About 頁或第二張狀態卡。
+- AI 首屏只完整顯示「本週重點」；本月洞察、收入變化來源、資料與分析依據
+  預設收合。AI renderer 保持唯讀並重用既有 analytics。
+- `settings.displaySize` 的一般閱讀 token 固定為 standard 13px／12px、
+  comfort 17px／15px、large 22px／19px（body／secondary）。Calendar 必須
+  使用獨立 typography tokens；日期固定 14／16／20px，Today circle 固定
+  34／36／40px，不得由窄螢幕 media query 反向縮小。
 
 ## Product Architecture Execution Rules
 

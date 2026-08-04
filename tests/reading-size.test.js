@@ -6,7 +6,7 @@ const html = fs.readFileSync(new URL("../index.html", `file://${__filename}`), "
 const designSystem = fs.readFileSync(new URL("../styles/design-system.css", `file://${__filename}`), "utf8");
 const serviceWorker = fs.readFileSync(new URL("../sw.js", `file://${__filename}`), "utf8");
 const driverSection = html.match(
-  /<section id="view-settings"[\s\S]*?<\/section>\s*<section id="view-about"/
+  /<section id="view-settings"[\s\S]*?<\/section>\s*<\/main>/
 )?.[0] || "";
 
 function extractFunction(name) {
@@ -116,10 +116,11 @@ test("Design System 提供三模式全域 typography token 且不使用縮放", 
   assert.doesNotMatch(displayRules, /\bzoom\s*:|transform\s*:\s*scale/);
 });
 
-test("舒適與大字的一般閱讀層級分別使用 16px 與 18px", () => {
-  assert.match(designSystem, /data-display-size="comfort"[\s\S]*?--display-body-size: 16px/);
-  assert.match(designSystem, /data-display-size="large"[\s\S]*?--display-body-size: 18px/);
-  assert.match(designSystem, /data-display-size="large"[\s\S]*?--display-control-size: 18px/);
+test("標準、舒適與大字使用核准的 13／17／22px 閱讀層級", () => {
+  assert.match(designSystem, /--display-body-size: 13px/);
+  assert.match(designSystem, /data-display-size="comfort"[\s\S]*?--display-body-size: 17px/);
+  assert.match(designSystem, /data-display-size="large"[\s\S]*?--display-body-size: 22px/);
+  assert.match(designSystem, /data-display-size="large"[\s\S]*?--display-control-size: 22px/);
 });
 
 test("Today 內容、欄位與操作共用全域顯示 token", () => {
@@ -141,9 +142,9 @@ test("Reports 文字、圖表標籤與空狀態重用閱讀 token", () => {
 });
 
 test("AI 依標準、舒適與大字維持分層閱讀比例", () => {
-  assert.match(html, /--reading-ai-body-size: 14px/);
-  assert.match(html, /data-display-size="comfort"[\s\S]*?--reading-ai-body-size: 16px[\s\S]*?--reading-ai-detail-size: 14px/);
-  assert.match(html, /data-display-size="large"[\s\S]*?--reading-ai-body-size: 18px[\s\S]*?--reading-ai-detail-size: 16px/);
+  assert.match(html, /--reading-ai-body-size: 13px/);
+  assert.match(html, /data-display-size="comfort"[\s\S]*?--reading-ai-body-size: 17px[\s\S]*?--reading-ai-detail-size: 15px/);
+  assert.match(html, /data-display-size="large"[\s\S]*?--reading-ai-body-size: 22px[\s\S]*?--reading-ai-detail-size: 19px/);
   assert.match(html, /\.ai-advice-list li,[\s\S]*?font-size: var\(--reading-ai-body-size\)/);
 });
 
@@ -166,6 +167,6 @@ test("顯示大小不進入 canonical 計算或 WorkRecord", () => {
 });
 
 test("HTML、CSS 與 JavaScript 變更同步更新 App Shell cache", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v22"/);
-  assert.match(html, /const appShellCacheName = "driver-pay-pro-v22"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v23"/);
+  assert.match(html, /const appShellCacheName = "driver-pay-pro-v23"/);
 });

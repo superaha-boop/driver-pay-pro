@@ -1,10 +1,33 @@
 # Driver Pay Pro 專案固定背景
 
-更新日期：2026-07-29
+更新日期：2026-08-04
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## V1.1 最終顯示體驗與 Calendar 對齊 — Current Candidate
+## Progressive Disclosure、全 App 字級與一致性 — Current Candidate
+
+- 工作分支：`codex/v1-1-m1-today-workflow`；base
+  `da1a467168426346bfdad9ac2c297c5f052942d4`。Human QA 前不 merge
+  `main`、不 Production deploy。
+- Today「今日收入」由整排原生 button 控制；金額永遠顯示，目標進度、尚差、
+  進度條及原有補充資訊只在展開時顯示。展開 state 只存在 session，跨台北
+  日期回到收合，不寫入 WorkRecord 或 settings。
+- AI 首屏只完整顯示「本週重點」；本月洞察、收入變化來源、資料與分析依據
+  預設收合，展開後仍使用原 `buildAIInsights()` 與 `sharedAnalytics`。
+- Driver 固定四類：常用設定（預設展開）、工作與收入設定、資料與備份、
+  App 與系統（預設收合）。About 與系統狀態已合併到 App 與系統；舊獨立
+  About route／row 與獨立 system-status card 不再存在。
+- 全 App `settings.displaySize` 不變；body／secondary 為 standard 13／12px、
+  comfort 17／15px、large 22／19px。Calendar 使用獨立 tokens：日期
+  14／16／20px、Today circle 34／36／40px，窄螢幕不再覆寫為較小值。
+- `.app-chevron` 統一 navigation 與 disclosure 圖示：20px、stroke 2；向右
+  是導覽，向下／上是收合／展開，一般動作不帶箭頭。
+- App Shell candidate 為 `driver-pay-pro-v23`。自動契約 267/267 通過；其中
+  60 項直接覆蓋本 Sprint。Chrome 3 模式 × 5 頁 × 5 寬度共 75 組無水平
+  overflow，Console 0 error／warning，Calendar computed sizes 與七日中心
+  對齊均通過。仍需一次 iPhone Safari／installed PWA Human QA。
+
+## V1.1 最終顯示體驗與 Calendar 對齊 — Superseded Candidate
 
 - 工作分支：`codex/v1-1-m1-today-workflow`；base `8badf1946184aaa0644d020517cb2016407dda16`。
 - Driver「顯示大小」固定提供標準／舒適／大字，canonical durable source

@@ -1,12 +1,38 @@
 # Driver Pay Pro 開發交接摘要
 
-更新日期：2026-07-29
+更新日期：2026-08-04
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
-## V1.1 最終顯示體驗與 Calendar 對齊 — Current Handoff
+## Progressive Disclosure and Display Size — Current Handoff
+
+- Branch：`codex/v1-1-m1-today-workflow`；base `da1a467168426346bfdad9ac2c297c5f052942d4`。
+- Today `#todayIncomeToggle` 是今日收入卡唯一 disclosure header；
+  `todayIncomeExpanded`／`todayIncomeDisclosureDate` 僅為 session state，
+  點擊只重繪 presentation，不儲存、不清除草稿。
+- AI `aiDisclosureState` 管理 month／sources／metadata 三個詳細區，預設皆
+  false；`#aiTodayAdvice` 只呈現一個本週重點或單一資料不足說明。
+- Driver `driverDisclosureState` 固定 common／work／data／app；common 預設
+  true，其餘 false。`#driverSystemStatusContent` 同時包含 About 與衍生系統
+  狀態；舊 `#view-about`／`#openAbout` 已移除，legacy `#about` route 安全回
+  Driver。
+- Design tokens：body／secondary standard 13／12、comfort 17／15、large
+  22／19；Calendar month 18／20／22、weekday 12／14／16、date 14／16／20、
+  detail 14／17／22、Today circle 34／36／40px。
+- 共用 `.app-disclosure*` 與 `.app-chevron` 處理 44px+ header、ARIA、focus、
+  hidden content、20px stroke-2 chevron 與 180° 展開旋轉。
+- App Shell `driver-pay-pro-v23`。目前 267/267 Node tests 通過；瀏覽器 75
+  responsive 組合、互動、computed typography、Calendar 七日中心、Manifest、
+  Service Worker 與 Console 均通過。開發工具的 transitive
+  `brace-expansion` 已由 5.0.8 更新至 5.0.9，`npm audit` 為 0
+  vulnerabilities。需建立 Public Preview 後進行唯一一次
+  iPhone Safari／installed PWA Human QA。
+- Human QA 前不得 merge `main` 或 Production deploy。預期完成狀態：
+  `Ready for Progressive Disclosure and Display Size Human QA`。
+
+## V1.1 最終顯示體驗與 Calendar 對齊 — Superseded Handoff
 
 - Branch：`codex/v1-1-m1-today-workflow`；base `8badf1946184aaa0644d020517cb2016407dda16`。
 - 全 App 顯示偏好 canonical source 是可選 `settings.displaySize`，合法值為
