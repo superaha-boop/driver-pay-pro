@@ -1,6 +1,6 @@
 # Driver Pay Pro — Codex Instructions
 
-Version: 1.9
+Version: 1.10
 
 ## Project Documentation
 
@@ -187,6 +187,22 @@ Version: 1.9
 - Local-first V1 固定使用 `driverPayApp.v2`，沒有 Supabase、authentication、
   cloud sync、migration 或外部 AI；完整跨頁契約以
   `docs/INTEGRATION_SPEC.md` 為準。
+
+## Today Progress and Driver Simplicity Rules
+
+- Today 綠色摘要的收入總額、今日實際工時與目前時薪是固定可見的核心資訊；
+  Progressive Disclosure 只能收合每日目標的未設定提示、百分比、尚差金額與
+  進度條，不得把收入、工時或時薪一起隱藏。
+- Today 目標進度的展開狀態只存在目前 session；跨台北日期回到收合，不得寫入
+  WorkRecord、settings 或其他 durable storage。
+- Driver 固定只有常用設定、工作與收入設定、資料與備份、App 與系統四個第一層
+  disclosure。設定頁遵循「同一概念只顯示一次」：每日目標只有一個標題與欄位，
+  顯示偏好只有「字體大小設定」及標準／舒適／大字，不加入重複摘要或教學文案。
+- Driver Header 摘要只在能幫助辨識內容時出現：常用設定不顯示摘要、工作與收入
+  設定顯示「平台、支出」、資料與備份顯示「備份、匯出」，App 與系統只顯示
+  「正常」或「需要注意」。
+- App 與系統只顯示可採取行動且能由目前執行環境可靠判定的狀態；不得堆疊紀錄
+  總數、日期範圍、技術模式或其他對一般使用者沒有立即用途的診斷文字。
 
 ## Driver Pay Pro Local-first V1 UX Freeze
 

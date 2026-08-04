@@ -43,30 +43,37 @@ contract(1, "今日收入 Header 整排可點擊", () => {
   assert.match(functionSource("renderStats"), /<button class="today-income-toggle" id="todayIncomeToggle"/);
   assert.match(html, /\.today-income-toggle\s*\{[\s\S]*?width: 100%/);
 });
-contract(2, "收合時收入金額仍顯示", () => {
-  assert.match(functionSource("renderStats"), /<strong class="today-income">\$\{money\(todaySummary\.total\)\}<\/strong>/);
+contract(2, "收合時收入與金額仍在 disclosure 外", () => {
+  const source = functionSource("renderStats");
+  assert.match(source, /<strong class="today-income">\$\{money\(todaySummary\.total\)\}<\/strong>/);
+  assert.ok(source.indexOf('class="today-income"') < source.indexOf('id="todayGoalDetails"'));
 });
-contract(3, "收合時達成百分比隱藏", () => {
-  assert.match(functionSource("renderStats"), /id="todayIncomeDetails"\$\{todayIncomeExpanded \? "" : " hidden"\}/);
-  assert.match(functionSource("updateDailyGoal"), /達成/);
+contract(3, "收合時實際工時與時薪仍在 disclosure 外", () => {
+  const source = functionSource("renderStats");
+  assert.ok(source.indexOf('class="today-secondary"') < source.indexOf('id="todayGoalDetails"'));
+  assert.match(source, /今日實際工時[\s\S]*?目前時薪/);
 });
-contract(4, "收合時尚差金額隱藏", () => {
-  assert.match(functionSource("updateDailyGoal"), /尚差/);
+contract(4, "只隱藏今日目標進度內容", () => {
+  assert.match(functionSource("renderStats"), /id="todayGoalDetails"\$\{todayGoalExpanded \? "" : " hidden"\}/);
   assert.match(functionSource("renderStats"), /id="dailyGoalCard"/);
 });
-contract(5, "收合時進度條隱藏", () => {
-  assert.match(functionSource("updateDailyGoal"), /today-goal-track/);
-  assert.match(functionSource("renderStats"), /today-income-details/);
+contract(5, "目標百分比、尚差與進度條共用同一收合區", () => {
+  const goal = functionSource("updateDailyGoal");
+  assert.match(goal, /達成/);
+  assert.match(goal, /尚差/);
+  assert.match(goal, /today-goal-track/);
 });
-contract(6, "展開時進度資訊一起出現", () => {
-  assert.match(html, /todayIncomeExpanded = !todayIncomeExpanded;\s*renderStats\(\)/);
+contract(6, "展開只切換目標進度 state", () => {
+  assert.match(html, /todayGoalExpanded = !todayGoalExpanded;\s*renderStats\(\)/);
 });
-contract(7, "Today Chevron 跟隨展開狀態", () => {
+contract(7, "Today Chevron 跟隨目標進度展開狀態", () => {
   assert.match(functionSource("renderStats"), /app-chevron app-chevron--disclosure/);
   assert.match(html, /\[aria-expanded="true"\][\s\S]*?rotate\(180deg\)/);
 });
 contract(8, "Today aria-expanded 正確輸出", () => {
-  assert.match(functionSource("renderStats"), /aria-expanded="\$\{String\(todayIncomeExpanded\)\}"/);
+  assert.match(functionSource("renderStats"), /aria-expanded="\$\{String\(todayGoalExpanded\)\}"/);
+  assert.match(functionSource("renderStats"), /aria-controls="todayGoalDetails"/);
+  assert.match(functionSource("renderStats"), /aria-label="今日目標進度/);
 });
 contract(9, "Today 展開不修改收入資料", () => {
   const listener = between('els.summaryStats.addEventListener("click"', 'els.manualEntryToggle.addEventListener');
@@ -77,7 +84,7 @@ contract(10, "Today 展開不清除表單草稿", () => {
   assert.doesNotMatch(listener, /resetForm|form\.reset|value\s*=/);
 });
 contract(11, "Today 跨日後預設收合", () => {
-  assert.match(functionSource("renderStats"), /todayIncomeDisclosureDate !== currentToday[\s\S]*?todayIncomeExpanded = false/);
+  assert.match(functionSource("renderStats"), /todayGoalDisclosureDate !== currentToday[\s\S]*?todayGoalExpanded = false/);
 });
 contract(12, "Today 內部區域不誤觸收合", () => {
   assert.match(html, /if \(!event\.target\.closest\("#todayIncomeToggle"\)\) return/);

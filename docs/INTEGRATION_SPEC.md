@@ -53,5 +53,6 @@ Today or Calendar successful write
 - Today、AI、Driver disclosure state is session-only UI state. It must not be added
   to `driverPayApp.v2`, WorkRecord, reports state, or analytics input.
 - 損壞或讀取失敗時不得清除原始 payload。
-- Service Worker Progressive Disclosure candidate cache 為 `driver-pay-pro-v23`。
+- Service Worker Today Progress and Driver Simplification candidate cache 為
+  `driver-pay-pro-v24`。
 - 沒有 Supabase、authentication、cloud sync、migration 或外部 AI。

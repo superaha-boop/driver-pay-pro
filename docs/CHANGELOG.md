@@ -16,6 +16,17 @@
 
 ## Unreleased
 
+### Today Progress and Driver Simplification
+
+- Today 綠色摘要固定顯示收入、今日實際工時與目前時薪；整排 disclosure 只
+  收合每日目標的未設定提示、百分比、尚差金額與進度條。
+- Driver 常用設定精簡為單一每日目標與單一字體大小設定，移除重複標題、說明
+  及一般成功狀態文字；既有自動儲存與錯誤／離線回饋不變。
+- Driver 四個 Header 摘要改為無摘要／平台、支出／備份、匯出／正常或需要
+  注意；App 與系統只保留可可靠判定且可採取行動的狀態。
+- 新增 47 項 Sprint contracts，App Shell candidate 更新為
+  `driver-pay-pro-v24`；資料結構、公式與 `driverPayApp.v2` 不變。
+
 ### Progressive Disclosure and Display Size Integration
 
 - Today 今日收入改為整排 disclosure；收合仍保留收入金額，展開才顯示目標

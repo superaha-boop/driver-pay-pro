@@ -45,8 +45,9 @@ test("Driver 只提供標準、舒適、大字三個全域顯示選項", () => {
     /<input type="radio" name="displaySize" value="([^"]+)" data-display-size-option/g
   )].map(match => match[1]);
   assert.deepEqual(inputs, ["standard", "comfort", "large"]);
-  assert.match(driverSection, /<legend>顯示大小<\/legend>/);
-  assert.match(driverSection, /id="displaySizeStatus"[\s\S]*?role="status" aria-live="polite"/);
+  assert.match(driverSection, /<legend>字體大小設定<\/legend>/);
+  assert.match(driverSection, /id="displaySizeStatus"[\s\S]*?role="status" aria-live="polite" hidden/);
+  assert.doesNotMatch(driverSection, /<h3>顯示設定<\/h3>|<legend>顯示大小<\/legend>/);
   assert.doesNotMatch(driverSection, /AI／報表文字大小/);
 });
 
@@ -167,6 +168,5 @@ test("顯示大小不進入 canonical 計算或 WorkRecord", () => {
 });
 
 test("HTML、CSS 與 JavaScript 變更同步更新 App Shell cache", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v23"/);
-  assert.match(html, /const appShellCacheName = "driver-pay-pro-v23"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v24"/);
 });

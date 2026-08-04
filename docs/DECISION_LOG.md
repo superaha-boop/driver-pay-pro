@@ -734,3 +734,24 @@
 - Rejected alternatives:
   - 不持久化 disclosure state，不建立頁面專用字級或第四種尺寸。
   - 不使用 zoom／scale、Unicode 箭頭、加減號或多層設定頁。
+
+## D-044
+
+- Date: 2026-08-04
+- Decision:
+  1. D-043 的 Today disclosure 只收合每日目標進度；收入、今日實際工時與
+     目前時薪永遠顯示。
+  2. 目標進度使用唯一 session state，跨台北日期重設收合，不持久化。
+  3. Driver 常用設定只保留單一每日目標與單一字體大小設定，刪除重複標題、
+     說明及一般成功狀態文字。
+  4. Driver Header 摘要固定為無摘要／平台、支出／備份、匯出／正常或需要
+     注意；App 與系統只顯示四項可靠狀態並保留 About 與安全提醒。
+  5. App Shell 更新為 v24；Human QA 前不 merge main、不 Production。
+- Reason: Today 核心結果必須三秒內可讀；Driver 同一概念重複出現會增加閱讀
+  與操作成本，精簡後仍保留必要錯誤、離線、法律與資料安全資訊。
+- Impact: Today／Driver presentation、Accessibility、tests、docs 與 v24；
+  WorkRecord、計算、設定資料、storage key、Supabase、main、Production 不變。
+- Rejected alternatives:
+  - 不把收入、工時或時薪放入 hidden disclosure。
+  - 不建立第二套目標 state、Driver 設定或診斷頁。
+  - 不以隱藏錯誤、離線、法律或資料安全資訊換取版面高度。

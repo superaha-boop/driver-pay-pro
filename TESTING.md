@@ -25,7 +25,26 @@
 執行一次。高風險資料、同步、Service Worker 或 iOS 特有變更仍須即時提高
 驗證層級。
 
-## Progressive Disclosure and Display Size Candidate
+## Today Progress and Driver Simplification Candidate
+
+- `tests/today-progress-driver-simplification.test.js` 有 47 項編號契約，覆蓋
+  Today 固定收入／工時／時薪、只收合目標進度、跨日 reset、ARIA、Driver
+  文案去重、四分類摘要、顯示偏好、responsive 基礎、既有 targeted gates、
+  App Shell v24 與 `driverPayApp.v2` 保護。
+- `npm run release:check` 已通過：完整 Node 314/314、Today 55/55、AI 24/24、
+  Driver 24/24、Integration 16/16、Reports 61/61、Calendar 41/41；inline JS、
+  Service Worker、Manifest、Production validation 與 `git diff --check` 均通過。
+  Lint 0 errors／10 個既有 warnings；`npm audit` 0 vulnerabilities。
+- 瀏覽器矩陣固定為 `standard／comfort／large` × Today／Driver ×
+  320／375／390／393／430px；逐組檢查 `scrollWidth === clientWidth`、標題／
+  選項無裁切、目標收合高度、整排互動、Console、Manifest 與 Service Worker。
+- 實際 Chrome 30 組矩陣全部無 overflow；Console 0 error／warning，目標展開
+  高度增加且收合不改 localStorage，320px 大字 Header 單行，v24 App Shell
+  可控制頁面並可離線重載。
+- Public Preview 必須是未登入 iPhone Safari 可直接開啟的 HTTPS 網址；唯一一次
+  Human QA 驗證 iPhone Safari、installed PWA、Offline、VoiceOver、safe area。
+
+## Progressive Disclosure and Display Size — Superseded Candidate
 
 - `tests/progressive-disclosure.test.js` 有 60 項編號契約，直接覆蓋 Today 12、
   AI 8、Driver 12、顯示大小 12、Calendar typography 10、Chevron 6。

@@ -7,9 +7,9 @@ const driverSection = html.match(
   /<section id="view-settings"[\s\S]*?<\/section>\s*<\/main>/
 )?.[0] || "";
 
-test("Driver 提供收入目標、顯示設定與單一系統狀態", () => {
-  assert.match(driverSection, />每日收入目標</);
-  assert.match(driverSection, /<legend>顯示大小<\/legend>/);
+test("Driver 提供精簡每日目標、字體大小設定與單一系統狀態", () => {
+  assert.match(driverSection, /id="driverGoalTitle">每日目標<\/h3>/);
+  assert.match(driverSection, /<legend>字體大小設定<\/legend>/);
   assert.match(driverSection, /id="driverSystemStatusDetails"/);
   assert.doesNotMatch(driverSection, /id="driverDataStatus"|id="driverAppStatus"/);
   assert.match(driverSection, />資料保存在這台裝置</);
@@ -24,17 +24,16 @@ test("每日目標只有一個直接編輯欄位並沿用既有設定來源", ()
   assert.match(html, /if \(!saveState\(\)\) \{\s*state\.settings\.dailyGoal = previous/);
   assert.match(html, /updateDailyGoal\(\);\s*renderStats\(\)/);
   assert.match(html, /scheduleDriverDailyGoalSave\(event\.currentTarget\)/);
-  assert.match(driverSection, /輸入後自動儲存/);
+  assert.match(driverSection, /aria-label="每日目標金額"/);
+  assert.doesNotMatch(driverSection, />收入目標<|>每日收入目標<|輸入後自動儲存/);
 });
 
-test("Driver 狀態只顯示衍生資訊，不建立第二個 durable store", () => {
-  assert.match(html, /本機紀錄總數/);
-  assert.match(html, /最早紀錄/);
-  assert.match(html, /最新紀錄/);
-  assert.match(html, /未提供可靠時間/);
-  assert.match(html, /Local-first V1/);
-  assert.match(html, /appShellCacheName/);
-  assert.match(html, /display-mode: standalone/);
+test("Driver 系統狀態只顯示可採取行動的精簡衍生資訊", () => {
+  assert.match(html, /driverStatusRow\("此裝置與 App"/);
+  assert.match(html, /driverStatusRow\("本機資料"/);
+  assert.match(html, /driverStatusRow\("離線功能"/);
+  assert.match(html, /driverStatusRow\("Service Worker"/);
+  assert.doesNotMatch(html, /本機紀錄總數|最後資料更新|版本里程碑/);
   const storageKeys = [...html.matchAll(/driverPayApp\.v\d+/g)].map(match => match[0]);
   assert.equal(storageKeys.length > 0, true);
   assert.equal(storageKeys.every(key => key === "driverPayApp.v2"), true);

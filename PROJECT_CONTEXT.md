@@ -4,7 +4,28 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## Progressive Disclosure、全 App 字級與一致性 — Current Candidate
+## Today 目標進度與 Driver 精簡 — Current Candidate
+
+- 工作分支：`codex/v1-1-m1-today-workflow`；base
+  `941cedf112c0566be9035fec67492a1e5b238bdb`。Human QA 前不 merge
+  `main`、不 Production deploy。
+- Today 綠色摘要的收入、今日實際工時與目前時薪固定顯示；整排 Header 只控制
+  每日目標的未設定提示、達成百分比、尚差金額與進度條。目標 disclosure state
+  僅存在 session，跨台北日期回到收合。
+- Driver 常用設定只顯示單一「每日目標」欄位與單一「字體大小設定」選擇；
+  刪除重複標題、說明與一般成功狀態文字。四個第一層分類、既有設定、About、
+  Local-first 警告與資料安全功能全部保留。
+- Driver Header 摘要固定為：常用設定無摘要、工作與收入設定「平台、支出」、
+  資料與備份「備份、匯出」、App 與系統「正常／需要注意」。系統狀態只保留
+  此裝置與 App、本機資料、離線功能、Service Worker 四項可靠狀態。
+- App Shell candidate 為 `driver-pay-pro-v24`。新增 47 項本 Sprint contract；
+  `release:check` 與完整 Node regression 314/314 已通過。Chrome 3 模式 ×
+  Today／Driver × 5 寬度共 30 組無 overflow，Console 0 error／warning，離線
+  App Shell 正常；仍須一次 iPhone Safari／installed PWA Human QA。
+- 資料結構、canonical calculations、`settings.displaySize`、WorkRecord、
+  `driverPayApp.v2`、Calendar、Reports、AI、CSV 與 Supabase 均未改動。
+
+## Progressive Disclosure、全 App 字級與一致性 — Superseded Candidate
 
 - 工作分支：`codex/v1-1-m1-today-workflow`；base
   `da1a467168426346bfdad9ac2c297c5f052942d4`。Human QA 前不 merge

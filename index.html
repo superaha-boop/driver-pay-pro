@@ -1485,21 +1485,17 @@
       white-space: nowrap;
     }
 
-    .today-income-details {
-      padding: 0 18px 14px;
-    }
-
-    .today-income-details[hidden] {
-      display: none;
-    }
-
     .today-secondary {
-      margin-top: 10px;
-      padding-top: 9px;
+      margin: 0 18px;
+      padding: 9px 0 14px;
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
       border-top: 1px solid rgba(255, 255, 255, .18);
+    }
+
+    .today-summary.is-goal-expanded .today-secondary {
+      padding-bottom: 0;
     }
 
     .today-secondary div {
@@ -1521,8 +1517,15 @@
       font-variant-numeric: tabular-nums;
     }
 
+    .today-goal-details {
+      padding: 0 18px 14px;
+    }
+
+    .today-goal-details[hidden] {
+      display: none;
+    }
+
     .today-goal {
-      margin-top: auto;
       padding-top: 10px;
       display: grid;
       gap: 7px;
@@ -4013,13 +4016,20 @@
     }
 
     .driver-goal-card {
+      gap: 10px;
       border-color: rgba(21, 150, 111, .22);
       background: #fbfdfc;
     }
 
+    .driver-setting-title {
+      margin: 0;
+      color: #203128;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
     .driver-goal-input {
-      display: grid;
-      gap: 7px;
+      display: block;
       color: #506159;
       font-size: 13px;
       font-weight: 600;
@@ -4061,8 +4071,11 @@
     }
 
     .driver-goal-card .ds-save-status {
-      min-height: 20px;
-      margin: -6px 0 0;
+      margin: 0;
+    }
+
+    .driver-goal-card .ds-save-status:empty {
+      display: none;
     }
 
     .driver-status-list {
@@ -4216,7 +4229,7 @@
     }
 
     .driver-settings-group .driver-goal-card {
-      padding: 16px 0;
+      padding: 12px 0 16px;
       background: transparent;
     }
 
@@ -4227,6 +4240,10 @@
 
     .driver-setting-section .panel-head {
       padding-top: 16px;
+    }
+
+    .driver-display-section {
+      padding: 16px 0 2px;
     }
 
     .driver-data-content,
@@ -4319,8 +4336,11 @@
     }
 
     .reading-size-status {
-      min-height: 20px;
-      margin: 10px 0 0;
+      margin: 8px 0 0;
+    }
+
+    .reading-size-status[hidden] {
+      display: none;
     }
 
     .nav button,
@@ -4491,6 +4511,20 @@
     }
 
     @media (max-width: 350px) {
+      html[data-display-size="large"] #view-settings :is(
+        #driverWorkToggle,
+        #driverDataToggle
+      ) .app-disclosure__summary {
+        display: none;
+      }
+
+      html[data-display-size="large"] #view-settings :is(
+        #driverWorkToggle,
+        #driverDataToggle
+      ) .app-disclosure__title {
+        white-space: nowrap;
+      }
+
       html[data-display-size="large"] .reports-trend-row {
         grid-template-columns: auto minmax(0, 1fr);
       }
@@ -6313,7 +6347,7 @@
         <div class="driver-dashboard">
           <header class="driver-page-intro">
             <h2>Driver</h2>
-            <p>管理此裝置的收入目標、顯示方式與常用設定。</p>
+            <p>管理常用設定。</p>
           </header>
         </div>
         <div class="driver-settings-stack">
@@ -6321,22 +6355,21 @@
             <button class="app-disclosure__trigger" id="driverCommonToggle" type="button" data-disclosure-scope="driver"
               data-disclosure-key="common" aria-expanded="true" aria-controls="driverCommonContent">
               <span class="app-disclosure__title" id="driverCommonTitle">常用設定</span>
-              <span class="app-disclosure__summary">顯示與每日目標</span>
               <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
             </button>
             <div class="app-disclosure__content driver-settings-group__content" id="driverCommonContent">
               <section class="driver-overview-card driver-goal-card" aria-labelledby="driverGoalTitle">
-                <div><span class="driver-card-kicker">收入目標</span><h3 id="driverGoalTitle">每日收入目標</h3><p>與「今天」使用相同設定，輸入後自動儲存。</p></div>
-                <label class="driver-goal-input" for="dailyGoal"><span>每日目標</span><span class="driver-goal-control"><span aria-hidden="true">NT$</span><input type="number" id="dailyGoal" min="0" max="99999999" step="100" inputmode="numeric" placeholder="例如：3000"></span></label>
-                <p class="ds-save-status" id="driverGoalStatus" data-status="idle" role="status" aria-live="polite"></p>
+                <h3 class="driver-setting-title" id="driverGoalTitle">每日目標</h3>
+                <label class="driver-goal-input" for="dailyGoal"><span class="sr-only">每日目標金額</span><span class="driver-goal-control"><span aria-hidden="true">NT$</span><input type="number" id="dailyGoal" min="0" max="99999999" step="100" inputmode="numeric" placeholder="例如：3000" aria-label="每日目標金額"></span></label>
+                <p class="ds-save-status" id="driverGoalStatus" data-status="idle" role="status" aria-live="polite" hidden></p>
               </section>
-              <div class="panel driver-setting-section"><div class="panel-head"><h3>顯示設定</h3></div><div class="panel-body">
-                <fieldset class="reading-size-fieldset"><legend>顯示大小</legend><div class="reading-size-options">
+              <div class="panel driver-setting-section driver-display-section"><div class="panel-body">
+                <fieldset class="reading-size-fieldset"><legend>字體大小設定</legend><div class="reading-size-options">
                   <label class="reading-size-choice"><input type="radio" name="displaySize" value="standard" data-display-size-option checked><span>標準</span></label>
                   <label class="reading-size-choice"><input type="radio" name="displaySize" value="comfort" data-display-size-option><span>舒適</span></label>
                   <label class="reading-size-choice"><input type="radio" name="displaySize" value="large" data-display-size-option><span>大字</span></label>
                 </div></fieldset>
-                <p class="ds-save-status reading-size-status" id="displaySizeStatus" data-status="idle" role="status" aria-live="polite"></p>
+                <p class="ds-save-status reading-size-status" id="displaySizeStatus" data-status="idle" role="status" aria-live="polite" hidden></p>
               </div></div>
             </div>
           </section>
@@ -6344,7 +6377,7 @@
           <section class="driver-settings-group app-disclosure" aria-labelledby="driverWorkTitle">
             <button class="app-disclosure__trigger" id="driverWorkToggle" type="button" data-disclosure-scope="driver"
               data-disclosure-key="work" aria-expanded="false" aria-controls="driverWorkContent">
-              <span class="app-disclosure__title" id="driverWorkTitle">工作與收入設定</span><span class="app-disclosure__summary">平台、支出與目標</span>
+              <span class="app-disclosure__title" id="driverWorkTitle">工作與收入設定</span><span class="app-disclosure__summary">平台、支出</span>
               <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
             </button>
             <div class="app-disclosure__content driver-settings-group__content" id="driverWorkContent" hidden>
@@ -6361,7 +6394,7 @@
           <section class="driver-settings-group app-disclosure" aria-labelledby="driverDataTitle">
             <button class="app-disclosure__trigger" id="driverDataToggle" type="button" data-disclosure-scope="driver"
               data-disclosure-key="data" aria-expanded="false" aria-controls="driverDataContent">
-              <span class="app-disclosure__title" id="driverDataTitle">資料與備份</span><span class="app-disclosure__summary">Local-first</span>
+              <span class="app-disclosure__title" id="driverDataTitle">資料與備份</span><span class="app-disclosure__summary">備份、匯出</span>
               <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
             </button>
             <div class="app-disclosure__content driver-data-content" id="driverDataContent" hidden>
@@ -6477,7 +6510,6 @@
     });
     const storageKey = "driverPayApp.v2";
     const lastValidStorageKey = `${storageKey}.lastValid`;
-    const appShellCacheName = "driver-pay-pro-v23";
     const displaySizeLabels = Object.freeze({
       standard: "標準",
       comfort: "舒適",
@@ -6583,8 +6615,8 @@
     let expenseShortcutStatus = "";
     let displaySizeStatus = "";
     let displaySizeStatusType = "";
-    let todayIncomeDisclosureDate = todayString();
-    let todayIncomeExpanded = false;
+    let todayGoalDisclosureDate = todayString();
+    let todayGoalExpanded = false;
     const aiDisclosureState = { month: false, sources: false, metadata: false };
     const driverDisclosureState = { common: true, work: false, data: false, app: Boolean(stateLoadError) };
     let systemStatusExpanded = driverDisclosureState.app;
@@ -8975,9 +9007,9 @@
 
     function renderStats() {
       const currentToday = todayString();
-      if (todayIncomeDisclosureDate !== currentToday) {
-        todayIncomeDisclosureDate = currentToday;
-        todayIncomeExpanded = false;
+      if (todayGoalDisclosureDate !== currentToday) {
+        todayGoalDisclosureDate = currentToday;
+        todayGoalExpanded = false;
       }
       const month = currentMonth();
       const monthSummary = summarize(entriesForMonth(month));
@@ -8985,21 +9017,21 @@
       const todaySummary = summarize(todayEntry);
 
       els.summaryStats.innerHTML = `
-        <article class="today-summary">
+        <article class="today-summary${todayGoalExpanded ? " is-goal-expanded" : ""}">
           <button class="today-income-toggle" id="todayIncomeToggle" type="button"
-            aria-expanded="${String(todayIncomeExpanded)}" aria-controls="todayIncomeDetails"
-            aria-label="今日收入 ${escapeAttr(money(todaySummary.total))}，進度${todayIncomeExpanded ? "已展開，按兩下收合" : "已收合，按兩下展開"}">
+            aria-expanded="${String(todayGoalExpanded)}" aria-controls="todayGoalDetails"
+            aria-label="今日目標進度，${todayGoalExpanded ? "已展開，按兩下收合" : "已收合，按兩下展開"}">
             <span class="today-summary-label">今日收入</span>
             <strong class="today-income">${money(todaySummary.total)}</strong>
             <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path d="m6 9 6 6 6-6"></path>
             </svg>
           </button>
-          <div class="today-income-details" id="todayIncomeDetails"${todayIncomeExpanded ? "" : " hidden"}>
-            <div class="today-secondary">
-              <div><span>今日實際工時</span><strong>${formatHours(todaySummary.hours)}</strong></div>
-              <div><span>目前時薪</span><strong>${money(todaySummary.hourly)}</strong></div>
-            </div>
+          <div class="today-secondary">
+            <div><span>今日實際工時</span><strong>${formatHours(todaySummary.hours)}</strong></div>
+            <div><span>目前時薪</span><strong>${money(todaySummary.hourly)}</strong></div>
+          </div>
+          <div class="today-goal-details" id="todayGoalDetails"${todayGoalExpanded ? "" : " hidden"}>
             <div class="today-goal" id="dailyGoalCard" aria-label="今日目標進度"></div>
           </div>
         </article>
@@ -10355,20 +10387,21 @@
     }
 
     function renderDriverStatus() {
-      const recordDates = state.entries
-        .map(entry => normalizeDateKey(entry?.date))
-        .filter(Boolean)
-        .sort();
-      const firstDate = recordDates[0];
-      const latestDate = recordDates.at(-1);
-      const offlineAvailable = navigator.serviceWorker?.controller
-        ? "已啟用 App Shell"
-        : "serviceWorker" in navigator ? "啟動時檢查" : "瀏覽器不支援";
-      const standalone = window.matchMedia?.("(display-mode: standalone)")?.matches
-        || navigator.standalone === true;
       const storageStatus = driverLocalStorageStatus();
       const needsAttention = Boolean(stateLoadError || lastPersistenceError || pwaSetupError)
         || ["讀取錯誤", "無法存取"].includes(storageStatus);
+      const serviceWorkerSupported = "serviceWorker" in navigator;
+      const serviceWorkerReady = Boolean(navigator.serviceWorker?.controller);
+      const serviceWorkerStatus = pwaSetupError
+        ? "需要注意"
+        : serviceWorkerReady ? "正常" : serviceWorkerSupported ? "啟動時檢查" : "不支援";
+      const offlineStatus = serviceWorkerReady
+        ? "可用"
+        : serviceWorkerSupported ? "啟動時檢查" : "不支援";
+      const localDataStatus = stateLoadError || lastPersistenceError
+        || ["讀取錯誤", "無法存取"].includes(storageStatus)
+        ? "需要注意"
+        : "正常";
       if (needsAttention && !systemStatusAutoOpened) {
         systemStatusExpanded = true;
         driverDisclosureState.app = true;
@@ -10383,21 +10416,10 @@
       }
       if (els.driverSystemStatusDetails) {
         els.driverSystemStatusDetails.innerHTML = [
-          driverStatusRow("本機紀錄總數", `${state.entries.length} 筆`),
-          driverStatusRow("最早紀錄", firstDate ? formatCalendarFullDate(firstDate) : "尚無紀錄"),
-          driverStatusRow("最新紀錄", latestDate ? formatCalendarFullDate(latestDate) : "尚無紀錄"),
-          driverStatusRow("最後資料更新", "未提供可靠時間"),
-          driverStatusRow("Local-first", "僅此裝置"),
-          driverStatusRow("離線可用", offlineAvailable),
-          driverStatusRow("資料讀取", stateLoadError ? "有錯誤" : "正常"),
-          driverStatusRow("資料儲存", lastPersistenceError ? "有錯誤" : "正常"),
-          driverStatusRow(storageKey, storageStatus),
-          driverStatusRow("App", brandAttribution.productName),
-          driverStatusRow("版本里程碑", "Local-first V1"),
-          driverStatusRow("App Shell", appShellCacheName),
-          driverStatusRow("開啟方式", standalone ? "已安裝 PWA" : "Safari／瀏覽器"),
-          driverStatusRow("連線狀態", navigator.onLine ? "Online" : "Offline"),
-          driverStatusRow("更新狀態", "啟動時自動檢查")
+          driverStatusRow("此裝置與 App", needsAttention ? "需要注意" : "正常"),
+          driverStatusRow("本機資料", localDataStatus),
+          driverStatusRow("離線功能", offlineStatus),
+          driverStatusRow("Service Worker", serviceWorkerStatus)
         ].join("");
       }
     }
@@ -10415,6 +10437,7 @@
       if (!els.driverGoalStatus) return;
       els.driverGoalStatus.textContent = message;
       els.driverGoalStatus.dataset.status = type;
+      els.driverGoalStatus.hidden = !message;
     }
 
     function saveDriverDailyGoal(input) {
@@ -10515,6 +10538,7 @@
       if (els.driverGoalStatus) {
         els.driverGoalStatus.textContent = driverGoalStatus;
         els.driverGoalStatus.dataset.status = driverGoalStatusType || "idle";
+        els.driverGoalStatus.hidden = !driverGoalStatus;
       }
       renderDriverStatus();
     }
@@ -10525,6 +10549,7 @@
       if (!els.displaySizeStatus) return;
       els.displaySizeStatus.textContent = message;
       els.displaySizeStatus.dataset.status = type;
+      els.displaySizeStatus.hidden = !message;
     }
 
     function saveDisplaySize(input) {
@@ -10532,7 +10557,7 @@
       const next = normalizeDisplaySize(input?.value);
       if (next === previous) {
         applyDisplaySize(next);
-        setDisplaySizeStatus("已儲存在此裝置", navigator.onLine ? "saved" : "offline");
+        setDisplaySizeStatus(navigator.onLine ? "" : "已離線儲存", navigator.onLine ? "" : "offline");
         return true;
       }
 
@@ -10548,10 +10573,7 @@
         return false;
       }
 
-      setDisplaySizeStatus(
-        navigator.onLine ? `已套用「${displaySizeLabels[next]}」` : `已離線套用「${displaySizeLabels[next]}」`,
-        navigator.onLine ? "saved" : "offline"
-      );
+      setDisplaySizeStatus(navigator.onLine ? "" : "已離線儲存", navigator.onLine ? "" : "offline");
       return true;
     }
 
@@ -12435,7 +12457,7 @@
     });
     els.summaryStats.addEventListener("click", event => {
       if (!event.target.closest("#todayIncomeToggle")) return;
-      todayIncomeExpanded = !todayIncomeExpanded;
+      todayGoalExpanded = !todayGoalExpanded;
       renderStats();
       document.getElementById("todayIncomeToggle")?.focus();
     });

@@ -1,6 +1,6 @@
 # Driver Pay Pro Design System
 
-Version: 1.1
+Version: 1.2
 更新日期：2026-07-29
 
 ## 文件定位
@@ -95,6 +95,9 @@ typography，不使用 `zoom` 或 `transform: scale()`：
   `aria-controls` 與可見 focus；內容以 `hidden` 控制，不重建資料。
 - `.app-chevron` 固定 20px、stroke 2、secondary color。向右／左只用於導覽；
   向下表示收合，展開時旋轉 180° 為向上。一般立即動作不加 Chevron。
+- Today `#todayIncomeToggle` 是特殊的 summary trigger：核心收入、工時與時薪
+  位於可見 summary，只有 `#todayGoalDetails` 使用 `hidden`。此模式仍只有一個
+  button、一個 `aria-expanded` 與一個 `aria-controls`，不得建立第二份 state。
 
 ### Semantic colors
 

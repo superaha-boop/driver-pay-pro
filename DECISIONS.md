@@ -837,3 +837,35 @@ AI 長文與 Reports 次要標籤在手機上需要較彈性的閱讀尺度，�
   Supabase、main 或 Production。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-043](docs/DECISION_LOG.md#d-043)。
+
+## D-044 — Today 只收合目標進度與 Driver 設定去重複
+
+- Date: 2026-08-04
+
+### 決策
+
+1. D-043 的 Today disclosure 範圍收斂為每日目標進度；今日收入、今日實際
+   工時與目前時薪在收合與展開狀態都固定可見。
+2. 目標進度包含未設定提示、達成百分比、尚差金額及進度條，使用單一
+   `todayGoalExpanded` session state，跨台北日期回到收合。
+3. Driver 常用設定只顯示單一「每日目標」與單一「字體大小設定」，移除重複
+   標題、說明及一般成功狀態文字；既有自動儲存、離線與錯誤回饋不變。
+4. Driver 第一層仍固定四類；Header 摘要依序為無摘要、「平台、支出」、
+   「備份、匯出」及「正常／需要注意」。
+5. App 與系統只保留此裝置與 App、本機資料、離線功能及 Service Worker 的
+   可靠狀態；About、版本、作者、法律與資料安全提醒保留。
+6. App Shell 更新為 v24；Human QA 前不 merge main、不 Production。
+
+### 原因
+
+收入、工時與時薪是 Today 三秒內必須看見的核心結果，不應因目標進度收合而
+消失。Driver 重複標題與診斷文字增加閱讀成本；直接保留唯一控制及可採取行動
+的狀態，更符合設定頁快速操作與 One Motion = One Meaning。
+
+### 影響範圍
+
+- Today／Driver presentation、Accessibility、tests、docs 與 PWA cache。
+- 不修改 WorkRecord、canonical calculations、收入／工時／支出公式、
+  `settings.displaySize`、CSV、`driverPayApp.v2`、Supabase、main 或 Production。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-044](docs/DECISION_LOG.md#d-044)。
