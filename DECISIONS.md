@@ -906,3 +906,24 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   Manifest、Supabase、migration、main 或 Production。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-045](docs/DECISION_LOG.md#d-045)。
+
+## D-046 — Expense Management、Calendar Inline Editing 與 KPI Production Release
+
+- Date: 2026-08-04
+
+### 決策
+
+1. D-045 已完成唯一一次 Product Owner Human QA：Passed，Release Candidate：Approved。
+2. 已將功能分支 `codex/expense-calendar-kpi-integration-20260804` 以一般 merge
+   合併至 `main`，merge commit 為 `b17b6d9b49f3cbe025af2264c976d75aca4f16f0`。
+3. 由既有 Vercel Git Integration 建立 Production deployment
+   `dpl_Goj84FfTsGga2wfNfF7xQBMsFLGy`，正式網址為 `https://driver-pay-app.vercel.app`。
+4. Production 使用 `driver-pay-pro-v25`，localStorage key、WorkRecord、
+   `expenseAllocations`、Manifest 與 Supabase 狀態維持不變。
+
+### 驗證
+
+- `npm run release:check` 通過；完整 Node 339/339，所有 targeted tests 通過。
+- Production 390px 五頁 Smoke QA 通過，無 Console error／warning，無水平 overflow。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-046](docs/DECISION_LOG.md#d-046)。

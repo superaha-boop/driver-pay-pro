@@ -16,7 +16,7 @@
 
 ## Unreleased
 
-### 2026-08-04 — Expense Management、Calendar Inline Editing 與 KPI Candidate
+### 2026-08-04 — Expense Management、Calendar Inline Editing 與 KPI Production Release
 
 - 月報新增支出分類彙總與原地每日明細；油錢優先，分月成本與實際付款使用
   `reportExpenseSummary()` 的同一口徑。
@@ -26,10 +26,13 @@
   全域編輯與固定大型整天刪除，並精簡月份格及詳細卡垂直空間。
 - 所有時薪改為總收入除以有效工時；Today KPI 重排，Calendar／Reports 重複
   標題移除，Bottom Navigation active state 統一加強。
-- App Shell candidate 更新為 `driver-pay-pro-v25`；`driverPayApp.v2`、
+- App Shell 更新為 `driver-pay-pro-v25`；`driverPayApp.v2`、
   WorkRecord、`expenseAllocations`、Manifest 與 Supabase 不變。
-- Human QA 通過前只 Push 功能分支與 Public Preview，不 merge `main`、不
-  Production deploy。
+- Product Owner Human QA：Passed；已合併 `main` 並由 Vercel Production 部署。
+- Production：`https://driver-pay-app.vercel.app`；merge commit
+  `b17b6d9b49f3cbe025af2264c976d75aca4f16f0`；deployment
+  `dpl_Goj84FfTsGga2wfNfF7xQBMsFLGy`；Service Worker cache `driver-pay-pro-v25`。
+- Production 390px 五頁 Smoke QA 通過，無 Console error／warning，無水平 overflow。
 
 ### 2026-08-04 — V1.1 Production Release
 

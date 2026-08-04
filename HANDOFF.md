@@ -6,11 +6,13 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
-## Expense Management、Calendar Inline Editing 與 KPI — Current Handoff
+## Expense Management、Calendar Inline Editing 與 KPI — Production Handoff
 
-- Branch：`codex/expense-calendar-kpi-integration-20260804`；base
-  `fd059b8de6226768ccb4105446e8f27fb5e69fcf`。本 Sprint 完成後只 Push
-  功能分支與 Public Preview；Human QA 前不 merge `main`、不 Production。
+- 功能 Branch：`codex/expense-calendar-kpi-integration-20260804`；功能 commit
+  `d1f7e269c8970ddf37b5442748375aeb999bd2e6`；Human QA：Passed。
+- 已合併至 `main`，release merge commit：`b17b6d9b49f3cbe025af2264c976d75aca4f16f0`。
+- Production：`https://driver-pay-app.vercel.app`；Vercel deployment
+  `dpl_Goj84FfTsGga2wfNfF7xQBMsFLGy`，狀態 `READY`。
 - `reportExpenseSummary()` 同時提供 `byDate` 與 `byCategory`，並區分月成本及
   實際付款；Reports 月報分類以油錢優先、其餘金額降序，native disclosure
   原地顯示日期、金額與選填備註。
@@ -25,7 +27,7 @@ GitHub：`superaha-boop/driver-pay-pro`
   門檻，不足或異常時不顯示誤導數字。
 - Today KPI、Calendar spacing、Reports 重複標題與 Bottom Navigation active
   presentation 已依 D-045 調整；全 App `settings.displaySize` 規則保持。
-- App Shell candidate：`driver-pay-pro-v25`。localStorage key 仍是
+- App Shell：`driver-pay-pro-v25`。localStorage key 仍是
   `driverPayApp.v2`，無 schema、migration、Supabase 或 dependency 變更。
 - `npm run release:check` 已通過：完整 Node 339/339、Today 80/80、AI 24/24、
   Driver 24/24、Integration 16/16、Reports 86/86、Calendar 66/66；lint 0
@@ -34,7 +36,8 @@ GitHub：`superaha-boop/driver-pay-pro`
 - Browser 已完成三種顯示模式 × Today／Calendar／Reports × 五種手機寬度共
   45 組 overflow 檢查，全部 `scrollWidth === clientWidth`，Console 無
   error／warning；Calendar 歷史日支出由原地表單提交後，月曆淨收入與月報
-  分類／明細同步更新。下一步只需公開 Preview 與唯一一次 iPhone Human QA。
+  分類／明細同步更新。Production 390px 五頁 Smoke QA 已通過，Console 無
+  error／warning，Manifest 與 Service Worker 正常。
 
 ---
 

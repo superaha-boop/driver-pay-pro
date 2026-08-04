@@ -778,3 +778,18 @@
 - Rejected alternatives:
   - 不建立 Reports 專用支出 aggregation 或第二套 Record Editor。
   - 不以全頁跳轉、Modal、阻斷式單筆刪除確認或淨收入時薪維持舊行為。
+
+## D-046
+
+- Date: 2026-08-04
+- Decision:
+  1. Expense Management、Calendar Inline Editing 與 KPI 已通過唯一一次 Product
+     Owner Human QA，Release Candidate Approved。
+  2. 功能分支以一般 merge 合併至 `main`，merge commit 為
+     `b17b6d9b49f3cbe025af2264c976d75aca4f16f0`。
+  3. Vercel Production deployment 為 `dpl_Goj84FfTsGga2wfNfF7xQBMsFLGy`，
+     正式網址為 `https://driver-pay-app.vercel.app`。
+  4. Production 使用 App Shell `driver-pay-pro-v25`；資料 key、schema、
+     allocation、Manifest 與 Supabase 維持不變。
+- Verification: `npm run release:check`、339/339 Node tests、Production 390px
+  五頁 Smoke QA、Manifest、Service Worker 與 Console 檢查全部通過。
