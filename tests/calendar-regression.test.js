@@ -69,9 +69,14 @@ const functionNames = [
   "nonNegativeNumber",
   "minutes",
   "timeValueMs",
+  "decimalHoursToMinutes",
+  "minutesToHourMinuteParts",
+  "validateWorkTimeRange",
+  "calculateWorkMinutes",
   "clockWorkDurationMs",
   "sessionWorkDurationMs",
   "workMetrics",
+  "hourlyRateQuality",
   "hourlyRate",
   "platformRate",
   "platformNetAmount",
@@ -80,6 +85,7 @@ const functionNames = [
   "entryExpenses",
   "entryTotal",
   "entryNet",
+  "recordDataQuality",
   "summarize",
   "isWorkDayRecord",
   "summarizeCalendarMonth",
@@ -106,6 +112,8 @@ const context = vm.createContext({
     hourMs: 3_600_000,
     dayMs: 86_400_000
   },
+  MIN_VALID_WORK_MINUTES: 10,
+  MAX_REASONABLE_HOURLY_RATE: 2000,
   todayString() {
     return "2026-07-25";
   },

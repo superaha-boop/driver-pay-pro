@@ -71,9 +71,14 @@ const functionNames = [
   "addLocalDays",
   "compactWeekRange",
   "timeValueMs",
+  "decimalHoursToMinutes",
+  "minutesToHourMinuteParts",
+  "validateWorkTimeRange",
+  "calculateWorkMinutes",
   "clockWorkDurationMs",
   "sessionWorkDurationMs",
   "workMetrics",
+  "hourlyRateQuality",
   "hourlyRate",
   "minutes",
   "finiteNumber",
@@ -91,7 +96,9 @@ const context = vm.createContext({
   workTimeUnits: Object.freeze({
     minuteMs: 60 * 1000,
     hourMs: 60 * 60 * 1000
-  })
+  }),
+  MIN_VALID_WORK_MINUTES: 10,
+  MAX_REASONABLE_HOURLY_RATE: 2000
 });
 vm.runInContext(
   `${functionNames.map(extractFunction).join("\n")}\n`
@@ -189,7 +196,7 @@ test("七天工時加總為 33 小時 30 分，平均時薪一致", () => {
 });
 
 test("PWA 發布會更新 Service Worker 並淘汰舊 App Shell", () => {
-  assert.match(serviceWorker, /driver-pay-pro-v13/);
+  assert.match(serviceWorker, /driver-pay-pro-v24/);
   assert.doesNotMatch(serviceWorker, /driver-pay-pro-v11/);
   assert.doesNotMatch(serviceWorker, /driver-pay-pro-v07-design-system-foundation/);
   assert.doesNotMatch(serviceWorker, /driver-pay-pro-v06-calendar-report-navigation/);

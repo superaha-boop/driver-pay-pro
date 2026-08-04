@@ -1,8 +1,193 @@
 # Driver Pay Pro 專案固定背景
 
-更新日期：2026-07-26
+更新日期：2026-08-04
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
+
+## Today 目標進度與 Driver 精簡 — Current Candidate
+
+- 工作分支：`codex/v1-1-m1-today-workflow`；base
+  `941cedf112c0566be9035fec67492a1e5b238bdb`。Human QA 前不 merge
+  `main`、不 Production deploy。
+- Today 綠色摘要的收入、今日實際工時與目前時薪固定顯示；整排 Header 只控制
+  每日目標的未設定提示、達成百分比、尚差金額與進度條。目標 disclosure state
+  僅存在 session，跨台北日期回到收合。
+- Driver 常用設定只顯示單一「每日目標」欄位與單一「字體大小設定」選擇；
+  刪除重複標題、說明與一般成功狀態文字。四個第一層分類、既有設定、About、
+  Local-first 警告與資料安全功能全部保留。
+- Driver Header 摘要固定為：常用設定無摘要、工作與收入設定「平台、支出」、
+  資料與備份「備份、匯出」、App 與系統「正常／需要注意」。系統狀態只保留
+  此裝置與 App、本機資料、離線功能、Service Worker 四項可靠狀態。
+- App Shell candidate 為 `driver-pay-pro-v24`。新增 47 項本 Sprint contract；
+  `release:check` 與完整 Node regression 314/314 已通過。Chrome 3 模式 ×
+  Today／Driver × 5 寬度共 30 組無 overflow，Console 0 error／warning，離線
+  App Shell 正常；仍須一次 iPhone Safari／installed PWA Human QA。
+- 資料結構、canonical calculations、`settings.displaySize`、WorkRecord、
+  `driverPayApp.v2`、Calendar、Reports、AI、CSV 與 Supabase 均未改動。
+
+## Progressive Disclosure、全 App 字級與一致性 — Superseded Candidate
+
+- 工作分支：`codex/v1-1-m1-today-workflow`；base
+  `da1a467168426346bfdad9ac2c297c5f052942d4`。Human QA 前不 merge
+  `main`、不 Production deploy。
+- Today「今日收入」由整排原生 button 控制；金額永遠顯示，目標進度、尚差、
+  進度條及原有補充資訊只在展開時顯示。展開 state 只存在 session，跨台北
+  日期回到收合，不寫入 WorkRecord 或 settings。
+- AI 首屏只完整顯示「本週重點」；本月洞察、收入變化來源、資料與分析依據
+  預設收合，展開後仍使用原 `buildAIInsights()` 與 `sharedAnalytics`。
+- Driver 固定四類：常用設定（預設展開）、工作與收入設定、資料與備份、
+  App 與系統（預設收合）。About 與系統狀態已合併到 App 與系統；舊獨立
+  About route／row 與獨立 system-status card 不再存在。
+- 全 App `settings.displaySize` 不變；body／secondary 為 standard 13／12px、
+  comfort 17／15px、large 22／19px。Calendar 使用獨立 tokens：日期
+  14／16／20px、Today circle 34／36／40px，窄螢幕不再覆寫為較小值。
+- `.app-chevron` 統一 navigation 與 disclosure 圖示：20px、stroke 2；向右
+  是導覽，向下／上是收合／展開，一般動作不帶箭頭。
+- App Shell candidate 為 `driver-pay-pro-v23`。自動契約 267/267 通過；其中
+  60 項直接覆蓋本 Sprint。Chrome 3 模式 × 5 頁 × 5 寬度共 75 組無水平
+  overflow，Console 0 error／warning，Calendar computed sizes 與七日中心
+  對齊均通過。仍需一次 iPhone Safari／installed PWA Human QA。
+
+## V1.1 最終顯示體驗與 Calendar 對齊 — Superseded Candidate
+
+- 工作分支：`codex/v1-1-m1-today-workflow`；base `8badf1946184aaa0644d020517cb2016407dda16`。
+- Driver「顯示大小」固定提供標準／舒適／大字，canonical durable source
+  改為可選 `settings.displaySize`。合法新欄位優先；缺少時相容讀取合法
+  `settings.aiReportsReadingSize`；未知值回退 `standard`。執行期與新寫入
+  只使用 `displaySize`，不改 `driverPayApp.v2` key 或 WorkRecord。
+- `<html data-display-size>` 與 `styles/design-system.css` 共用 tokens 套用
+  Today、Calendar、Reports、AI、Driver 與 Bottom Navigation。標準維持既有
+  視覺；舒適一般內文 16px；大字一般內文 18px；主要 KPI 與主標題只維持或
+  小幅調整，不使用 zoom／scale。
+- Driver 原「資料狀態」與「App 狀態」合併為置底的「系統狀態」。正常時
+  預設收合；讀取或 storage 異常時顯示「需要注意」並可自動展開一次；展開
+  內容只使用既有可驗證資料。
+- Calendar 所有日期數字共用 34px 固定 day slot（320px 為 32px）；Today
+  只改該槽位的外框／實心狀態，不使用 margin、position 或 translate 位移。
+  日期格高度、Heat、Selected、Today button、Work Record Card 與資料邏輯
+  保持不變。
+- L1 已通過：207/207 Node、Today 55/55、AI 24/24、Driver 24/24、
+  Integration 16/16、Reports 61/61、Calendar 41/41；release check、lint
+  0 errors、inline JavaScript、Service Worker、Manifest、static validation、
+  `git diff --check` 與 npm audit 0 vulnerabilities。
+- Chrome mobile emulation 的 3 模式 × 5 頁 × 320／375／390／393／430px
+  共 75 組均無水平 overflow；Console 0 error／warning。390px 同列七個
+  day slot 的 `top`、34px 高度與垂直中心完全一致。
+- App Shell candidate 為 `driver-pay-pro-v22`。本階段只 Push 功能分支與
+  Public Preview；收到指定 V1.1 Final Human QA／Release Candidate 核准前
+  不 merge `main`、不 Production deploy。
+
+## Calendar Today 日期標記 — Prior Candidate
+
+- 工作分支：`codex/v1-1-m1-today-workflow`；base `49ef956`。AI／Reports
+  Reading Size Human QA 已由 Product Owner 確認 Passed。
+- Calendar 今天未選取時以 30px、2px 品牌深綠外框包住日期數字；被選取時
+  改為品牌深綠實心圓與反差文字。原 4px 小圓點已移除，不使用短橫線、
+  文字、額外圖示或動畫。
+- 今天與 Heat／Record 可組合；日期格尺寸、44px 級操作範圍、其他日期
+  Selected、Heat 演算法、Today button、exact-date route 與 Work Record
+  Card 均保持原契約。
+- `aria-current="date"` 只套用真正台北今天，`aria-selected` 繼續表達選取。
+- L1 已通過：197/197 Node、Calendar 39/39、其他專項 regression、lint
+  0 errors、inline JavaScript、Service Worker、Manifest 與 static Production
+  validation。Chrome mobile emulation 的 320／375／390／393／430px、
+  selected／unselected、Heat、Today button、exact-date route、離線重載與
+  Console 均通過。
+- App Shell candidate 為 `driver-pay-pro-v21`。本階段只 Push 功能分支與
+  Public Preview；Final Calendar Today Marker Human QA 通過前不 merge
+  `main`、不 Production deploy。
+
+## AI／報表閱讀文字大小 — Superseded by Global Display Size
+
+- 工作分支：`codex/v1-1-m1-today-workflow`；base `d7571dc`。本 Sprint 只新增
+  AI／Reports 的閱讀層級設定，不 merge `main`、不 Production deploy。
+- Driver「顯示設定」提供標準／舒適／大字三個原生 radio。唯一來源為可選
+  `settings.aiReportsReadingSize`；舊資料或未知值回退 `standard`。
+- 切換後立即以 `<html data-ai-reports-reading-size>` 和共用 CSS variables
+  更新 AI／Reports，並交易式寫回 `driverPayApp.v2`；失敗會回復前一設定。
+- 主要 KPI 與頁面主標題不大幅放大；內文、次要文字、行高、閱讀間距及
+  Reports 圖表標籤依層級調整。Today、Calendar、一般 Driver、Bottom
+  Navigation 與 canonical calculations 不受影響。
+- App Shell candidate 為 `driver-pay-pro-v20`；Product Owner 已確認
+  AI／Reports Reading Size Human QA Passed，臨時 Preview 已停止，尚未
+  merge `main` 或 Production deploy。
+
+## Today Work Status Header — Current Candidate
+
+- 工作分支：`codex/v1-1-m1-today-workflow`；base `e0b3dc9`。Expense UX
+  Human QA 已由 Product Owner 確認 Passed。
+- `#workDetailsToggle` 改為「今日工作狀態」整條 44px 原生 button；圖示、
+  標題、中間空白、狀態與 chevron 共用同一展開入口。
+- 原獨立「工作明細 ＋」列與空白高度已移除；`#workMetrics`、
+  `setWorkDetailsExpanded()` 與原 `aria-expanded` state 繼續沿用。
+- 工作操作與明細內容都在 toggle button 外，不會冒泡改變展開狀態。狀態
+  更新只同步 accessible name，不會重設展開 state 或清除工時草稿。
+- App Shell candidate 為 `driver-pay-pro-v19`；完成後只 Push 功能分支與
+  Public Preview，不 merge main、不 Production。
+
+## Today Expense UX Batch 2 — Human QA Passed
+
+- Homepage Detail Human QA 已通過；本批只處理支出操作與分月成本，仍在
+  `codex/v1-1-m1-today-workflow`，完成後不 merge main、不 Production。
+- 支出類別改為唯一原生 select；快捷仍寫入同一 draft，沒有第二份 state。
+- WorkRecord 只增加可選
+  `expenseAllocations[category] = { months, startMonth }`。原始付款仍在
+  `expenses[category]`，舊紀錄缺欄位時視為一次支出，無 migration。
+- Calendar 使用原始付款；Reports／AI 使用 `reportExpenseSummary()` 的分月
+  衍生成本，尾差由最後月吸收。CSV 同時保留原始付款與分月資訊。
+- 付款日期與備註同列；400px 以下日期縮為「今天・7月29日」等短格式。
+- App Shell candidate 為 `driver-pay-pro-v18`；Product Owner 已確認
+  Expense UX Human QA Passed，臨時 Public Preview 已停止。
+
+## V1.1 Milestone 1 — Today Workflow and Work-Time Unification
+
+- 工作分支：`codex/v1-1-m1-today-workflow`，基準為最新
+  `origin/main` `8041e84591c76b16582e41403ae7267f5fd1bc90`。
+- Product Owner 已確認 Milestone 1 Final Human QA 通過；原 Final Preview
+  tunnel 已停止。後續 Homepage Detail Sprint 通過前仍不合併 `main`、不
+  部署 Production。
+- Today、Calendar、Reports、AI、CSV 與時薪現在都透過同一個
+  `workMetrics()` 讀取整數 `workMinutes` 衍生結果。
+- 有效 `startTime`／`endTime`／`breakMinutes` 優先；缺少完整時間時才相容
+  讀取舊 `manualHours` 或即時 `workSession`。舊小數工時以
+  `Math.round(hours × 60)` 轉為整數分鐘，不改寫歷史紀錄。
+- Today 手動修正工作時間採 transactional localStorage 寫入；成功讀回後才
+  更新記憶體並發出一次 committed-record notification。開始／暫停／繼續／
+  收工與原生 time picker 共用相同欄位。
+- Today 綠色摘要是正式工時的唯一高階顯示；工作狀態卡只保留 status、
+  44px 工作明細與下一步操作，不再重複主工時。每日紀錄固定為三個可獨立
+  收合的區塊：「工時設定／新增支出／其他資料」。
+- 新增支出保留完整類別與方式資料，但快捷高度縮為 46px，類別與方式使用
+  同列 48px 選擇按鈕；快捷切換不清除草稿金額、日期、方式或備註。
+- 工時設定一次只顯示 clock 或 manual 一種輸入。模式由既有欄位推導，
+  切換前必須確認，確認後才交易式清除另一組欄位；舊資料同時含兩組值時
+  仍以 clock 結果優先，且不會靜默清除。manual 模式只顯示小時／分鐘
+  輸入；clock 模式只保留一個共用格式的計算結果。
+- 已收工的 clock 紀錄提供同列「再跑一段／修改時間」。確認續跑後保留原始
+  `startTime`、將收工空檔加入既有 `breakMinutes`、清除 `endTime` 並沿用
+  同一筆 WorkRecord；manual 模式會提示先切換，不建立多段資料模型。
+- 有收入但沒有有效工時時，明確儲存流程會提供「補上工時／稍後再補」；選擇
+  稍後再補仍保留紀錄，但 Today、Reports 與 AI 均不計算該筆時薪。
+- 共用資料品質狀態固定為 `complete`、`missing-work-time`、
+  `insufficient-work-time`、`abnormal-hourly-rate` 與
+  `invalid-time-range`。最低有效工時為 10 分鐘；高於 NT$2,000／小時只視為
+  待檢查資料，不修改原始紀錄，也不產生正常 AI 建議或比較。
+- 今日天氣採使用者明確同意後的一次性定位，透過 Open-Meteo（無 API key）
+  取得 `weather_code` 並映射為既有有限分類。精確經緯度不寫入 WorkRecord
+  或 localStorage；只保存 `settings.weatherAutoConsent` 偏好，建議結果僅在
+  session 記憶體快取 30 分鐘。拒絕、離線或服務失敗時保留完整手動流程；
+  歷史補登永不套用目前天氣，手動值永遠優先。
+- `driverPayApp.v2` 與 WorkRecord schema 均未更名或遷移；`manualHours` 只保留
+  作舊資料相容欄位，`workMinutes` 是衍生值而非新儲存欄位；僅相容擴充上述
+  settings 偏好，不需要 migration。
+- 自動測試目前 173/173，Today targeted 51/51；320、375、390、393、430px
+  必須無水平 overflow，Calendar 與 Reports 維持相同 canonical 結果。
+- Service Worker App Shell candidate 更新為 `driver-pay-pro-v17`。Follow-up
+  implementation commits `882bfcd`、`57ba512` 已推送；Homepage Detail 的
+  公開 Preview
+  `https://cord-diagnosis-quite-cancel.trycloudflare.com` 已通過未登入 HTTPS、
+  390px、Manifest、Service Worker v17、檔案一致性與 Console smoke；Human
+  QA 狀態記錄於 `HANDOFF.md` 與 `TESTING.md`。
 
 ## Driver Pay Pro Local-first V1 UX Freeze
 
@@ -482,7 +667,10 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 
 - 第一層依序顯示油錢、停車費、洗車快捷新增、支出類別、金額、三段式支出方式、付款日期與單一儲存按鈕。
 - 使用者文字固定為「一次支出」、「每月固定」、「分月計算」，不使用會計術語。
-- 一次支出沿用既有 `entry.expenses[category]` 儲存方式；每月固定與分月計算目前只提供前端狀態與即時計算預覽，不持久化規則，也不改變月報算法。
+- 一次支出沿用既有 `entry.expenses[category]` 儲存方式；分月計算只以可選
+  `expenseAllocations[category] = { months, startMonth }` 保存必要規則。
+  Calendar 保留原始付款口徑，Reports／AI 使用衍生後的每月成本；舊紀錄
+  沒有 allocation 時仍視為一次支出。
 - 分月計算自訂期間限制 2～60 個月；不能整除時由最後一個月補齊差額。
 
 ### 月曆與報表
@@ -539,7 +727,9 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 - 首頁核心卡放大並整合今日目標。
 - 首頁獨立天氣列已移除；「其他資料」內班別與天氣已改為直接選取、自動儲存。
 - 「更新今日紀錄」與新增支出付款日期已改為共用的完整置中日期卡。
-- 新增支出已加入三個快捷按鈕與一次支出、每月固定、分月計算三種前端模式；固定／分月規則尚未持久化。
+- 新增支出已加入三個快捷按鈕與一次支出、每月固定、分月計算；本次
+  Expense UX Batch 2 已讓分月計算保存可選 allocation metadata，重新載入
+  後仍可由 Reports／AI 依月份重算，原始付款紀錄保持一筆。
 - 週報週期已改為精簡日期格式。
 - 週報手機版月份明細已改為單一外層卡片內的精簡每日清單。
 - 手機清單只顯示有收入的平台，無收入日顯示「尚無收入紀錄」。
@@ -569,7 +759,9 @@ Codex 無需為每次 commit、push 工作 Branch、合併至 `main`、push `mai
 3. Calendar 已 UX Freeze；一般視覺偏好與新想法加入 Backlog，不直接修改。
 4. 每次 Calendar、PWA 或原生 input 相關發布仍需實體 iPhone Safari 與 installed PWA 回歸。
 5. 未經使用者確認，不修改已凍結首頁或重新設計週報。
-6. 若要讓每月固定或分月計算真正影響未來月報，需另立資料 migration 與報表規格，不可直接複製未來月份資料。
+6. 分月支出已依 D-038 使用可選 metadata 與讀取層衍生方式完成，不建立未來
+   月份 WorkRecord，也不需要 migration；若未來要改變此資料契約，仍需另立
+   PRD 與相容方案。
 
 ### QA 分級
 

@@ -1,7 +1,7 @@
 # Driver Pay Pro Design System
 
-Version: 1.0
-更新日期：2026-07-25
+Version: 1.2
+更新日期：2026-07-29
 
 ## 文件定位
 
@@ -67,6 +67,37 @@ styles/design-system.css
 | `.ds-numeric` | 金額、時數、百分比與 KPI |
 
 使用 Apple system font stack，不下載或提交字型。主要數字加 `.ds-numeric` 以啟用 `tabular-nums`。同一畫面避免大量 Display 數字競爭注意力。
+
+#### Global display size
+
+Driver 的「顯示大小」以 `<html data-display-size>` 控制全 App 同一套分層
+typography，不使用 `zoom` 或 `transform: scale()`：
+
+- `standard`：一般閱讀 13px、次要文字 12px，保留既有資訊密度。
+- `comfort`：一般閱讀 17px、次要文字 15px，控制與按鈕文字 17px。
+- `large`：一般閱讀 22px、次要文字 19px，控制 22px、按鈕 20px；主要
+  KPI 與頁面主標題只維持或小幅調整。
+
+實作 token 包含 `--display-body-size`、`--display-secondary-size`、
+`--display-caption-size`、`--display-control-size`、
+`--display-calendar-month-size`、`--display-calendar-weekday-size`、
+`--display-calendar-date-size`、`--display-calendar-today-button-size`、
+`--display-calendar-detail-size`、`--display-calendar-detail-secondary-size`、
+`--display-calendar-today-circle-size`、`--display-nav-label-size` 與
+`--display-body-line-height`。Calendar 日期固定 14／16／20px、Today circle
+固定 34／36／40px；窄螢幕 media query 不得覆寫為較小值。
+
+#### Disclosure and Chevron
+
+- 原地展開使用 `.app-disclosure`、`.app-disclosure__trigger`、
+  `.app-disclosure__content` 與 `.app-chevron--disclosure`。
+- Trigger 是整排原生 button，至少 44px，具 `aria-expanded`、
+  `aria-controls` 與可見 focus；內容以 `hidden` 控制，不重建資料。
+- `.app-chevron` 固定 20px、stroke 2、secondary color。向右／左只用於導覽；
+  向下表示收合，展開時旋轉 180° 為向上。一般立即動作不加 Chevron。
+- Today `#todayIncomeToggle` 是特殊的 summary trigger：核心收入、工時與時薪
+  位於可見 summary，只有 `#todayGoalDetails` 使用 `hidden`。此模式仍只有一個
+  button、一個 `aria-expanded` 與一個 `aria-controls`，不得建立第二份 state。
 
 ### Semantic colors
 

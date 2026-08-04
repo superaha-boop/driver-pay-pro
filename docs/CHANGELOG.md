@@ -16,6 +16,114 @@
 
 ## Unreleased
 
+### Today Progress and Driver Simplification
+
+- Today 綠色摘要固定顯示收入、今日實際工時與目前時薪；整排 disclosure 只
+  收合每日目標的未設定提示、百分比、尚差金額與進度條。
+- Driver 常用設定精簡為單一每日目標與單一字體大小設定，移除重複標題、說明
+  及一般成功狀態文字；既有自動儲存與錯誤／離線回饋不變。
+- Driver 四個 Header 摘要改為無摘要／平台、支出／備份、匯出／正常或需要
+  注意；App 與系統只保留可可靠判定且可採取行動的狀態。
+- 新增 47 項 Sprint contracts，App Shell candidate 更新為
+  `driver-pay-pro-v24`；資料結構、公式與 `driverPayApp.v2` 不變。
+
+### Progressive Disclosure and Display Size Integration
+
+- Today 今日收入改為整排 disclosure；收合仍保留收入金額，展開才顯示目標
+  進度與補充資訊，session state 不寫入資料。
+- AI 預設只完整顯示本週重點；本月洞察、收入變化來源、資料與分析依據改為
+  原地收合列，仍重用原分析資料。
+- Driver 重整為常用設定、工作與收入設定、資料與備份、App 與系統四類；
+  About 與系統狀態合併，移除獨立 About route／row。
+- 顯示大小更新為 13／17／22px body 層級；Calendar 使用專用月份、星期、
+  日期、完整紀錄與 Today circle tokens，窄螢幕不反向縮小。
+- 全 App chevron 重用 20px／stroke-2 `.app-chevron`；新增 60 項 Sprint
+  contracts，App Shell candidate 更新為 `driver-pay-pro-v23`。
+- 更新開發工具的 transitive `brace-expansion` 5.0.8 → 5.0.9，修正 audit
+  報告的 high severity 問題；此套件不進入 App runtime bundle。
+
+### V1.1 Final Display and Calendar Alignment
+
+- 將原 AI／報表閱讀設定升級為全 App「顯示大小」，標準／舒適／大字共同
+  套用 Today、Calendar、Reports、AI、Driver 與 Bottom Navigation。
+- 新 canonical 偏好為可選 `settings.displaySize`；合法新值優先，缺欄位時
+  相容舊 `settings.aiReportsReadingSize`，不 migration、不改 storage key。
+- Driver 的資料與 App 狀態合併為置底「系統狀態」disclosure；正常預設收合，
+  異常顯示「需要注意」。
+- Calendar 所有日期共用固定 34px day slot（320px 為 32px），Today 圓圈
+  與同列日期完全同基線，不改日期格高度或資料互動。
+- App Shell candidate 更新為 `driver-pay-pro-v22`。
+
+### Calendar Today 日期標記
+
+- 以 30px、2px 品牌深綠日期圓圈取代 Today 下方 4px 小圓點。
+- 今天未選取時使用透明圓形外框；今天被選取時使用深綠實心圓與反差文字，
+  並降低整格 Selected 視覺競爭。
+- 保留 Heat、其他日期 Selected、完整日期格點擊、`aria-current="date"`、
+  Today button、exact-date route 與 Work Record Card。
+- App Shell candidate 更新為 `driver-pay-pro-v21`。
+
+### AI／報表閱讀文字大小
+
+- Driver 新增「顯示設定」，提供標準／舒適／大字三個立即生效的閱讀層級。
+- AI 與 Reports 共用 `settings.aiReportsReadingSize` 及同一組 CSS reading
+  tokens；舊資料安全回退標準，不增加第二份頁面 state。
+- 放大閱讀內文、次要資訊、行高、段落間距與 Reports 圖表標籤；主要 KPI、
+  Today、Calendar、一般 Driver 與 Bottom Navigation 維持原尺寸。
+- App Shell candidate 更新為 `driver-pay-pro-v20`。
+- Product Owner 已確認 AI／Reports Reading Size Human QA Passed。
+
+### Today Work Status Header
+
+- 將「今日工作狀態」整條 44px 標題列改為現有工作明細的唯一展開入口。
+- 移除獨立「工作明細 ＋」列；狀態 badge 與 chevron 留在同一列。
+- 工作操作與明細內容維持 toggle 外的獨立事件範圍，不修改工時或狀態邏輯。
+- App Shell candidate 更新為 `driver-pay-pro-v19`。
+
+### Today Expense UX Batch 2
+
+- 支出類別改為單一直接原生選擇器，移除重複第二層 select。
+- 新增可選 `expenseAllocations` metadata，原始付款與 localStorage key 不變；
+  Reports／AI 使用分月成本，Calendar 保留原始付款。
+- CSV 同時匯出原始付款與分月資訊；切回一次支出或刪除支出會清理 allocation。
+- 精簡分月卡片，付款日期與備註同列，窄螢幕使用短日期。
+- App Shell candidate 更新為 `driver-pay-pro-v18`。
+- Product Owner 已確認 Expense UX Human QA Passed。
+
+### V1.1 Milestone 1 — Today Workflow and Work-Time Unification
+
+- 修正 Today 手動變更開始／結束時間後仍沿用舊 `workSession` 工時的 P0
+  data-integrity bug。
+- 工時統一為衍生整數分鐘：有效 clock fields 優先，缺少完整時間時才相容
+  legacy `manualHours` 或 live session。
+- 新增共用轉換、驗證與自然語言格式函式；Today、Calendar、Reports、AI、
+  CSV 與平均時薪共用 `workMetrics()`。
+- Product Owner 已確認 Milestone 1 Final Human QA 通過。
+- Today 綠色摘要改為正式工時唯一高階顯示；工作狀態卡只保留 status、
+  工作明細與下一步操作，不再重複主工時。
+- manual 模式只顯示小時／分鐘輸入；clock 模式只保留一次共用格式計算結果。
+- 支出快捷按鈕縮短但維持 44px 以上；類別與方式使用同列兩個目前值按鈕，
+  並保留完整選項及快捷切換前的草稿內容。
+- Human QA follow-up 將主工時與 44px 工作明細控制固定同列；修改工作時間
+  會展開並安全捲動，不自動 focus 或彈出鍵盤。
+- 每日紀錄使用三個獨立收合區塊：「工時設定／新增支出／其他資料」；完整
+  智慧支出流程恢復為獨立區塊，且 `儲存支出` 與 `儲存詳細紀錄` 分離。
+- 工時輸入改為互斥 clock／manual 模式，切換前明確確認並在成功 persistence
+  後才清除另一組欄位；模式由既有欄位推導，不新增 schema。
+- 已收工 clock 紀錄新增同列「再跑一段／修改時間」；確認續跑保留原開始、
+  將收工空檔累加為休息並沿用同一筆 WorkRecord。
+- 有收入無有效工時時提供「補上工時／稍後再補」；共用資料品質規則排除
+  少於 10 分鐘或高於 NT$2,000／小時的異常時薪，AI 顯示原因而不輸出誤導
+  數字、比較或建議。
+- 新增使用者同意後的一次性自動天氣：Open-Meteo、無 API key、精確位置不
+  保存、session 快取 30 分鐘；拒絕／離線／失敗／歷史補登維持手動選擇，
+  手動值優先。
+- Today 工時欄位改為 transactional auto-save，成功 persistence 後才更新
+  記憶體與通知 dependent views。
+- `test:today` 增為 51 項；全套測試增為 173 項。
+- Service Worker App Shell candidate 更新為 `driver-pay-pro-v17`。
+- `driverPayApp.v2` 與 WorkRecord schema 未變更，舊資料不遷移、不批量改寫。
+
 ### Local-first V1 Release Candidate
 
 - 完成唯讀 evidence-based AI：營運建議、本月洞察、智慧提醒，並透過

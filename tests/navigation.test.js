@@ -124,7 +124,7 @@ test("月曆與報表月份狀態互相獨立", () => {
 test("Calendar 4B 保留摘要並將過去日期寫入集中於共用編輯器", () => {
   const calendarSection = html.match(/<section id="view-calendar"[\s\S]*?<\/section>\s*<section id="view-reports"/)?.[0] || "";
   assert.match(html, /總收入[\s\S]*淨收入[\s\S]*工作時間[\s\S]*時薪/);
-  assert.match(html, /\.calendar-date[\s\S]*?min-height: 58px;/);
+  assert.match(html, /\.calendar-date[\s\S]*?min-height: max\(58px, calc\(var\(--calendar-day-marker-size\) \+ 24px\)\)/);
   assert.doesNotMatch(calendarSection, /id="entryForm"|id="detailForm"/);
   assert.match(html, /data-calendar-add/);
   assert.match(html, /data-calendar-edit/);

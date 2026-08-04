@@ -46,6 +46,23 @@
   --line-height-caption: 1.35;
   --letter-spacing-tight: -0.02em;
   --letter-spacing-normal: 0;
+  --display-body-size: 13px;
+  --display-secondary-size: 12px;
+  --display-caption-size: 12px;
+  --display-control-size: 16px;
+  --display-button-size: 14px;
+  --display-chart-label-size: 12px;
+  --display-calendar-month-size: 18px;
+  --display-calendar-weekday-size: 12px;
+  --display-calendar-date-size: 14px;
+  --display-calendar-amount-size: 11px;
+  --display-calendar-today-button-size: 16px;
+  --display-calendar-detail-size: 14px;
+  --display-calendar-detail-secondary-size: 12px;
+  --display-calendar-today-circle-size: 34px;
+  --display-nav-label-size: 14px;
+  --display-body-line-height: 1.55;
+  --display-secondary-color: var(--color-text-secondary);
 
   /* Brand */
   --color-brand: #15966f;
@@ -127,6 +144,50 @@
   --safe-area-right: env(safe-area-inset-right, 0px);
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --safe-area-left: env(safe-area-inset-left, 0px);
+}
+
+html[data-display-size="comfort"] {
+  --display-body-size: 17px;
+  --display-secondary-size: 15px;
+  --display-caption-size: 14px;
+  --display-control-size: 17px;
+  --display-button-size: 17px;
+  --display-chart-label-size: 15px;
+  --display-calendar-month-size: 20px;
+  --display-calendar-weekday-size: 14px;
+  --display-calendar-date-size: 16px;
+  --display-calendar-amount-size: 12px;
+  --display-calendar-today-button-size: 17px;
+  --display-calendar-detail-size: 17px;
+  --display-calendar-detail-secondary-size: 15px;
+  --display-calendar-today-circle-size: 36px;
+  --display-nav-label-size: 15px;
+  --display-body-line-height: 1.65;
+  --display-secondary-color: #506159;
+}
+
+html[data-display-size="large"] {
+  --font-size-body: 22px;
+  --font-size-secondary: 19px;
+  --font-size-caption: 16px;
+  --font-size-button: 20px;
+  --display-body-size: 22px;
+  --display-secondary-size: 19px;
+  --display-caption-size: 16px;
+  --display-control-size: 22px;
+  --display-button-size: 20px;
+  --display-chart-label-size: 18px;
+  --display-calendar-month-size: 22px;
+  --display-calendar-weekday-size: 16px;
+  --display-calendar-date-size: 20px;
+  --display-calendar-amount-size: 14px;
+  --display-calendar-today-button-size: 20px;
+  --display-calendar-detail-size: 22px;
+  --display-calendar-detail-secondary-size: 19px;
+  --display-calendar-today-circle-size: 40px;
+  --display-nav-label-size: 17px;
+  --display-body-line-height: 1.72;
+  --display-secondary-color: #46534c;
 }
 
 /* Typography primitives */

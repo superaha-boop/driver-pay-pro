@@ -1,6 +1,6 @@
 # Driver Pay Pro — Codex Instructions
 
-Version: 1.7
+Version: 1.10
 
 ## Project Documentation
 
@@ -87,6 +87,24 @@ Version: 1.7
 - 現有頁面採漸進式遷移；不得因 Design System 存在就一次性重寫凍結頁面。
 - 完整 token、primitive、表單與 showcase 規格請讀取 `docs/DESIGN_SYSTEM.md`。
 
+## Progressive Disclosure and Display Size Rules
+
+- Today、AI 與 Driver 的原地展開必須重用同一 disclosure 行為：整排至少
+  44px、原生 button、`aria-expanded`、`aria-controls`、可見 focus，且
+  內部控制項不得誤觸收合。
+- Chevron 語意固定：向右表示進入另一頁或下一層；向下表示原地展開；向上
+  表示原地收合；一般立即動作不加 Chevron。SVG 必須重用 `.app-chevron`，
+  20px、stroke 2，不使用 Unicode、加減號或鉛筆代替。
+- Driver 固定以「常用設定／工作與收入設定／資料與備份／App 與系統」四個
+  第一層分類呈現；常用設定預設展開，其餘預設收合。About 與系統狀態只在
+  「App 與系統」內，不建立獨立 About 頁或第二張狀態卡。
+- AI 首屏只完整顯示「本週重點」；本月洞察、收入變化來源、資料與分析依據
+  預設收合。AI renderer 保持唯讀並重用既有 analytics。
+- `settings.displaySize` 的一般閱讀 token 固定為 standard 13px／12px、
+  comfort 17px／15px、large 22px／19px（body／secondary）。Calendar 必須
+  使用獨立 typography tokens；日期固定 14／16／20px，Today circle 固定
+  34／36／40px，不得由窄螢幕 media query 反向縮小。
+
 ## Product Architecture Execution Rules
 
 - 底部主要資訊架構固定為「今天｜月曆｜報表｜AI｜Driver」，不得自行增加第六個主要分頁。
@@ -157,6 +175,9 @@ Version: 1.7
 - AI 必須重用 `sharedAnalytics` 與 Reports canonical period、calculation、
   comparison、trend、Important Dates、platform、persistence、formatting 及
   drill-down 基礎；完整契約以 `docs/AI_SPEC.md` 為準。
+- 全 App 顯示偏好固定使用可選 `settings.displaySize` 與 root
+  `data-display-size`；合法新欄位優先，缺少時才相容讀取舊
+  `aiReportsReadingSize`。不得新增頁面專用字級設定、zoom 或 scale。
 - Driver 只管理既有跨日設定與衍生的本機／App 狀態；每日目標必須與 Today
   共用 `state.settings.dailyGoal`，不得新增另一份來源。
 - Driver 不得新增每日紀錄、雲端狀態或不可靠的最後更新時間；完整契約以
@@ -166,6 +187,22 @@ Version: 1.7
 - Local-first V1 固定使用 `driverPayApp.v2`，沒有 Supabase、authentication、
   cloud sync、migration 或外部 AI；完整跨頁契約以
   `docs/INTEGRATION_SPEC.md` 為準。
+
+## Today Progress and Driver Simplicity Rules
+
+- Today 綠色摘要的收入總額、今日實際工時與目前時薪是固定可見的核心資訊；
+  Progressive Disclosure 只能收合每日目標的未設定提示、百分比、尚差金額與
+  進度條，不得把收入、工時或時薪一起隱藏。
+- Today 目標進度的展開狀態只存在目前 session；跨台北日期回到收合，不得寫入
+  WorkRecord、settings 或其他 durable storage。
+- Driver 固定只有常用設定、工作與收入設定、資料與備份、App 與系統四個第一層
+  disclosure。設定頁遵循「同一概念只顯示一次」：每日目標只有一個標題與欄位，
+  顯示偏好只有「字體大小設定」及標準／舒適／大字，不加入重複摘要或教學文案。
+- Driver Header 摘要只在能幫助辨識內容時出現：常用設定不顯示摘要、工作與收入
+  設定顯示「平台、支出」、資料與備份顯示「備份、匯出」，App 與系統只顯示
+  「正常」或「需要注意」。
+- App 與系統只顯示可採取行動且能由目前執行環境可靠判定的狀態；不得堆疊紀錄
+  總數、日期範圍、技術模式或其他對一般使用者沒有立即用途的診斷文字。
 
 ## Driver Pay Pro Local-first V1 UX Freeze
 

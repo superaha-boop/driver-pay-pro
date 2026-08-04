@@ -79,15 +79,27 @@ const functionNames = [
   "nonNegativeNumber",
   "minutes",
   "timeValueMs",
+  "decimalHoursToMinutes",
+  "minutesToHourMinuteParts",
+  "validateWorkTimeRange",
+  "calculateWorkMinutes",
   "clockWorkDurationMs",
   "sessionWorkDurationMs",
   "workMetrics",
+  "hourlyRateQuality",
   "hourlyRate",
   "platformRate",
   "platformNetAmount",
   "entryIncome",
   "entryExpenses",
+  "normalizeExpenseAllocation",
+  "expenseAllocationFor",
+  "expenseAllocationMonth",
+  "expenseAllocationAmount",
+  "reportExpenseSummary",
   "entryTotal",
+  "entryNet",
+  "recordDataQuality",
   "summarize",
   "isWorkDayRecord",
   "weekStart",
@@ -122,6 +134,7 @@ const functionNames = [
   "buildAIDataQuality",
   "buildAiAnalysisContext",
   "aiInsightTarget",
+  "hourlyRateStatusMessage",
   "buildAIInsights"
 ];
 const sharedAnalyticsSource = html.match(
@@ -138,8 +151,18 @@ const state = {
     monthlyGoal: 80000
   }
 };
+const fixtureNow = new Date(`${fixture.today}T12:00:00+08:00`);
+class FixtureDate extends Date {
+  constructor(...args) {
+    super(...(args.length ? args : [fixtureNow.getTime()]));
+  }
+
+  static now() {
+    return fixtureNow.getTime();
+  }
+}
 const context = vm.createContext({
-  Date,
+  Date: FixtureDate,
   Intl,
   Map,
   Math,
@@ -154,7 +177,9 @@ const context = vm.createContext({
   workTimeUnits: Object.freeze({
     minuteMs: 60 * 1000,
     hourMs: 60 * 60 * 1000
-  })
+  }),
+  MIN_VALID_WORK_MINUTES: 10,
+  MAX_REASONABLE_HOURLY_RATE: 2000
 });
 vm.runInContext(
   `${functionNames.map(extractFunction).join("\n")}\n`
@@ -205,6 +230,29 @@ test("同一份 fixture 的 AI 與 Reports 月彙總完全一致", () => {
   );
 });
 
+test("AI 與 Reports 共用分月後的每月成本", () => {
+  const originalEntries = state.entries;
+  state.entries = [{
+    id: "insurance",
+    date: "2026-07-29",
+    incomes: {},
+    expenses: { 汽車保險: 12000 },
+    expenseAllocations: {
+      汽車保險: { months: 12, startMonth: "2026-07" }
+    }
+  }];
+  const source = context.ai.buildAiAnalysisContext();
+  const reportsAggregate = context.ai.sharedAnalytics.aggregateReport(
+    state.entries,
+    context.ai.sharedAnalytics.getLocalMonthRange("2026-07")
+  );
+  state.entries = originalEntries;
+  assert.equal(source.monthAggregate.totalExpenses, 1000);
+  assert.equal(source.monthAggregate.netIncome, -1000);
+  assert.equal(source.monthAggregate.totalExpenses, reportsAggregate.totalExpenses);
+  assert.equal(source.monthAggregate.netIncome, reportsAggregate.netIncome);
+});
+
 test("同一份 fixture 的 AI 與 Reports 平台彙總完全一致", () => {
   const aiContext = context.ai.buildAiAnalysisContext();
   const reportsPlatform = context.ai.sharedAnalytics.aggregatePlatformIncome(
@@ -253,14 +301,74 @@ test("Insight Engine 輸出三個 V1 區塊、證據與分析依據", () => {
   }
 });
 
-test("AI UI 維持三個主要區塊並提供精確日期與報表導覽", () => {
+test("AI UI 預設只完整顯示本週重點，詳細分析保留精確導覽", () => {
   const aiSection = html.match(/<section id="view-ai"[\s\S]*?<\/section>\s*<section id="view-settings"/)?.[0] || "";
-  assert.match(aiSection, />營運建議</);
+  assert.match(aiSection, />本週重點</);
   assert.match(aiSection, />本月洞察</);
-  assert.match(aiSection, />智慧提醒</);
+  assert.match(aiSection, />收入變化來源</);
+  assert.match(aiSection, />資料與分析依據</);
+  assert.equal((aiSection.match(/class="app-disclosure__content"[^>]* hidden/g) || []).length, 3);
   assert.doesNotMatch(aiSection, />平台表現</);
   assert.match(html, /data-ai-calendar-date/);
   assert.match(html, /data-ai-report-view/);
   assert.match(html, /driverpay:recordchange/);
   assert.match(html, /離線・使用本機資料/);
+});
+
+test("AI 與 Reports 共用最低 10 分鐘及 2000 元時薪上限", () => {
+  const monthRange = context.ai.sharedAnalytics.getLocalMonthRange("2026-07");
+  for (const [minutes, expected] of [[0, "missing-work-time"], [2, "insufficient-work-time"], [9, "insufficient-work-time"]]) {
+    const aggregate = context.ai.sharedAnalytics.aggregateReport([{
+      date: "2026-07-26",
+      incomes: { Uber: 1000 },
+      manualHours: minutes / 60
+    }], monthRange);
+    assert.equal(aggregate.hourlyRateStatus, expected);
+    assert.equal(aggregate.averageHourlyIncome, null);
+  }
+
+  const valid = context.ai.sharedAnalytics.aggregateReport([{
+    date: "2026-07-26",
+    incomes: { Uber: 1000 },
+    manualHours: 0.5
+  }], monthRange);
+  assert.equal(valid.hourlyRateStatus, "complete");
+  assert.equal(valid.averageHourlyIncome, 2000);
+
+  const abnormal = context.ai.sharedAnalytics.aggregateReport([{
+    date: "2026-07-26",
+    incomes: { Uber: 1100 },
+    manualHours: 0.5
+  }], monthRange);
+  assert.equal(abnormal.hourlyRateStatus, "abnormal-hourly-rate");
+  assert.equal(abnormal.averageHourlyIncome, null);
+});
+
+test("AI 對異常時薪顯示檢查提示且不產生正常表現結論", () => {
+  const originalEntries = state.entries;
+  state.entries = [{
+    date: "2026-07-26",
+    incomes: { Uber: 1100 },
+    expenses: {},
+    manualHours: 0.5
+  }];
+  const source = context.ai.buildAiAnalysisContext();
+  const insights = context.ai.buildAIInsights({
+    currentWeek: source.currentWeek,
+    previousWeek: source.previousWeek,
+    weekComparison: source.weekComparison,
+    currentMonth: source.monthAggregate,
+    previousMonth: source.previousMonthAggregate,
+    monthComparison: source.monthComparison,
+    platformMonth: source.monthPlatformAggregate,
+    importantDates: source.importantDates,
+    monthlyTrend: source.monthlyTrend,
+    dataQuality: source.dataQuality,
+    goalState: source.goalState,
+    ranges: source.ranges
+  });
+  state.entries = originalEntries;
+  const output = JSON.stringify(insights);
+  assert.match(output, /時薪資料可能異常/);
+  assert.doesNotMatch(output, /表現非常好|本月平均時薪.*2,200/);
 });

@@ -1,6 +1,6 @@
 # Driver Pay Pro — Reports Specification
 
-Version: 1.0
+Version: 1.1
 Status: Approved implementation specification
 Updated: 2026-07-26
 Implementation status: Sprint 5B1 and 5B2 implemented; Final Regression and Product Owner L3 Human QA passed; UX Freeze Version 1 active
@@ -215,10 +215,10 @@ Every page must reuse the same canonical functions or selectors. Reports must no
 | KPI | Canonical definition | Unit | Zero/no-data behavior |
 | --- | --- | --- | --- |
 | Total income | Sum of `entryTotal(record)` | Integer NT$ | Stored record with zero shows `NT$0`; no records shows `—` |
-| Expenses | Sum of `entryExpenses(record)` | Integer NT$ | Same distinction |
-| Net income | Sum of `entryNet(record)`, equivalent to total minus expenses | Integer NT$ | Signed values allowed |
+| Expenses | `reportExpenseSummary(records, range)`；allocated categories use derived monthly cost, legacy/one-time categories use original payment | Integer NT$ | Same distinction |
+| Net income | Period total income minus the canonical report expense summary | Integer NT$ | Signed values allowed |
 | Work days | Count of unique dates where `isWorkDayRecord(record)` is true | Integer days | `0 天` |
-| Work time | Sum of canonical `workMetrics(record).durationMs` | Milliseconds internally | `0 分` |
+| Work time | Sum of canonical `workMetrics(record).durationMs`; each record is derived from integer `workMinutes` | Milliseconds at aggregation boundary | `0 分` |
 | Average hourly income | Period net income ÷ period valid work hours | NT$/hour | `NT$0` when duration is zero |
 | Platform income | Sum of recognized `platformNetAmount` for that stored platform key | Integer NT$ | No tips included |
 | Platform share | Positive platform income ÷ sum of positive recognized platform income | Percentage | Not available when denominator is zero |
@@ -346,7 +346,8 @@ Reports consumes the persistence adapter's explicit read result.
 ### Stored
 
 - Main data remains under `driverPayApp.v2`.
-- Existing entries, platforms, goals, rates, and settings retain their schema.
+- Existing entries, platforms, goals, rates, and settings retain their schema except
+  the approved optional `expenseAllocations[category] = { months, startMonth }`.
 - No Reports summary, comparison, trend, tab, selected period, or return context is stored.
 
 ### Normalized input
@@ -405,6 +406,11 @@ Reports must not depend on AI aggregation helpers. AI and Reports should eventua
 
 ## 22. Accessibility
 
+- Reports 閱讀文字與 AI 共用 Driver 的 canonical `settings.displaySize`，
+  標準／舒適／大字必須同步套用到標籤、期間、比較、趨勢、平台文字、
+  圖表文字替代與狀態訊息；主要 KPI 金額不大幅放大。
+- 文字大小切換只改 presentation，不得改變 selector、圖表資料、期間或
+  aggregation；長期間、平台名稱與金額必須可換行或安全重排，不以裁切處理。
 - The report switcher uses `role="tablist"`, each control uses `role="tab"` and `aria-selected`, and panels use linked `role="tabpanel"`.
 - Arrow-key tab navigation follows the standard horizontal tab pattern.
 - All controls meet 44×44px touch targets and show focus.

@@ -43,8 +43,8 @@
       --coral: var(--color-legacy-coral);
       --danger: var(--color-danger);
       --shadow: var(--shadow-card);
-      --reading-ai-body-size: 14px;
-      --reading-ai-detail-size: 13px;
+      --reading-ai-body-size: 13px;
+      --reading-ai-detail-size: 12px;
       --reading-ai-small-size: 12px;
       --reading-ai-micro-size: 11px;
       --reading-ai-section-title-size: 18px;
@@ -64,16 +64,16 @@
     }
 
     html[data-display-size="comfort"] {
-      --reading-ai-body-size: 16px;
-      --reading-ai-detail-size: 14px;
-      --reading-ai-small-size: 14px;
-      --reading-ai-micro-size: 13px;
-      --reading-ai-section-title-size: 19px;
-      --reading-ai-item-title-size: 16px;
-      --reading-ai-value-size: 16px;
-      --reading-report-body-size: 16px;
-      --reading-report-caption-size: 14px;
-      --reading-report-value-size: 17px;
+      --reading-ai-body-size: 17px;
+      --reading-ai-detail-size: 15px;
+      --reading-ai-small-size: 15px;
+      --reading-ai-micro-size: 14px;
+      --reading-ai-section-title-size: 20px;
+      --reading-ai-item-title-size: 17px;
+      --reading-ai-value-size: 17px;
+      --reading-report-body-size: 17px;
+      --reading-report-caption-size: 15px;
+      --reading-report-value-size: 18px;
       --reading-report-title-size: 18px;
       --reading-body-line-height: 1.65;
       --reading-small-line-height: 1.65;
@@ -84,17 +84,17 @@
     }
 
     html[data-display-size="large"] {
-      --reading-ai-body-size: 18px;
-      --reading-ai-detail-size: 16px;
-      --reading-ai-small-size: 16px;
-      --reading-ai-micro-size: 14px;
-      --reading-ai-section-title-size: 20px;
-      --reading-ai-item-title-size: 18px;
-      --reading-ai-value-size: 18px;
-      --reading-report-body-size: 18px;
-      --reading-report-caption-size: 16px;
-      --reading-report-value-size: 18px;
-      --reading-report-title-size: 19px;
+      --reading-ai-body-size: 22px;
+      --reading-ai-detail-size: 19px;
+      --reading-ai-small-size: 19px;
+      --reading-ai-micro-size: 16px;
+      --reading-ai-section-title-size: 22px;
+      --reading-ai-item-title-size: 20px;
+      --reading-ai-value-size: 20px;
+      --reading-report-body-size: 22px;
+      --reading-report-caption-size: 19px;
+      --reading-report-value-size: 22px;
+      --reading-report-title-size: 21px;
       --reading-body-line-height: 1.72;
       --reading-small-line-height: 1.72;
       --reading-card-padding: 18px;
@@ -645,19 +645,21 @@
     }
 
     .collapsible summary::after {
-      content: "+";
-      width: 26px;
-      height: 26px;
-      border-radius: 8px;
-      display: grid;
-      place-items: center;
-      color: white;
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      font-weight: 800;
+      content: "";
+      width: 14px;
+      height: 14px;
+      margin: 0 3px;
+      display: block;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      color: var(--color-text-secondary);
+      background: transparent;
+      transform: rotate(45deg) scale(.72);
+      transform-origin: center;
     }
 
     .collapsible[open] summary::after {
-      content: "−";
+      transform: rotate(225deg) scale(.72);
     }
 
     .collapsible-body {
@@ -1436,40 +1438,64 @@
     }
 
     .today-summary {
-      min-height: 214px;
-      padding: 14px 18px 12px;
-      display: flex;
-      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
       border-radius: 20px;
       color: #fff;
       background: var(--brand-strong);
       box-shadow: none;
     }
 
+    .today-income-toggle {
+      width: 100%;
+      min-width: 0;
+      min-height: 64px;
+      padding: 10px 16px 10px 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 9px;
+      color: inherit;
+      background: transparent;
+      text-align: left;
+    }
+
+    .today-income-toggle:focus-visible {
+      outline: 3px solid rgba(255, 255, 255, .68);
+      outline-offset: -4px;
+    }
+
     .today-summary-label {
       display: block;
-      margin-bottom: 3px;
       color: rgba(255, 255, 255, .72);
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
     .today-income {
-      display: block;
-      overflow-wrap: anywhere;
-      font-size: clamp(50px, 14vw, 64px);
+      min-width: 0;
+      overflow: hidden;
+      font-size: clamp(28px, 8vw, 38px);
       line-height: 1;
-      letter-spacing: -.055em;
+      letter-spacing: -.04em;
       font-variant-numeric: tabular-nums;
+      text-align: right;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .today-secondary {
-      margin-top: 10px;
-      padding-top: 9px;
+      margin: 0 18px;
+      padding: 9px 0 14px;
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
       border-top: 1px solid rgba(255, 255, 255, .18);
+    }
+
+    .today-summary.is-goal-expanded .today-secondary {
+      padding-bottom: 0;
     }
 
     .today-secondary div {
@@ -1491,8 +1517,15 @@
       font-variant-numeric: tabular-nums;
     }
 
+    .today-goal-details {
+      padding: 0 18px 14px;
+    }
+
+    .today-goal-details[hidden] {
+      display: none;
+    }
+
     .today-goal {
-      margin-top: auto;
       padding-top: 10px;
       display: grid;
       gap: 7px;
@@ -1518,6 +1551,82 @@
       height: 100%;
       border-radius: inherit;
       background: rgba(255, 255, 255, .96);
+    }
+
+    .app-disclosure {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .app-disclosure__trigger {
+      width: 100%;
+      min-width: 0;
+      min-height: 52px;
+      padding: 9px 16px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .app-disclosure__trigger:focus-visible {
+      outline: 3px solid var(--color-focus-ring);
+      outline-offset: -3px;
+    }
+
+    .app-disclosure__title {
+      min-width: 0;
+      font-size: var(--reading-ai-section-title-size);
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .app-disclosure__summary {
+      min-width: 0;
+      max-width: min(42vw, 180px);
+      overflow: hidden;
+      color: var(--muted);
+      font-size: var(--display-secondary-size);
+      line-height: 1.3;
+      text-align: right;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .app-disclosure__content {
+      padding: 2px 16px 16px;
+      border-top: 1px solid var(--color-border-subtle);
+    }
+
+    .app-disclosure__content[hidden] {
+      display: none;
+    }
+
+    .app-chevron,
+    .collapsible summary::after {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      color: var(--color-text-secondary);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform var(--motion-normal) var(--ease-standard);
+    }
+
+    [aria-expanded="true"] > .app-chevron,
+    [aria-expanded="true"] .app-chevron--disclosure {
+      transform: rotate(180deg);
     }
 
     .layout,
@@ -1642,10 +1751,10 @@
     }
 
     .work-details-chevron {
-      width: 18px;
-      height: 18px;
-      flex: 0 0 18px;
-      color: var(--brand-strong);
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      color: var(--color-text-secondary);
       fill: none;
       stroke: currentColor;
       stroke-width: 2;
@@ -2135,10 +2244,8 @@
     }
 
     .expense-choice-chevron {
-      flex: 0 0 auto;
+      flex: 0 0 20px;
       color: #087653;
-      font-size: 14px;
-      font-weight: 750;
     }
 
     .expense-mode-option {
@@ -3555,6 +3662,36 @@
       box-shadow: none;
     }
 
+    .ai-insight-card.app-disclosure {
+      padding: 0;
+    }
+
+    .ai-insight-card.app-disclosure .app-disclosure__content {
+      padding-top: var(--reading-card-gap);
+    }
+
+    .ai-primary-summary {
+      display: grid;
+      gap: var(--reading-item-gap);
+    }
+
+    .ai-primary-summary h4,
+    .ai-primary-summary p {
+      margin: 0;
+    }
+
+    .ai-primary-summary h4 {
+      color: #fff;
+      font-size: var(--reading-ai-item-title-size);
+      line-height: var(--reading-body-line-height);
+    }
+
+    .ai-primary-summary p {
+      color: rgba(255, 255, 255, .84);
+      font-size: var(--reading-ai-body-size);
+      line-height: var(--reading-body-line-height);
+    }
+
     .ai-section-head {
       margin-bottom: var(--reading-card-gap);
       display: flex;
@@ -3686,7 +3823,16 @@
       background: transparent;
       border: 0;
       font-size: var(--reading-ai-detail-size);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
       font-weight: 650;
+    }
+
+    .ai-context-button .app-chevron {
+      width: 18px;
+      height: 18px;
+      color: currentColor;
     }
 
     .ai-insight-card.primary .ai-context-button {
@@ -3870,13 +4016,20 @@
     }
 
     .driver-goal-card {
+      gap: 10px;
       border-color: rgba(21, 150, 111, .22);
       background: #fbfdfc;
     }
 
+    .driver-setting-title {
+      margin: 0;
+      color: #203128;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
     .driver-goal-input {
-      display: grid;
-      gap: 7px;
+      display: block;
       color: #506159;
       font-size: 13px;
       font-weight: 600;
@@ -3918,8 +4071,11 @@
     }
 
     .driver-goal-card .ds-save-status {
-      min-height: 20px;
-      margin: -6px 0 0;
+      margin: 0;
+    }
+
+    .driver-goal-card .ds-save-status:empty {
+      display: none;
     }
 
     .driver-status-list {
@@ -4049,6 +4205,71 @@
       font-size: 18px;
     }
 
+    .driver-settings-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .driver-settings-group__content {
+      display: grid;
+      gap: 0;
+      padding: 0 16px 14px;
+    }
+
+    .driver-settings-group__content > .panel,
+    .driver-settings-group__content > .driver-overview-card {
+      border: 0;
+      border-top: 1px solid var(--color-border-subtle);
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .driver-settings-group__content > :first-child {
+      border-top: 0;
+    }
+
+    .driver-settings-group .driver-goal-card {
+      padding: 12px 0 16px;
+      background: transparent;
+    }
+
+    .driver-setting-section .panel-head,
+    .driver-setting-section .panel-body {
+      padding-inline: 0;
+    }
+
+    .driver-setting-section .panel-head {
+      padding-top: 16px;
+    }
+
+    .driver-display-section {
+      padding: 16px 0 2px;
+    }
+
+    .driver-data-content,
+    .driver-app-system-content {
+      display: grid;
+      gap: 14px;
+    }
+
+    .driver-data-content .driver-safety-note {
+      margin-top: 12px;
+    }
+
+    .driver-about-inline {
+      margin-top: 12px;
+      padding: 20px 16px;
+      border: 0;
+      box-shadow: none;
+      background: var(--color-surface-muted);
+    }
+
+    .driver-system-details h3 {
+      margin: 0 0 4px;
+      color: var(--color-text-primary);
+      font-size: var(--reading-ai-section-title-size);
+    }
+
     .reading-size-fieldset {
       min-inline-size: 0;
       margin: 0;
@@ -4115,8 +4336,11 @@
     }
 
     .reading-size-status {
-      min-height: 20px;
-      margin: 10px 0 0;
+      margin: 8px 0 0;
+    }
+
+    .reading-size-status[hidden] {
+      display: none;
     }
 
     .nav button,
@@ -4220,6 +4444,49 @@
       font-size: var(--display-control-size);
     }
 
+    html:not([data-display-size="standard"]) #view-today :is(
+      .work-status-row .home-heading > span,
+      .panel-head h3,
+      .section-heading,
+      .collapsible summary,
+      .today-summary-label
+    ) {
+      font-size: var(--display-body-size);
+      line-height: var(--display-body-line-height);
+    }
+
+    html:not([data-display-size="standard"]) #view-today :is(
+      .today-secondary span,
+      .today-goal-status,
+      .income-unit
+    ) {
+      font-size: var(--display-secondary-size);
+      line-height: var(--display-body-line-height);
+    }
+
+    html:not([data-display-size="standard"]) :is(
+      #view-today,
+      #view-calendar,
+      #view-settings
+    ) :is(.button, .ds-button, .ai-context-button) {
+      font-size: var(--display-button-size);
+    }
+
+    html:not([data-display-size="standard"]) #view-settings :is(
+      input,
+      select,
+      textarea
+    ) {
+      font-size: var(--display-control-size);
+    }
+
+    html:not([data-display-size="standard"]) #view-settings :is(
+      .panel-body button,
+      .about-action-row
+    ) {
+      font-size: var(--display-button-size);
+    }
+
     @media (min-width: 700px) {
       .driver-dashboard {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4244,6 +4511,20 @@
     }
 
     @media (max-width: 350px) {
+      html[data-display-size="large"] #view-settings :is(
+        #driverWorkToggle,
+        #driverDataToggle
+      ) .app-disclosure__summary {
+        display: none;
+      }
+
+      html[data-display-size="large"] #view-settings :is(
+        #driverWorkToggle,
+        #driverDataToggle
+      ) .app-disclosure__title {
+        white-space: nowrap;
+      }
+
       html[data-display-size="large"] .reports-trend-row {
         grid-template-columns: auto minmax(0, 1fr);
       }
@@ -4687,11 +4968,11 @@
     }
 
     .details-panel .detail-section summary::after {
-      flex: 0 0 28px;
-      width: 28px;
-      height: 28px;
-      border-radius: 10px;
-      background: var(--brand);
+      flex: 0 0 14px;
+      width: 14px;
+      height: 14px;
+      margin: 0 5px;
+      background: transparent;
     }
 
     .detail-summary-main {
@@ -4793,7 +5074,7 @@
       flex: 0 0 20px;
       fill: none;
       stroke: currentColor;
-      stroke-width: 1.9;
+      stroke-width: 2;
       stroke-linecap: round;
       stroke-linejoin: round;
       transition: transform var(--motion-normal) var(--ease-standard);
@@ -4994,6 +5275,7 @@
 
     .calendar-month-title {
       min-width: 0;
+      font-size: var(--display-calendar-month-size);
       text-align: center;
       white-space: nowrap;
     }
@@ -5002,6 +5284,7 @@
       min-width: 56px;
       padding-inline: var(--spacing-3);
       border-radius: var(--radius-sm);
+      font-size: var(--display-calendar-today-button-size);
     }
 
     .calendar-today-button:hover {
@@ -5022,7 +5305,7 @@
     .calendar-weekdays {
       margin-bottom: calc(var(--spacing-1) * -1);
       color: var(--color-text-secondary);
-      font-size: var(--font-size-caption);
+      font-size: var(--display-calendar-weekday-size);
       font-weight: var(--font-weight-bold);
       line-height: var(--line-height-caption);
       text-align: center;
@@ -5062,10 +5345,10 @@
     }
 
     .calendar-date {
-      --calendar-day-marker-size: 34px;
+      --calendar-day-marker-size: var(--display-calendar-today-circle-size);
       position: relative;
       min-width: 0;
-      min-height: 58px;
+      min-height: max(58px, calc(var(--calendar-day-marker-size) + 24px));
       padding: 6px 2px 5px;
       border: 1px solid transparent;
       border-radius: var(--radius-sm);
@@ -5171,6 +5454,7 @@
       min-height: 178px;
       padding: var(--spacing-4) var(--spacing-5);
       touch-action: pan-y;
+      font-size: var(--display-calendar-detail-size);
     }
 
     .calendar-record-card.is-updating #calendarRecordContent {
@@ -5202,6 +5486,7 @@
       align-items: baseline;
       flex-wrap: wrap;
       overflow-wrap: anywhere;
+      font-size: var(--display-calendar-detail-size);
     }
 
     .calendar-record-date {
@@ -5217,13 +5502,13 @@
 
     .calendar-record-weekday {
       color: var(--color-text-secondary);
-      font-size: var(--font-size-secondary);
+      font-size: var(--display-calendar-detail-secondary-size);
       font-weight: var(--font-weight-medium);
     }
 
     .calendar-record-context {
       color: var(--color-text-tertiary);
-      font-size: var(--font-size-caption);
+      font-size: var(--display-calendar-detail-secondary-size);
       line-height: var(--line-height-caption);
     }
 
@@ -5243,7 +5528,7 @@
     .calendar-support-row span,
     .calendar-platform-row span {
       color: var(--color-text-secondary);
-      font-size: var(--font-size-secondary);
+      font-size: var(--display-calendar-detail-secondary-size);
       line-height: var(--line-height-caption);
     }
 
@@ -5297,14 +5582,14 @@
     .calendar-support-row strong {
       flex: 0 0 auto;
       color: var(--color-text-primary);
-      font-size: var(--font-size-body);
+      font-size: var(--display-calendar-detail-size);
       line-height: var(--line-height-caption);
       font-variant-numeric: tabular-nums;
     }
 
     .calendar-note {
       color: var(--color-text-secondary);
-      font-size: var(--font-size-secondary);
+      font-size: var(--display-calendar-detail-secondary-size);
       line-height: var(--line-height-body);
       overflow-wrap: anywhere;
       white-space: pre-wrap;
@@ -5510,7 +5795,7 @@
 
     .calendar-month-summary-item span {
       color: var(--color-text-secondary);
-      font-size: var(--font-size-secondary);
+      font-size: var(--display-calendar-detail-secondary-size);
     }
 
     .calendar-month-summary-item strong {
@@ -5543,12 +5828,12 @@
       }
 
       .calendar-month-title {
-        font-size: 18px;
+        font-size: var(--display-calendar-month-size);
       }
 
       .calendar-date {
-        --calendar-day-marker-size: 32px;
-        min-height: 54px;
+        min-height: max(54px, calc(var(--calendar-day-marker-size) + 24px));
+        padding-inline: 0;
       }
 
       .calendar-date__day {
@@ -5705,7 +5990,7 @@
             </span>
             <span class="work-status-meta">
               <strong id="workStatusText" data-status="idle">尚未開始</strong>
-              <svg class="work-details-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <svg class="work-details-chevron app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path d="m6 9 6 6 6-6"></path>
               </svg>
             </span>
@@ -5752,7 +6037,7 @@
           <div class="panel-head">
             <button class="manual-entry-toggle" id="manualEntryToggle" type="button" aria-expanded="true" aria-controls="manualEntryContent">
               <span id="formTitle">每日紀錄</span>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
+              <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="m6 9 6 6 6-6"></path>
               </svg>
             </button>
@@ -5913,13 +6198,13 @@
         <div class="calendar-page ds-page-container">
           <div class="calendar-month-navigation" aria-label="月份導覽">
             <button class="ds-icon-button" id="calendarPreviousMonth" type="button" aria-label="上一個月">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
+              <svg class="app-chevron app-chevron--left" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="m15 18-6-6 6-6"></path>
               </svg>
             </button>
             <h3 class="calendar-month-title ds-section-title ds-numeric" id="calendarMonthTitle"></h3>
             <button class="ds-icon-button" id="calendarNextMonth" type="button" aria-label="下一個月">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
+              <svg class="app-chevron app-chevron--right" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="m9 18 6-6-6-6"></path>
               </svg>
             </button>
@@ -5966,13 +6251,13 @@
             aria-labelledby="reportTabWeek" data-report-panel="week">
             <header class="reports-period-header">
               <button class="ds-icon-button" type="button" data-report-period="previous"
-                aria-label="查看上一週"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button>
+                aria-label="查看上一週"><svg class="app-chevron app-chevron--left" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button>
               <div class="reports-period-title">
                 <span>週報</span>
                 <h3 id="weekPeriodLabel"></h3>
               </div>
               <button class="ds-icon-button" type="button" data-report-period="next"
-                aria-label="查看下一週"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+                aria-label="查看下一週"><svg class="app-chevron app-chevron--right" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
               <button class="ds-button ds-button--secondary reports-current-button" type="button"
                 data-report-period="current">本週</button>
             </header>
@@ -5983,13 +6268,13 @@
             aria-labelledby="reportTabMonth" data-report-panel="month">
             <header class="reports-period-header">
               <button class="ds-icon-button" type="button" data-report-period="previous"
-                aria-label="查看上個月"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button>
+                aria-label="查看上個月"><svg class="app-chevron app-chevron--left" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button>
               <div class="reports-period-title">
                 <span>月報</span>
                 <h3 id="monthPeriodLabel"></h3>
               </div>
               <button class="ds-icon-button" type="button" data-report-period="next"
-                aria-label="查看下個月"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+                aria-label="查看下個月"><svg class="app-chevron app-chevron--right" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
               <button class="ds-button ds-button--secondary reports-current-button" type="button"
                 data-report-period="current">本月</button>
             </header>
@@ -6017,26 +6302,44 @@
           </header>
           <section class="ai-insight-card primary" aria-labelledby="aiTodayTitle">
             <div class="ai-section-head">
-              <h3 id="aiTodayTitle">營運建議</h3>
-              <span class="ai-section-kicker">本週優先行動</span>
+              <h3 id="aiTodayTitle">本週重點</h3>
+              <span class="ai-section-kicker">最值得先看</span>
             </div>
             <div id="aiTodayAdvice"></div>
           </section>
-          <section class="ai-insight-card" aria-labelledby="aiMonthTitle">
-            <div class="ai-section-head">
-              <h3 id="aiMonthTitle">本月洞察</h3>
-              <span class="ai-section-kicker">本月累計</span>
+          <section class="ai-insight-card app-disclosure" aria-labelledby="aiMonthTitle">
+            <button class="app-disclosure__trigger" id="aiMonthDisclosureToggle" type="button"
+              data-disclosure-scope="ai" data-disclosure-key="month" aria-expanded="false" aria-controls="aiMonthDisclosureContent">
+              <span class="app-disclosure__title" id="aiMonthTitle">本月洞察</span>
+              <span class="app-disclosure__summary" id="aiMonthDisclosureSummary">本月摘要</span>
+              <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+            </button>
+            <div class="app-disclosure__content" id="aiMonthDisclosureContent" hidden>
+              <div id="aiMonthInsights"></div>
             </div>
-            <div id="aiMonthInsights"></div>
           </section>
-          <section class="ai-insight-card" aria-labelledby="aiAlertsTitle">
-            <div class="ai-section-head">
-              <h3 id="aiAlertsTitle">智慧提醒</h3>
-              <span class="ai-section-kicker">規則偵測</span>
+          <section class="ai-insight-card app-disclosure" aria-labelledby="aiAlertsTitle">
+            <button class="app-disclosure__trigger" id="aiSourcesDisclosureToggle" type="button"
+              data-disclosure-scope="ai" data-disclosure-key="sources" aria-expanded="false" aria-controls="aiSourcesDisclosureContent">
+              <span class="app-disclosure__title" id="aiAlertsTitle">收入變化來源</span>
+              <span class="app-disclosure__summary" id="aiSourcesDisclosureSummary">狀態摘要</span>
+              <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+            </button>
+            <div class="app-disclosure__content" id="aiSourcesDisclosureContent" hidden>
+              <div id="aiAlerts"></div>
             </div>
-            <div id="aiAlerts"></div>
           </section>
-          <aside class="ai-analysis-meta" id="aiAnalysisMetadata" aria-label="分析依據"></aside>
+          <section class="ai-insight-card app-disclosure" aria-labelledby="aiMetadataTitle">
+            <button class="app-disclosure__trigger" id="aiMetadataDisclosureToggle" type="button"
+              data-disclosure-scope="ai" data-disclosure-key="metadata" aria-expanded="false" aria-controls="aiMetadataDisclosureContent">
+              <span class="app-disclosure__title" id="aiMetadataTitle">資料與分析依據</span>
+              <span class="app-disclosure__summary" id="aiMetadataDisclosureSummary">分析期間</span>
+              <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+            </button>
+            <div class="app-disclosure__content" id="aiMetadataDisclosureContent" hidden>
+              <aside class="ai-analysis-meta" id="aiAnalysisMetadata" aria-label="分析依據"></aside>
+            </div>
+          </section>
         </div>
       </section>
 
@@ -6044,197 +6347,77 @@
         <div class="driver-dashboard">
           <header class="driver-page-intro">
             <h2>Driver</h2>
-            <p>管理此裝置的收入目標、顯示方式與常用設定。</p>
+            <p>管理常用設定。</p>
           </header>
-
-          <section class="driver-overview-card driver-goal-card" aria-labelledby="driverGoalTitle">
-            <div>
-              <span class="driver-card-kicker">收入目標</span>
-              <h3 id="driverGoalTitle">每日收入目標</h3>
-              <p>與「今天」使用相同設定，輸入後自動儲存。</p>
+        </div>
+        <div class="driver-settings-stack">
+          <section class="driver-settings-group app-disclosure" aria-labelledby="driverCommonTitle">
+            <button class="app-disclosure__trigger" id="driverCommonToggle" type="button" data-disclosure-scope="driver"
+              data-disclosure-key="common" aria-expanded="true" aria-controls="driverCommonContent">
+              <span class="app-disclosure__title" id="driverCommonTitle">常用設定</span>
+              <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+            </button>
+            <div class="app-disclosure__content driver-settings-group__content" id="driverCommonContent">
+              <section class="driver-overview-card driver-goal-card" aria-labelledby="driverGoalTitle">
+                <h3 class="driver-setting-title" id="driverGoalTitle">每日目標</h3>
+                <label class="driver-goal-input" for="dailyGoal"><span class="sr-only">每日目標金額</span><span class="driver-goal-control"><span aria-hidden="true">NT$</span><input type="number" id="dailyGoal" min="0" max="99999999" step="100" inputmode="numeric" placeholder="例如：3000" aria-label="每日目標金額"></span></label>
+                <p class="ds-save-status" id="driverGoalStatus" data-status="idle" role="status" aria-live="polite" hidden></p>
+              </section>
+              <div class="panel driver-setting-section driver-display-section"><div class="panel-body">
+                <fieldset class="reading-size-fieldset"><legend>字體大小設定</legend><div class="reading-size-options">
+                  <label class="reading-size-choice"><input type="radio" name="displaySize" value="standard" data-display-size-option checked><span>標準</span></label>
+                  <label class="reading-size-choice"><input type="radio" name="displaySize" value="comfort" data-display-size-option><span>舒適</span></label>
+                  <label class="reading-size-choice"><input type="radio" name="displaySize" value="large" data-display-size-option><span>大字</span></label>
+                </div></fieldset>
+                <p class="ds-save-status reading-size-status" id="displaySizeStatus" data-status="idle" role="status" aria-live="polite" hidden></p>
+              </div></div>
             </div>
-            <label class="driver-goal-input" for="dailyGoal">
-              <span>每日目標</span>
-              <span class="driver-goal-control"><span aria-hidden="true">NT$</span><input type="number" id="dailyGoal"
-                min="0" max="99999999" step="100" inputmode="numeric" placeholder="例如：3000"></span>
-            </label>
-            <p class="ds-save-status" id="driverGoalStatus" data-status="idle" role="status" aria-live="polite"></p>
           </section>
 
-        </div>
-
-        <h2 class="driver-settings-heading">常用設定</h2>
-        <div class="layout">
-          <div class="panel">
-            <div class="panel-head">
-              <h3>顯示設定</h3>
-            </div>
-            <div class="panel-body">
-              <fieldset class="reading-size-fieldset">
-                <legend>顯示大小</legend>
-                <div class="reading-size-options">
-                  <label class="reading-size-choice">
-                    <input type="radio" name="displaySize" value="standard" data-display-size-option checked>
-                    <span>標準</span>
-                  </label>
-                  <label class="reading-size-choice">
-                    <input type="radio" name="displaySize" value="comfort" data-display-size-option>
-                    <span>舒適</span>
-                  </label>
-                  <label class="reading-size-choice">
-                    <input type="radio" name="displaySize" value="large" data-display-size-option>
-                    <span>大字</span>
-                  </label>
-                </div>
-              </fieldset>
-              <p class="ds-save-status reading-size-status" id="displaySizeStatus" data-status="idle" role="status" aria-live="polite"></p>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panel-head">
-              <h3>快捷支出設定</h3>
-            </div>
-            <div class="panel-body">
-              <div class="expense-shortcut-settings" id="expenseShortcutSettings"></div>
-              <div class="settings-actions">
-                <button class="button secondary" id="restoreExpenseShortcuts" type="button">恢復預設</button>
-              </div>
-              <p class="expense-shortcut-settings-status" id="expenseShortcutStatus" role="status"></p>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panel-head">
-              <h3>平台設定</h3>
-            </div>
-            <div class="panel-body">
-              <div class="platform-create-form">
-                <div class="settings-row">
-                  <label>新增平台
-                    <input id="newPlatformName" placeholder="例如：大都會車隊">
-                  </label>
-                  <button class="button" id="addPlatform">新增</button>
-                </div>
-                <fieldset class="platform-mode-fieldset">
-                  <legend>收入怎麼輸入？</legend>
-                  <div class="platform-mode-options">
-                    <label class="platform-mode-choice">
-                      <input type="radio" name="newPlatformInputMode" value="total" checked>
-                      <span>直接輸入總額</span>
-                    </label>
-                    <label class="platform-mode-choice">
-                      <input type="radio" name="newPlatformInputMode" value="incremental">
-                      <span>每筆收入累加</span>
-                    </label>
-                  </div>
-                </fieldset>
-              </div>
-              <div class="chips" id="platformChips"></div>
-              <h3 class="platform-mode-heading">收入輸入方式</h3>
-              <div class="platform-mode-list" id="platformInputModeSettings"></div>
-              <div style="height: 18px"></div>
-              <h3 style="margin: 0 0 12px; font-size: 16px;">平台實拿比例</h3>
-              <div class="rate-grid" id="platformRateInputs"></div>
-              <div style="height: 12px"></div>
-              <button class="button" id="saveRates">儲存比例</button>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panel-head">
-              <h3>支出類別與目標</h3>
-            </div>
-            <div class="panel-body">
-              <div class="settings-row">
-                <label>新增支出類別
-                  <input id="newExpenseName" placeholder="例如：輪胎">
-                </label>
-                <button class="button" id="addExpense">新增</button>
-              </div>
-              <div class="chips" id="expenseChips"></div>
-              <div style="height: 18px"></div>
-              <label>每月淨收入目標
-                <input type="number" id="monthlyGoal" min="0" step="100" placeholder="例如：80000">
-              </label>
-              <div style="height: 12px"></div>
-              <button class="button" id="saveMonthlyGoal">儲存每月目標</button>
-              <div class="settings-actions">
-                <button class="button secondary" id="exportCsv" type="button">匯出 CSV</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="panel settings-about-panel">
-            <button class="settings-link-row" id="openAbout" type="button" aria-label="開啟關於 Driver Pay Pro">
-              <span class="settings-link-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="9"></circle>
-                  <path d="M12 11v5"></path>
-                  <path d="M12 8h.01"></path>
-                </svg>
-              </span>
-              <span class="settings-link-copy">
-                <strong>關於 Driver Pay Pro</strong>
-                <small id="settingsAppVersion"></small>
-              </span>
-              <svg class="settings-link-chevron" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="m9 18 6-6-6-6"></path>
-              </svg>
+          <section class="driver-settings-group app-disclosure" aria-labelledby="driverWorkTitle">
+            <button class="app-disclosure__trigger" id="driverWorkToggle" type="button" data-disclosure-scope="driver"
+              data-disclosure-key="work" aria-expanded="false" aria-controls="driverWorkContent">
+              <span class="app-disclosure__title" id="driverWorkTitle">工作與收入設定</span><span class="app-disclosure__summary">平台、支出</span>
+              <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
             </button>
-          </div>
+            <div class="app-disclosure__content driver-settings-group__content" id="driverWorkContent" hidden>
+              <div class="panel driver-setting-section"><div class="panel-head"><h3>快捷支出設定</h3></div><div class="panel-body"><div class="expense-shortcut-settings" id="expenseShortcutSettings"></div><div class="settings-actions"><button class="button secondary" id="restoreExpenseShortcuts" type="button">恢復預設</button></div><p class="expense-shortcut-settings-status" id="expenseShortcutStatus" role="status"></p></div></div>
+              <div class="panel driver-setting-section"><div class="panel-head"><h3>平台設定</h3></div><div class="panel-body">
+                <div class="platform-create-form"><div class="settings-row"><label>新增平台<input id="newPlatformName" placeholder="例如：大都會車隊"></label><button class="button" id="addPlatform">新增</button></div>
+                  <fieldset class="platform-mode-fieldset"><legend>收入怎麼輸入？</legend><div class="platform-mode-options"><label class="platform-mode-choice"><input type="radio" name="newPlatformInputMode" value="total" checked><span>直接輸入總額</span></label><label class="platform-mode-choice"><input type="radio" name="newPlatformInputMode" value="incremental"><span>每筆收入累加</span></label></div></fieldset></div>
+                <div class="chips" id="platformChips"></div><h3 class="platform-mode-heading">收入輸入方式</h3><div class="platform-mode-list" id="platformInputModeSettings"></div><div style="height: 18px"></div><h3 style="margin: 0 0 12px; font-size: 16px;">平台實拿比例</h3><div class="rate-grid" id="platformRateInputs"></div><div style="height: 12px"></div><button class="button" id="saveRates">儲存比例</button>
+              </div></div>
+              <div class="panel driver-setting-section"><div class="panel-head"><h3>支出類別與目標</h3></div><div class="panel-body"><div class="settings-row"><label>新增支出類別<input id="newExpenseName" placeholder="例如：輪胎"></label><button class="button" id="addExpense">新增</button></div><div class="chips" id="expenseChips"></div><div style="height: 18px"></div><label>每月淨收入目標<input type="number" id="monthlyGoal" min="0" step="100" placeholder="例如：80000"></label><div style="height: 12px"></div><button class="button" id="saveMonthlyGoal">儲存每月目標</button></div></div>
+            </div>
+          </section>
+
+          <section class="driver-settings-group app-disclosure" aria-labelledby="driverDataTitle">
+            <button class="app-disclosure__trigger" id="driverDataToggle" type="button" data-disclosure-scope="driver"
+              data-disclosure-key="data" aria-expanded="false" aria-controls="driverDataContent">
+              <span class="app-disclosure__title" id="driverDataTitle">資料與備份</span><span class="app-disclosure__summary">備份、匯出</span>
+              <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+            </button>
+            <div class="app-disclosure__content driver-data-content" id="driverDataContent" hidden>
+              <aside class="driver-safety-note" aria-labelledby="driverSafetyTitle"><h3 id="driverSafetyTitle">資料保存在這台裝置</h3><p>目前沒有跨裝置同步或雲端備份。清除 Safari 網站資料可能會刪除工作紀錄；請定期匯出 CSV 留存。</p></aside>
+              <button class="button secondary" id="exportCsv" type="button">匯出 CSV</button>
+            </div>
+          </section>
+
+          <section class="driver-settings-group app-disclosure" aria-labelledby="driverSystemStatusTitle">
+            <button class="app-disclosure__trigger" id="driverSystemStatusToggle" type="button" data-disclosure-scope="driver"
+              data-disclosure-key="app" aria-expanded="false" aria-controls="driverSystemStatusContent">
+              <span class="app-disclosure__title" id="driverSystemStatusTitle">App 與系統</span>
+              <span class="driver-system-status-badge" id="driverSystemStatusBadge">正常</span>
+              <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+            </button>
+            <div class="app-disclosure__content driver-app-system-content" id="driverSystemStatusContent" hidden>
+              <section class="about-identity driver-about-inline" aria-labelledby="aboutProductName"><img class="about-logo" src="assets/driver-pay-pro-master-icon.png" alt="Driver Pay Pro App Logo"><h3 id="aboutProductName"></h3><p class="about-version" id="aboutAppVersion"></p><p class="about-role" id="aboutAuthorRole"></p><strong class="about-author" id="aboutAuthorName"></strong><p class="about-tagline" id="aboutTagline"></p></section>
+              <div class="about-actions" aria-label="聯絡選項"><button class="about-action-row" type="button" disabled><span>Send Feedback</span><span class="about-action-meta">即將推出</span></button></div>
+              <p class="about-legal"><span id="aboutCopyright"></span><br>All Rights Reserved.</p>
+              <section class="driver-system-details" aria-labelledby="driverStatusDetailTitle"><h3 id="driverStatusDetailTitle">系統狀態</h3><dl class="driver-status-list" id="driverSystemStatusDetails"></dl></section>
+            </div>
+          </section>
         </div>
-
-        <section class="driver-overview-card driver-system-status" aria-labelledby="driverSystemStatusTitle">
-          <button class="driver-system-status-toggle" id="driverSystemStatusToggle" type="button"
-            aria-expanded="false" aria-controls="driverSystemStatusContent">
-            <span class="driver-system-status-heading">
-              <span class="driver-card-kicker">系統狀態</span>
-              <h3 id="driverSystemStatusTitle">此裝置與 App</h3>
-            </span>
-            <span class="driver-system-status-badge" id="driverSystemStatusBadge">正常</span>
-            <svg class="driver-system-status-chevron" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="m6 9 6 6 6-6"></path>
-            </svg>
-          </button>
-          <div class="driver-system-status-content" id="driverSystemStatusContent" hidden>
-            <aside class="driver-safety-note" aria-labelledby="driverSafetyTitle">
-              <h3 id="driverSafetyTitle">資料保存在這台裝置</h3>
-              <p>目前沒有跨裝置同步或雲端備份。清除 Safari 網站資料可能會刪除工作紀錄；離線時仍可使用已快取的 App。</p>
-            </aside>
-            <dl class="driver-status-list" id="driverSystemStatusDetails"></dl>
-          </div>
-        </section>
-      </section>
-
-      <section id="view-about" class="view about-view hidden" aria-labelledby="aboutProductName">
-        <button class="about-back-button" id="closeAbout" type="button">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="m15 18-6-6 6-6"></path>
-          </svg>
-          <span>設定</span>
-        </button>
-
-        <section class="about-identity">
-          <img class="about-logo" src="assets/driver-pay-pro-master-icon.png" alt="Driver Pay Pro App Logo">
-          <h3 id="aboutProductName"></h3>
-          <p class="about-version" id="aboutAppVersion"></p>
-          <p class="about-role" id="aboutAuthorRole"></p>
-          <strong class="about-author" id="aboutAuthorName"></strong>
-          <p class="about-tagline" id="aboutTagline"></p>
-        </section>
-
-        <div class="about-actions" aria-label="聯絡選項">
-          <button class="about-action-row" type="button" disabled>
-            <span>Send Feedback</span>
-            <span class="about-action-meta">即將推出</span>
-          </button>
-        </div>
-
-        <p class="about-legal">
-          <span id="aboutCopyright"></span><br>
-          All Rights Reserved.
-        </p>
       </section>
 
     </main>
@@ -6246,7 +6429,7 @@
     <div class="record-editor-shell">
       <header class="record-editor-header">
         <button class="ds-icon-button record-editor-close" id="recordEditorClose" type="button" aria-label="關閉工作紀錄編輯器">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+          <svg class="app-chevron app-chevron--left" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
         </button>
         <div class="record-editor-heading">
           <h2 id="recordEditorTitle">工作紀錄</h2>
@@ -6327,7 +6510,6 @@
     });
     const storageKey = "driverPayApp.v2";
     const lastValidStorageKey = `${storageKey}.lastValid`;
-    const appShellCacheName = "driver-pay-pro-v22";
     const displaySizeLabels = Object.freeze({
       standard: "標準",
       comfort: "舒適",
@@ -6418,6 +6600,8 @@
 
     let stateLoadError = null;
     let stateRecoveryNotice = "";
+    let lastPersistenceError = null;
+    let pwaSetupError = null;
     const state = loadState();
     let activeView = "today";
     let reportsState = createReportsState(todayString());
@@ -6431,7 +6615,11 @@
     let expenseShortcutStatus = "";
     let displaySizeStatus = "";
     let displaySizeStatusType = "";
-    let systemStatusExpanded = Boolean(stateLoadError);
+    let todayGoalDisclosureDate = todayString();
+    let todayGoalExpanded = false;
+    const aiDisclosureState = { month: false, sources: false, metadata: false };
+    const driverDisclosureState = { common: true, work: false, data: false, app: Boolean(stateLoadError) };
+    let systemStatusExpanded = driverDisclosureState.app;
     let systemStatusAutoOpened = Boolean(stateLoadError);
     let driverGoalSaveTimer = 0;
     let driverGoalStatus = "";
@@ -6469,8 +6657,7 @@
       calendar: ["月曆", "查看、編輯與管理每日歷史紀錄。"],
       reports: ["報表", "查看週報、月報與平台收入統計。"],
       ai: ["AI 營運助理", "根據你的收入與工時紀錄提供分析"],
-      settings: ["Driver Space", "調整平台、支出類別與收入目標。"],
-      about: ["關於 Driver Pay Pro", "產品、版本與作者資訊。"]
+      settings: ["Driver Space", "調整平台、支出類別與收入目標。"]
     };
 
     const els = {
@@ -6680,6 +6867,7 @@
         if (updateMemory) replaceStateContents(normalized);
         stateLoadError = null;
         stateRecoveryNotice = "";
+        lastPersistenceError = null;
         return true;
       } catch (error) {
         if (storageSnapshotsCaptured) {
@@ -6696,6 +6884,7 @@
             console.error("安全快照回復失敗；原始主資料仍優先保留。", restoreError);
           }
         }
+        lastPersistenceError = error;
         console.error("無法安全儲存資料。", error);
         return false;
       }
@@ -8045,7 +8234,7 @@
         : target.view === "reports" ? "查看報表"
           : target.view === "settings" ? "查看 Driver"
             : "前往今天";
-      return `<button class="ai-context-button" type="button" ${attributes} aria-label="${escapeAttr(accessibleName || label)}">${label}　›</button>`;
+      return `<button class="ai-context-button" type="button" ${attributes} aria-label="${escapeAttr(accessibleName || label)}"><span>${label}</span><svg class="app-chevron app-chevron--right" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>`;
     }
 
     function renderAIInsightItems(items, emptyText, options = {}) {
@@ -8067,6 +8256,31 @@
       `;
     }
 
+    function setDisclosureExpanded(trigger, expanded) {
+      if (!trigger) return;
+      const content = document.getElementById(trigger.getAttribute("aria-controls"));
+      trigger.setAttribute("aria-expanded", String(Boolean(expanded)));
+      if (content) content.hidden = !expanded;
+    }
+
+    function renderAiPrimaryInsight(insights, offline) {
+      if (insights.dataSufficiency !== "sufficient") {
+        return `
+          <div class="ai-primary-summary">
+            <h4>目前還不能形成可靠分析</h4>
+            <p>再累積 1 個有效工作日後，即可比較收入、工時與時薪。</p>
+            ${aiContextButtonMarkup(aiInsightTarget("today"), "前往今天新增工作紀錄")}
+            ${offline ? `<span class="ai-local-status">離線・使用本機資料</span>` : ""}
+          </div>
+        `;
+      }
+      return renderAIInsightItems(
+        insights.operatingRecommendations.slice(0, 1),
+        "目前沒有需要優先處理的營運建議。",
+        { offline }
+      );
+    }
+
     function renderAiAnalysis() {
       if (!els.aiTodayAdvice) return;
       try {
@@ -8086,11 +8300,7 @@
           ranges: context.ranges
         });
         const offline = !navigator.onLine;
-        els.aiTodayAdvice.innerHTML = renderAIInsightItems(
-          insights.operatingRecommendations,
-          "目前資料仍不足以形成可靠的營運建議。",
-          { offline }
-        );
+        els.aiTodayAdvice.innerHTML = renderAiPrimaryInsight(insights, offline);
         els.aiMonthInsights.innerHTML = renderAIInsightItems(
           insights.monthlyInsights,
           "本月尚無可解讀的工作紀錄。"
@@ -8100,6 +8310,13 @@
           "目前沒有需要處理的資料問題。"
         );
         const metadata = insights.analysisMetadata;
+        document.getElementById("aiMonthDisclosureSummary").textContent = insights.dataSufficiency === "sufficient"
+          ? `${metadata.workDays} 個工作日`
+          : "資料不足";
+        document.getElementById("aiSourcesDisclosureSummary").textContent = insights.smartReminders.length
+          ? `${insights.smartReminders.length} 項提醒`
+          : "目前正常";
+        document.getElementById("aiMetadataDisclosureSummary").textContent = `${metadata.recordCount} 筆紀錄`;
         const generatedAt = new Date(insights.generatedAt).toLocaleTimeString("zh-TW", {
           hour: "2-digit",
           minute: "2-digit",
@@ -8462,7 +8679,7 @@
               </select>
               <button class="expense-choice-button" type="button" data-expense-toggle-mode aria-expanded="${String(expenseDraft.modeOpen)}" aria-label="支出方式，${escapeAttr(expenseModeLabel())}">
                 <strong>${escapeHtml(expenseModeLabel())}</strong>
-                <span class="expense-choice-chevron" aria-hidden="true">▾</span>
+                <svg class="expense-choice-chevron app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
               </button>
             </div>
             <div class="expense-mode-options"${expenseDraft.modeOpen ? "" : " hidden"} role="group" aria-label="支出方式">
@@ -8789,20 +9006,34 @@
     }
 
     function renderStats() {
+      const currentToday = todayString();
+      if (todayGoalDisclosureDate !== currentToday) {
+        todayGoalDisclosureDate = currentToday;
+        todayGoalExpanded = false;
+      }
       const month = currentMonth();
       const monthSummary = summarize(entriesForMonth(month));
       const todayEntry = state.entries.filter(entry => entry.date === todayString());
       const todaySummary = summarize(todayEntry);
 
       els.summaryStats.innerHTML = `
-        <article class="today-summary">
-          <span class="today-summary-label">今日收入</span>
-          <strong class="today-income">${money(todaySummary.total)}</strong>
+        <article class="today-summary${todayGoalExpanded ? " is-goal-expanded" : ""}">
+          <button class="today-income-toggle" id="todayIncomeToggle" type="button"
+            aria-expanded="${String(todayGoalExpanded)}" aria-controls="todayGoalDetails"
+            aria-label="今日目標進度，${todayGoalExpanded ? "已展開，按兩下收合" : "已收合，按兩下展開"}">
+            <span class="today-summary-label">今日收入</span>
+            <strong class="today-income">${money(todaySummary.total)}</strong>
+            <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="m6 9 6 6 6-6"></path>
+            </svg>
+          </button>
           <div class="today-secondary">
             <div><span>今日實際工時</span><strong>${formatHours(todaySummary.hours)}</strong></div>
             <div><span>目前時薪</span><strong>${money(todaySummary.hourly)}</strong></div>
           </div>
-          <div class="today-goal" id="dailyGoalCard" aria-label="今日目標進度"></div>
+          <div class="today-goal-details" id="todayGoalDetails"${todayGoalExpanded ? "" : " hidden"}>
+            <div class="today-goal" id="dailyGoalCard" aria-label="今日目標進度"></div>
+          </div>
         </article>
       `;
 
@@ -10156,19 +10387,24 @@
     }
 
     function renderDriverStatus() {
-      const recordDates = state.entries
-        .map(entry => normalizeDateKey(entry?.date))
-        .filter(Boolean)
-        .sort();
-      const firstDate = recordDates[0];
-      const latestDate = recordDates.at(-1);
-      const offlineAvailable = "serviceWorker" in navigator ? "已啟用 App Shell" : "瀏覽器不支援";
-      const standalone = window.matchMedia?.("(display-mode: standalone)")?.matches
-        || navigator.standalone === true;
       const storageStatus = driverLocalStorageStatus();
-      const needsAttention = Boolean(stateLoadError) || ["讀取錯誤", "無法存取"].includes(storageStatus);
+      const needsAttention = Boolean(stateLoadError || lastPersistenceError || pwaSetupError)
+        || ["讀取錯誤", "無法存取"].includes(storageStatus);
+      const serviceWorkerSupported = "serviceWorker" in navigator;
+      const serviceWorkerReady = Boolean(navigator.serviceWorker?.controller);
+      const serviceWorkerStatus = pwaSetupError
+        ? "需要注意"
+        : serviceWorkerReady ? "正常" : serviceWorkerSupported ? "啟動時檢查" : "不支援";
+      const offlineStatus = serviceWorkerReady
+        ? "可用"
+        : serviceWorkerSupported ? "啟動時檢查" : "不支援";
+      const localDataStatus = stateLoadError || lastPersistenceError
+        || ["讀取錯誤", "無法存取"].includes(storageStatus)
+        ? "需要注意"
+        : "正常";
       if (needsAttention && !systemStatusAutoOpened) {
         systemStatusExpanded = true;
+        driverDisclosureState.app = true;
         systemStatusAutoOpened = true;
       }
       if (els.driverSystemStatusBadge) {
@@ -10176,33 +10412,21 @@
         els.driverSystemStatusBadge.dataset.status = needsAttention ? "warning" : "normal";
       }
       if (els.driverSystemStatusToggle) {
-        els.driverSystemStatusToggle.setAttribute("aria-expanded", String(systemStatusExpanded));
-      }
-      if (els.driverSystemStatusContent) {
-        els.driverSystemStatusContent.hidden = !systemStatusExpanded;
+        setDisclosureExpanded(els.driverSystemStatusToggle, systemStatusExpanded);
       }
       if (els.driverSystemStatusDetails) {
         els.driverSystemStatusDetails.innerHTML = [
-          driverStatusRow("本機紀錄總數", `${state.entries.length} 筆`),
-          driverStatusRow("最早紀錄", firstDate ? formatCalendarFullDate(firstDate) : "尚無紀錄"),
-          driverStatusRow("最新紀錄", latestDate ? formatCalendarFullDate(latestDate) : "尚無紀錄"),
-          driverStatusRow("最後資料更新", "未提供可靠時間"),
-          driverStatusRow("Local-first", "僅此裝置"),
-          driverStatusRow("離線可用", offlineAvailable),
-          driverStatusRow("資料讀取", stateLoadError ? "有錯誤" : "正常"),
-          driverStatusRow(storageKey, storageStatus),
-          driverStatusRow("App", brandAttribution.productName),
-          driverStatusRow("版本里程碑", "Local-first V1"),
-          driverStatusRow("App Shell", appShellCacheName),
-          driverStatusRow("開啟方式", standalone ? "已安裝 PWA" : "Safari／瀏覽器"),
-          driverStatusRow("連線狀態", navigator.onLine ? "Online" : "Offline"),
-          driverStatusRow("更新狀態", "啟動時自動檢查")
+          driverStatusRow("此裝置與 App", needsAttention ? "需要注意" : "正常"),
+          driverStatusRow("本機資料", localDataStatus),
+          driverStatusRow("離線功能", offlineStatus),
+          driverStatusRow("Service Worker", serviceWorkerStatus)
         ].join("");
       }
     }
 
     function toggleDriverSystemStatus() {
       systemStatusExpanded = !systemStatusExpanded;
+      driverDisclosureState.app = systemStatusExpanded;
       renderDriverStatus();
       els.driverSystemStatusToggle?.focus();
     }
@@ -10213,6 +10437,7 @@
       if (!els.driverGoalStatus) return;
       els.driverGoalStatus.textContent = message;
       els.driverGoalStatus.dataset.status = type;
+      els.driverGoalStatus.hidden = !message;
     }
 
     function saveDriverDailyGoal(input) {
@@ -10313,6 +10538,7 @@
       if (els.driverGoalStatus) {
         els.driverGoalStatus.textContent = driverGoalStatus;
         els.driverGoalStatus.dataset.status = driverGoalStatusType || "idle";
+        els.driverGoalStatus.hidden = !driverGoalStatus;
       }
       renderDriverStatus();
     }
@@ -10323,6 +10549,7 @@
       if (!els.displaySizeStatus) return;
       els.displaySizeStatus.textContent = message;
       els.displaySizeStatus.dataset.status = type;
+      els.displaySizeStatus.hidden = !message;
     }
 
     function saveDisplaySize(input) {
@@ -10330,7 +10557,7 @@
       const next = normalizeDisplaySize(input?.value);
       if (next === previous) {
         applyDisplaySize(next);
-        setDisplaySizeStatus("已儲存在此裝置", navigator.onLine ? "saved" : "offline");
+        setDisplaySizeStatus(navigator.onLine ? "" : "已離線儲存", navigator.onLine ? "" : "offline");
         return true;
       }
 
@@ -10346,10 +10573,7 @@
         return false;
       }
 
-      setDisplaySizeStatus(
-        navigator.onLine ? `已套用「${displaySizeLabels[next]}」` : `已離線套用「${displaySizeLabels[next]}」`,
-        navigator.onLine ? "saved" : "offline"
-      );
+      setDisplaySizeStatus(navigator.onLine ? "" : "已離線儲存", navigator.onLine ? "" : "offline");
       return true;
     }
 
@@ -10880,12 +11104,11 @@
       }
       document.querySelectorAll(".view").forEach(section => section.classList.add("hidden"));
       document.getElementById(`view-${view}`)?.classList.remove("hidden");
-      const navView = view === "about" ? "settings" : view;
-      els.navButtons.forEach(button => button.classList.toggle("active", button.dataset.view === navView));
+      els.navButtons.forEach(button => button.classList.toggle("active", button.dataset.view === view));
       els.viewTitle.textContent = titles[view][0];
       els.viewSubtitle.textContent = titles[view][1];
       document.body.dataset.activeView = view;
-      document.getElementById("newEntry").classList.toggle("hidden", view === "today" || view === "about");
+      document.getElementById("newEntry").classList.toggle("hidden", view === "today");
       if (view === "reports") {
         setReportView(activeReportView);
         if (previousView === "calendar" && reportsState.returnContext) restoreReportsContext();
@@ -10914,18 +11137,18 @@
       }
       if (first === "ai") return { view: "ai", reportView: activeReportView };
       if (["driver", "settings"].includes(first)) return { view: "settings", reportView: activeReportView };
-      if (first === "about") return { view: "about", reportView: activeReportView };
+      if (first === "about") return { view: "settings", reportView: activeReportView };
       return { view: "today", reportView: activeReportView };
     }
 
     function appRouteHash(view, reportView = activeReportView) {
       if (view === "reports") return "#reports";
       if (view === "settings") return "#driver";
-      return `#${["today", "calendar", "ai", "about"].includes(view) ? view : "today"}`;
+      return `#${["today", "calendar", "ai"].includes(view) ? view : "today"}`;
     }
 
     function applyRoute(route) {
-      const view = ["today", "calendar", "reports", "ai", "settings", "about"].includes(route?.view)
+      const view = ["today", "calendar", "reports", "ai", "settings"].includes(route?.view)
         ? route.view
         : "today";
       if (view === "reports") setReportView(route.reportView);
@@ -10937,7 +11160,7 @@
 
     function navigateTo(view, reportView = activeReportView, replace = false) {
       const route = {
-        view: ["today", "calendar", "reports", "ai", "settings", "about"].includes(view) ? view : "today",
+        view: ["today", "calendar", "reports", "ai", "settings"].includes(view) ? view : "today",
         reportView: normalizeReportView(reportView)
       };
       const hash = appRouteHash(route.view, route.reportView);
@@ -12160,7 +12383,6 @@
     }
 
     function renderBrandAttribution() {
-      document.getElementById("settingsAppVersion").textContent = `Version ${brandAttribution.version}`;
       document.getElementById("aboutProductName").textContent = brandAttribution.productName;
       document.getElementById("aboutAppVersion").textContent = `Version ${brandAttribution.version}`;
       document.getElementById("aboutAuthorRole").textContent = brandAttribution.authorRole;
@@ -12181,8 +12403,15 @@
         });
         navigator.serviceWorker
           .register("./sw.js", { updateViaCache: "none" })
-          .then(registration => registration.update())
-          .catch(error => console.warn("PWA 離線快取未啟用", error));
+          .then(registration => {
+            pwaSetupError = null;
+            return registration.update();
+          })
+          .catch(error => {
+            pwaSetupError = error;
+            if (activeView === "settings") renderDriverStatus();
+            console.warn("PWA 離線快取未啟用", error);
+          });
       }
     }
 
@@ -12225,6 +12454,12 @@
     });
     els.workDetailsToggle.addEventListener("click", () => {
       setWorkDetailsExpanded(els.workDetailsToggle.getAttribute("aria-expanded") !== "true");
+    });
+    els.summaryStats.addEventListener("click", event => {
+      if (!event.target.closest("#todayIncomeToggle")) return;
+      todayGoalExpanded = !todayGoalExpanded;
+      renderStats();
+      document.getElementById("todayIncomeToggle")?.focus();
     });
     els.manualEntryToggle.addEventListener("click", () => {
       setManualEntryExpanded(els.manualEntryToggle.getAttribute("aria-expanded") !== "true");
@@ -12357,6 +12592,15 @@
       next.focus();
     }));
     document.getElementById("view-ai").addEventListener("click", event => {
+      const disclosureToggle = event.target.closest('[data-disclosure-scope="ai"]');
+      if (disclosureToggle) {
+        const key = disclosureToggle.dataset.disclosureKey;
+        if (!Object.hasOwn(aiDisclosureState, key)) return;
+        aiDisclosureState[key] = !aiDisclosureState[key];
+        setDisclosureExpanded(disclosureToggle, aiDisclosureState[key]);
+        disclosureToggle.focus();
+        return;
+      }
       const calendarTarget = event.target.closest("[data-ai-calendar-date]");
       if (calendarTarget) {
         const date = normalizeDateKey(calendarTarget.dataset.aiCalendarDate);
@@ -12622,8 +12866,6 @@
     });
 
     document.getElementById("driverSpaceLogo").addEventListener("click", () => navigateTo("settings"));
-    document.getElementById("openAbout").addEventListener("click", () => navigateTo("about"));
-    document.getElementById("closeAbout").addEventListener("click", () => navigateTo("settings"));
     const driverDailyGoalInput = document.getElementById("dailyGoal");
     driverDailyGoalInput.addEventListener("input", event => scheduleDriverDailyGoalSave(event.currentTarget));
     driverDailyGoalInput.addEventListener("change", event => saveDriverDailyGoal(event.currentTarget));
@@ -12752,9 +12994,17 @@
     });
 
     document.getElementById("view-settings").addEventListener("click", event => {
-      const systemStatusToggle = event.target.closest("#driverSystemStatusToggle");
-      if (systemStatusToggle) {
-        toggleDriverSystemStatus();
+      const disclosureToggle = event.target.closest('[data-disclosure-scope="driver"]');
+      if (disclosureToggle) {
+        const key = disclosureToggle.dataset.disclosureKey;
+        if (!Object.hasOwn(driverDisclosureState, key)) return;
+        if (key === "app") {
+          toggleDriverSystemStatus();
+        } else {
+          driverDisclosureState[key] = !driverDisclosureState[key];
+          setDisclosureExpanded(disclosureToggle, driverDisclosureState[key]);
+          disclosureToggle.focus();
+        }
         return;
       }
       const platformButton = event.target.closest("[data-remove-platform]");

@@ -59,7 +59,7 @@ test("Fixture 只存在測試目錄且不會進入 Production 或 App Shell", ()
   assert.doesNotMatch(html, /v1-regression\.json|__TEST_DATA__/);
   assert.doesNotMatch(serviceWorker, /tests\/|fixtures\//);
   assert.equal(fixture.expected.storageKey, "driverPayApp.v2");
-  assert.equal(fixture.expected.serviceWorkerCache, "driver-pay-pro-v13");
+  assert.equal(fixture.expected.serviceWorkerCache, "driver-pay-pro-v24");
 });
 
 test("AI 與 Driver 唯讀 renderer 不寫回 WorkRecord", () => {
@@ -84,13 +84,14 @@ test("只有核准 mutation 與既有 Driver 目標設定可進入 persistence",
 });
 
 test("AI 與 Driver Accessibility 契約完整", () => {
-  assert.match(html, /<h3 id="aiTodayTitle">營運建議<\/h3>/);
-  assert.match(html, /<h3 id="aiMonthTitle">本月洞察<\/h3>/);
-  assert.match(html, /<h3 id="aiAlertsTitle">智慧提醒<\/h3>/);
+  assert.match(html, /<h3 id="aiTodayTitle">本週重點<\/h3>/);
+  assert.match(html, /id="aiMonthDisclosureToggle"[\s\S]*?aria-expanded="false"[\s\S]*?aria-controls="aiMonthDisclosureContent"/);
+  assert.match(html, /id="aiSourcesDisclosureToggle"[\s\S]*?aria-expanded="false"[\s\S]*?aria-controls="aiSourcesDisclosureContent"/);
+  assert.match(html, /id="aiMetadataDisclosureToggle"[\s\S]*?aria-expanded="false"[\s\S]*?aria-controls="aiMetadataDisclosureContent"/);
   assert.match(html, /ai-reminder-severity/);
   assert.match(html, /aria-label="\$\{escapeAttr\(accessibleName \|\| label\)\}"/);
   assert.match(html, /label class="driver-goal-input" for="dailyGoal"/);
-  assert.match(html, /id="driverGoalStatus" role="status" aria-live="polite"/);
+  assert.match(html, /id="driverGoalStatus"[\s\S]*?role="status" aria-live="polite"/);
   assert.match(html, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(html, /:focus-visible/);
 });
@@ -115,12 +116,12 @@ test("事件與 autosave 不會重複註冊或建立無限制 timer", () => {
   assert.equal((html.match(/window\.addEventListener\("storage"/g) || []).length, 0);
 });
 
-test("Service Worker v13 更新、清舊 cache 並保留 navigation fallback", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v13"/);
+test("Service Worker v24 更新、清舊 cache 並保留 navigation fallback", () => {
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v24"/);
   assert.match(serviceWorker, /keys\.filter\(key => key !== CACHE_NAME\)\.map\(key => caches\.delete\(key\)\)/);
   assert.match(serviceWorker, /event\.request\.mode === "navigate"/);
   assert.match(serviceWorker, /isNavigation && !response\.ok/);
   assert.match(serviceWorker, /cached \|\| response/);
   assert.match(serviceWorker, /caches\.match\("\.\/index\.html"\)/);
-  assert.doesNotMatch(serviceWorker, /driver-pay-pro-v12|trycloudflare|_vercel_share/);
+  assert.doesNotMatch(serviceWorker, /driver-pay-pro-v16|driver-pay-pro-v12|trycloudflare|_vercel_share/);
 });

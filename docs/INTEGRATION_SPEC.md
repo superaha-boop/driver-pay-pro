@@ -1,15 +1,15 @@
 # Driver Pay Pro — Local-first V1 Integration Specification
 
-Version: 1.0
-Status: V1 Release Candidate
-Updated: 2026-07-26
+Version: 1.1
+Status: V1.1 Release Candidate
+Updated: 2026-07-29
 
 ## Canonical Flow
 
 ```text
 driverPayApp.v2
   → validated persistence read
-  → canonical WorkRecord calculations
+  → canonical WorkRecord calculations / reportExpenseSummary
   → sharedAnalytics
   → Today / Calendar / Reports / AI
 ```
@@ -42,7 +42,17 @@ Today or Calendar successful write
 ## Offline and Data Safety
 
 - Local-first；沒有網路仍可讀取與執行核准的本機流程。
-- 主 key 固定為 `driverPayApp.v2`，WorkRecord schema 不變。
+- 主 key 固定為 `driverPayApp.v2`；唯一核准的相容擴充是可選
+  `expenseAllocations[category] = { months, startMonth }`。
+- 跨日顯示偏好使用既有 settings 中可選
+  `displaySize = "standard" | "comfort" | "large"`；新欄位缺少時可相容讀取
+  合法 `aiReportsReadingSize`，無效值回退 `standard`，不得寫入 WorkRecord。
+- `displaySize` presentation tokens use body／secondary 13／12px (standard),
+  17／15px (comfort), and 22／19px (large). Calendar uses its own constrained
+  typography tokens so the seven-column grid remains stable.
+- Today、AI、Driver disclosure state is session-only UI state. It must not be added
+  to `driverPayApp.v2`, WorkRecord, reports state, or analytics input.
 - 損壞或讀取失敗時不得清除原始 payload。
-- Service Worker V1 candidate cache 為 `driver-pay-pro-v13`。
+- Service Worker Today Progress and Driver Simplification candidate cache 為
+  `driver-pay-pro-v24`。
 - 沒有 Supabase、authentication、cloud sync、migration 或外部 AI。

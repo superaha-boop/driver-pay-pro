@@ -1,6 +1,6 @@
 # Driver Pay Pro — Product Specification
 
-Version: 1.0
+Version: 1.1
 
 Status: Approved product architecture baseline
 
@@ -58,11 +58,36 @@ Purpose: capture and monitor the current working day.
 Primary responsibilities:
 
 - Show today's income, actual work time, hourly rate, and goal progress.
+- Treat the core green summary as the only high-level display of today's actual work
+  time. The work-status card owns only status, work-detail disclosure, and the next
+  work action; it must not repeat the same duration.
+- Use the complete work-status header row as the single disclosure control for the
+  existing work details. The native button keeps status and chevron in the same
+  44px row; work actions and detail content remain outside its event boundary.
 - Start, pause, resume, and end today's work session.
 - Enter or correct today's platform income.
 - Add today's expenses.
 - Record today's shift, weather, orders, distance, and note.
 - Provide immediate save and work-status feedback.
+- Keep work time, expense entry, and supporting data as three independent collapsed
+  sections in the same Today form: "工時設定", "新增支出", and "其他資料".
+- In manual work-time mode, the hour and minute inputs are the only editable duration
+  display. In clock mode, show one calculated result using the canonical duration
+  formatter.
+- Keep expense shortcuts compact and preserve the current draft when a shortcut is
+  selected. The category and expense-mode values act as the two direct selection
+  buttons and continue to open the complete existing option sources.
+- Work time uses one derived input mode at a time: complete clock fields take
+  precedence; otherwise legacy manual hours are used. Switching modes requires
+  confirmation before clearing the inactive mode's values.
+- A stopped clock-based day may continue in the same WorkRecord. The stopped gap is
+  added to break minutes, the original start is retained, and no second daily record
+  is created.
+- When income exists without valid work time, offer a non-blocking path to add work
+  time or save for later; incomplete work time must not produce an hourly rate.
+- Treat automatic weather as optional Today-only progressive enhancement: explain
+  the one-time location use, never persist precise coordinates, and always preserve
+  the manual and offline record flow.
 
 Today must not become:
 
@@ -247,7 +272,9 @@ The current canonical local storage key is:
 
 `driverPayApp.v2`
 
-The current top-level state contains platforms, expense categories, entries, and settings. This Sprint does not change that structure.
+The current top-level state contains platforms, expense categories, entries, and settings.
+WorkRecord may optionally contain `expenseAllocations[category] = { months, startMonth }`;
+records without it remain one-time expenses.
 
 ### 6.2 Canonical values
 
@@ -257,9 +284,14 @@ Canonical calculations:
 
 - Recognized platform income: each platform amount after its configured platform rate.
 - Total income: recognized platform income plus tips.
-- Total expenses: sum of the record's expense amounts.
+- Calendar record expenses: sum of the original payment amounts on the WorkRecord.
+- Reports and AI expenses: `reportExpenseSummary()` derives allocated monthly costs
+  when valid optional metadata exists; otherwise it uses the original one-time payment.
 - Net income: total income minus total expenses.
-- Actual work duration: the canonical duration in milliseconds returned by the shared work-time calculation.
+- Actual work duration: integer derived `workMinutes`, converted to milliseconds at
+  the shared aggregation boundary. Complete valid start/end/break fields take
+  precedence; legacy manual hours and live session are fallbacks when clock fields
+  are incomplete.
 - Average hourly rate: net income divided by actual work hours; zero when duration is zero or invalid.
 - Weekly summary: records in a complete Monday-to-Sunday calendar week.
 - Monthly summary: records whose local date belongs to the selected calendar month.
@@ -269,7 +301,8 @@ The current canonical implementation functions are `entryIncome`, `entryTotal`, 
 ### 6.3 Data safety
 
 - Do not rename or clear `driverPayApp.v2`.
-- Do not change the data model without an approved migration and rollback plan.
+- Do not change the data model without an approved migration and rollback plan, except
+  the explicitly approved optional `expenseAllocations` compatibility extension.
 - Do not delete or normalize historical user data merely to simplify UI work.
 - Input-mode changes must not change the final daily platform total.
 - Current storage is browser-local and does not sync across devices.

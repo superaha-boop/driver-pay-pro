@@ -1,6 +1,6 @@
 # Driver Pay Pro Testing
 
-更新日期：2026-07-26
+更新日期：2026-08-04
 
 ## 基本規則
 
@@ -24,6 +24,188 @@
 小型 Sprint 原則上不重複執行完整 L3；大模組完成 Final Regression 後集中
 執行一次。高風險資料、同步、Service Worker 或 iOS 特有變更仍須即時提高
 驗證層級。
+
+## Today Progress and Driver Simplification Candidate
+
+- `tests/today-progress-driver-simplification.test.js` 有 47 項編號契約，覆蓋
+  Today 固定收入／工時／時薪、只收合目標進度、跨日 reset、ARIA、Driver
+  文案去重、四分類摘要、顯示偏好、responsive 基礎、既有 targeted gates、
+  App Shell v24 與 `driverPayApp.v2` 保護。
+- `npm run release:check` 已通過：完整 Node 314/314、Today 55/55、AI 24/24、
+  Driver 24/24、Integration 16/16、Reports 61/61、Calendar 41/41；inline JS、
+  Service Worker、Manifest、Production validation 與 `git diff --check` 均通過。
+  Lint 0 errors／10 個既有 warnings；`npm audit` 0 vulnerabilities。
+- 瀏覽器矩陣固定為 `standard／comfort／large` × Today／Driver ×
+  320／375／390／393／430px；逐組檢查 `scrollWidth === clientWidth`、標題／
+  選項無裁切、目標收合高度、整排互動、Console、Manifest 與 Service Worker。
+- 實際 Chrome 30 組矩陣全部無 overflow；Console 0 error／warning，目標展開
+  高度增加且收合不改 localStorage，320px 大字 Header 單行，v24 App Shell
+  可控制頁面並可離線重載。
+- Public Preview 必須是未登入 iPhone Safari 可直接開啟的 HTTPS 網址；唯一一次
+  Human QA 驗證 iPhone Safari、installed PWA、Offline、VoiceOver、safe area。
+
+## Progressive Disclosure and Display Size — Superseded Candidate
+
+- `tests/progressive-disclosure.test.js` 有 60 項編號契約，直接覆蓋 Today 12、
+  AI 8、Driver 12、顯示大小 12、Calendar typography 10、Chevron 6。
+- 全部 Node regression 目前為 267/267；專項 Today、Calendar、Reports、AI、
+  Driver 與 Integration 仍必須各自通過。
+- 瀏覽器矩陣固定為 `standard／comfort／large` × Today／Calendar／Reports／
+  AI／Driver × 320／375／390／393／430px，共 75 組，逐組檢查
+  `scrollWidth === clientWidth` 與 Console。
+- Calendar 必須以 computed style 驗證 month 18／20／22、weekday 12／14／16、
+  date 14／16／20、Today button 16／17／20、detail 14／17／22、circle
+  34／36／40px，且同一 row 七個 day center 完全一致。
+- App Shell candidate 是 `driver-pay-pro-v23`；Manifest 與 `sw.js` 必須從
+  Public Preview 同源回傳成功。實體 iPhone Safari、installed PWA、offline、
+  VoiceOver 與 safe area 仍由一次 Human QA Gate 完成。
+
+## V1.1 Final Display and Calendar Alignment
+
+- `tests/reading-size.test.js` 驗證三個全域 radio、`displaySize` canonical
+  source、舊 `aiReportsReadingSize` fallback、首次繪製、交易式保存、六個
+  UI 區域共用 tokens、16／18px 層級、320px 重排與計算隔離。
+- `tests/driver.test.js` 驗證單一置底系統狀態、正常收合、異常「需要注意」、
+  disclosure ARIA／focus／44px target，且不保留舊兩個 status container。
+- `tests/calendar.test.js` 驗證所有日期共用 34px day slot、320px 32px、
+  Today outline／solid、無 dot、無位移補丁、完整 cell target 與既有
+  Calendar state／mutation 回歸。
+- 瀏覽器矩陣固定為三模式 × 320／375／390／393／430px × Today／Calendar／
+  Reports／AI／Driver；每組必須 `scrollWidth === clientWidth`。
+- Calendar 同列所有 day slot 必須具有相同 `top`、`height` 與垂直中心；
+  Console 0 error／warning，Manifest 200，Service Worker v22 可控制頁面。
+- 實際 L1：207/207 Node、Today 55/55、AI 24/24、Driver 24/24、
+  Integration 16/16、Reports 61/61、Calendar 41/41；release check Passed，
+  lint 0 errors／10 既有 warnings，npm audit 0 vulnerabilities。
+- 實際 Chrome：75 組 responsive matrix 全部
+  `scrollWidth === clientWidth`；390px 同列七個日期的 day center 均為
+  `447.546875px`、高度 34px；Console 0 error／warning，Manifest 與
+  Service Worker 正常，顯示偏好重載後仍保留。
+- L2 必須提供未登入 iPhone Safari 可直接開啟的公開 HTTPS Preview。指定
+  Final Human QA／RC 核准前不得 merge main 或 Production deploy。
+
+## Calendar Today 日期標記（v21 歷史驗證）
+
+- `tests/calendar.test.js` 驗證原 4px Today dot 已移除、日期數字使用
+  30px／2px 品牌圓圈、Today + Selected 使用實心圓與反差文字，且
+  `aria-current="date"` 只由既有 `isToday` 條件產生。
+- `npm run release:check`：Passed；197/197 Node、Today 55/55、AI 19/19、
+  Driver 16/16、Integration 16/16、Reports 56/56、Calendar 39/39。
+- Lint：0 errors／10 既有 warnings；inline JavaScript、Service Worker、
+  Manifest、static Production validation 與 `git diff --check` Passed；
+  `npm audit` 為 0 vulnerabilities。
+- 真實 Chrome mobile emulation 驗證台北 2026-07-29：
+  - Today 未選取為 30×30px 透明品牌外框；選取為 30×30px 品牌實心圓與
+    白色文字。
+  - Today + Heat 仍保留 heat surface，圓圈可辨識；Today + Selected 只保留
+    低干擾 brand-subtle cell surface，沒有第二個強烈 cell border。
+  - `aria-current="date"` 數量固定為 1；Today button、exact-date route、
+    Work Record Card、無紀錄與有紀錄狀態均正常。
+  - 320／375／390／393／430px 的 selected／unselected 共 10 組皆
+    `scrollWidth === clientWidth`，日期格維持既有 54／58px 高度。
+  - `driverPayApp.v2` 在 Calendar 導覽前後完全一致；Service Worker
+    `driver-pay-pro-v21` 離線重新載入通過；Console 0 error／0 warning。
+- App Shell candidate：`driver-pay-pro-v21`。本小型 Sprint 只做 L1、公開
+  L2 與一次 Final Calendar Today Marker Human QA；不重複完整 L3。
+
+## AI／報表閱讀文字大小（已由全域顯示大小取代）
+
+- `tests/reading-size.test.js` 覆蓋三個固定 radio、原生語意、44px target、
+  舊資料 fallback、單一 settings source、交易式保存、首次 render 前套用、
+  AI／Reports 共用 tokens、主要 KPI 不大幅放大與其他頁面隔離。
+- AI、Reports、Driver 專項測試都會包含 reading-size contract；全部 Node
+  tests 也會執行同一份測試。
+- 瀏覽器矩陣需驗證標準／舒適／大字立即生效、重新載入保留、離線保存、
+  320／375／390／393／430px 無水平 overflow、Console 無錯誤，且 Today、
+  Calendar、Driver 設定控制與 Bottom Navigation 尺寸不變。
+- L1 實際結果：`release:check` Passed；196/196 Node、Today 55/55、
+  AI 19/19、Driver 16/16、Integration 16/16、Reports 56/56、
+  Calendar 38/38。Lint 0 errors／10 既有 warnings；`npm audit` 0
+  vulnerabilities。
+- Chrome mobile emulation 實際結果：三個模式的 AI／Reports typography
+  即時更新；AI 主標題與 Reports 主要 KPI 保持同尺寸；重新載入與離線保存
+  通過；Arrow 鍵更新 radio 與 root attribute；五個 viewport、兩頁、三模式
+  共 30 組均 `scrollWidth === clientWidth`，Console 0 error／warning。
+- App Shell candidate：`driver-pay-pro-v20`。本小型 Sprint 只做 L1、公開
+  L2 與一次指定 Human QA，不重複完整 L3。
+
+## Today Work Status Header
+
+- Contract tests 驗證整條原生 button、唯一 `aria-expanded` state、正確
+  `aria-controls`、動態狀態 accessible name、44px focusable target、
+  chevron 與操作按鈕事件隔離。
+- 真實瀏覽器已驗證標題文字、中間空白、狀態 badge 與 chevron 四個位置都
+  可切換同一 `#workMetrics`；再次點擊可收合。
+- 開始、暫停、繼續、收工、再跑一段與修改時間均不改變明細展開狀態；
+  idle、running、paused、stopped 與 continue 後共用相同標題控制。
+- 320、375、390、393、430px 均無水平 overflow；標題、狀態、chevron
+  完整，收合時標題與操作列只保留既有 7px grid gap。
+- `npm run release:check`：Passed；185/185 Node、Today 55/55、AI 8/8、
+  Driver 5/5、Integration 16/16、Reports 45/45、Calendar 38/38。
+- Lint：0 errors／10 既有 warnings；inline JavaScript、Service Worker、
+  Manifest、static build、Console 0 error／warning 與 `git diff --check`
+  Passed；`npm audit` 為 0 vulnerabilities。
+- App Shell candidate：`driver-pay-pro-v19`。尚待一次 Work Status Header
+  iPhone Safari／installed PWA Human QA。
+
+## Today Expense UX Batch 2 — Human QA Passed
+
+- 新增 `tests/expense-allocation.test.js`，涵蓋 legacy WorkRecord、重開保存、
+  一次／分月切換、金額／月份／開始月重算、刪除同步、Calendar／Reports／
+  AI／CSV 口徑與尾差總額。
+- 瀏覽器隔離 origin 驗證 $12,000／12 個月：月報與 AI 為 $1,000，
+  Calendar 付款日仍為 $12,000；重新載入後月份、開始月、金額與備註保留。
+- 快捷分類切換保留金額、日期、分月方式與備註；類別 DOM 只有一個 select。
+- 320、375、390、393、430px 均 `scrollWidth === clientWidth`；320px 使用
+  「今天・7月29日」且不與備註按鈕重疊。
+- `npm run release:check`：Passed；183/183 Node、Today 53/53、AI 8/8、
+  Driver 5/5、Integration 16/16、Reports 45/45、Calendar 38/38。
+- Lint：0 errors／10 既有 warnings；inline JavaScript、Service Worker、
+  Manifest、static build／Production validation 與 `git diff --check` Passed。
+  `npm audit`：0 vulnerabilities。
+- App Shell candidate：`driver-pay-pro-v18`。Product Owner 已確認 Expense UX
+  Human QA Passed；臨時 Preview 已停止。
+
+## V1.1 Milestone 1 — Today／Work-Time／QA Follow-up
+
+- Product Owner 已確認 Milestone 1 Final Human QA 通過；舊 Preview tunnel
+  已停止。本次 Homepage Detail 只需要新的公開 L2／一次細節 Human QA。
+- `npm run test:today`：51/51，涵蓋 stale session 修正、正常／無休息／跨午夜、
+  break validation、不完整時間、舊小數工時轉換、整數分鐘、自然語言格式、
+  zero-hour hourly rate、Today 同列明細、reduced-motion 捲動、未填工時提醒、
+  三個獨立收合區塊、工時模式確認、9 小時 10 分＝550 分鐘、續跑休息累加、
+  manual／clock 顯示去重複、支出同列選擇按鈕、快捷草稿保留、支出防重複
+  與 transactional persistence、天氣權限／映射／手動覆蓋及 CSV。
+- `npm test`：173/173；Calendar、Reports、AI 與 integration regression 全部
+  保持通過。
+- 共用時薪界線：0～9 分鐘不計算；10 分鐘且時薪不高於 NT$2,000 可計算；
+  超過 NT$2,000 標記異常，不參與 AI 正常洞察、百分比或排班建議。
+- 真實瀏覽器隔離 origin：
+  - start → pause → resume → end 狀態與主要操作正確。
+  - 工時模式一次只顯示一種；雙向切換均先確認，manual 模式的「再跑一段」
+    會提示先切換。
+  - clock 模式「再跑一段」保留原始開始時間、清空結束時間並把收工空檔加入
+    休息；不建立第二筆日期紀錄。
+  - 「新增支出」與「其他資料」獨立收合；46px 快捷、同列類別／方式按鈕、
+    完整類別、三種支出方式、付款日期、備註與獨立儲存流程正常。
+  - 快捷切換後 `$1,234`、日期、分月方式與備註草稿保持不變。
+  - 手動修改 10:00–18:08 後立即顯示 8 小時 8 分，重開仍保留。
+  - Calendar 與 Reports 對同一筆紀錄皆顯示 8 小時 8 分。
+  - 320、375、390、393、430px 皆為 `scrollWidth === clientWidth`；支出
+    兩個按鈕保持同列、快捷 46px、選擇按鈕 48px、工作明細 44px。
+  - 有收入無工時時，「補上工時」保留表單並捲動但不彈鍵盤；「稍後再補」
+    可儲存，AI 顯示未計算原因而非極端時薪。
+  - 天氣首次展開只顯示隱私說明；未同意不呼叫定位，手動選擇可獨立保存。
+    自動定位成功、iOS 權限拒絕及 installed-PWA 權限行為留給最終一次真機 QA。
+  - Console：0 error／0 warning。
+- App Shell：`driver-pay-pro-v17`；Manifest 與 localStorage key
+  `driverPayApp.v2` 保持原契約。
+- Homepage Detail 新公開 Preview：
+  `https://cord-diagnosis-quite-cancel.trycloudflare.com`；未登入外部 HTTPS
+  200、HTML／Manifest／Service Worker SHA-256 與本機一致、Service Worker
+  v17、390px 無 overflow、Console 0 error／warning，且沒有登入或警告頁。
+- 尚待：Product Owner 於 iPhone Safari／installed PWA 驗證本次細節去重複、
+  支出操作、safe area 與離線更新。
 
 ## Local-first V1 Release Candidate
 

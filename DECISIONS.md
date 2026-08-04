@@ -480,3 +480,392 @@ L1 120/120、公開 L2、單次 Product Owner L3 與全部 Freeze Gate 已具備
   Service Worker、正式資料或 dependencies。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-033](docs/DECISION_LOG.md#d-033)。
+
+## D-034 — V1.1 Today 工時統一採衍生整數分鐘
+
+- Date: 2026-07-29
+
+### 決策
+
+1. `startTime`、`endTime` 與 `breakMinutes` 是完整時間存在時的唯一優先來源；
+   `workMinutes = end - start - break`，跨午夜維持單日加 24 小時規則。
+2. `workMinutes` 是 canonical 衍生整數，不新增到 WorkRecord；既有
+   `manualHours` 只在缺少完整 clock fields 時相容讀取，並以
+   `Math.round(hours × 60)` 轉換。
+3. Today、Calendar、Reports、AI、CSV 與平均時薪必須持續重用
+   `workMetrics()`，不得保留頁面專用工時公式。
+4. Today 手動時間修正採 transactional auto-save；只有 localStorage 寫入與
+   read-back 成功後才更新記憶體並通知依賴頁面。
+5. Today 工作狀態使用單一自然語言主工時，不顯示秒；工作明細與手動新增
+   預設收合。手動工時介面使用小時／分鐘欄位。
+6. WorkRecord schema 與 `driverPayApp.v2` 不變，不批量遷移或改寫舊資料。
+
+### 原因
+
+舊 Today 表單會保留 stale `workSession`，而舊優先順序又讓 session 或
+`manualHours` 蓋過使用者剛修正的 clock fields，造成 Today 與下游統計顯示
+舊工時。整數分鐘可消除小數輸入與浮點誤差，同時保留現有 schema 相容性。
+
+### 影響範圍
+
+- 修改 Today 工時流程、共用工時 selector、CSV 工時顯示、測試與 App Shell
+  cache；Calendar／Reports 只接受相同 canonical 結果，不改凍結 UI。
+- Supabase、同步、authentication、多段工作模型與 Production 資料均不在
+  本決策範圍。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-034](docs/DECISION_LOG.md#d-034)。
+
+## D-035 — V1.1 Today Follow-up 共用資料品質與隱私優先天氣
+
+- Date: 2026-07-29
+
+### 決策
+
+1. Today、Reports 與 AI 共用 `hourlyRateQuality()` 與
+   `recordDataQuality()`；資料品質狀態固定為 `complete`、
+   `missing-work-time`、`insufficient-work-time`、
+   `abnormal-hourly-rate`、`invalid-time-range`。
+2. 有效工時至少 10 分鐘，合理時薪上限為 NT$2,000／小時。界線只控制
+   分析與提示，不限制、修改或刪除使用者原始收入與工時。
+3. 有收入但無有效工時的明確儲存流程提供「補上工時／稍後再補」；不得由
+   autosave 重複打擾，也不得用零工時計算時薪。
+4. 每日紀錄第一層只保留收入與工時；支出及其他選填資料使用同一表單，
+   集中於預設收合的「其他資料」。
+5. 自動天氣只限 Today，必須先說明並取得使用者同意，再取得一次性位置；
+   使用 Open-Meteo 公開 API，無 API key。精確位置不寫入 WorkRecord 或
+   localStorage，建議只在 session 記憶體快取 30 分鐘。
+6. 使用者拒絕定位、離線、外部服務失敗或編輯歷史日期時，完整回退手動選擇；
+   手動天氣永遠覆蓋自動建議。
+7. WorkRecord schema 與 `driverPayApp.v2` key 不變；僅在既有 settings
+   相容加入 `weatherAutoConsent`，不需要 migration。
+
+### 原因
+
+極短或缺失工時曾造成 AI 顯示失真的高時薪；同時，Today 的選填資料與明細
+操作占用核心流程空間。共用資料品質出口可避免頁面各自判斷，明確同意與
+一次性定位則在減少輸入步驟時維持 Local-first 與 Privacy by Default。
+
+### 影響範圍
+
+- 修改 Today workflow、AI／Reports 共用時薪有效性、測試與 App Shell cache。
+- Calendar／Reports frozen UI、正式資料、Supabase、同步、authentication、
+  WorkRecord schema、精確定位儲存與 Production 均不在本決策範圍。
+- Open-Meteo 與 iOS 定位權限的長期真機覆蓋記錄於 TD-027。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-035](docs/DECISION_LOG.md#d-035)。
+
+## D-036 — V1.1 Today 獨立支出、互斥工時模式與同日續跑
+
+- Date: 2026-07-29
+
+### 決策
+
+1. D-035 的表單分層第 4 點由本決策取代：Today 固定保留三個獨立可收合區塊
+   「工時設定／新增支出／其他資料」，不得再把完整新增支出元件嵌入其他資料。
+2. `儲存支出` 只寫入單筆支出；`儲存詳細紀錄` 處理工時與其他資料。兩條
+   流程都必須防止重複提交，且成功 persistence read-back 後才顯示成功。
+3. 工時一次只允許 clock 或 manual 一種有效輸入。模式由既有欄位推導，
+   不新增 durable mode 欄位；切換模式前必須說明清除範圍並取得確認。
+4. 舊紀錄同時含完整 clock 與 manual 時，canonical 結果仍以 clock 優先，
+   UI 必須揭露衝突並要求使用者明確選擇，不得靜默清除。
+5. 已收工的 clock 紀錄可在確認後「再跑一段」：保留原 `startTime`、將停止
+   空檔累加進 `breakMinutes`、清除 `endTime`，並沿用同一天同一筆
+   WorkRecord。manual 模式必須先切換。
+6. 本 Milestone 不建立完整多段工作資料模型；同日續跑仍輸出同一個 canonical
+   實際工時給 Today、Calendar、Reports、AI 與 CSV。
+7. Product Owner 只執行一次 Final Human QA；所有程式、L1、公開 Preview
+   smoke 與文件完成後才交付，不在過程中重複要求。
+
+### 原因
+
+把完整支出流程放進其他資料會降低高頻支出的可發現性；同時顯示 clock 與
+manual 會產生兩個互相競爭的答案。將輸入模式互斥、切換改為確認式交易，
+以及把同日第二段工作建模為停止空檔休息，可在不變更 schema 的前提下維持
+單一 canonical 工時與原有報表相容性。
+
+### 影響範圍
+
+- 修改 Today 表單結構、支出 persistence、工時輸入 UI、同日續跑、測試、
+  文件與 App Shell cache v16。
+- `driverPayApp.v2`、WorkRecord schema、收入／支出／工時計算公式、
+  Calendar／Reports／AI frozen UI、Supabase、同步與正式資料均不變。
+- 完整多段工作模型維持 Deferred；本決策不授權 main merge 或 Production
+  deployment，須先完成本 Milestone 唯一一次 Final Human QA。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-036](docs/DECISION_LOG.md#d-036)。
+
+## D-037 — Today 顯示責任去重複與支出控制精簡
+
+- Date: 2026-07-29
+
+### 決策
+
+1. Product Owner 已確認 V1.1 Milestone 1 Final Human QA 通過；後續低風險
+   Today 細節 Sprint 可在同一功能分支繼續，但新的 Homepage Detail Human
+   QA 通過前不得合併 `main` 或部署 Production。
+2. Today 綠色摘要卡是今日正式工時的唯一高階顯示。工作狀態卡只負責狀態、
+   工作明細與下一步操作，不再顯示第二份主工時。
+3. manual 工時以小時／分鐘輸入作唯一主要顯示，不再顯示重複摘要；clock
+   工時保留一次使用 `formatWorkDuration()` 的計算結果。
+4. 新增支出的快捷按鈕縮短但維持至少 44px；類別與支出方式改為同列兩個
+   真正按鈕，按鈕本身同時顯示目前值與完整選項入口。
+5. 快捷分類切換必須保留尚未儲存的金額、日期、支出方式與備註；完整類別、
+   legacy／自訂類別、三種支出方式與獨立支出 persistence 均保持原來源。
+6. `driverPayApp.v2`、WorkRecord schema、canonical calculation、Calendar、
+   Reports、AI 與 CSV 契約均不變，不需要 migration。
+
+### 原因
+
+Today 同時在綠色摘要、工作狀態與 manual 輸入下方重複顯示同一工時，增加
+視覺高度卻沒有提供新的操作資訊。支出類別與方式也各自以標籤、目前值及
+修改文字重複表達。將責任集中在摘要、狀態與輸入控制本身，可以降低高度，
+同時保留所有既有功能與資料相容性。
+
+### 影響範圍
+
+- 僅修改 Today 的顯示結構、支出草稿互動、contract tests、文件與 App Shell
+  cache v17。
+- 不修改工時、收入或支出公式，不修改任何 durable schema，不修改
+  Calendar／Reports／AI／Driver UI，不合併 `main`，不部署 Production。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-037](docs/DECISION_LOG.md#d-037)。
+
+## D-038 — 支出分月採可選 WorkRecord metadata 與衍生成本
+
+- Date: 2026-07-29
+
+### 決策
+
+1. Product Owner 明確授權 WorkRecord 僅增加可選
+   `expenseAllocations[category] = { months, startMonth }`；原始
+   `expenses[category]`、`driverPayApp.v2` key 與其他欄位不變。
+2. 舊紀錄或缺少有效 allocation 的分類一律視為一次支出，不批量改寫、不
+   migration。切回一次支出或刪除分類時同步移除對應 metadata。
+3. Calendar 與原始付款紀錄持續使用 `entryExpenses()`；Reports／AI 透過
+   `reportExpenseSummary()` 將原始金額依月份衍生，不能整除的尾差由最後
+   一個月吸收。
+4. 為讓週／月趨勢與期間 KPI 可重現，每月衍生成本以該台北月份第一天作為
+   report-only accounting anchor；不建立 WorkRecord，也不改變 Calendar。
+5. CSV 保留原始付款日期、金額與分類欄，並增加可讀的分月期間、月份數、
+   一般月額與尾月金額。
+6. 本 Sprint 完成後只 Push 功能分支與提供 Public Preview；不 merge
+   `main`、不 Production deploy。
+
+### 原因
+
+只保存原始金額無法在 App 重開後還原月份數與開始月份。可選且分類級的
+metadata 是支援修改、刪除、尾差與舊資料相容所需的最小擴充，不需要複製
+十二筆紀錄或批量遷移。
+
+### 影響範圍
+
+- Today 支出 UI、WorkRecord 可選 metadata、Reports／AI canonical expense
+  selector、CSV、tests、文件與 App Shell v18。
+- 收入、工時、平台、其他 WorkRecord 欄位、Supabase、同步、正式資料、
+  Calendar UI、main 與 Production 不變。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-038](docs/DECISION_LOG.md#d-038)。
+
+## D-039 — 今日工作狀態整條標題列控制工作明細
+
+- Date: 2026-07-29
+
+### 決策
+
+1. Product Owner 已確認 Expense UX Human QA Passed；後續小型 Today
+   work-status Sprint 仍在同一功能分支進行，不 merge main、不 Production。
+2. 原 `#workDetailsToggle` 改為「今日工作狀態」整條原生 button，包含圖示、
+   標題、中間空白、狀態 badge 與 chevron，觸控高度至少 44px。
+3. 移除獨立「工作明細 ＋」列；繼續沿用同一 `#workMetrics`、
+   `setWorkDetailsExpanded()` 與 `aria-expanded` state，不建立第二套明細。
+4. 工作操作與明細內容位於 toggle 外；狀態或計時更新只同步 accessible
+   name，不改變展開 state，也不清除工時草稿。
+5. 本 Sprint 不修改 canonical work-time、狀態機、WorkRecord、
+   `expenseAllocations`、`driverPayApp.v2` 或任何下游資料。
+
+### 原因
+
+獨立「工作明細」列只有右側小控制，浪費一整行高度並縮小單手操作範圍。
+把 disclosure 語意集中到既有標題列，可在不改資料與狀態邏輯下提供完整
+44px 點擊面積、鍵盤與 VoiceOver 語意。
+
+### 影響範圍
+
+- 僅修改 Today 工作狀態卡 presentation／disclosure、tests、docs 與 App
+  Shell v19。
+- 工時計算、工作狀態機、收入、支出、Calendar／Reports／AI／CSV、
+  schema、Supabase、main 與 Production 不變。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-039](docs/DECISION_LOG.md#d-039)。
+
+## D-040 — AI 與 Reports 共用單一閱讀文字大小設定
+
+- Date: 2026-07-29
+
+### 決策
+
+1. Driver「顯示設定」新增標準／舒適／大字三個原生 radio，唯一 durable
+   source 為可選 `settings.aiReportsReadingSize`。
+2. 舊資料缺少欄位或出現未知值時使用 `standard`，不批量改寫、不 migration。
+3. 切換後立即更新 `<html data-ai-reports-reading-size>` 並交易式保存；失敗
+   必須回復前一視覺與 setting。
+4. AI 與 Reports 共用同一組 reading CSS variables；放大內文、次要文字、
+   行高、閱讀間距與圖表標籤，主標題和主要 KPI 只維持或輕微調整。
+5. Today、Calendar、一般 Driver、Bottom Navigation、canonical analytics、
+   WorkRecord、`expenseAllocations` 與 `driverPayApp.v2` key 不變。
+6. 本 Sprint 只 Push 功能分支與提供 Public Preview；不 merge `main`、不
+   Production deploy。
+
+### 原因
+
+AI 長文與 Reports 次要標籤在手機上需要較彈性的閱讀尺度，但瀏覽器 zoom 或
+頁面各自的字級 state 會放大操作控制、增加 overflow 並造成設定分歧。單一
+持久偏好配合共享 typography tokens，可在不改資料和計算的前提下提供一致
+且可回復的閱讀體驗。
+
+### 影響範圍
+
+- Driver 顯示設定、AI／Reports presentation、tests、docs 與 App Shell v20。
+- Today、Calendar、其他 Driver 設定、Bottom Navigation、資料公式、CSV、
+  schema、Supabase、main 與 Production 不變。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-040](docs/DECISION_LOG.md#d-040)。
+
+## D-041 — Calendar Today 日期改用日期圓圈標記
+
+- Date: 2026-07-29
+
+### 決策
+
+1. Product Owner 明確核准 Calendar V1.1 的 Today marker 小範圍 Freeze
+   例外；本次只修改今天日期標記，不重設 Calendar 其他狀態或版型。
+2. 今天未選取時，以 28～30px、2px 品牌深綠外框直接包住日期數字；不得
+   使用原本的小圓點、短橫線、文字、額外圖示或動畫。
+3. 今天被選取時，日期圓圈改為品牌深綠實心、文字使用反差色；日期格只
+   保留低干擾 surface，不再疊加強烈 cell border。
+4. Today 可與 Heat、Record、Adjacent Month 組合；外框／實心圓必須保持
+   清楚且只有一個 Today marker。
+5. `aria-current="date"` 只套用真正台北今天；既有 `aria-selected`、完整
+   日期格點擊範圍、canonical local-date、今天按鈕、deep link 與工作紀錄
+   卡片全部維持。
+6. App Shell 更新為 `driver-pay-pro-v21`。本階段只 Push 功能分支並提供
+   Public Preview；最終 Human QA 通過前不 merge `main`、不 Production。
+
+### 原因
+
+日期下方 4px 小圓點在 iPhone 上不易辨識，也可能讓使用者花時間判斷是否為
+資料符號。直接包住日期數字能在不增加格高或第二個控制的前提下，讓 Today
+身分更清楚。
+
+### 影響範圍
+
+- Calendar Today marker presentation、Accessibility contract、tests、docs 與
+  PWA cache。
+- 不修改其他日期、Heat 演算法、Calendar state／Editor、Today、Reports、
+  AI、Driver、WorkRecord、`expenseAllocations`、`settings.aiReportsReadingSize`、
+  `driverPayApp.v2`、Supabase、main 或 Production。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-041](docs/DECISION_LOG.md#d-041)。
+
+## D-042 — 全 App 顯示大小、Driver 系統狀態與 Calendar 共用日期基線
+
+- Date: 2026-07-29
+
+### 決策
+
+1. D-040 的 AI／Reports 專用閱讀設定升級為全 App「顯示大小」。唯一
+   canonical durable source 是可選 `settings.displaySize`；合法新欄位優先，
+   缺少時才讀取合法 `settings.aiReportsReadingSize`，其餘回退 `standard`。
+2. 執行期與新寫入只使用 `displaySize`；root 使用 `data-display-size`。
+   標準保留既有比例，舒適一般內文約 16px，大字約 18px。Today、Calendar、
+   Reports、AI、Driver 與 Bottom Navigation 重用同一 Design System tokens，
+   不使用 zoom、scale 或頁面專用 setting。
+3. Driver 原資料狀態與 App 狀態合併為置底單一「系統狀態」disclosure；
+   正常預設收合，讀取／storage 異常顯示「需要注意」並可自動展開一次。
+4. Calendar 所有日期共用 34px day slot，320px 使用 32px；透明 border
+   保留相同 geometry。Today 只切換該 slot 的外框／背景，不使用位移補丁，
+   不修改 cell 高度、Heat、Selected、Today button 或資料互動。
+5. App Shell 更新為 `driver-pay-pro-v22`。本階段只 Push 功能分支並提供
+   Public Preview；只有收到指定 Final Human QA 與 Release Candidate 核准
+   後才能 merge `main` 與 Production deploy。
+
+### 原因
+
+閱讀偏好若只影響 AI／Reports，使用者在其他主要頁面仍會遇到相同小字；
+同一 global token hierarchy 能提高一致性又保持 KPI 層級。Driver 狀態卡
+重複且佔用上方空間，合併 disclosure 可保留資訊並降低日常干擾。Today 圓圈
+若只有今天擁有額外高度，會造成日期基線下沉；所有日期共享同一槽位才能從
+根本消除偏移。
+
+### 影響範圍
+
+- 全域 presentation tokens、Driver system-status presentation、Calendar day
+  geometry、tests、docs 與 PWA cache。
+- 不修改 WorkRecord、canonical calculations、`expenseAllocations`、
+  `driverPayApp.v2` key、Supabase、main 或 Production。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-042](docs/DECISION_LOG.md#d-042)。
+
+## D-043 — Progressive Disclosure、核准字級與 Chevron 語意
+
+- Date: 2026-08-04
+
+### 決策
+
+1. Today 今日收入以整排 disclosure 顯示；金額永遠可見，進度資訊只在展開
+   後顯示，session state 不持久化。
+2. AI 首屏只完整顯示本週重點；本月洞察、收入變化來源與資料分析依據預設
+   收合，既有 analytics 與唯讀責任不變。
+3. Driver 第一層固定四類；About 與系統狀態合併至 App 與系統，移除獨立
+   About route／row 與獨立 system-status card。
+4. 全 App body／secondary 為 13／12、17／15、22／19px。Calendar 另用受控
+   token，日期 14／16／20px、Today circle 34／36／40px。
+5. `.app-chevron` 統一為 20px、stroke 2；左右只表示導覽，向下／上表示原地
+   收合／展開，一般動作不加箭頭。
+6. App Shell 更新為 v23；Human QA 核准前不 merge main、不 Production。
+
+### 原因
+
+在不增加資料與功能的前提下，以較少預設內容、更清楚字級差異及一致互動，
+降低司機快速查看時的閱讀壓力與誤觸風險。
+
+### 影響範圍
+
+- Today／AI／Driver presentation、global／Calendar typography tokens、Chevron、
+  Accessibility、tests、docs 與 PWA cache。
+- 不修改 WorkRecord、analytics、收入／工時／支出公式、CSV、storage key、
+  Supabase、main 或 Production。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-043](docs/DECISION_LOG.md#d-043)。
+
+## D-044 — Today 只收合目標進度與 Driver 設定去重複
+
+- Date: 2026-08-04
+
+### 決策
+
+1. D-043 的 Today disclosure 範圍收斂為每日目標進度；今日收入、今日實際
+   工時與目前時薪在收合與展開狀態都固定可見。
+2. 目標進度包含未設定提示、達成百分比、尚差金額及進度條，使用單一
+   `todayGoalExpanded` session state，跨台北日期回到收合。
+3. Driver 常用設定只顯示單一「每日目標」與單一「字體大小設定」，移除重複
+   標題、說明及一般成功狀態文字；既有自動儲存、離線與錯誤回饋不變。
+4. Driver 第一層仍固定四類；Header 摘要依序為無摘要、「平台、支出」、
+   「備份、匯出」及「正常／需要注意」。
+5. App 與系統只保留此裝置與 App、本機資料、離線功能及 Service Worker 的
+   可靠狀態；About、版本、作者、法律與資料安全提醒保留。
+6. App Shell 更新為 v24；Human QA 前不 merge main、不 Production。
+
+### 原因
+
+收入、工時與時薪是 Today 三秒內必須看見的核心結果，不應因目標進度收合而
+消失。Driver 重複標題與診斷文字增加閱讀成本；直接保留唯一控制及可採取行動
+的狀態，更符合設定頁快速操作與 One Motion = One Meaning。
+
+### 影響範圍
+
+- Today／Driver presentation、Accessibility、tests、docs 與 PWA cache。
+- 不修改 WorkRecord、canonical calculations、收入／工時／支出公式、
+  `settings.displaySize`、CSV、`driverPayApp.v2`、Supabase、main 或 Production。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-044](docs/DECISION_LOG.md#d-044)。
