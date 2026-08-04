@@ -140,7 +140,8 @@ driverPayApp.v2
 Canonical 衍生值為整數 `workMinutes`；WorkRecord 仍保留既有
 `manualHours` 相容欄位，不新增 durable `workMinutes`。
 
-平均時薪為 `淨收入 ÷ 工時`；工時為 0 時顯示 0 或「資料不足」，不得產生 NaN／Infinity。
+平均時薪為 `總收入 ÷ 有效工時`；支出只影響淨收入與成本。工時為 0 時顯示
+0 或「資料不足」，不得產生 NaN／Infinity。
 
 ### 目標
 

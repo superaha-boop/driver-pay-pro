@@ -755,3 +755,26 @@
   - 不把收入、工時或時薪放入 hidden disclosure。
   - 不建立第二套目標 state、Driver 設定或診斷頁。
   - 不以隱藏錯誤、離線、法律或資料安全資訊換取版面高度。
+
+## D-045
+
+- Date: 2026-08-04
+- Decision:
+  1. 月報支出分類重用 `reportExpenseSummary()`，以月成本為主數字；油錢優先，
+     其餘依金額排序，原地展開日期、金額與備註。分月實際付款不同時才補充。
+  2. Today 提供預設收合的今日支出，日期＋類別單筆移除成功後保留 5 秒復原，
+     金額、備註與 allocation 同步處理。
+  3. Calendar 過去紀錄改為五個原地 disclosure 並移動唯一表單 DOM；取消
+     全頁／Modal Editor、全域編輯與固定大型整天刪除。
+  4. 時薪固定為總收入除以有效工時；支出只影響淨收入與成本。所有頁面及 CSV
+     重用 canonical helper 與相同品質門檻。
+  5. Calendar／Reports 重複標題、Calendar 垂直空間、Bottom Navigation active
+     state 與 Today KPI 層級依核准 PRD 調整。
+  6. App Shell 更新為 v25；唯一 Human QA 通過前不 merge main、不 Production。
+- Reason: 讓支出核對與歷史修改保留頁面上下文，並把收入效率與成本後獲利拆成
+  可解釋且一致的 canonical 指標。
+- Impact: Today、Calendar、Reports、hourly/expense selector、tests、docs、v25；
+  storage key、WorkRecord、allocation schema、Supabase、main、Production 不變。
+- Rejected alternatives:
+  - 不建立 Reports 專用支出 aggregation 或第二套 Record Editor。
+  - 不以全頁跳轉、Modal、阻斷式單筆刪除確認或淨收入時薪維持舊行為。

@@ -1,13 +1,13 @@
 # Driver Pay Pro — Calendar Interaction and Implementation Specification
 
-Version: 1.2
+Version: 1.3
 
 Status: Approved implementation specification
 
 Updated: 2026-08-04
 
-Implementation status: Calendar V1 implemented and UX frozen；V1.1 display-size
-typography candidate awaiting Progressive Disclosure and Display Size Human QA
+Implementation status: Calendar V1 implemented and frozen；D-045 approved the
+V1.1 inline-editing and compact-layout exception, awaiting one combined Human QA
 
 > This document is the primary implementation source for the Calendar redesign. It defines target behavior and records current repository constraints. It does not authorize changes outside an approved Calendar Implementation Sprint.
 
@@ -28,7 +28,7 @@ Calendar answers:
 - Distinguish recorded, empty, today, selected, and future dates.
 - Read a useful daily summary without leaving Calendar.
 - Backfill a past day without selecting the date again.
-- Correct an existing record through the same Record Editor contract used elsewhere.
+- Correct an existing record below the calendar through the same reusable form DOM.
 - Trust that Calendar, Today, Reports, and AI show the same calculations.
 
 ## 3. Scope
@@ -43,7 +43,7 @@ The first Calendar implementation includes:
 - Distinct Today and Selected states.
 - Standard Work Record Card.
 - Today, past, future, empty, loading, error, and offline states.
-- Past-record creation, editing, and confirmed deletion through one reusable Record Editor.
+- Past-record creation, editing, and confirmed deletion through one reusable inline Record Editor.
 - Month and day swipe enhancements with visible alternatives.
 - Accessibility, responsive, local-first, and regression coverage.
 - Compact monthly net-income and work-day summary.
@@ -65,13 +65,12 @@ The first Calendar implementation includes:
 
 Fixed vertical order:
 
-1. Page Header: `月曆`.
-2. Month Navigation: previous, `YYYY 年 M 月`, next, Today.
-3. Weekday Header: 一、二、三、四、五、六、日.
-4. Month Grid.
-5. Selected Day Work Record Card.
-6. Compact Monthly Summary.
-7. Bottom Navigation safe-area spacing.
+1. Month Navigation: previous, `YYYY 年 M 月`, next, Today.
+2. Weekday Header: 一、二、三、四、五、六、日.
+3. Month Grid.
+4. Selected Day Work Record Card.
+5. Compact Monthly Summary.
+6. Bottom Navigation safe-area spacing.
 
 Rules:
 
@@ -354,20 +353,20 @@ V1 uses Standard mode.
 
 Header:
 
-- Full localized date and weekday.
-- Visible text action `編輯` when an existing past record is editable.
+- Full localized date and weekday only; there is no global `編輯` action.
 - Quiet `所選日期不在目前月份` context when applicable.
-- Delete is not beside Edit.
 
-Primary metrics, two columns:
+Past records expose five 44px inline disclosure rows below the date:
 
-- 總收入: canonical `entryTotal(record)`.
-- 淨收入: canonical `entryNet(record)`.
+- 收入: canonical `entryTotal(record)`.
+- 工時: canonical `workMetrics(record)` and hourly-quality display.
+- 支出: original payment count and `entryExpenses(record)`.
+- 其他資料: existing optional fields.
+- 更多操作: confirmed full-record deletion only.
 
-Secondary metrics, two columns:
-
-- 工作時間: canonical `workMetrics(record).durationMs`, display formatted.
-- 時薪: canonical `hourlyRate(net, durationMs)`.
+Only the selected section expands. The Calendar grid, selected date, and Bottom
+Navigation context remain visible. The editor moves the same Today form DOM into the
+inline host and never creates a second form, full-page screen, or Modal editor.
 
 Platform income:
 
@@ -418,7 +417,7 @@ Do not implement other modes in v1.
 
 - Title: `此日期尚無工作紀錄`.
 - Primary action: `新增紀錄`.
-- Open the reusable Record Editor in create mode with `selectedDate` prefilled and locked.
+- Open the reusable Record Editor inline below the grid with `selectedDate` prefilled and locked.
 
 ### 15.3 Future date
 
@@ -449,7 +448,7 @@ Flow:
 
 1. User selects a past empty date.
 2. User chooses `新增紀錄`.
-3. Open the one reusable Record Editor in create mode.
+3. Open the one reusable Record Editor inline in create mode.
 4. Prefill and lock the date to `selectedDate`.
 5. Reuse existing platform modes, expense shortcuts, validation, and canonical calculations.
 6. Persist to the existing `state.entries` model and `driverPayApp.v2`.
@@ -460,8 +459,8 @@ Do not ask for the date again and do not add a second record schema or duplicate
 
 ## 18. Record Editing
 
-- `編輯` is visible in the Work Record Card header.
-- It opens the same Record Editor used by backfill.
+- There is no global `編輯` action in the Work Record Card header.
+- Income, Work Time, Expenses, and Other Data each open the same inline Record Editor.
 - Date is prefilled and locked for Calendar editing.
 - Successful completion returns to the same Calendar date.
 - Cell, heat, card, and summary update from canonical functions.
@@ -470,9 +469,9 @@ Do not ask for the date again and do not add a second record schema or duplicate
 Safest implementation:
 
 - Extract a single Record Editor controller without duplicating IDs or handlers.
-- Reuse the existing form DOM/field logic in a mobile full-screen editing layer.
+- Reuse the existing form DOM/field logic in the Calendar inline host.
 - Keep Today's frozen visual composition unchanged.
-- Avoid a Bottom Sheet because the existing record form is long and keyboard-heavy.
+- Expand only the requested section so the month and selected-date context remain visible.
 - Provide `openRecordEditor({ date, mode, origin })` and one close/return contract.
 
 ## 19. Record Deletion
@@ -506,7 +505,8 @@ Current repository behavior is mixed:
 
 V1 Calendar rules:
 
-- Do not add another Calendar-level Save button.
+- A compact Calendar-level `儲存修改` action may commit the shared draft; it must not
+  become a full-width page-ending CTA.
 - Preserve the Record Editor's one explicit grouped-detail submit because current integrity depends on it.
 - Preserve existing immediate-save semantics for platform income, shift, and weather.
 - Preserve the expense flow's existing explicit action.
@@ -662,7 +662,7 @@ Calendar reads the existing entry model. No formatted value is stored.
 | Total expenses | `entryExpenses(record)` | Single implementation |
 | Net income | `entryNet(record)` | Single implementation |
 | Actual duration | `workMetrics(record).durationMs` / `.workMinutes` | Single implementation; complete clock fields take precedence |
-| Hourly income | `hourlyRate(net, durationMs)` | Single implementation |
+| Hourly income | `hourlyRate(totalIncome, durationMs)` | Single implementation; shared quality gate |
 | Monthly net | `summarize(entriesForMonth(month)).net` | Reusable existing implementation |
 | Monthly work days | Unique valid dates where duration, total income, expenses, orders, or distance is positive | Missing shared selector; add one pure shared function before Calendar summary |
 | Platform month totals | `platformNetAmount` aggregation | Existing Reports implementation, not a Calendar responsibility |
@@ -900,7 +900,7 @@ Do not subdivide further unless implementation discovers a new data-loss or arch
 - [ ] Adjacent-month date selection switches displayed month.
 - [ ] Future dates cannot create records.
 - [ ] Past empty dates can open backfill with a locked date.
-- [ ] Edit is directly visible for an existing record.
+- [ ] The five inline section rows are directly visible for an existing past record.
 - [ ] Delete is secondary, date-specific, confirmed, and transactional.
 - [ ] Card swipe changes selected day and cross-month swipe changes month.
 - [ ] Monthly net and work-day summary updates after mutations.

@@ -108,7 +108,7 @@ test("儲存流程在分月與一次支出間切換並同步清理", () => {
   assert.match(source, /entry\.expenseAllocations\[category\] = \{[\s\S]*?months: selectedExpenseMonths\(\),[\s\S]*?startMonth: expenseDraft\.startMonth/);
   assert.match(source, /delete entry\.expenseAllocations\[category\]/);
   assert.match(source, /delete draft\.expenseAllocations\[category\]/);
-  assert.match(html, /delete recordEditorState\.draft\.expenseAllocations\?\.\[category\]/);
+  assert.match(extractFunction("removeCalendarExpense"), /delete record\.expenseAllocations\?\.\[category\]/);
 });
 
 test("重新載入時可選 allocation metadata 由既有 payload 原樣保留", () => {

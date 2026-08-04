@@ -16,6 +16,21 @@
 
 ## Unreleased
 
+### 2026-08-04 — Expense Management、Calendar Inline Editing 與 KPI Candidate
+
+- 月報新增支出分類彙總與原地每日明細；油錢優先，分月成本與實際付款使用
+  `reportExpenseSummary()` 的同一口徑。
+- Today 新增預設收合的今日支出清單，可交易式移除單一類別並在 5 秒內復原
+  金額、備註與 allocation。
+- Calendar 改為五個區段式原地編輯，重用唯一表單 DOM；移除全頁 Editor、
+  全域編輯與固定大型整天刪除，並精簡月份格及詳細卡垂直空間。
+- 所有時薪改為總收入除以有效工時；Today KPI 重排，Calendar／Reports 重複
+  標題移除，Bottom Navigation active state 統一加強。
+- App Shell candidate 更新為 `driver-pay-pro-v25`；`driverPayApp.v2`、
+  WorkRecord、`expenseAllocations`、Manifest 與 Supabase 不變。
+- Human QA 通過前只 Push 功能分支與 Public Preview，不 merge `main`、不
+  Production deploy。
+
 ### 2026-08-04 — V1.1 Production Release
 
 - Today Progress 與 Driver Simplification 已通過 Product Owner Human QA，合併至

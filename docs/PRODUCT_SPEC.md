@@ -1,12 +1,12 @@
 # Driver Pay Pro — Product Specification
 
-Version: 1.1
+Version: 1.2
 
 Status: Approved product architecture baseline
 
 Owner: Mark Hu
 
-Updated: 2026-07-25
+Updated: 2026-08-04
 
 > This document defines what Driver Pay Pro is, which page owns each capability, and how data and interactions must remain consistent across the app. Implementation status is recorded separately in the Current State Audit.
 
@@ -67,6 +67,8 @@ Primary responsibilities:
 - Start, pause, resume, and end today's work session.
 - Enter or correct today's platform income.
 - Add today's expenses.
+- Review today's expense count and total beside the expense flow, then remove one
+  category in place with a short undo window without deleting the day's record.
 - Record today's shift, weather, orders, distance, and note.
 - Provide immediate save and work-status feedback.
 - Keep work time, expense entry, and supporting data as three independent collapsed
@@ -117,6 +119,9 @@ Primary responsibilities:
 - Open the selected date's Work Record Card below the calendar.
 - Create a missing past record.
 - Edit or delete an existing past record.
+- Keep past-record viewing and editing below the month grid through the five inline
+  sections Income, Work Time, Expenses, Other Data, and More Actions. The same
+  reusable form DOM is moved into that context; no full-page or Modal editor exists.
 
 Calendar must not:
 
@@ -138,6 +143,8 @@ Primary responsibilities:
 
 - Weekly summaries.
 - Monthly summaries.
+- Monthly expense-category totals with in-place daily detail disclosure; allocated
+  categories distinguish monthly cost from actual payment through the shared selector.
 - Platform performance and ranking.
 - Read-only trends and comparisons.
 
@@ -292,7 +299,9 @@ Canonical calculations:
   the shared aggregation boundary. Complete valid start/end/break fields take
   precedence; legacy manual hours and live session are fallbacks when clock fields
   are incomplete.
-- Average hourly rate: net income divided by actual work hours; zero when duration is zero or invalid.
+- Average hourly rate: total income divided by actual work hours. Expenses affect net
+  income and cost analysis, never hourly-income metrics; zero/invalid duration does not
+  produce `Infinity`, `NaN`, or a misleading rate.
 - Weekly summary: records in a complete Monday-to-Sunday calendar week.
 - Monthly summary: records whose local date belongs to the selected calendar month.
 
@@ -353,7 +362,7 @@ Do not create page-specific copies that differ only slightly. A page may compose
 | 總收入 | Recognized platform income plus tips | Gross unless explicitly labelled |
 | 淨收入 | Total income minus expenses | Profit guarantee |
 | 實際工時 | Elapsed work time minus breaks or canonical manual correction | Online time without definition |
-| 平均時薪 | Net income divided by actual work hours | Guaranteed hourly income |
+| 平均時薪 | Total income divided by actual work hours | Guaranteed hourly income |
 | 直接輸入總額 | Replace the day's platform total | overwrite / total mode |
 | 每筆收入累加 | Add one amount to the current platform total | increment / cumulative mode |
 

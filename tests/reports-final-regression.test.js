@@ -269,7 +269,7 @@ test("Monthly Final Regression 保留曆月、跨月週、跨年週與閏年", (
 
   const important = reports.findImportantReportDates(fixture.weeklyCurrent, "month");
   assert.equal(important.longestWork.date, "2026-07-13");
-  assert.equal(important.highestHourly.date, "2026-07-14");
+  assert.equal(important.highestHourly.date, "2026-07-13");
 });
 
 test("Platform Final Regression 正規化別名、穩定排序並隔離無效值", () => {
@@ -379,6 +379,6 @@ test("Reports Accessibility、responsive 與 PWA Freeze Candidate 契約完整",
   assert.match(html, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(html, /\.reports-platform-row[\s\S]*?grid-template-columns: minmax\(0, 1fr\) auto/);
   assert.doesNotMatch(reportsSection, /平台效率|最佳平台|平台時薪|<img[^>]+platform/);
-  assert.match(serviceWorker, /driver-pay-pro-v24/);
+  assert.match(serviceWorker, /driver-pay-pro-v25/);
   assert.doesNotMatch(serviceWorker, /driver-pay-pro-v16/);
 });

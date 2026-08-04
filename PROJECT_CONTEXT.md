@@ -4,6 +4,36 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
+## Expense Management、Calendar Inline Editing 與 KPI — Current Candidate
+
+- 工作分支：`codex/expense-calendar-kpi-integration-20260804`；base
+  `fd059b8de6226768ccb4105446e8f27fb5e69fcf`。唯一一次 iPhone Human QA
+  通過前不 merge `main`、不 Production deploy。
+- Today 在新增支出旁提供預設收合的「今日支出」；可只移除該日期與類別的
+  金額、備註及 allocation，成功後提供 5 秒最近一次復原，不影響收入、工時
+  或其他支出。
+- Calendar 過去日期改為收入／工時／支出／其他資料／更多操作五個原地
+  disclosure；重用 Today 唯一表單 DOM，不再使用全頁或 Modal Editor。整天
+  刪除只在更多操作內，仍需包含日期與影響範圍的確認。
+- 月報使用擴充後的 `reportExpenseSummary()` 顯示所選月份支出分類；油錢優先，
+  其餘按成本排序，原地展開日期、金額與備註。分月分類主數字是月成本，只有
+  實際付款不同時才補充付款金額。
+- 所有「時薪／平均時薪／每小時收入」統一為總收入 ÷ 有效工時；支出仍只
+  影響淨收入、成本與支出分析。Today 綠色摘要以置中的今日收入及等寬工時／
+  時薪兩欄呈現。
+- Calendar／Reports 內容區重複大標題移除，Calendar 列高依顯示模式為
+  70／76／84px；Bottom Navigation 五頁共用淡綠 active surface、品牌綠、
+  semibold 與 `aria-current="page"`。
+- App Shell candidate 為 `driver-pay-pro-v25`；`driverPayApp.v2`、WorkRecord、
+  `expenseAllocations`、Manifest、Supabase 與 Local-first 原則不變。
+- L1／本機 L2 驗證已通過：完整 Node 339/339、`release:check`、lint 0 errors
+  （10 個既有 warnings）、build、Manifest、Service Worker syntax、
+  `git diff --check` 與 `npm audit` 0 vulnerabilities。Browser 已驗證 Today、
+  Calendar、Reports 在 standard／comfort／large × 320／375／390／393／430px
+  共 45 組無水平 overflow，Console 無 error／warning；Calendar 原地新增支出
+  及月報分類展開的端到端流程正常。仍需 Public Preview 上唯一一次 iPhone
+  Safari／installed PWA Human QA。
+
 ## V1.1 Production Release — Current State
 
 - 正式分支：`main`；merge commit

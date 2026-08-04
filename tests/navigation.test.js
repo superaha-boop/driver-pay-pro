@@ -121,15 +121,16 @@ test("月曆與報表月份狀態互相獨立", () => {
   assert.match(html, /lastReportView: normalizeReportView\(settings\.lastReportView\)/);
 });
 
-test("Calendar 4B 保留摘要並將過去日期寫入集中於共用編輯器", () => {
+test("Calendar 原地分區編輯保留摘要與所選日期上下文", () => {
   const calendarSection = html.match(/<section id="view-calendar"[\s\S]*?<\/section>\s*<section id="view-reports"/)?.[0] || "";
-  assert.match(html, /總收入[\s\S]*淨收入[\s\S]*工作時間[\s\S]*時薪/);
-  assert.match(html, /\.calendar-date[\s\S]*?min-height: max\(58px, calc\(var\(--calendar-day-marker-size\) \+ 24px\)\)/);
+  assert.match(html, /sectionButton\("income"[\s\S]*?sectionButton\("work"[\s\S]*?sectionButton\("expenses"[\s\S]*?sectionButton\("other"[\s\S]*?sectionButton\("more"/);
+  assert.match(html, /\.calendar-date[\s\S]*?min-height: var\(--display-calendar-row-height\)/);
   assert.doesNotMatch(calendarSection, /id="entryForm"|id="detailForm"/);
   assert.match(html, /data-calendar-add/);
-  assert.match(html, /data-calendar-edit/);
-  assert.match(html, /id="recordEditorDialog"/);
-  assert.match(html, /moveSharedEditorToDialog\(\)/);
+  assert.match(html, /data-calendar-section/);
+  assert.match(html, /id="recordEditorInline"/);
+  assert.doesNotMatch(html, /id="recordEditorDialog"/);
+  assert.match(html, /moveSharedEditorToCalendar\(\)/);
   assert.match(html, /els\.recordEditorContent\.append\(els\.sharedIncomePanel, els\.sharedDetailPanel\)/);
 });
 

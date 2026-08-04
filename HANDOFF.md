@@ -6,6 +6,38 @@ GitHub：`superaha-boop/driver-pay-pro`
 
 ---
 
+## Expense Management、Calendar Inline Editing 與 KPI — Current Handoff
+
+- Branch：`codex/expense-calendar-kpi-integration-20260804`；base
+  `fd059b8de6226768ccb4105446e8f27fb5e69fcf`。本 Sprint 完成後只 Push
+  功能分支與 Public Preview；Human QA 前不 merge `main`、不 Production。
+- `reportExpenseSummary()` 同時提供 `byDate` 與 `byCategory`，並區分月成本及
+  實際付款；Reports 月報分類以油錢優先、其餘金額降序，native disclosure
+  原地顯示日期、金額與選填備註。
+- Today `#todayExpenseManager` 預設收合，使用 category 作為現有資料模型下的
+  單筆識別；`removeTodayExpense()`／`undoLastExpenseRemoval()` 交易式保存並
+  在 5 秒內完整復原金額、備註與 allocation。
+- Calendar `#recordEditorInline` 以五個 section toggle 控制同一份
+  `#sharedIncomePanel`／`#sharedDetailPanel`；舊 `#recordEditorDialog` 已移除。
+  支出可原地新增、修改、移除與復原；整天刪除只在更多操作及確認 dialog。
+- Canonical hourly source 仍是 `hourlyRateQuality()`／`hourlyRate()`，輸入改為
+  total income 與有效工時；支出不再降低時薪。Calendar 顯示也重用相同品質
+  門檻，不足或異常時不顯示誤導數字。
+- Today KPI、Calendar spacing、Reports 重複標題與 Bottom Navigation active
+  presentation 已依 D-045 調整；全 App `settings.displaySize` 規則保持。
+- App Shell candidate：`driver-pay-pro-v25`。localStorage key 仍是
+  `driverPayApp.v2`，無 schema、migration、Supabase 或 dependency 變更。
+- `npm run release:check` 已通過：完整 Node 339/339、Today 80/80、AI 24/24、
+  Driver 24/24、Integration 16/16、Reports 86/86、Calendar 66/66；lint 0
+  errors／10 個既有 warnings，build、Inline JavaScript、Service Worker、
+  Manifest、`git diff --check` 與 `npm audit` 0 vulnerabilities 均通過。
+- Browser 已完成三種顯示模式 × Today／Calendar／Reports × 五種手機寬度共
+  45 組 overflow 檢查，全部 `scrollWidth === clientWidth`，Console 無
+  error／warning；Calendar 歷史日支出由原地表單提交後，月曆淨收入與月報
+  分類／明細同步更新。下一步只需公開 Preview 與唯一一次 iPhone Human QA。
+
+---
+
 ## V1.1 Production Release — Current Handoff
 
 - Branch：`main`；merge commit `4282b378538e1fa99db67106aad8bb9c36560532`。
@@ -589,7 +621,8 @@ Sprint 5B2 — Platform, Drill-Down, and Hardening。屆時再處理平台正式
 - 新增 `docs/REPORTS_SPEC.md` Version 1.0，成為下一個 Reports Core Implementation 的唯一主要實作規格。
 - 固定 `週報｜月報｜平台`，新 session 預設週報；所有 Reports navigation state 維持 session-only。
 - 週報採台北星期一至星期日，月報採台北曆月；支援前一期間、下一期間與返回本週／本月。
-- 週／月共用 canonical KPI，平均時薪為期間淨收入除以期間有效工時。
+- 週／月共用 canonical KPI；此歷史段落原採淨收入時薪，已由 D-045 的
+  「期間總收入除以期間有效工時」取代。
 - 週趨勢採七個每日淨收入點；月趨勢採四至六個 Monday-first 週彙總。
 - 平台只分析收入貢獻；小費不歸入平台，也不推論效率或最佳平台。
 - 重要日期連到 Calendar 精確日期，Reports 本身保持唯讀並在同 session 保留返回 context。
@@ -701,7 +734,9 @@ SaveStatus。後續只接受 Bug、Accessibility、Data Integrity 與重大使�
 ### 已完成
 
 - 過去空日期顯示「新增紀錄」，已有紀錄顯示直接可見的「編輯」；今天仍導回 Today，未來日期沒有寫入入口。
-- Calendar 以原本的 `#entryForm`、`#detailForm`、收入欄位與支出元件作為唯一 Record Editor，開啟時將同一組 DOM 移入全螢幕 dialog，關閉後移回 Today；沒有第二套欄位 ID、資料模型或計算公式。
+- Calendar 以原本的 `#entryForm`、`#detailForm`、收入欄位與支出元件作為唯一
+  Record Editor。此歷史段落原使用全螢幕 dialog，已由 D-045 的 Calendar
+  原地 host 取代；單一 DOM／資料模型／公式原則不變。
 - Calendar 編輯使用 UI draft；收入、班別、天氣、支出與其他欄位在按「完成」前不寫入 durable state。
 - 離開 dirty editor 會顯示日期明確的放棄確認；刪除是次級操作，確認內容包含日期及收入／支出／工時影響範圍。
 - 新增日期、未來日期、數值範圍、開始／結束配對、休息時間與最小內容驗證；歷史時間欄位被校正時移除該紀錄不再可信的 aggregate `workSession`，避免覆蓋已編輯時間。
@@ -715,7 +750,8 @@ SaveStatus。後續只接受 Bug、Accessibility、Data Integrity 與重大使�
 - Node 自動測試：45/45 通過。
 - Inline JavaScript 語法、`git diff --check` 通過；瀏覽器 Console 無 error／warning。
 - 隔離 localStorage 來源完成新增 $2,300、放棄 $2,500 草稿、正式更新 $2,500、刪除回空狀態；未來日期沒有新增入口。
-- 390／393／430px 的 `scrollWidth === clientWidth`；390px 全螢幕編輯器、共用收入欄位與兩個 time input 均在 viewport 內。
+- 390／393／430px 的 `scrollWidth === clientWidth`；此歷史全螢幕驗證已由
+  D-045 原地 Editor responsive matrix 取代。
 - `driverPayApp.v2` key 與 WorkRecord schema 不變；新增的是獨立的 last-valid safety key，沒有 Supabase、後端或跨裝置同步。
 - TypeScript、ESLint、production build：專案未配置，Not available。
 

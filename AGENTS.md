@@ -145,6 +145,8 @@ Version: 1.10
 - 今天空狀態連到 Today；過去空日期可補登；未來空日期沒有新增入口。
 - Calendar 不取代 Reports，不加入即時工作控制、趨勢、平台排行或 AI 洞察。
 - Calendar 必須使用 canonical calculations、`styles/design-system.css` primitives 與同一套 Record Editor；不得建立第二套表單、資料模型或公式。
+- Calendar 的過去紀錄編輯固定留在月曆下方，以收入／工時／支出／其他資料／
+  更多操作五個原地 disclosure 重用同一套表單；不得恢復全頁或 Modal 型 Editor。
 - 完整狀態、手勢、Accessibility、資料與驗收規格以 `docs/CALENDAR_SPEC.md` 為準。
 
 ## Reports Execution Rules
@@ -153,7 +155,10 @@ Version: 1.10
 - Reports 固定包含「週報｜月報｜平台」；新 App session 預設週報，同 session 可保留分頁與期間，但不得將 transient Reports state 新增到 `driverPayApp.v2`。
 - 週報以台北本地星期一至星期日為完整七天，月報以台北本地曆月為完整期間；日期運算必須重用 Calendar 的 date-only utilities。
 - 週／月 KPI、比較、趨勢、平台總額與重要日期必須建立在 canonical calculations 與純 selector 上；renderer 不得自行複製公式。
-- 平均時薪固定為期間淨收入除以期間有效工作時數；零工時不得出現 `Infinity` 或 `NaN`。
+- 平均時薪固定為期間總收入除以期間有效工作時數；支出只影響淨收入與成本，
+  不得扣入任何「時薪／平均時薪／每小時收入」。零工時不得出現 `Infinity` 或 `NaN`。
+- 月報支出分類必須重用 `reportExpenseSummary()`；分類主數字使用月成本，分月
+  支出只有在實際付款不同時才顯示兩種口徑，不得建立 Reports 專用支出公式。
 - 週趨勢使用七個每日淨收入點；月趨勢使用四至六個 Monday-first 週彙總，且月份邊界只計入選定月份日期。
 - 平台頁只描述收入貢獻、排行與占比，不得推論平台效率、最佳平台或平台時薪；小費不得誤歸入平台收入。
 - 平台名稱相容只可在讀取層使用核准 alias 正規化；不得為了排行改寫歷史

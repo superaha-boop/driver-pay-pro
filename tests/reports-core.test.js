@@ -203,7 +203,7 @@ test("共用 aggregator 正確計算收入、支出、淨收入、工時與工�
   assert.equal(aggregate.netIncome, 6250);
   assert.equal(aggregate.workDays, 2);
   assert.equal(aggregate.totalWorkDuration, 13.5 * 60 * 60 * 1000);
-  assert.equal(aggregate.averageHourlyIncome, 6250 / 13.5);
+  assert.equal(aggregate.averageHourlyIncome, 6750 / 13.5);
 });
 
 test("月報以分月成本計算且 Calendar 原始付款值維持不變", () => {
@@ -358,7 +358,7 @@ test("Reports 狀態不再讀寫 legacy localStorage 設定並保留唯讀介面
   assert.doesNotMatch(html.match(/<section id="view-reports"[\s\S]*?<\/section>\s*<section id="view-ai"/)?.[0] || "", /data-calendar-(?:add|edit|delete)/);
 });
 
-test("Local-first V1.1 App Shell 使用 Service Worker cache v24", () => {
-  assert.match(serviceWorker, /driver-pay-pro-v24/);
+test("Local-first V1.1 App Shell 使用 Service Worker cache v25", () => {
+  assert.match(serviceWorker, /driver-pay-pro-v25/);
   assert.doesNotMatch(serviceWorker, /driver-pay-pro-v11/);
 });

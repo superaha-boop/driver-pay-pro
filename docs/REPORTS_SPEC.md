@@ -1,9 +1,10 @@
 # Driver Pay Pro — Reports Specification
 
-Version: 1.1
+Version: 1.2
 Status: Approved implementation specification
-Updated: 2026-07-26
-Implementation status: Sprint 5B1 and 5B2 implemented; Final Regression and Product Owner L3 Human QA passed; UX Freeze Version 1 active
+Updated: 2026-08-04
+Implementation status: Reports UX Freeze Version 1 active；D-045 approved the
+monthly expense-category and duplicate-title exception, awaiting combined Human QA
 
 This document remains the sole primary implementation source and regression
 specification for Reports. If it conflicts with a later, explicitly approved PRD, the later PRD wins.
@@ -24,6 +25,10 @@ Production blocker；一般視覺改善與新增功能進入 Backlog。後續 AI
 本規格已驗證的 period、aggregation、comparison、trend、Important Dates、
 platform、persistence、refresh、formatting、state 與 drill-down 基礎，不得
 建立另一套 aggregation。
+
+D-045 是 Product Owner 明確核准的 Freeze 例外：移除內容區重複「報表」標題，
+並在月報加入重用 `reportExpenseSummary()` 的支出分類 disclosure。這不授權
+改變週／月期間、收入、趨勢、平台或其他凍結演算法。
 
 ## 1. Purpose
 
@@ -58,6 +63,8 @@ The first formal Reports implementation includes:
 - prior-period comparisons;
 - weekly daily-net trend;
 - monthly weekly-net trend;
+- monthly expense-category totals and in-place dated details, with allocated monthly
+  cost distinguished from actual payment when the values differ;
 - important-date links to Calendar;
 - platform income ranking, share, period total, and safe comparison;
 - empty, loading, error, offline, accessibility, responsive, and performance behavior;
@@ -219,7 +226,7 @@ Every page must reuse the same canonical functions or selectors. Reports must no
 | Net income | Period total income minus the canonical report expense summary | Integer NT$ | Signed values allowed |
 | Work days | Count of unique dates where `isWorkDayRecord(record)` is true | Integer days | `0 天` |
 | Work time | Sum of canonical `workMetrics(record).durationMs`; each record is derived from integer `workMinutes` | Milliseconds at aggregation boundary | `0 分` |
-| Average hourly income | Period net income ÷ period valid work hours | NT$/hour | `NT$0` when duration is zero |
+| Average hourly income | Period total income ÷ period valid work hours | NT$/hour | `NT$0` when duration is zero |
 | Platform income | Sum of recognized `platformNetAmount` for that stored platform key | Integer NT$ | No tips included |
 | Platform share | Positive platform income ÷ sum of positive recognized platform income | Percentage | Not available when denominator is zero |
 
