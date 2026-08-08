@@ -138,19 +138,20 @@ test("每日紀錄保留工時、支出與其他資料三個獨立收合區塊",
   }
 });
 
-test("工時只顯示一種輸入方式且切換前需要確認", () => {
+test("工時只顯示一種輸入方式且一次點擊直接切換", () => {
   const detail = html.slice(html.indexOf('id="workTimeSection"'), html.indexOf('id="expenseSection"'));
   assert.match(detail, /id="clockWorkFields"/);
   assert.match(detail, /class="work-mode-fields hidden" id="manualWorkFields"/);
   assert.match(detail, /id="workModeToggle"/);
-  assert.match(html, /id="workModeDialog"/);
-  const request = extractFunction("requestWorkTimeModeSwitch");
-  const apply = extractFunction("applyWorkTimeModeSwitch");
-  assert.match(request, /切換後會清除開始時間、結束時間與休息時間/);
-  assert.match(request, /切換後會清除手動工時/);
-  assert.match(apply, /saveTodayWorkTimeFromForm\(activeRecordDate\)/);
-  assert.match(apply, /previousValues/);
-  assert.doesNotMatch(apply, /saveState\(\)/);
+  assert.doesNotMatch(html, /id="workModeDialog"|切換工時輸入方式？|確認切換/);
+  const directSwitch = extractFunction("switchWorkTimeInputMode");
+  assert.match(html, /els\.workModeToggle\.addEventListener\("click", switchWorkTimeInputMode\)/);
+  assert.match(directSwitch, /workTimeInputMode === "clock" \? "manual" : "clock"/);
+  assert.match(directSwitch, /workTimeModeDraft\.clock = currentClockValues/);
+  assert.match(directSwitch, /workTimeModeDraft\.manualMinutes = currentManualMinutes/);
+  assert.match(directSwitch, /setWorkTimeInputMode\(targetMode, formData\(\)\)/);
+  assert.doesNotMatch(directSwitch, /showModal|confirm\(|saveTodayWorkTimeFromForm|persistStatePayload|saveState\(\)/);
+  assert.match(extractFunction("resetForm"), /resetWorkTimeModeDraft\(targetDate\)/);
 });
 
 test("手動模式隱藏重複即時摘要，時間模式保留單一計算結果", () => {

@@ -86,8 +86,9 @@ Primary responsibilities:
   selected. The category and expense-mode values act as the two direct selection
   buttons and continue to open the complete existing option sources.
 - Work time uses one derived input mode at a time: complete clock fields take
-  precedence; otherwise legacy manual hours are used. Switching modes requires
-  confirmation before clearing the inactive mode's values.
+  precedence; otherwise legacy manual hours are used. Switching modes is a direct,
+  non-destructive UI action without a confirmation dialog. The inactive mode's draft
+  remains session-only; switching alone does not persist or clear the stored record.
 - A stopped clock-based day may continue in the same WorkRecord. The stopped gap is
   added to break minutes, the original start is retained, and no second daily record
   is created.

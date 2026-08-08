@@ -1,6 +1,21 @@
 # Driver Pay Pro Testing
 
-## Current Hotfix — Active Record Date, Today KPI and Semantic Display Size
+## Current Hotfix — First-tap Date Picker and Direct Work-time Mode Switch
+
+- Today 日期卡固定只使用完整覆蓋卡片的原生 `input[type="date"]`；不再從冒泡
+  click 重複呼叫 `showPicker()`。驗證第一次點擊的原生路徑、`max`、日期更新與
+  `activeRecordDate` 綁定。
+- 工時模式切換移除確認 Dialog；一次點擊立即切換，另一模式草稿保留於目前
+  session，切換本身不呼叫 persistence。實際修改欄位後仍走既有安全 autosave。
+- App Shell candidate：`driver-pay-pro-v30`。必測 320／375／390／393／430px、
+  Console、無水平 overflow、日期切換、clock → manual → clock 草稿還原。
+- 2026-08-08 L1：`npm run release:check` Passed；403/403 Node、Today 142/142、
+  Calendar 69/69、Reports 89/89、AI／Driver 各 25/25、Integration 16/16；lint
+  0 errors／10 個既有 warnings。五個手機寬度皆無 overflow，Dialog 不存在，
+  clock 08:00／17:00／休息 60 分與 manual 5 小時 30 分來回切換後均保留；
+  Console 0 error／warning。
+
+## Previous Hotfix — Active Record Date, Today KPI and Semantic Display Size
 
 - `tests/active-record-date-hotfix.test.js` 固定 60 項：日期隔離、原生 Picker、
   導航完整渲染及 Today KPI／工時格式。`npm run test:today` 已納入此檔案。

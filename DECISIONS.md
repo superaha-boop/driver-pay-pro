@@ -998,3 +998,19 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   導致點擊日期卡只顯示焦點框而無法選日。
 - Impact: Today date-picker presentation／interaction、tests、docs 與 v29；
   `driverPayApp.v2`、WorkRecord、計算、Manifest、Supabase 與正式資料不變。
+
+## D-051 — Today First-tap Date Picker and Direct Work-time Mode Switch
+
+- Date: 2026-08-08
+- Decision:
+  1. D-050 的 `showPicker()` click 增強由本決策取代；Today 日期卡固定只使用
+     完整覆蓋卡片的原生 date input，不在同一次 click 建立第二條開啟路徑。
+  2. D-036 的工時模式切換確認由本決策取代；「改用手動工時／改用開始／結束
+     時間」一次點擊立即切換，不顯示 Dialog。
+  3. 切換是 session-only UI 動作；另一模式草稿只在目前日期保留，切換本身不
+     儲存、不清除正式紀錄。實際輸入後才沿用既有安全 persistence。
+  4. App Shell 更新為 v30；資料 key、WorkRecord 與 canonical 工時計算不變。
+- Reason: iPhone 實機顯示雙重 Picker 觸發會讓第一次點擊只 focus；非破壞性的
+  工時顯示模式切換不應要求第二次確認。
+- Impact: Today date／work-time interaction、tests、docs 與 v30；其他頁面、
+  schema、Manifest、Supabase 與正式資料不變。

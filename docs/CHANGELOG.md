@@ -16,6 +16,15 @@
 
 ## Unreleased
 
+### 2026-08-08 — Today First-tap Date Picker and Direct Work-time Switch
+
+- 移除 Today 日期卡 click 冒泡後的第二次 `showPicker()` 路徑，整張卡只由同一
+  原生 date input 接管，避免 iPhone 第一次點擊只取得焦點。
+- 「改用手動工時／改用開始／結束時間」改為一次點擊直接切換；移除確認
+  Dialog，離開模式的草稿只保留於 session，切換本身不寫入或清除既有紀錄。
+- App Shell 更新為 `driver-pay-pro-v30`；`driverPayApp.v2`、WorkRecord、
+  canonical 工時計算、Manifest 與 Supabase 不變。
+
 ### 2026-08-08 — Today Daily Record Native Date Picker Hotfix Production Release
 
 - 修正每日紀錄日期卡只取得焦點、不開啟原生月曆的回歸；透明 date input 恢復
