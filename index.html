@@ -2514,8 +2514,18 @@
       box-shadow: none;
       opacity: 0;
       cursor: pointer;
-      -webkit-appearance: none;
-      appearance: none;
+      -webkit-appearance: auto;
+      appearance: auto;
+    }
+
+    .date-card input[type="date"]::-webkit-calendar-picker-indicator {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      cursor: pointer;
     }
 
     .expense-suggestion-card {
@@ -8937,6 +8947,16 @@
       });
     }
 
+    function openNativeDatePicker(input) {
+      if (!input || input.disabled || typeof input.showPicker !== "function") return false;
+      try {
+        input.showPicker();
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
     function syncDateCardDisplay(input) {
       const card = input?.closest(".date-card");
       if (!card) return;
@@ -13665,6 +13685,10 @@
         return;
       }
       saveTodayDetailRecord(activeRecordDate);
+    });
+
+    els.detailForm.addEventListener("click", event => {
+      if (event.target.id === "date") openNativeDatePicker(event.target);
     });
 
     els.detailForm.addEventListener("input", event => {

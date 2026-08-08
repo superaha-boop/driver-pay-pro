@@ -982,3 +982,19 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
 - Impact: Design System typography、Today／Driver／Reports／AI presentation、
   tests、docs 與 v28；設定來源、計算、WorkRecord、storage key、Manifest、
   Supabase、main 與 Production 不變。
+
+## D-050 — Today Daily Record Native Date Picker
+
+- Date: 2026-08-08
+- Decision:
+  1. Today 每日紀錄日期卡繼續使用唯一原生 `input[type="date"]`，整張日期卡都是
+     Picker 觸發區，不建立自訂月曆或第二份日期 state。
+  2. Date input 保留 native appearance；WebKit picker indicator 覆蓋完整卡片。
+     支援 `showPicker()` 時作直接開啟增強，不支援時保留原生點擊 fallback。
+  3. 選擇結果仍只進入 `activeRecordDate`，僅允許今天或過去日期；收入、工時、
+     支出、其他資料及付款日期沿用同一日期 guard。
+  4. App Shell 更新為 v29。
+- Reason: `appearance: none` 移除了 Chrome／部分 WebKit 的原生日期面板觸發區，
+  導致點擊日期卡只顯示焦點框而無法選日。
+- Impact: Today date-picker presentation／interaction、tests、docs 與 v29；
+  `driverPayApp.v2`、WorkRecord、計算、Manifest、Supabase 與正式資料不變。

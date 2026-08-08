@@ -27,6 +27,13 @@
   不允許未來日期，也不建立第二份日期 state。
 - App Shell candidate：`driver-pay-pro-v28`。`driverPayApp.v2`、WorkRecord、
   `expenseAllocations`、Manifest、Supabase 與正式資料均不變。
+- 2026-08-08 Date Picker follow-up 修正透明原生 date input 的
+  `appearance: none` 回歸：恢復 native appearance、把 WebKit picker indicator
+  擴至整張日期卡，並在支援時呼叫 `showPicker()`。點擊日期卡不再只顯示焦點框；
+  App Shell follow-up 為 `driver-pay-pro-v29`。
+- Follow-up 驗證為 403/403 Node、Today 142/142；320／375／390／393／430px
+  原生 date input 均完整位於卡片內且無水平 overflow，390px 實際點擊可由原生
+  Picker 接管，Console 0 error／warning。
 - Repository 無法直接讀取 iPhone Production origin 的 localStorage；2026-07-04、
   2026-08-02、2026-08-04 的正式資料稽核需 Product Owner 提供備份匯出或在裝置
   執行唯讀診斷。Hotfix 不會自動搬移、刪除或猜測修復任何紀錄。

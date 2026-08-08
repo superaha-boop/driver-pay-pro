@@ -73,6 +73,25 @@ test("日期隔離 01：每日紀錄日期卡可選今天或過去日期並使�
   assert.match(html, /setActiveRecordDate\(requestedDate, \{ preserveDisclosure: true \}\)/);
 });
 
+test("日期 Picker：整張日期卡保留原生外觀與跨瀏覽器開啟能力", () => {
+  const dateInputCss = html.match(/\.date-card input\[type="date"\] \{[\s\S]*?\n    \}/)?.[0] || "";
+  assert.match(dateInputCss, /-webkit-appearance: auto/);
+  assert.match(dateInputCss, /appearance: auto/);
+  assert.doesNotMatch(dateInputCss, /appearance: none/);
+  assert.match(html, /\.date-card input\[type="date"\]::-webkit-calendar-picker-indicator[\s\S]*?inset: 0[\s\S]*?width: 100%[\s\S]*?height: 100%/);
+  assert.match(extractFunction("openNativeDatePicker"), /typeof input\.showPicker !== "function"[\s\S]*?input\.showPicker\(\)/);
+  assert.match(html, /els\.detailForm\.addEventListener\("click"[\s\S]*?event\.target\.id === "date"[\s\S]*?openNativeDatePicker\(event\.target\)/);
+
+  const pickerContext = vm.createContext({});
+  vm.runInContext(`${extractFunction("openNativeDatePicker")}\nglobalThis.openPicker = openNativeDatePicker;`, pickerContext);
+  let opened = 0;
+  assert.equal(pickerContext.openPicker({ disabled: false, showPicker() { opened += 1; } }), true);
+  assert.equal(opened, 1);
+  assert.equal(pickerContext.openPicker({ disabled: false }), false);
+  assert.equal(pickerContext.openPicker({ disabled: true, showPicker() { opened += 1; } }), false);
+  assert.equal(opened, 1);
+});
+
 test("日期隔離 02：支出日期由 activeRecordDate 建立", () => {
   assert.match(setActiveDate, /expenseDraft = createExpenseDraft\(target\)/);
   assert.match(extractFunction("renderExpenseForm"), /dateCardMarkup\(\{ id: "smartExpenseDate", value: activeRecordDate[\s\S]*?locked: true \}\)/);

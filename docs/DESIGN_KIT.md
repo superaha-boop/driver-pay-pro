@@ -36,6 +36,10 @@ Design System 採漸進式導入；本文件不授權一次性重寫首頁、月
 - 選項：直接選擇清單；需要容納更多內容時才考慮 Bottom Sheet
 - 收入：數字鍵盤
 
+日期卡可以用自訂文字呈現，但必須由同一個原生 `input[type="date"]` 覆蓋完整
+44px 以上觸控區。不得以 `appearance: none` 移除原生 Picker 入口；支援
+`showPicker()` 時只作增強，不得取代 Safari／PWA 的原生點擊 fallback。
+
 ### One-Hand First
 
 主要操作必須容易單手完成。

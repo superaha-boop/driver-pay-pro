@@ -837,3 +837,19 @@
 - Reason: 修正結構文字過度放大、主要數據級差不足與大字控制擁擠。
 - Impact: typography、Today／Driver／Reports／AI presentation、tests、docs、v28；
   資料 key、schema、計算、Manifest、Supabase、main 與 Production 不變。
+
+## D-050
+
+- Date: 2026-08-08
+- Decision:
+  - Today 每日紀錄日期卡保留唯一原生 `input[type="date"]` 與完整卡片觸控區，
+    不建立自訂月曆或第二份日期 state。
+  - Date input 使用 native appearance；WebKit picker indicator 覆蓋整張卡。
+    支援 `showPicker()` 時作增強，不支援時維持原生點擊 fallback。
+  - 選定日期仍只更新 `activeRecordDate`，且僅允許今天或過去日期；所有 Daily
+    Record 欄位及付款日期繼續通過同一日期 guard。
+  - App Shell candidate 更新為 v29。
+- Reason: `appearance: none` 使 Chrome／部分 WebKit 的透明原生日期 input 只會
+  focus，無法開啟 Picker。
+- Impact: Today date-picker interaction、tests、docs、v29；資料 key、schema、
+  計算、Manifest、Supabase 與正式資料不變。

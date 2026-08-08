@@ -16,6 +16,15 @@
 
 ## Unreleased
 
+### 2026-08-08 — Today Daily Record Native Date Picker Hotfix
+
+- 修正每日紀錄日期卡只取得焦點、不開啟原生月曆的回歸；透明 date input 恢復
+  native appearance，WebKit picker indicator 覆蓋完整日期卡。
+- 支援 `showPicker()` 的瀏覽器由同一原生 input 直接開啟；不支援時維持原生點擊
+  fallback。選定日期仍只更新 `activeRecordDate`，支出付款日期同步，未來日期禁止。
+- App Shell 更新為 `driver-pay-pro-v29`；資料 key、WorkRecord、計算、Manifest
+  與 Supabase 不變。
+
 ### 2026-08-08 — Semantic Display Size and KPI Hierarchy
 
 - 新增 Data／Controls／Structure 語意 typography tokens；主要數據與輸入值在

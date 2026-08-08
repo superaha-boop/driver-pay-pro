@@ -27,9 +27,18 @@ GitHub：`superaha-boop/driver-pay-pro`
 - 顯示大小以 Data／Controls／Structure 三層 token 運作：主數據 24／27／30px、
   每日目標與平台輸入值 26／29／32px；結構標題與導覽固定或只小幅變化，三個
   字體大小選項固定 14px，不再讓標題比主要數據更強勢。
-- 新增 `tests/active-record-date-hotfix.test.js` 57 項：日期隔離 21、導航 16、
-  KPI／工時格式已補強語意字體與單位分層。App Shell candidate 為
+- `tests/active-record-date-hotfix.test.js` 現為 60 項：日期隔離、原生 Picker、
+  導航及 KPI／工時格式。Typography commit 的 App Shell candidate 為
   `driver-pay-pro-v28`。
+- Date Picker follow-up：原透明 date input 的 `appearance: none` 讓 Chrome／部分
+  WebKit 點擊後只取得焦點、不開啟原生月曆。現改回 native appearance，WebKit
+  indicator 覆蓋完整日期卡，支援 `showPicker()` 時由同一原生 input 直接開啟；
+  不支援時保留原生點擊 fallback。App Shell 更新為 `driver-pay-pro-v29`。
+- Follow-up L1：403/403 Node、Today 142/142、Calendar 69/69、Reports 89/89、
+  AI／Driver 各 25/25、Integration 16/16；release check、Manifest、SW syntax、
+  static Production validation 與 `git diff --check` 通過，lint 0 errors／10 個
+  既有 warnings。320～430px 無 overflow，日期 input 完整位於卡片內，390px
+  實際點擊由原生 Picker 接管，Console 0 error／warning。
 - L1：release check Passed；402/402 Node、Today 141/141、Calendar 69/69、
   Reports 89/89、AI／Driver 各 25/25、Integration 16/16；lint 0 errors／10 個
   既有 warnings。L2 的精確日期 handoff、十輪切頁完整重繪與 Console 檢查均

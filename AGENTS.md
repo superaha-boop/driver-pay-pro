@@ -157,6 +157,10 @@ Version: 1.11
 - `activeRecordDate` 是 Today Daily Record Editor 的唯一 session 日期來源。
   所有收入、工時、支出、其他資料、復原與整日刪除都必須顯式傳入目標日期並
   通過同一日期綁定 guard；不得在缺少／無效／不一致時 fallback 到今天。
+- Today 每日紀錄日期卡必須保留真正可操作的原生 `input[type="date"]`；整張卡
+  都是 Picker 觸發區，不能以 `appearance: none` 移除原生開啟能力。支援
+  `showPicker()` 時可作安全增強，不支援時必須回退原生點擊；只能選今天或過去
+  日期，並繼續更新同一個 `activeRecordDate`。
 - 完整狀態、手勢、Accessibility、資料與驗收規格以 `docs/CALENDAR_SPEC.md` 為準。
 
 ## Reports Execution Rules
