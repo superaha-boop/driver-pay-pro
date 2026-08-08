@@ -2511,13 +2511,22 @@
       padding: 0;
       border: 0;
       border-radius: inherit;
+      color: transparent;
       background: transparent;
       box-shadow: none;
-      opacity: 0;
+      opacity: 1;
       cursor: pointer;
+      caret-color: transparent;
       touch-action: manipulation;
+      -webkit-text-fill-color: transparent;
       -webkit-appearance: auto;
       appearance: auto;
+    }
+
+    .date-card input[type="date"]::-webkit-date-and-time-value,
+    .date-card input[type="date"]::-webkit-datetime-edit {
+      color: transparent;
+      -webkit-text-fill-color: transparent;
     }
 
     .date-card input[type="date"]::-webkit-calendar-picker-indicator {
@@ -2527,6 +2536,7 @@
       height: 100%;
       margin: 0;
       padding: 0;
+      opacity: 0;
       cursor: pointer;
     }
 
@@ -4287,7 +4297,7 @@
     .driver-page-intro p {
       margin: 5px 0 0;
       color: #68736e;
-      font-size: 14px;
+      font-size: var(--font-page-subtitle);
       line-height: 1.5;
     }
 
@@ -4675,10 +4685,7 @@
       .app-toast-action
     ),
     html:not([data-display-size="standard"]) #view-settings :is(
-      .panel-body label:not(.reading-size-choice),
-      .panel-body button:not(.income-add-button),
-      .panel-body select,
-      .panel-body input:not(#dailyGoal)
+      .panel-body label:not(.reading-size-choice)
     ) {
       font-size: var(--display-body-size);
       line-height: var(--display-body-line-height);
@@ -4693,10 +4700,8 @@
       .expense-form-status
     ),
     html:not([data-display-size="standard"]) #view-settings :is(
-      .driver-page-intro p,
       .driver-overview-card p,
       .driver-safety-note p,
-      .driver-goal-input,
       .driver-status-list dt,
       .driver-status-list dd,
       .expense-shortcut-settings-note

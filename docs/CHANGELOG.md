@@ -16,6 +16,16 @@
 
 ## Unreleased
 
+### 2026-08-08 — Driver Typography and Native Date First-tap Hotfix
+
+- 修正 Driver 頁面副標題 standard 14px、comfort 13px 的反向縮小；改為
+  14／15／16px 單調級距。
+- 每日目標值改為 28／34／40px，字體選項仍固定 14px；Today 主收入與次要 KPI
+  改用獨立安全下限，避免一般數據 token 調整再次把首頁數字縮小。
+- Today 日期卡不再把整個原生 date input 設為 `opacity: 0`；只隱藏內部文字與
+  indicator，保留唯一原生控制與同一 `activeRecordDate`。
+- App Shell 更新為 `driver-pay-pro-v31`；資料 key、schema、計算與 Manifest 不變。
+
 ### 2026-08-08 — Today First-tap Date Picker and Direct Work-time Switch
 
 - 移除 Today 日期卡 click 冒泡後的第二次 `showPicker()` 路徑，整張卡只由同一

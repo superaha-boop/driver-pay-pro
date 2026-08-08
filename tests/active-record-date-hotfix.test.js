@@ -73,15 +73,19 @@ test("日期隔離 01：每日紀錄日期卡可選今天或過去日期並使�
   assert.match(html, /setActiveRecordDate\(requestedDate, \{ preserveDisclosure: true \}\)/);
 });
 
-test("日期 Picker：整張日期卡只使用單一原生點擊路徑", () => {
+test("日期 Picker：原生控制本體可命中，第一次點擊不只聚焦透明覆蓋層", () => {
   const dateInputCss = html.match(/\.date-card input\[type="date"\] \{[\s\S]*?\n    \}/)?.[0] || "";
   const dateCard = extractFunction("dateCardMarkup");
   assert.match(dateInputCss, /-webkit-appearance: auto/);
   assert.match(dateInputCss, /appearance: auto/);
   assert.match(dateInputCss, /z-index: 1/);
   assert.match(dateInputCss, /touch-action: manipulation/);
+  assert.match(dateInputCss, /opacity: 1/);
+  assert.match(dateInputCss, /color: transparent/);
+  assert.match(dateInputCss, /-webkit-text-fill-color: transparent/);
+  assert.doesNotMatch(dateInputCss, /opacity: 0/);
   assert.doesNotMatch(dateInputCss, /appearance: none/);
-  assert.match(html, /\.date-card input\[type="date"\]::-webkit-calendar-picker-indicator[\s\S]*?inset: 0[\s\S]*?width: 100%[\s\S]*?height: 100%/);
+  assert.match(html, /\.date-card input\[type="date"\]::-webkit-calendar-picker-indicator[\s\S]*?inset: 0[\s\S]*?width: 100%[\s\S]*?height: 100%[\s\S]*?opacity: 0/);
   assert.match(dateCard, /<label class="date-card[\s\S]*?for="\$\{escapeAttr\(id\)\}"/);
   assert.match(dateCard, /<input type="date" id="\$\{escapeAttr\(id\)\}"/);
   assert.doesNotMatch(html, /openNativeDatePicker|\.showPicker\(/);
@@ -235,8 +239,8 @@ for (const [number, label, assertion] of [
   [3, "今日收入字級大於次級 KPI", () => {
     assert.match(css, /--font-kpi-primary: clamp\(50px, 14vw, 64px\)/);
     assert.match(css, /--font-kpi-secondary: clamp\(28px, 7vw, 32px\)/);
-    assert.match(css, /--today-revenue-value-size: var\(--font-kpi-primary\)/);
-    assert.match(css, /--today-secondary-value-size: var\(--font-kpi-secondary\)/);
+    assert.match(css, /--today-revenue-value-size: clamp\(50px, 14vw, 64px\)/);
+    assert.match(css, /--today-secondary-value-size: clamp\(28px, 7vw, 32px\)/);
   }],
   [4, "Chevron 使用獨立 24px 欄位不擠壓收入", () => assert.match(html, /\.today-income-toggle[\s\S]*?grid-template-columns: minmax\(0, 1fr\) 24px/)],
   [5, "今日工時標籤位於數字上方", () => assert.match(renderStats, /<span>今日工時<\/span><strong class="today-work-duration">/)],

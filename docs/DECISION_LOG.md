@@ -869,3 +869,19 @@
   確認步驟。
 - Impact: Today interaction、tests、docs、v30；其他頁面、schema、Manifest、
   Supabase 與正式資料不變。
+
+## D-052
+
+- Date: 2026-08-08
+- Decision:
+  - Today 日期卡的原生 date input 本體保持 `opacity: 1` 與 native appearance；
+    只隱藏內部日期文字與 indicator，避免 iPhone 第一次觸控只取得焦點。
+  - 不加入 `showPicker()` click 增強、自訂月曆或第二份日期 state。
+  - Driver 每日目標使用 28／34／40px；頁面副標題使用 14／15／16px，三模式
+    單調增加；字體切換控制固定 14px。
+  - Today KPI 使用獨立安全下限 token，既有大數字比例不得被 Driver 字級修改縮小。
+  - App Shell 更新為 v31；資料與計算契約不變。
+- Reason: v30 實體 iPhone QA 仍需第二次點擊日期；舊副標題為標準 14px、舒適
+  13px、大字 15px，造成視覺忽大忽小。
+- Impact: Today date input、Driver／Today typography、tests、docs、v31；無 schema、
+  localStorage key、Manifest、Supabase 或正式資料變更。

@@ -110,6 +110,7 @@ test("Design System 提供三模式語意 typography token 且不使用縮放", 
     "font-button",
     "font-body",
     "font-section-title",
+    "font-page-subtitle",
     "font-navigation",
     "display-calendar-date-size",
     "display-nav-label-size"
@@ -126,9 +127,12 @@ test("主要數據有明確三級差且結構文字只小幅變化", () => {
   assert.match(designSystem, /--font-data: 24px/);
   assert.match(designSystem, /data-display-size="comfort"[\s\S]*?--font-data: 27px/);
   assert.match(designSystem, /data-display-size="large"[\s\S]*?--font-data: 30px/);
-  assert.match(designSystem, /--font-input-value: 26px/);
-  assert.match(designSystem, /data-display-size="comfort"[\s\S]*?--font-input-value: 29px/);
-  assert.match(designSystem, /data-display-size="large"[\s\S]*?--font-input-value: 32px/);
+  assert.match(designSystem, /--font-input-value: 28px/);
+  assert.match(designSystem, /data-display-size="comfort"[\s\S]*?--font-input-value: 34px/);
+  assert.match(designSystem, /data-display-size="large"[\s\S]*?--font-input-value: 40px/);
+  assert.match(designSystem, /--font-page-subtitle: 14px/);
+  assert.match(designSystem, /data-display-size="comfort"[\s\S]*?--font-page-subtitle: 15px/);
+  assert.match(designSystem, /data-display-size="large"[\s\S]*?--font-page-subtitle: 16px/);
   assert.match(designSystem, /data-display-size="large"[\s\S]*?--font-section-title: 19px/);
   assert.match(designSystem, /data-display-size="large"[\s\S]*?--font-navigation: 14px/);
 });
@@ -160,13 +164,21 @@ test("AI 依語意 token 維持數據、內文與標題層級", () => {
 });
 
 test("Driver 重要數值縮放、切換控制與 Bottom Navigation 保持穩定", () => {
-  assert.match(html, /#view-settings :is\([\s\S]*?\.driver-page-intro p[\s\S]*?font-size: var\(--display-secondary-size\)/);
+  assert.match(html, /\.driver-page-intro p\s*\{[\s\S]*?font-size: var\(--font-page-subtitle\)/);
   assert.match(html, /\.nav button,[\s\S]*?font-size: var\(--display-nav-label-size\)/);
   assert.match(html, /\.driver-goal-control input\s*\{[\s\S]*?font-size: var\(--font-input-value\)/);
   assert.match(html, /\.reading-size-choice\s*\{[\s\S]*?font-size: 14px[\s\S]*?line-height: 1\.25/);
   assert.doesNotMatch(html, /#view-settings :is\(\s*\.reading-size-choice,/);
   assert.match(html, /\.panel-body label:not\(\.reading-size-choice\)/);
   assert.match(html, /#view-settings :is\(\s*input:not\(#dailyGoal\),/);
+});
+
+test("首頁 KPI 使用獨立下限，不會被一般數據 token 縮小", () => {
+  assert.match(designSystem, /--today-revenue-value-size: clamp\(50px, 14vw, 64px\)/);
+  assert.match(designSystem, /data-display-size="comfort"[\s\S]*?--today-revenue-value-size: clamp\(54px, 15vw, 68px\)/);
+  assert.match(designSystem, /data-display-size="large"[\s\S]*?--today-revenue-value-size: clamp\(60px, 16vw, 74px\)/);
+  assert.match(designSystem, /--today-secondary-value-size: clamp\(28px, 7vw, 32px\)/);
+  assert.doesNotMatch(designSystem, /--today-revenue-value-size: var\(--font-kpi-primary\)/);
 });
 
 test("大字模式保留 320px 趨勢與平台列安全重排", () => {
@@ -190,5 +202,5 @@ test("Today KPI 共用數字字體規格且工時單位降階", () => {
 });
 
 test("HTML、CSS 與 JavaScript 變更同步更新 App Shell cache", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v30"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v31"/);
 });
