@@ -4,6 +4,21 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
+## PWA First-tap and Driver Labels — Release Candidate
+
+- Branch：`codex/pwa-first-tap-driver-labels-20260808`；base：`4924018`。
+- 首次載入後日期與「新增支出」都可能需要第二次點擊的共同根因，已定位為舊
+  Service Worker 更新流程：install `skipWaiting()`、activate `clients.claim()`，
+  並由頁面的 `controllerchange` 強制 reload。這會在 UI 已可操作後中斷當下觸控。
+- v32 移除這三個中途接管／重載路徑，保留 `registration.update()`；下載好的
+  worker 等待既有 client 自然關閉，下次啟動再生效。
+- Driver 四個第一層 disclosure 精簡為「常用／收支／資料／系統」；只修改可見
+  名稱，不改 ID、內容、順序、摘要或互動。
+- 新增自動契約防止 `window.location.reload()`、`skipWaiting()`、
+  `clients.claim()` 回歸。App Shell 更新為 `driver-pay-pro-v32`。
+- 不改 `driverPayApp.v2`、WorkRecord、canonical calculations、Manifest、
+  Supabase 或正式資料。
+
 ## Driver Typography and Native Date First-tap — Production Released
 
 - Branch：`codex/driver-typography-date-first-tap-20260808`；base：`a99701f`；功能

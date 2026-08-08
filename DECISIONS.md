@@ -1032,3 +1032,22 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   數字的三級差不明顯。
 - Impact: Today date-picker presentation、Driver／Today typography、tests、docs 與
   v31；其他 UI、schema、Manifest、Supabase 與正式資料不變。
+
+## D-053 — Deferred PWA Update Activation and Concise Driver Labels
+
+- Date: 2026-08-08
+- Decision:
+  1. Service Worker 註冊仍使用 `updateViaCache: "none"` 並主動執行
+     `registration.update()`，但 install 不再 `skipWaiting()`，activate 不再
+     `clients.claim()`。
+  2. 頁面不再監聽 `controllerchange` 強制 `window.location.reload()`；下載好的
+     新 worker 等待既有 clients 自然關閉，於下次自然啟動時生效。
+  3. Driver 四個第一層名稱固定為「常用／收支／資料／系統」；只縮短標題，
+     不改內容、順序、摘要、ID、展開狀態或設定來源。
+  4. App Shell 更新為 v32；新增 Production guard，禁止中途強制接管與 reload
+     回歸。
+- Reason: 日期卡與原生「新增支出」details 是兩個不同元件，卻都只在 App 首次
+  開啟時偶發需要第二次點擊。共同根因是 worker 更新在 UI 可操作後接管並 reload，
+  使當下第一次觸控被中斷；分別修改元件無法徹底解決。
+- Impact: PWA update lifecycle、Driver labels、tests、docs 與 v32；
+  `driverPayApp.v2`、WorkRecord、計算、Manifest、Supabase 與正式資料不變。

@@ -194,6 +194,8 @@ Purpose: manage persistent preferences and app-level configuration.
 
 Primary responsibilities:
 
+- Present the four first-level settings disclosures as `常用／收支／資料／系統`;
+  `常用` is expanded by default and the other three are collapsed.
 - Platform management and income input modes.
 - Platform rates.
 - Quick expense settings and expense categories.
@@ -203,6 +205,11 @@ Primary responsibilities:
 - Future sync, backup, and account status if those capabilities are approved.
 
 Driver must not contain single-day work data such as a particular day's weather, shift, note, or income.
+
+Installed-PWA updates may be checked and downloaded while the App is open, but they
+must not force a Service Worker takeover or page reload after the UI is interactive.
+The waiting worker activates after existing clients close so the first user action and
+unsaved input cannot be interrupted.
 
 ## 4. Feature Ownership Matrix
 
