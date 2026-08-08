@@ -158,9 +158,9 @@ Version: 1.11
   所有收入、工時、支出、其他資料、復原與整日刪除都必須顯式傳入目標日期並
   通過同一日期綁定 guard；不得在缺少／無效／不一致時 fallback 到今天。
 - Today 每日紀錄日期卡必須保留真正可操作的原生 `input[type="date"]`；整張卡
-  都是 Picker 觸發區，不能以 `appearance: none` 移除原生開啟能力。支援
-  `showPicker()` 的能力不得在同一次 click 再建立第二條觸發路徑；Today 日期卡
-  固定只使用原生 input 點擊，確保 iPhone Safari／PWA 第一次點擊即可開啟。
+  都是 Picker 觸發區，不能以 `appearance: none` 或整個 input `opacity: 0`
+  移除／弱化原生開啟能力。自訂日期文字只隱藏原生 input 的內部文字與 indicator，
+  input 本體必須保持可命中；不得在同一次 click 再疊加 `showPicker()`。
   只能選今天或過去日期，並繼續更新同一個 `activeRecordDate`。
 - Today 的「改用手動工時／改用開始／結束時間」是非破壞性的直接切換，不顯示
   確認 Dialog。離開模式的草稿只保留於目前 session，切換本身不得持久化或清除
@@ -203,6 +203,9 @@ Version: 1.11
   `aiReportsReadingSize`。不得新增頁面專用字級設定、zoom 或 scale。
 - Driver 只管理既有跨日設定與衍生的本機／App 狀態；每日目標必須與 Today
   共用 `state.settings.dailyGoal`，不得新增另一份來源。
+- Driver 每日目標值使用 28／34／40px 的數據級距；頁面副標題使用
+  `--font-page-subtitle` 14／15／16px，只能單調增加。Today 主收入與次要 KPI
+  使用獨立的安全下限 token，不得因調整一般數據或 Driver typography 而縮小。
 - Driver 不得新增每日紀錄、雲端狀態或不可靠的最後更新時間；完整契約以
   `docs/DRIVER_SPEC.md` 為準。
 - 成功 WorkRecord 寫入只發出一次 committed-record notification；Reports 與

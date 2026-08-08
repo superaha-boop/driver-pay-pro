@@ -38,7 +38,8 @@ Design System 採漸進式導入；本文件不授權一次性重寫首頁、月
 
 日期卡可以用自訂文字呈現，但必須由同一個原生 `input[type="date"]` 覆蓋完整
 44px 以上觸控區。不得以 `appearance: none` 移除原生 Picker 入口；Today 日期卡
-不得在同一次 click 疊加 `showPicker()`，避免 iPhone 第一次點擊只取得焦點。
+不得將整個原生 input 設為 `opacity: 0`；只隱藏其內部文字與 indicator，讓
+input 本體保持可命中。不得在同一次 click 疊加 `showPicker()`。
 
 ### One-Hand First
 
@@ -87,6 +88,9 @@ Design System 採漸進式導入；本文件不授權一次性重寫首頁、月
 - 顯示模式依資訊重要性分級，不等比例放大全頁：主要 KPI、金額、工時與目標
   數值有明確三級差；輸入與按鈕只適度放大；頁面／卡片標題、Driver 分類、
   Header、Logo、Bottom Navigation 與字體切換控制固定或只小幅變化。
+- Driver 每日目標值固定使用 28／34／40px；「管理常用設定」等頁面副標題固定
+  使用 14／15／16px 單調級距。Today 主收入與次要 KPI 保有獨立安全下限，
+  不得隨一般輸入或 Driver 字級調整而縮小。
 - Calendar 使用獨立字級，不直接套用 22px 到七欄日期；日期固定
   14／16／20px、Today circle 34／36／40px，窄螢幕只能保持或放大。
 - 原地展開整排至少 44px 並使用向下／向上 Chevron；進入下一層才使用向右

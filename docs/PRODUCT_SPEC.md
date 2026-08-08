@@ -74,6 +74,9 @@ Primary responsibilities:
 - Let the Daily Record date card select today or a past date directly. A valid change
   updates the single `activeRecordDate` and reloads that exact day's income, work time,
   expenses, and supporting data; the expense payment date follows the same date.
+- Keep the native date input itself hit-test visible for first-tap iPhone behavior;
+  custom card copy may hide native inner text, but must not make the whole input fully
+  transparent or add a competing `showPicker()` click path.
 - Keep `activeRecordDate` session-only and bind every Daily Record mutation to it;
   missing, invalid, future, or mismatched dates must fail without a fallback to today.
 - Provide immediate save and work-status feedback.

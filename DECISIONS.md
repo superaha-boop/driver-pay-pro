@@ -1014,3 +1014,21 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   工時顯示模式切換不應要求第二次確認。
 - Impact: Today date／work-time interaction、tests、docs 與 v30；其他頁面、
   schema、Manifest、Supabase 與正式資料不變。
+
+## D-052 — Native Date Hit Target and Monotonic Data Typography
+
+- Date: 2026-08-08
+- Decision:
+  1. D-051 的「整個原生 date input 透明」實作由本決策修正；Today 日期 input
+     本體固定 `opacity: 1`，只將原生內部日期文字與 indicator 視覺隱藏。整張卡
+     仍由唯一原生 input 接管，不加入 `showPicker()` 或第二份日期 state。
+  2. Driver 每日目標值的 standard／comfort／large 改為 28／34／40px；頁面副標題
+     使用 14／15／16px，避免 standard 14px → comfort 13px 的反向縮小。
+  3. Today 主收入與次要 KPI 改用獨立 responsive token，維持既有下限
+     50／54／60px 與 28／31／34px，不受 Driver／一般數據 token 調整影響。
+  4. App Shell 更新為 v31；顯示偏好、資料 key、WorkRecord 與計算不變。
+- Reason: Product Owner 的 iPhone Safari／PWA 實測證實 v30 的全透明原生 input
+  第一次觸控仍只取得焦點；同時 Driver 副標題在舒適模式反而比標準小，重要目標
+  數字的三級差不明顯。
+- Impact: Today date-picker presentation、Driver／Today typography、tests、docs 與
+  v31；其他 UI、schema、Manifest、Supabase 與正式資料不變。

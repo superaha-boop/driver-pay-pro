@@ -4,6 +4,18 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
+## Driver Typography and Native Date First-tap — Current Candidate
+
+- Branch：`codex/driver-typography-date-first-tap-20260808`；base：`a99701f`。
+- v30 在實體 iPhone Safari／PWA 仍需第二次點日期。根本實作問題是原生 date input
+  整體 `opacity: 0`；v31 將 input 本體保持可命中，只隱藏原生內部文字與 indicator，
+  不新增 `showPicker()` 或第二份日期 state。
+- Driver 每日目標值由 26／29／32px 強化為 28／34／40px；頁面副標題由原本
+  14／13／15px 修正為 14／15／16px；字體選項固定 14px。
+- Today 主收入與次要 KPI 改用獨立安全下限 token，維持既有大數字比例。
+- 本機三模式 × 320／375／390／393／430px 無 overflow；日期 input 完整位於
+  日期卡內，選 8/7 後標題、歷史 context 與付款日期同步。App Shell v31。
+
 ## Today First-tap Date Picker and Direct Work-time Switch — Production Released
 
 - 功能 Branch：`codex/today-first-tap-direct-work-mode-20260808`；功能 commit：
