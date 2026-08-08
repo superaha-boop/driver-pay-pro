@@ -1,6 +1,6 @@
 # Driver Pay Pro Testing
 
-## Current Hotfix — First-tap Date Picker and Direct Work-time Mode Switch
+## Released Hotfix — First-tap Date Picker and Direct Work-time Mode Switch
 
 - Today 日期卡固定只使用完整覆蓋卡片的原生 `input[type="date"]`；不再從冒泡
   click 重複呼叫 `showPicker()`。驗證第一次點擊的原生路徑、`max`、日期更新與
@@ -14,6 +14,9 @@
   0 errors／10 個既有 warnings。五個手機寬度皆無 overflow，Dialog 不存在，
   clock 08:00／17:00／休息 60 分與 manual 5 小時 30 分來回切換後均保留；
   Console 0 error／warning。
+- Production 390px：HTTP 200；第一次日期 click 由原生 Picker 接管，工時模式
+  雙向一次點擊切換且無 Dialog，clock 草稿還原，無 overflow，Console 0
+  error／warning。Production App Shell 為 v30。
 
 ## Previous Hotfix — Active Record Date, Today KPI and Semantic Display Size
 

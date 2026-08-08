@@ -4,9 +4,14 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
-## Today First-tap Date Picker and Direct Work-time Switch — Current Sprint
+## Today First-tap Date Picker and Direct Work-time Switch — Production Released
 
-- Branch：`codex/today-first-tap-direct-work-mode-20260808`；base：`3b7cb9f`。
+- 功能 Branch：`codex/today-first-tap-direct-work-mode-20260808`；功能 commit：
+  `4e25b16`。已合併至 `main`，merge commit：
+  `463c949f5e1a1bb40a2f598d1375f39fcc01fd64`。
+- Production：`https://driver-pay-app.vercel.app`；Vercel deployment：
+  `Cc8BV7rWsKejxTEWRC4zNv93toVT`，狀態成功，App Shell 為
+  `driver-pay-pro-v30`。
 - 日期卡移除 click 冒泡後再次呼叫 `showPicker()` 的路徑；整張卡只使用同一個
   原生 date input，保留 native appearance、完整 WebKit indicator 與 44px 以上
   觸控區，目標是 iPhone Safari／PWA 第一次點擊即開啟。
@@ -19,6 +24,9 @@ GitHub：`superaha-boop/driver-pay-pro`
   69/69、Reports 89/89、AI／Driver 各 25/25、Integration 16/16；lint 0 errors／
   10 個既有 warnings。320／375／390／393／430px 無 overflow，日期 input 完整
   位於卡片內；clock／manual 雙向一次點擊切換、雙方草稿還原及 Console 均通過。
+- Production 390px：日期卡第一次 click 後原生 Picker 直接接管；重新載入後
+  clock → manual → clock 一次點擊完成、無 Dialog，08:00／17:00／休息 60 分
+  草稿完整還原。HTTP 200、Console 0 error／warning、無水平 overflow。
 
 ## Active Record Date and Today KPI Hotfix — Production Released
 

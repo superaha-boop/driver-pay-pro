@@ -24,6 +24,10 @@
   Dialog，離開模式的草稿只保留於 session，切換本身不寫入或清除既有紀錄。
 - App Shell 更新為 `driver-pay-pro-v30`；`driverPayApp.v2`、WorkRecord、
   canonical 工時計算、Manifest 與 Supabase 不變。
+- 功能 commit `4e25b16` 已合併至 `main`；merge commit：
+  `463c949f5e1a1bb40a2f598d1375f39fcc01fd64`。Vercel Production deployment
+  `Cc8BV7rWsKejxTEWRC4zNv93toVT` 已完成，正式網址：
+  `https://driver-pay-app.vercel.app`。
 
 ### 2026-08-08 — Today Daily Record Native Date Picker Hotfix Production Release
 

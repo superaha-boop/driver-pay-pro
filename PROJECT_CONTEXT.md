@@ -4,9 +4,13 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## Today First-tap Date Picker and Direct Work-time Switch — Candidate
+## Today First-tap Date Picker and Direct Work-time Switch — Released
 
-- Branch：`codex/today-first-tap-direct-work-mode-20260808`；base：`3b7cb9f`。
+- 功能 Branch：`codex/today-first-tap-direct-work-mode-20260808`；功能 commit：
+  `4e25b16`；`main` merge commit：
+  `463c949f5e1a1bb40a2f598d1375f39fcc01fd64`。
+- Production：`https://driver-pay-app.vercel.app`；Vercel deployment
+  `Cc8BV7rWsKejxTEWRC4zNv93toVT`；App Shell `driver-pay-pro-v30`。
 - Today 日期卡固定只走原生 `input[type="date"]` 點擊；不再於同一 click 使用
   `showPicker()` 建立第二條路徑。選日後仍更新唯一 `activeRecordDate`。
 - 「改用手動工時／改用開始／結束時間」一次點擊立即切換；移除確認 Dialog。
@@ -16,6 +20,8 @@
 - L1／本機瀏覽器已通過：403/403 Node、Today 142/142、五個手機寬度無 overflow、
   日期原生 input 完整覆蓋卡片、clock／manual 直接切換與兩邊草稿還原正常，
   Console 0 error／warning。
+- Production 390px 已確認第一次日期 click 由原生 Picker 接管；工時模式雙向
+  一次點擊切換、無 Dialog、clock 草稿還原正常，Console 0 error／warning。
 
 ## Active Record Date and Today KPI Production Hotfix — Released
 
