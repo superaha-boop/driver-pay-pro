@@ -233,7 +233,7 @@ test("Calendar 時薪顯示沿用 canonical 品質門檻", () => {
 test("Today KPI 主收入左對齊且次要 KPI 標籤在數字上方", () => {
   const source = extractFunction("renderStats");
   assert.match(source, /today-income-copy/);
-  assert.match(source, /<div><span>今日工時<\/span><strong>\$\{formatWorkDurationCompact\(todaySummary\.durationMs \/ workTimeUnits\.minuteMs\)\}<\/strong><\/div>/);
+  assert.match(source, /<div><span>今日工時<\/span><strong class="today-work-duration">\$\{formatWorkDurationKpi\(todaySummary\.durationMs \/ workTimeUnits\.minuteMs\)\}<\/strong><\/div>/);
   assert.match(source, /<div><span>\$\{todayHourlyLabel\}<\/span><strong>\$\{money\(todaySummary\.hourly\)\}<\/strong><\/div>/);
   assert.match(html, /\.today-income-copy[\s\S]*?justify-items: start/);
 });
@@ -247,6 +247,6 @@ test("Today KPI 依工作狀態切換目前與平均時薪標籤", () => {
 test("資料 key、schema 與 App Shell 只做核准範圍變更", () => {
   assert.match(html, /const storageKey = "driverPayApp\.v2"/);
   assert.match(html, /expenseAllocations/);
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v27"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v28"/);
   assert.doesNotMatch(html, /supabase|migration/i);
 });

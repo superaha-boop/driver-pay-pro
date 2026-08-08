@@ -16,6 +16,17 @@
 
 ## Unreleased
 
+### 2026-08-08 — Semantic Display Size and KPI Hierarchy
+
+- 新增 Data／Controls／Structure 語意 typography tokens；主要數據與輸入值在
+  標準／舒適／大字有清楚級差，結構標題、導覽與切換控制保持穩定。
+- Today 主收入、工時與時薪統一 system font、700、line-height 1 與 tabular
+  numerals；工時單位降階，不增加新的卡片或資料狀態。
+- Driver 每日目標與平台收入輸入值重用 `--font-input-value`，三模式為
+  26／29／32px。App Shell 更新為 `driver-pay-pro-v28`。
+- 不改 `settings.displaySize` 儲存方式、`driverPayApp.v2`、WorkRecord、計算、
+  Manifest、Supabase、main 或 Production。
+
 ### 2026-08-04 — Active Record Date and Today KPI Production Hotfix Candidate
 
 - 新增 session-only `activeRecordDate` 與統一日期綁定 guard；收入、工時、支出、
@@ -26,7 +37,8 @@
 - 標準模式 KPI 恢復參考版 `50–64px` 主收入與 `26–32px` 次要數字比例。
 - 每日紀錄日期卡恢復可操作，可直接切換今天或過去日期；所有欄位與付款日期
   仍由同一 `activeRecordDate` 隔離，未來日期禁止。
-- 新增 57 項 Hotfix contract，App Shell 更新為 `driver-pay-pro-v27`。
+- 新增 57 項 Hotfix contract，原 Hotfix App Shell 更新為 `driver-pay-pro-v27`；
+  本次字級層級補強後 candidate 為 `driver-pay-pro-v28`。
 - 不改 `driverPayApp.v2`、WorkRecord、allocation、Manifest、Supabase 或正式資料；
   Human QA 前不 merge `main`、不 Production deploy。
 

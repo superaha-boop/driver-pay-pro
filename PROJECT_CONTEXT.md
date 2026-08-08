@@ -16,12 +16,16 @@
 - Calendar 不再移動 `#sharedIncomePanel`／`#sharedDetailPanel`。返回 Today 時會
   恢復並重繪 KPI、工作狀態、平台收入、每日紀錄、支出與其他資料，修正半頁渲染。
 - Today KPI 將今日收入置於左上並作為最大數字；今日工時與平均時薪為等寬兩欄；
-  目標進度仍是唯一可收合區。標準模式以 `50–64px` 主收入與 `26–32px` 次要
-  KPI 恢復參考版 2:1 比例；工時使用 `0分鐘`、`1小時10分鐘` 等簡潔格式。
+  目標進度仍是唯一可收合區。標準模式以 `50–64px` 主收入與 `28–32px` 次要
+  KPI 恢復參考版比例；三者共用 700、line-height 1 與 tabular numerals，工時
+  的分鐘／小時單位降階顯示。
+- 顯示大小改為 Data／Controls／Structure 語意分層。主要資料 24／27／30px、
+  每日目標與平台收入輸入值 26／29／32px；結構標題與 Bottom Navigation 固定
+  或只小幅變化，字體切換控制固定 14px。
 - 每日紀錄日期卡已恢復可操作；原生 date input 可選今天或過去日期，選擇後
   直接切換同一 `activeRecordDate` 並載入該日全部欄位。付款日期仍鎖定跟隨，
   不允許未來日期，也不建立第二份日期 state。
-- App Shell candidate：`driver-pay-pro-v27`。`driverPayApp.v2`、WorkRecord、
+- App Shell candidate：`driver-pay-pro-v28`。`driverPayApp.v2`、WorkRecord、
   `expenseAllocations`、Manifest、Supabase 與正式資料均不變。
 - Repository 無法直接讀取 iPhone Production origin 的 localStorage；2026-07-04、
   2026-08-02、2026-08-04 的正式資料稽核需 Product Owner 提供備份匯出或在裝置

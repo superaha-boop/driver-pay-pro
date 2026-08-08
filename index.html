@@ -43,17 +43,17 @@
       --coral: var(--color-legacy-coral);
       --danger: var(--color-danger);
       --shadow: var(--shadow-card);
-      --reading-ai-body-size: 13px;
-      --reading-ai-detail-size: 12px;
-      --reading-ai-small-size: 12px;
+      --reading-ai-body-size: var(--font-body);
+      --reading-ai-detail-size: var(--font-secondary);
+      --reading-ai-small-size: var(--display-caption-size);
       --reading-ai-micro-size: 11px;
-      --reading-ai-section-title-size: 18px;
+      --reading-ai-section-title-size: var(--font-section-title);
       --reading-ai-item-title-size: 15px;
-      --reading-ai-value-size: 15px;
-      --reading-report-body-size: var(--font-size-secondary);
-      --reading-report-caption-size: var(--font-size-caption);
-      --reading-report-value-size: var(--font-size-body);
-      --reading-report-title-size: var(--font-size-card-title);
+      --reading-ai-value-size: var(--font-data);
+      --reading-report-body-size: var(--font-body);
+      --reading-report-caption-size: var(--font-secondary);
+      --reading-report-value-size: var(--font-data);
+      --reading-report-title-size: var(--font-section-title);
       --reading-body-line-height: 1.55;
       --reading-small-line-height: 1.6;
       --reading-card-padding: 16px;
@@ -64,19 +64,10 @@
     }
 
     html[data-display-size="comfort"] {
-      --reading-ai-body-size: 17px;
-      --reading-ai-detail-size: 15px;
-      --reading-ai-small-size: 15px;
-      --reading-ai-micro-size: 14px;
-      --reading-ai-section-title-size: 20px;
-      --reading-ai-item-title-size: 17px;
-      --reading-ai-value-size: 17px;
-      --reading-report-body-size: 17px;
-      --reading-report-caption-size: 15px;
-      --reading-report-value-size: 18px;
-      --reading-report-title-size: 18px;
-      --reading-body-line-height: 1.65;
-      --reading-small-line-height: 1.65;
+      --reading-ai-micro-size: 12px;
+      --reading-ai-item-title-size: 16px;
+      --reading-body-line-height: 1.6;
+      --reading-small-line-height: 1.6;
       --reading-card-padding: 17px;
       --reading-card-gap: 14px;
       --reading-list-gap: 11px;
@@ -84,19 +75,10 @@
     }
 
     html[data-display-size="large"] {
-      --reading-ai-body-size: 22px;
-      --reading-ai-detail-size: 19px;
-      --reading-ai-small-size: 19px;
-      --reading-ai-micro-size: 16px;
-      --reading-ai-section-title-size: 22px;
-      --reading-ai-item-title-size: 20px;
-      --reading-ai-value-size: 20px;
-      --reading-report-body-size: 22px;
-      --reading-report-caption-size: 19px;
-      --reading-report-value-size: 22px;
-      --reading-report-title-size: 21px;
-      --reading-body-line-height: 1.72;
-      --reading-small-line-height: 1.72;
+      --reading-ai-micro-size: 13px;
+      --reading-ai-item-title-size: 17px;
+      --reading-body-line-height: 1.65;
+      --reading-small-line-height: 1.65;
       --reading-card-padding: 18px;
       --reading-card-gap: 16px;
       --reading-list-gap: 13px;
@@ -1488,10 +1470,13 @@
       min-width: 0;
       overflow: hidden;
       max-width: 100%;
+      font-family: var(--font-family-sans);
       font-size: var(--today-revenue-value-size);
-      line-height: 1;
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-kpi);
       letter-spacing: -.04em;
       font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1;
       text-align: left;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -1529,13 +1514,24 @@
       display: block;
       max-width: 100%;
       overflow: hidden;
+      font-family: var(--font-family-sans);
       font-size: var(--today-secondary-value-size);
-      line-height: 1.12;
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-kpi);
       letter-spacing: -.02em;
       font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1;
       margin-top: 4px;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    .today-secondary .today-work-duration__unit {
+      display: inline;
+      margin-inline-start: 2px;
+      font-size: var(--font-kpi-unit);
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: 0;
     }
 
     .today-income-toggle .app-chevron {
@@ -1870,7 +1866,7 @@
     .work-metrics strong {
       margin-top: 2px;
       overflow: hidden;
-      font-size: 14px;
+      font-size: var(--display-control-size);
       font-variant-numeric: tabular-nums;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -1965,8 +1961,10 @@
       border-radius: 15px;
       color: #203128;
       background: #fafcfb;
-      font-size: 28px;
+      font-family: var(--font-family-sans);
+      font-size: var(--font-input-value);
       font-weight: 700;
+      line-height: 1;
       text-align: right;
       font-variant-numeric: tabular-nums;
       box-shadow: none;
@@ -2216,6 +2214,7 @@
     }
 
     .today-expense-amount {
+      font-size: var(--display-control-size);
       font-weight: 750;
       font-variant-numeric: tabular-nums;
     }
@@ -2347,7 +2346,7 @@
 
     .smart-expense-field .expense-amount-input,
     .smart-expense-field input[type="number"] {
-      font-size: 20px;
+      font-size: var(--font-input-value);
       font-weight: 750;
       font-variant-numeric: tabular-nums;
     }
@@ -3076,7 +3075,7 @@
     .reports-primary-kpi strong {
       overflow-wrap: anywhere;
       color: var(--color-text-primary);
-      font: var(--font-weight-bold) clamp(21px, 6vw, 28px)/var(--line-height-title) var(--font-family-sans);
+      font: var(--font-weight-bold) var(--font-data)/var(--line-height-title) var(--font-family-sans);
       font-variant-numeric: tabular-nums;
       letter-spacing: var(--letter-spacing-tight);
     }
@@ -4361,9 +4360,12 @@
       background: transparent;
       border: 0;
       outline: 0;
-      font-size: 21px;
+      font-family: var(--font-family-sans);
+      font-size: var(--font-input-value);
       font-weight: 700;
+      line-height: 1;
       font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1;
       text-align: right;
     }
 
@@ -4603,6 +4605,7 @@
       background: #fff;
       font-size: 14px;
       font-weight: 650;
+      line-height: 1.25;
       text-align: center;
       cursor: pointer;
     }
@@ -4660,8 +4663,7 @@
       .app-toast-action
     ),
     html:not([data-display-size="standard"]) #view-settings :is(
-      .reading-size-choice,
-      .panel-body label,
+      .panel-body label:not(.reading-size-choice),
       .panel-body button:not(.income-add-button),
       .panel-body select,
       .panel-body input:not(#dailyGoal)
@@ -4747,8 +4749,8 @@
       .section-heading,
       .collapsible summary
     ) {
-      font-size: var(--display-body-size);
-      line-height: var(--display-body-line-height);
+      font-size: var(--font-section-title);
+      line-height: var(--line-height-title);
     }
 
     html:not([data-display-size="standard"]) #view-today :is(
@@ -4768,7 +4770,7 @@
     }
 
     html:not([data-display-size="standard"]) #view-settings :is(
-      input,
+      input:not(#dailyGoal),
       select,
       textarea
     ) {
@@ -5117,7 +5119,7 @@
 
       .income-grid .inline-income-input {
         padding-inline: 4px;
-        font-size: 26px;
+        font-size: min(var(--font-input-value), 28px);
       }
 
       .income-grid .inline-income-input::placeholder {
@@ -8028,6 +8030,16 @@
       return remainder ? `${hours}小時${remainder}分鐘` : `${hours}小時`;
     }
 
+    function formatWorkDurationKpi(totalMinutes) {
+      const minutes = Math.max(0, Math.round(Number(totalMinutes || 0)));
+      if (minutes < 60) {
+        return `${minutes}<span class="today-work-duration__unit">分鐘</span>`;
+      }
+      const hours = Math.floor(minutes / 60);
+      const remainder = minutes % 60;
+      return `${hours}<span class="today-work-duration__unit">小時</span>${remainder ? `${remainder}<span class="today-work-duration__unit">分鐘</span>` : ""}`;
+    }
+
     function clockWorkDurationMs(entry) {
       const result = validateWorkTimeRange(entry);
       if (!result.valid || !result.complete) return 0;
@@ -9790,7 +9802,7 @@
             </svg>
           </button>
           <div class="today-secondary" aria-label="今日工時與時薪">
-            <div><span>今日工時</span><strong>${formatWorkDurationCompact(todaySummary.durationMs / workTimeUnits.minuteMs)}</strong></div>
+            <div><span>今日工時</span><strong class="today-work-duration">${formatWorkDurationKpi(todaySummary.durationMs / workTimeUnits.minuteMs)}</strong></div>
             <div><span>${todayHourlyLabel}</span><strong>${money(todaySummary.hourly)}</strong></div>
           </div>
           <div class="today-goal-details" id="todayGoalDetails"${todayGoalExpanded ? "" : " hidden"}>

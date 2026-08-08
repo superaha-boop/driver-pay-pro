@@ -100,10 +100,13 @@ Version: 1.11
   「App 與系統」內，不建立獨立 About 頁或第二張狀態卡。
 - AI 首屏只完整顯示「本週重點」；本月洞察、收入變化來源、資料與分析依據
   預設收合。AI renderer 保持唯讀並重用既有 analytics。
-- `settings.displaySize` 的一般閱讀 token 固定為 standard 13px／12px、
-  comfort 17px／15px、large 22px／19px（body／secondary）。Calendar 必須
-  使用獨立 typography tokens；日期固定 14／16／20px，Today circle 固定
-  34／36／40px，不得由窄螢幕 media query 反向縮小。
+- `settings.displaySize` 必須依資訊角色縮放：主要 KPI／金額／工時／目標等
+  數據有清楚的 standard／comfort／large 級差；按鈕與輸入操作只適度放大；
+  頁面／卡片標題、Driver 分類、Header、Logo 與 Bottom Navigation 固定或只
+  小幅變化。不得以單一全域 font-size、zoom 或 scale 等比例放大全 App。
+  字體大小切換控制本身固定 14px。Calendar 維持獨立 typography tokens；日期
+  固定 14／16／20px，Today circle 固定 34／36／40px，不得由窄螢幕 media
+  query 反向縮小。
 
 ## Product Architecture Execution Rules
 

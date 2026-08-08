@@ -168,7 +168,7 @@
   "corruptJson": "{\"entries\":[",
   "expected": {
     "storageKey": "driverPayApp.v2",
-    "serviceWorkerCache": "driver-pay-pro-v27",
+    "serviceWorkerCache": "driver-pay-pro-v28",
     "mainViews": ["today", "calendar", "reports", "ai", "settings"],
     "aiPrimarySections": ["營運建議", "本月洞察", "智慧提醒"]
   }

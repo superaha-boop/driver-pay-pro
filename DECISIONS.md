@@ -961,3 +961,24 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   形成 Production 資料完整性與導航渲染 Release Blocker。
 - Impact: Today／Calendar routing and presentation、write guards、tests、docs、v27；
   `driverPayApp.v2`、WorkRecord、allocation、Manifest、Supabase 與正式資料不變。
+
+## D-049 — Semantic Display Size and KPI Hierarchy
+
+- Date: 2026-08-08
+- Decision:
+  1. `settings.displaySize` 與 `data-display-size` 維持唯一顯示偏好，但不再以
+     13／17／22px 對頁面文字等比例放大；改為 Data／Controls／Structure 三層。
+  2. Today 主收入與次要工時／時薪分別使用 `--font-kpi-primary` 與
+     `--font-kpi-secondary`；三者共用 system font、700、line-height 1 與
+     tabular numerals。工時單位使用較小的 `--font-kpi-unit`。
+  3. 每日目標與平台收入輸入值重用 `--font-input-value`，standard／comfort／
+     large 固定為 26／29／32px；一般主數據使用 24／27／30px。
+  4. 頁面／卡片標題、Driver 分類、Header、Logo、Bottom Navigation 固定或
+     只小幅變化；字體切換控制本身固定 14px。
+  5. Calendar 日期的既有 14／16／20px 與 Today circle 34／36／40px 契約不變。
+     App Shell candidate 更新為 v28；Human QA 前不 merge main、不 Production。
+- Reason: 舊規則放大大量結構文字，卻讓每日目標與主要資料缺少清楚級差，造成
+  視覺優先順序反轉及大字模式擁擠。語意 token 可讓數據真正可讀，同時穩定版面。
+- Impact: Design System typography、Today／Driver／Reports／AI presentation、
+  tests、docs 與 v28；設定來源、計算、WorkRecord、storage key、Manifest、
+  Supabase、main 與 Production 不變。

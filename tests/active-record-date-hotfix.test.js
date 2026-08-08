@@ -213,17 +213,19 @@ test("日期隔離 21：日期選擇器拒絕未來日期且支出日期仍同�
 
 const renderStats = extractFunction("renderStats");
 const durationContext = vm.createContext({ Math, Number });
-vm.runInContext(`${extractFunction("formatWorkDurationCompact")}\nglobalThis.format = formatWorkDurationCompact;`, durationContext);
+vm.runInContext(`${extractFunction("formatWorkDurationCompact")}\n${extractFunction("formatWorkDurationKpi")}\nglobalThis.format = formatWorkDurationCompact;\nglobalThis.formatKpi = formatWorkDurationKpi;`, durationContext);
 
 for (const [number, label, assertion] of [
   [1, "今日收入標籤左對齊", () => assert.match(html, /\.today-income-toggle[\s\S]*?text-align: left/)],
   [2, "今日收入金額左對齊", () => assert.match(html, /\.today-income[\s\S]*?text-align: left/)],
   [3, "今日收入字級大於次級 KPI", () => {
-    assert.match(css, /--today-revenue-value-size: clamp\(50px, 14vw, 64px\)/);
-    assert.match(css, /--today-secondary-value-size: clamp\(26px, 7vw, 32px\)/);
+    assert.match(css, /--font-kpi-primary: clamp\(50px, 14vw, 64px\)/);
+    assert.match(css, /--font-kpi-secondary: clamp\(28px, 7vw, 32px\)/);
+    assert.match(css, /--today-revenue-value-size: var\(--font-kpi-primary\)/);
+    assert.match(css, /--today-secondary-value-size: var\(--font-kpi-secondary\)/);
   }],
   [4, "Chevron 使用獨立 24px 欄位不擠壓收入", () => assert.match(html, /\.today-income-toggle[\s\S]*?grid-template-columns: minmax\(0, 1fr\) 24px/)],
-  [5, "今日工時標籤位於數字上方", () => assert.match(renderStats, /<span>今日工時<\/span><strong>/)],
+  [5, "今日工時標籤位於數字上方", () => assert.match(renderStats, /<span>今日工時<\/span><strong class="today-work-duration">/)],
   [6, "平均時薪標籤位於數字上方", () => assert.match(renderStats, /<span>\$\{todayHourlyLabel\}<\/span><strong>/)],
   [7, "次級 KPI 使用兩個等寬欄位", () => assert.match(html, /\.today-secondary[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/)],
   [8, "次級 KPI 共用相同垂直對齊", () => assert.match(html, /\.today-secondary div[\s\S]*?flex-direction: column[\s\S]*?align-items: flex-start/)],
@@ -241,7 +243,9 @@ for (const [number, label, assertion] of [
   [17, "120 分鐘顯示 2小時", () => assert.equal(durationContext.format(120), "2小時")],
   [18, "KPI 不顯示 0小時00分", () => assert.doesNotMatch(renderStats, /0小時00分|padStart/)],
   [19, "精密工作狀態計算仍使用毫秒 canonical 邏輯", () => assert.match(extractFunction("sessionWorkDurationMs"), /accumulatedActiveMs[\s\S]*?nowMs[\s\S]*?clockDurationMs/)],
-  [20, "平均時薪使用總收入除以工時", () => assert.match(extractFunction("summarize"), /hourly: hourlyRate\(total, durationMs\)/)]
+  [20, "平均時薪使用總收入除以工時", () => assert.match(extractFunction("summarize"), /hourly: hourlyRate\(total, durationMs\)/)],
+  [21, "工時 KPI 數字與分鐘單位分層", () => assert.equal(durationContext.formatKpi(29), '29<span class="today-work-duration__unit">分鐘</span>')],
+  [22, "工時 KPI 小時與分鐘單位皆降階", () => assert.equal(durationContext.formatKpi(70), '1<span class="today-work-duration__unit">小時</span>10<span class="today-work-duration__unit">分鐘</span>')]
 ]) {
   test(`Today KPI ${String(number).padStart(2, "0")}：${label}`, assertion);
 }

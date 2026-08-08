@@ -820,3 +820,20 @@
 - Reason: 日期來源分歧與 Calendar DOM 搬移是跨日期寫入及半頁渲染的共同根因。
 - Impact: HTML／CSS／Service Worker、tests、docs；資料 key、schema、Manifest、
   Supabase 與正式資料不變。
+
+## D-049
+
+- Date: 2026-08-08
+- Decision:
+  - `settings.displaySize` 維持唯一顯示偏好，縮放行為改為 Data／Controls／
+    Structure 三層；不得再用單一頁面字級等比例放大。
+  - Today 收入、工時、時薪共用 system font、700、line-height 1 與 tabular
+    numerals；工時單位降階顯示。
+  - 每日目標與平台收入使用 26／29／32px input-value token；一般主數據使用
+    24／27／30px data token。
+  - 結構標題與 Bottom Navigation 固定或只小幅變化；字體切換控制固定 14px。
+  - Calendar typography 契約不變；App Shell candidate 更新為 v28；Human QA
+    前不 merge main、不 Production。
+- Reason: 修正結構文字過度放大、主要數據級差不足與大字控制擁擠。
+- Impact: typography、Today／Driver／Reports／AI presentation、tests、docs、v28；
+  資料 key、schema、計算、Manifest、Supabase、main 與 Production 不變。

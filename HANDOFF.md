@@ -21,15 +21,22 @@ GitHub：`superaha-boop/driver-pay-pro`
   顯示「日期狀態異常，未儲存。請重新選擇日期。」並停止寫入。
 - Today KPI 已使用左對齊最大今日收入、等寬今日工時／平均時薪、右側 disclosure
   chevron；只有目標進度收合。標準模式主收入／次要 KPI 使用參考版
-  `50–64px`／`26–32px` 比例。新增 `formatWorkDurationCompact()`。
+  `50–64px`／`28–32px` 比例；三者共用 700、line-height 1、tabular numerals，
+  工時單位以較小字級顯示。保留 `formatWorkDurationCompact()`，KPI 使用新增的
+  `formatWorkDurationKpi()`。
+- 顯示大小以 Data／Controls／Structure 三層 token 運作：主數據 24／27／30px、
+  每日目標與平台輸入值 26／29／32px；結構標題與導覽固定或只小幅變化，三個
+  字體大小選項固定 14px，不再讓標題比主要數據更強勢。
 - 新增 `tests/active-record-date-hotfix.test.js` 57 項：日期隔離 21、導航 16、
-  KPI／工時格式 20。App Shell candidate 為 `driver-pay-pro-v27`。
-- L1：release check Passed；399/399 Node、Today 139/139、Calendar 69/69、
-  Reports 88/88、AI／Driver 各 24/24、Integration 16/16；lint 0 errors／9 個
-  既有 warnings。L2 的 15 組 responsive matrix、7/4 精確日期 handoff、十輪
-  切頁完整重繪與 Console 檢查均通過。2026-08-08 再驗證三種顯示模式 ×
-  320／375／390／393／430px 共 15 組無 overflow；390px 標準模式主收入
-  `54.6px`、次要 KPI `27.3px`，日期卡可選 8/7／8/8 且資料互不串寫。
+  KPI／工時格式已補強語意字體與單位分層。App Shell candidate 為
+  `driver-pay-pro-v28`。
+- L1：release check Passed；402/402 Node、Today 141/141、Calendar 69/69、
+  Reports 89/89、AI／Driver 各 25/25、Integration 16/16；lint 0 errors／10 個
+  既有 warnings。L2 的精確日期 handoff、十輪切頁完整重繪與 Console 檢查均
+  通過。2026-08-08 再驗證三種顯示模式 × 五頁 × 320／375／390／393／430px
+  共 75 組無 overflow；390px 標準／舒適／大字的
+  主收入為 54.6／58.5／62.4px、次要 KPI 為 28／31.2／35.1px、每日目標為
+  26／29／32px。日期卡可選 8/7／8/8 且資料互不串寫。
 - 不改 `driverPayApp.v2`、WorkRecord、`expenseAllocations`、Manifest、Supabase
   或正式資料。iPhone 正式 localStorage 無法由 repo 直接讀取；資料稽核需要裝置
   匯出，Hotfix 僅提供 `window.auditDriverPayRecords()` 唯讀診斷。

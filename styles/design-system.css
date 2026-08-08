@@ -46,11 +46,23 @@
   --line-height-caption: 1.35;
   --letter-spacing-tight: -0.02em;
   --letter-spacing-normal: 0;
-  --display-body-size: 13px;
-  --display-secondary-size: 12px;
+  /* Responsive typography roles: data scales clearly; structure stays stable. */
+  --font-kpi-primary: clamp(50px, 14vw, 64px);
+  --font-kpi-secondary: clamp(28px, 7vw, 32px);
+  --font-kpi-unit: 0.56em;
+  --font-data: 24px;
+  --font-input-value: 26px;
+  --font-button: 16px;
+  --font-body: 13px;
+  --font-secondary: 12px;
+  --font-section-title: 18px;
+  --font-navigation: 14px;
+  --line-height-kpi: 1;
+  --display-body-size: var(--font-body);
+  --display-secondary-size: var(--font-secondary);
   --display-caption-size: 12px;
   --display-control-size: 16px;
-  --display-button-size: 14px;
+  --display-button-size: var(--font-button);
   --display-chart-label-size: 12px;
   --display-calendar-month-size: 18px;
   --display-calendar-weekday-size: 12px;
@@ -61,11 +73,11 @@
   --display-calendar-detail-secondary-size: 12px;
   --display-calendar-today-circle-size: 34px;
   --display-calendar-row-height: 70px;
-  --display-nav-label-size: 14px;
+  --display-nav-label-size: var(--font-navigation);
   --today-revenue-label-size: 15px;
-  --today-revenue-value-size: clamp(50px, 14vw, 64px);
+  --today-revenue-value-size: var(--font-kpi-primary);
   --today-secondary-label-size: 13px;
-  --today-secondary-value-size: clamp(26px, 7vw, 32px);
+  --today-secondary-value-size: var(--font-kpi-secondary);
   --display-body-line-height: 1.55;
   --display-secondary-color: var(--color-text-secondary);
 
@@ -152,12 +164,21 @@
 }
 
 html[data-display-size="comfort"] {
-  --display-body-size: 17px;
-  --display-secondary-size: 15px;
-  --display-caption-size: 14px;
+  --font-kpi-primary: clamp(54px, 15vw, 68px);
+  --font-kpi-secondary: clamp(31px, 8vw, 36px);
+  --font-data: 27px;
+  --font-input-value: 29px;
+  --font-button: 17px;
+  --font-body: 15px;
+  --font-secondary: 13px;
+  --font-section-title: 18px;
+  --font-navigation: 14px;
+  --display-body-size: var(--font-body);
+  --display-secondary-size: var(--font-secondary);
+  --display-caption-size: 13px;
   --display-control-size: 17px;
-  --display-button-size: 17px;
-  --display-chart-label-size: 15px;
+  --display-button-size: var(--font-button);
+  --display-chart-label-size: 14px;
   --display-calendar-month-size: 20px;
   --display-calendar-weekday-size: 14px;
   --display-calendar-date-size: 16px;
@@ -167,26 +188,31 @@ html[data-display-size="comfort"] {
   --display-calendar-detail-secondary-size: 15px;
   --display-calendar-today-circle-size: 36px;
   --display-calendar-row-height: 76px;
-  --display-nav-label-size: 15px;
-  --today-revenue-label-size: 17px;
-  --today-revenue-value-size: clamp(54px, 15vw, 68px);
-  --today-secondary-label-size: 15px;
-  --today-secondary-value-size: clamp(29px, 8vw, 36px);
-  --display-body-line-height: 1.65;
+  --display-nav-label-size: var(--font-navigation);
+  --today-revenue-label-size: 16px;
+  --today-revenue-value-size: var(--font-kpi-primary);
+  --today-secondary-label-size: 14px;
+  --today-secondary-value-size: var(--font-kpi-secondary);
+  --display-body-line-height: 1.6;
   --display-secondary-color: #506159;
 }
 
 html[data-display-size="large"] {
-  --font-size-body: 22px;
-  --font-size-secondary: 19px;
-  --font-size-caption: 16px;
-  --font-size-button: 20px;
-  --display-body-size: 22px;
-  --display-secondary-size: 19px;
-  --display-caption-size: 16px;
-  --display-control-size: 22px;
-  --display-button-size: 20px;
-  --display-chart-label-size: 18px;
+  --font-kpi-primary: clamp(60px, 16vw, 74px);
+  --font-kpi-secondary: clamp(34px, 9vw, 40px);
+  --font-data: 30px;
+  --font-input-value: 32px;
+  --font-button: 18px;
+  --font-body: 17px;
+  --font-secondary: 15px;
+  --font-section-title: 19px;
+  --font-navigation: 14px;
+  --display-body-size: var(--font-body);
+  --display-secondary-size: var(--font-secondary);
+  --display-caption-size: 14px;
+  --display-control-size: 18px;
+  --display-button-size: var(--font-button);
+  --display-chart-label-size: 16px;
   --display-calendar-month-size: 22px;
   --display-calendar-weekday-size: 16px;
   --display-calendar-date-size: 20px;
@@ -196,12 +222,12 @@ html[data-display-size="large"] {
   --display-calendar-detail-secondary-size: 19px;
   --display-calendar-today-circle-size: 40px;
   --display-calendar-row-height: 84px;
-  --display-nav-label-size: 17px;
-  --today-revenue-label-size: 19px;
-  --today-revenue-value-size: clamp(58px, 16vw, 72px);
-  --today-secondary-label-size: 17px;
-  --today-secondary-value-size: clamp(32px, 9vw, 40px);
-  --display-body-line-height: 1.72;
+  --display-nav-label-size: var(--font-navigation);
+  --today-revenue-label-size: 17px;
+  --today-revenue-value-size: var(--font-kpi-primary);
+  --today-secondary-label-size: 15px;
+  --today-secondary-value-size: var(--font-kpi-secondary);
+  --display-body-line-height: 1.65;
   --display-secondary-color: #46534c;
 }
 
