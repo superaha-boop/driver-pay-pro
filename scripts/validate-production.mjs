@@ -60,6 +60,8 @@ assertCheck(appShell.includes("./index.html"), "Service Worker App Shell must in
 assertCheck(appShell.includes("./manifest.webmanifest"), "Service Worker App Shell must include the manifest.");
 assertCheck(/event\.request\.mode === "navigate"/.test(serviceWorker), "Service Worker navigation detection is missing.");
 assertCheck(/caches\.match\("\.\/index\.html"\)/.test(serviceWorker), "Service Worker navigation fallback is missing.");
+assertCheck(!/window\.location\.reload\(\)/.test(indexHtml), "PWA update must not reload an interactive page.");
+assertCheck(!/skipWaiting\(\)|clients\.claim\(\)/.test(serviceWorker), "Service Worker update must wait for the next natural app launch.");
 
 assertCheck(manifest.start_url === "./" && manifest.scope === "./", "Manifest start_url and scope must remain relative.");
 for (const icon of manifest.icons || []) {

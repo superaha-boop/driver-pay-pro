@@ -16,6 +16,16 @@
 
 ## Unreleased
 
+### 2026-08-08 — PWA First-tap and Driver Labels
+
+- 修正 App 首次開啟後第一次點日期或「新增支出」可能被吞掉：Service Worker
+  更新不再於互動中的頁面 `skipWaiting()`、claim clients 或強制 reload。
+- 保留更新檢查與離線能力；等待中的新 worker 於既有頁面自然關閉後，在下次
+  自然啟動生效。
+- Driver 四個第一層名稱精簡為「常用／收支／資料／系統」，內容、順序、摘要
+  與 disclosure 行為不變。
+- App Shell 更新為 `driver-pay-pro-v32`；資料 key、schema、計算與 Manifest 不變。
+
 ### 2026-08-08 — Driver Typography and Native Date First-tap Hotfix
 
 - 修正 Driver 頁面副標題 standard 14px、comfort 13px 的反向縮小；改為

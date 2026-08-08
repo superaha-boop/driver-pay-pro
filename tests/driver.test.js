@@ -39,7 +39,7 @@ test("Driver 系統狀態只顯示可採取行動的精簡衍生資訊", () => {
   assert.equal(storageKeys.every(key => key === "driverPayApp.v2"), true);
 });
 
-test("App 與系統位於 Driver 最後且正常時預設收合", () => {
+test("系統位於 Driver 最後且正常時預設收合", () => {
   const dataIndex = driverSection.indexOf('id="driverDataToggle"');
   const systemIndex = driverSection.indexOf('id="driverSystemStatusToggle"');
   assert.ok(systemIndex > dataIndex);
@@ -47,6 +47,11 @@ test("App 與系統位於 Driver 最後且正常時預設收合", () => {
   assert.match(driverSection, /id="driverSystemStatusContent" hidden/);
   assert.match(driverSection, /id="aboutAppVersion"/);
   assert.match(driverSection, /id="driverSystemStatusDetails"/);
+});
+
+test("Driver 第一層名稱精簡為常用收支資料系統", () => {
+  const titles = [...driverSection.matchAll(/class="app-disclosure__title"[^>]*>([^<]+)<\/span>/g)].map(match => match[1]);
+  assert.deepEqual(titles, ["常用", "收支", "資料", "系統"]);
 });
 
 test("整條系統狀態標題可操作並具備狀態徽章與鍵盤語意", () => {

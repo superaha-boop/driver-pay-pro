@@ -1,5 +1,22 @@
 # Driver Pay Pro Testing
 
+## Candidate — PWA First-tap and Driver Labels
+
+- `npm test`：407/407 Passed。
+- 新增契約確認：頁面不註冊 `controllerchange` 強制 reload；Service Worker 不含
+  `skipWaiting()`／`clients.claim()`；`registration.update()` 與原生日期 input、
+  原生「新增支出」details 均保留。
+- Driver 四個標題精確為「常用／收支／資料／系統」，舊長標題不再出現在正式
+  UI；內容與 disclosure ID 不變。
+- `npm run release:check`：Passed；lint 0 errors／10 個既有 warnings，Today
+  142/142、Calendar 69/69、Reports 90/90、AI 26/26、Driver 27/27、Integration
+  17/17，Inline JavaScript、Service Worker、Manifest、Production validation
+  與 `git diff --check` 全部通過。
+- 320／375／390／393／430px：全部無水平 overflow。390px 乾淨啟動後，新增
+  支出第一次 click 即展開；可見日期 input 第一次 click 即取得原生控制焦點，
+  選日同步 Daily Record 與付款日期；Driver 標題正確。Console 0 error／warning。
+- App Shell candidate：`driver-pay-pro-v32`；Production smoke 尚待部署後核對。
+
 ## Released Hotfix — Driver Typography and Native Date First-tap
 
 - Driver 390px computed sizes：每日目標 28／34／40px；「管理常用設定」

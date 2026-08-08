@@ -128,7 +128,7 @@ contract(20, "AI 展開只修改 session disclosure state", () => {
 contract(21, "Driver 顯示四個主要分類", () => {
   assert.deepEqual([...driver.matchAll(/data-disclosure-scope="driver"\s+data-disclosure-key="([^"]+)"/g)].map(match => match[1]), ["common", "work", "data", "app"]);
 });
-contract(22, "常用設定預設展開", () => {
+contract(22, "常用預設展開", () => {
   assert.match(driver, /id="driverCommonToggle"[\s\S]*?aria-expanded="true"[\s\S]*?id="driverCommonContent">/);
 });
 contract(23, "Driver 其他三類預設收合", () => {
@@ -140,11 +140,11 @@ contract(24, "Driver 移除獨立 About 入口", () => {
 contract(25, "Driver 移除獨立系統狀態卡", () => {
   assert.doesNotMatch(driver, /driver-overview-card driver-system-status/);
 });
-contract(26, "Version 顯示於 App 與系統內容", () => {
+contract(26, "Version 顯示於系統內容", () => {
   const app = between('id="driverSystemStatusContent"', '</section>\n        </div>');
   assert.match(app, /id="aboutAppVersion"/);
 });
-contract(27, "系統狀態顯示於 App 與系統內容", () => {
+contract(27, "系統狀態顯示於系統內容", () => {
   assert.match(driver, /id="driverSystemStatusContent"[\s\S]*?id="driverSystemStatusDetails"/);
 });
 contract(28, "正常狀態不使用警示色", () => {
@@ -165,6 +165,14 @@ contract(31, "Driver 內部按鈕不誤觸分類收合", () => {
 });
 contract(32, "Driver 分類 aria-expanded 完整", () => {
   assert.equal((driver.match(/data-disclosure-scope="driver"[\s\S]*?aria-expanded="(?:true|false)"/g) || []).length, 4);
+});
+
+contract(61, "Driver 四個分類使用最短清楚名稱", () => {
+  assert.deepEqual(
+    [...driver.matchAll(/class="app-disclosure__title"[^>]*>([^<]+)<\/span>/g)].map(match => match[1]),
+    ["常用", "收支", "資料", "系統"]
+  );
+  assert.doesNotMatch(driver, />常用設定<|>工作與收入設定<|>資料與備份<|>App 與系統</);
 });
 
 contract(33, "顯示大小只有標準舒適大字", () => {

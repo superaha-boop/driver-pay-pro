@@ -150,6 +150,9 @@ available；不得因 lint／validation 存在就宣稱已完成 TypeScript migr
 - standalone 正常
 - 離線基本功能正常
 - PWA 關閉後重開，資料與計時狀態仍存在
+- 更新檢查不得在互動中的頁面強制重新載入；第一次點擊日期、支出或其他控制
+  不得因 Service Worker 接管而遺失。新版本等待所有既有頁面自然關閉後，於
+  下次啟動生效。
 
 ### Regression
 

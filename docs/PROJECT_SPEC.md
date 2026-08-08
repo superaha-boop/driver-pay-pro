@@ -274,11 +274,12 @@ Canonical 衍生值為整數 `workMinutes`；WorkRecord 仍保留既有
 ## PWA 與離線行為
 
 - Manifest 使用 standalone、直向優先與繁體中文。
-- Service Worker cache 名稱為 `driver-pay-pro-v06-calendar-report-navigation`。
+- Service Worker cache 名稱為 `driver-pay-pro-v32`。
 - App Shell 包含首頁、manifest、主要 icon 與 hero 圖。
 - navigation 採略過 HTTP cache 的 network-first：成功時更新 `index.html` 快取，離線時才 fallback；其他同源 GET 資源成功時更新各自快取。
-- activate 會刪除非目前名稱的舊快取並 claim clients。
-- Service Worker 註冊使用 `updateViaCache: "none"`；新 worker 接管既有 PWA 後會安全重載一次，不清除 localStorage。
+- activate 會刪除非目前名稱的舊快取，但不在互動中的舊頁面強制 claim clients。
+- Service Worker 註冊使用 `updateViaCache: "none"` 並檢查更新；新 worker 會等待
+  既有頁面自然關閉，於下次自然啟動時生效，不在第一次操作期間強制重載。
 
 ## 非功能需求
 

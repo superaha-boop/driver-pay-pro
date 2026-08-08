@@ -247,6 +247,6 @@ test("Today KPI 依工作狀態切換目前與平均時薪標籤", () => {
 test("資料 key、schema 與 App Shell 只做核准範圍變更", () => {
   assert.match(html, /const storageKey = "driverPayApp\.v2"/);
   assert.match(html, /expenseAllocations/);
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v31"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v32"/);
   assert.doesNotMatch(html, /supabase|migration/i);
 });

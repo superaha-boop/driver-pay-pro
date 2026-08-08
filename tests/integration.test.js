@@ -68,13 +68,21 @@ test("五個主分頁與 session context 保持既有契約", () => {
 });
 
 test("Local-first V1 App Shell、Manifest 與 release source 保持安全", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v31"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v32"/);
   assert.match(serviceWorker, /"\.\/index\.html"/);
   assert.match(serviceWorker, /"\.\/styles\/design-system\.css"/);
   assert.equal(manifest.start_url, "./");
   assert.equal(manifest.scope, "./");
   assert.equal(html.includes("driverPayApp.v2"), true);
   assert.doesNotMatch(`${html}\n${serviceWorker}`, /trycloudflare\.com|_vercel_share|localhost:\d+/);
+});
+
+test("PWA 更新等待下次自然啟動且不吞掉首次操作", () => {
+  assert.match(html, /register\("\.\/sw\.js", \{ updateViaCache: "none" \}\)/);
+  assert.doesNotMatch(html, /addEventListener\("controllerchange"|window\.location\.reload\(\)/);
+  assert.doesNotMatch(serviceWorker, /skipWaiting\(\)|clients\.claim\(\)/);
+  assert.match(html, /<input type="date" id="\$\{escapeAttr\(id\)\}"/);
+  assert.match(html, /<details class="collapsible detail-section expense-section" id="expenseSection">/);
 });
 
 test("Offline 狀態允許 AI 與 Driver 繼續使用本機資料", () => {

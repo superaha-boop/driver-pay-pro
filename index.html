@@ -6746,7 +6746,7 @@
           <section class="driver-settings-group app-disclosure" aria-labelledby="driverCommonTitle">
             <button class="app-disclosure__trigger" id="driverCommonToggle" type="button" data-disclosure-scope="driver"
               data-disclosure-key="common" aria-expanded="true" aria-controls="driverCommonContent">
-              <span class="app-disclosure__title" id="driverCommonTitle">常用設定</span>
+              <span class="app-disclosure__title" id="driverCommonTitle">常用</span>
               <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
             </button>
             <div class="app-disclosure__content driver-settings-group__content" id="driverCommonContent">
@@ -6769,7 +6769,7 @@
           <section class="driver-settings-group app-disclosure" aria-labelledby="driverWorkTitle">
             <button class="app-disclosure__trigger" id="driverWorkToggle" type="button" data-disclosure-scope="driver"
               data-disclosure-key="work" aria-expanded="false" aria-controls="driverWorkContent">
-              <span class="app-disclosure__title" id="driverWorkTitle">工作與收入設定</span><span class="app-disclosure__summary">平台、支出</span>
+              <span class="app-disclosure__title" id="driverWorkTitle">收支</span><span class="app-disclosure__summary">平台、支出</span>
               <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
             </button>
             <div class="app-disclosure__content driver-settings-group__content" id="driverWorkContent" hidden>
@@ -6786,7 +6786,7 @@
           <section class="driver-settings-group app-disclosure" aria-labelledby="driverDataTitle">
             <button class="app-disclosure__trigger" id="driverDataToggle" type="button" data-disclosure-scope="driver"
               data-disclosure-key="data" aria-expanded="false" aria-controls="driverDataContent">
-              <span class="app-disclosure__title" id="driverDataTitle">資料與備份</span><span class="app-disclosure__summary">備份、匯出</span>
+              <span class="app-disclosure__title" id="driverDataTitle">資料</span><span class="app-disclosure__summary">備份、匯出</span>
               <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
             </button>
             <div class="app-disclosure__content driver-data-content" id="driverDataContent" hidden>
@@ -6798,7 +6798,7 @@
           <section class="driver-settings-group app-disclosure" aria-labelledby="driverSystemStatusTitle">
             <button class="app-disclosure__trigger" id="driverSystemStatusToggle" type="button" data-disclosure-scope="driver"
               data-disclosure-key="app" aria-expanded="false" aria-controls="driverSystemStatusContent">
-              <span class="app-disclosure__title" id="driverSystemStatusTitle">App 與系統</span>
+              <span class="app-disclosure__title" id="driverSystemStatusTitle">系統</span>
               <span class="driver-system-status-badge" id="driverSystemStatusBadge">正常</span>
               <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
             </button>
@@ -13404,13 +13404,6 @@
 
     function setupPwa() {
       if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-        const hadController = Boolean(navigator.serviceWorker.controller);
-        let refreshing = false;
-        navigator.serviceWorker.addEventListener("controllerchange", () => {
-          if (!hadController || refreshing) return;
-          refreshing = true;
-          window.location.reload();
-        });
         navigator.serviceWorker
           .register("./sw.js", { updateViaCache: "none" })
           .then(registration => {

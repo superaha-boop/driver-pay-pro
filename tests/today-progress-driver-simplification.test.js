@@ -88,7 +88,7 @@ contract(17, "收入工時時薪計算不依賴 disclosure state", () => {
   for (const name of ["summarize", "workMetrics", "hourlyRate"]) assert.doesNotMatch(functionSource(name), /todayGoalExpanded|todayGoalDisclosureDate/);
 });
 
-contract(18, "常用設定只有一個可見每日目標標題", () => assert.equal((driver.match(/>每日目標<\/h3>/g) || []).length, 1));
+contract(18, "常用只有一個可見每日目標標題", () => assert.equal((driver.match(/>每日目標<\/h3>/g) || []).length, 1));
 contract(19, "不再顯示收入目標", () => assert.doesNotMatch(driver, />收入目標</));
 contract(20, "不再顯示每日收入目標", () => assert.doesNotMatch(driver, />每日收入目標</));
 contract(21, "不再顯示重複自動儲存說明", () => assert.doesNotMatch(driver, /與「今天」使用相同設定|輸入後自動儲存/));
@@ -114,13 +114,13 @@ contract(29, "每日目標資料結構保持不變", () => {
 contract(30, "Driver 四個主要分類仍存在", () => {
   assert.deepEqual([...driver.matchAll(/data-disclosure-scope="driver"\s+data-disclosure-key="([^"]+)"/g)].map(match => match[1]), ["common", "work", "data", "app"]);
 });
-contract(31, "常用設定 Header 沒有重複摘要", () => {
+contract(31, "常用 Header 沒有重複摘要", () => {
   const header = driver.match(/id="driverCommonToggle"[\s\S]*?<\/button>/)?.[0] || "";
   assert.doesNotMatch(header, /app-disclosure__summary|顯示與每日目標/);
 });
-contract(32, "工作與收入設定摘要已精簡", () => assert.match(driver, /id="driverWorkTitle">工作與收入設定<\/span><span class="app-disclosure__summary">平台、支出<\/span>/));
-contract(33, "資料與備份摘要已精簡", () => assert.match(driver, /id="driverDataTitle">資料與備份<\/span><span class="app-disclosure__summary">備份、匯出<\/span>/));
-contract(34, "App 與系統正常狀態仍存在", () => {
+contract(32, "收支摘要已精簡", () => assert.match(driver, /id="driverWorkTitle">收支<\/span><span class="app-disclosure__summary">平台、支出<\/span>/));
+contract(33, "資料摘要已精簡", () => assert.match(driver, /id="driverDataTitle">資料<\/span><span class="app-disclosure__summary">備份、匯出<\/span>/));
+contract(34, "系統正常狀態仍存在", () => {
   assert.match(driver, /id="driverSystemStatusBadge">正常<\/span>/);
   assert.match(functionSource("renderDriverStatus"), /needsAttention \? "需要注意" : "正常"/);
 });
@@ -155,7 +155,7 @@ contract(43, "Calendar targeted tests 保留於 release gate", () => assert.matc
 contract(44, "Reports targeted tests 保留於 release gate", () => assert.match(packageJson.scripts["test:reports"], /reports/));
 contract(45, "AI targeted tests 保留於 release gate", () => assert.match(packageJson.scripts["test:ai"], /ai\.test\.js/));
 contract(46, "Integration targeted tests 保留於 release gate", () => assert.match(packageJson.scripts["test:integration"], /integration\.test\.js/));
-contract(47, "PWA App Shell 遞增至 v31 且 storage key 不變", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v31"/);
+contract(47, "PWA App Shell 遞增至 v32 且 storage key 不變", () => {
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v32"/);
   assert.match(html, /const storageKey = "driverPayApp\.v2"/);
 });

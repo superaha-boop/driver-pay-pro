@@ -4,6 +4,19 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
+## PWA First-tap and Driver Labels — Release Candidate
+
+- Branch：`codex/pwa-first-tap-driver-labels-20260808`；base：`4924018`。
+- 根本原因不是日期或支出各自的控制元件，而是 Service Worker 在 App 已可操作後
+  使用 `skipWaiting()`／`clients.claim()` 接管，`controllerchange` 再強制
+  `window.location.reload()`；第一次觸控若剛好發生在此時會被重載中斷。
+- v32 保留更新檢查與離線 App Shell，但不在既有頁面中途接管或重新載入；新
+  worker 等待既有頁面自然關閉，於下次自然啟動生效。
+- Driver 四個第一層名稱縮短為「常用／收支／資料／系統」；內容、順序、摘要、
+  展開狀態與資料來源不變。
+- App Shell：`driver-pay-pro-v32`。不改 `driverPayApp.v2`、WorkRecord、計算、
+  Manifest、Supabase 或正式資料。
+
 ## Driver Typography and Native Date First-tap — Released
 
 - Branch：`codex/driver-typography-date-first-tap-20260808`；功能 commit：

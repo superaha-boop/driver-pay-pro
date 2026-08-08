@@ -885,3 +885,18 @@
   13px、大字 15px，造成視覺忽大忽小。
 - Impact: Today date input、Driver／Today typography、tests、docs、v31；無 schema、
   localStorage key、Manifest、Supabase 或正式資料變更。
+
+## D-053
+
+- Date: 2026-08-08
+- Decision:
+  - Service Worker 更新保留 `registration.update()`，但移除 `skipWaiting()`、
+    `clients.claim()` 與頁面 `controllerchange` 強制 reload。
+  - 新 worker 等待既有 clients 自然關閉，於下次自然啟動生效，避免中斷第一次
+    觸控或尚未儲存的輸入。
+  - Driver 第一層名稱固定為「常用／收支／資料／系統」；內容與互動不變。
+  - App Shell 更新為 v32，Production validation 阻止舊接管流程回歸。
+- Reason: 日期與「新增支出」兩個無關控制都只在首次啟動偶發需要第二次點擊，
+  實際共同來源是 Service Worker 在 UI 已互動後重新載入頁面。
+- Impact: PWA lifecycle、Driver labels、tests、docs、v32；無 schema、storage key、
+  Manifest、Supabase 或正式資料變更。
