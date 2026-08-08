@@ -802,3 +802,54 @@
 - 全 App 時薪固定使用總收入除以有效工時，支出只影響淨收入與成本分析。
 - 週報與月報共用支出分類 selector；首頁目標進度只收合底部區域。
 - 本決策不改 `driverPayApp.v2`、WorkRecord schema、`expenseAllocations` 或 Supabase。
+
+## D-048
+
+- Date: 2026-08-04
+- Decision:
+  - Today 使用唯一 session-only `activeRecordDate`；所有收入、工時、支出、其他
+    資料、復原及整日刪除都必須顯式綁定並通過日期 guard，不 fallback 到今天。
+  - Calendar 維持唯讀，只將精確有效日期交給 Today 的唯一 Daily Record Editor；
+    不再搬動 Today 表單 DOM。
+  - 返回 Today 時完整恢復所有模組；Today KPI 使用左對齊最大收入、等寬工時／
+    時薪與簡潔時間格式，只有目標進度可收合；標準模式主／次 KPI 使用已驗證的
+    `50–64px`／`26–32px` 比例。
+  - Today 每日紀錄日期卡可直接選今天或過去日期，並更新同一個
+    `activeRecordDate`；付款日期同步，未來日期仍禁止。
+  - App Shell candidate 為 `driver-pay-pro-v27`；Human QA 前不 merge、不 Production。
+- Reason: 日期來源分歧與 Calendar DOM 搬移是跨日期寫入及半頁渲染的共同根因。
+- Impact: HTML／CSS／Service Worker、tests、docs；資料 key、schema、Manifest、
+  Supabase 與正式資料不變。
+
+## D-049
+
+- Date: 2026-08-08
+- Decision:
+  - `settings.displaySize` 維持唯一顯示偏好，縮放行為改為 Data／Controls／
+    Structure 三層；不得再用單一頁面字級等比例放大。
+  - Today 收入、工時、時薪共用 system font、700、line-height 1 與 tabular
+    numerals；工時單位降階顯示。
+  - 每日目標與平台收入使用 26／29／32px input-value token；一般主數據使用
+    24／27／30px data token。
+  - 結構標題與 Bottom Navigation 固定或只小幅變化；字體切換控制固定 14px。
+  - Calendar typography 契約不變；App Shell candidate 更新為 v28；Human QA
+    前不 merge main、不 Production。
+- Reason: 修正結構文字過度放大、主要數據級差不足與大字控制擁擠。
+- Impact: typography、Today／Driver／Reports／AI presentation、tests、docs、v28；
+  資料 key、schema、計算、Manifest、Supabase、main 與 Production 不變。
+
+## D-050
+
+- Date: 2026-08-08
+- Decision:
+  - Today 每日紀錄日期卡保留唯一原生 `input[type="date"]` 與完整卡片觸控區，
+    不建立自訂月曆或第二份日期 state。
+  - Date input 使用 native appearance；WebKit picker indicator 覆蓋整張卡。
+    支援 `showPicker()` 時作增強，不支援時維持原生點擊 fallback。
+  - 選定日期仍只更新 `activeRecordDate`，且僅允許今天或過去日期；所有 Daily
+    Record 欄位及付款日期繼續通過同一日期 guard。
+  - App Shell candidate 更新為 v29。
+- Reason: `appearance: none` 使 Chrome／部分 WebKit 的透明原生日期 input 只會
+  focus，無法開啟 Picker。
+- Impact: Today date-picker interaction、tests、docs、v29；資料 key、schema、
+  計算、Manifest、Supabase 與正式資料不變。

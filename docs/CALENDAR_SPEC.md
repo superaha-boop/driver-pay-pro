@@ -1,13 +1,23 @@
 # Driver Pay Pro — Calendar Interaction and Implementation Specification
 
-Version: 1.3
+Version: 1.4
 
 Status: Approved implementation specification
 
 Updated: 2026-08-04
 
-Implementation status: Calendar V1 implemented and frozen；D-045 approved the
-V1.1 inline-editing and compact-layout exception, awaiting one combined Human QA
+Implementation status: Calendar V1 implemented and frozen. D-047 and D-048 supersede
+the D-045 mutation exception: Calendar is read-only and hands an exact valid date to
+Today's single Daily Record Editor.
+
+> **Authoritative mutation override (D-048):** Any older section in this document
+> describing an inline Calendar Record Editor, moving Today form DOM, Calendar-owned
+> create/edit/delete, draft commit, or Calendar expense mutation is retained only as
+> historical context and is no longer an implementation requirement. Calendar may
+> render summaries and links; all writes belong to Today and require `activeRecordDate`.
+> Today's Daily Record date card may also select today or a past date directly; it must
+> update that same `activeRecordDate`, never create a parallel date state, and continue
+> to reject future dates.
 
 > This document is the primary implementation source for the Calendar redesign. It defines target behavior and records current repository constraints. It does not authorize changes outside an approved Calendar Implementation Sprint.
 
@@ -27,8 +37,8 @@ Calendar answers:
 - Find a date in under three seconds.
 - Distinguish recorded, empty, today, selected, and future dates.
 - Read a useful daily summary without leaving Calendar.
-- Backfill a past day without selecting the date again.
-- Correct an existing record below the calendar through the same reusable form DOM.
+- Hand a selected past date to Today without selecting the date again.
+- Correct an existing record only through Today's single Daily Record Editor.
 - Trust that Calendar, Today, Reports, and AI show the same calculations.
 
 ## 3. Scope
@@ -43,7 +53,7 @@ The first Calendar implementation includes:
 - Distinct Today and Selected states.
 - Standard Work Record Card.
 - Today, past, future, empty, loading, error, and offline states.
-- Past-record creation, editing, and confirmed deletion through one reusable inline Record Editor.
+- Direct past-record creation/edit handoff to Today; Calendar itself remains read-only.
 - Month and day swipe enhancements with visible alternatives.
 - Accessibility, responsive, local-first, and regression coverage.
 - Compact monthly net-income and work-day summary.

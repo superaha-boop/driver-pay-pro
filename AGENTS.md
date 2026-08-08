@@ -1,6 +1,6 @@
 # Driver Pay Pro — Codex Instructions
 
-Version: 1.10
+Version: 1.11
 
 ## Project Documentation
 
@@ -100,18 +100,23 @@ Version: 1.10
   「App 與系統」內，不建立獨立 About 頁或第二張狀態卡。
 - AI 首屏只完整顯示「本週重點」；本月洞察、收入變化來源、資料與分析依據
   預設收合。AI renderer 保持唯讀並重用既有 analytics。
-- `settings.displaySize` 的一般閱讀 token 固定為 standard 13px／12px、
-  comfort 17px／15px、large 22px／19px（body／secondary）。Calendar 必須
-  使用獨立 typography tokens；日期固定 14／16／20px，Today circle 固定
-  34／36／40px，不得由窄螢幕 media query 反向縮小。
+- `settings.displaySize` 必須依資訊角色縮放：主要 KPI／金額／工時／目標等
+  數據有清楚的 standard／comfort／large 級差；按鈕與輸入操作只適度放大；
+  頁面／卡片標題、Driver 分類、Header、Logo 與 Bottom Navigation 固定或只
+  小幅變化。不得以單一全域 font-size、zoom 或 scale 等比例放大全 App。
+  字體大小切換控制本身固定 14px。Calendar 維持獨立 typography tokens；日期
+  固定 14／16／20px，Today circle 固定 34／36／40px，不得由窄螢幕 media
+  query 反向縮小。
 
 ## Product Architecture Execution Rules
 
 - 底部主要資訊架構固定為「今天｜月曆｜報表｜AI｜Driver」，不得自行增加第六個主要分頁。
 - 新功能或修改既有功能前，必須先核對 `docs/PRODUCT_SPEC.md` 的 Feature Ownership Matrix。
 - 每個可寫入功能只能有一個 Primary owner；其他頁面只能 View、Link 或 None。
-- 今天只負責今日即時工作與今日紀錄；月曆負責過去日期定位、補登、編輯與刪除。
-- 報表與 AI 保持唯讀；需要修正紀錄時只能連到月曆的確切日期。
+- 今天負責今日即時工作，並以唯一 Daily Record Editor 編輯目前選定的今日或
+  過去日期；月曆只負責日期定位與唯讀摘要，再把精確日期交給 Today。
+- 報表與 AI 保持唯讀；需要修正紀錄時先連到月曆的確切日期，再由月曆導向
+  Today 的同一個 Daily Record Editor。
 - Driver 只管理跨日持久設定，不得放入某一天的收入、班別、天氣或備註。
 - 未來日期不得建立工作紀錄。
 - 收入、支出、淨收入、實際工時、平均時薪及週／月彙總必須使用同一套 canonical calculation；禁止為單一頁面複製另一套公式。
@@ -141,12 +146,21 @@ Version: 1.10
 - 日期格只顯示淨收入簡寫；完整金額與資料顯示於下方工作紀錄卡片。
 - 收入熱度依當月有效正淨收入的相對分布計算，使用 Design System 語意 token，不在 renderer 硬編碼色票。
 - 工作紀錄卡片第一版固定使用標準模式，位於月曆正下方，不使用平台 Logo。
-- 編輯入口必須直接可見；刪除是次級操作，必須包含日期與影響範圍的確認。
-- 今天空狀態連到 Today；過去空日期可補登；未來空日期沒有新增入口。
+- 歷史日期的「新增紀錄／編輯這天」入口必須直接可見並導向 Today；Calendar
+  本身不得建立、修改或刪除紀錄。刪除只存在 Today 編輯流程，且必須包含日期
+  與影響範圍的確認。
+- 今天空狀態連到 Today；過去空日期可導向 Today 補登；未來空日期沒有新增入口。
 - Calendar 不取代 Reports，不加入即時工作控制、趨勢、平台排行或 AI 洞察。
-- Calendar 必須使用 canonical calculations、`styles/design-system.css` primitives 與同一套 Record Editor；不得建立第二套表單、資料模型或公式。
-- Calendar 的過去紀錄編輯固定留在月曆下方，以收入／工時／支出／其他資料／
-  更多操作五個原地 disclosure 重用同一套表單；不得恢復全頁或 Modal 型 Editor。
+- Calendar 必須使用 canonical calculations 與 `styles/design-system.css`
+  primitives；Calendar 只讀摘要不得掛載或搬動 Today 的表單 DOM，也不得建立
+  第二套表單、資料模型或公式。
+- `activeRecordDate` 是 Today Daily Record Editor 的唯一 session 日期來源。
+  所有收入、工時、支出、其他資料、復原與整日刪除都必須顯式傳入目標日期並
+  通過同一日期綁定 guard；不得在缺少／無效／不一致時 fallback 到今天。
+- Today 每日紀錄日期卡必須保留真正可操作的原生 `input[type="date"]`；整張卡
+  都是 Picker 觸發區，不能以 `appearance: none` 移除原生開啟能力。支援
+  `showPicker()` 時可作安全增強，不支援時必須回退原生點擊；只能選今天或過去
+  日期，並繼續更新同一個 `activeRecordDate`。
 - 完整狀態、手勢、Accessibility、資料與驗收規格以 `docs/CALENDAR_SPEC.md` 為準。
 
 ## Reports Execution Rules

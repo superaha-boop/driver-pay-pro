@@ -5,7 +5,7 @@
   "description": "Static mobile-first PWA for driver income and work-time tracking",
   "scripts": {
     "test": "node --test tests/*.test.js",
-    "test:today": "TZ=Asia/Taipei node --test tests/work-time.test.js tests/today-follow-up.test.js tests/expense-calendar-kpi-integration.test.js",
+    "test:today": "TZ=Asia/Taipei node --test tests/work-time.test.js tests/today-follow-up.test.js tests/expense-calendar-kpi-integration.test.js tests/active-record-date-hotfix.test.js",
     "test:ai": "TZ=Asia/Taipei node --test tests/ai.test.js tests/reading-size.test.js",
     "test:driver": "TZ=Asia/Taipei node --test tests/driver.test.js tests/reading-size.test.js",
     "test:integration": "TZ=Asia/Taipei node --test tests/integration.test.js tests/v1-regression.test.js",

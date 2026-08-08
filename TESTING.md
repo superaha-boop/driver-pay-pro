@@ -1,5 +1,44 @@
 # Driver Pay Pro Testing
 
+## Current Hotfix — Active Record Date, Today KPI and Semantic Display Size
+
+- `tests/active-record-date-hotfix.test.js` 固定 60 項：日期隔離、原生 Picker、
+  導航完整渲染及 Today KPI／工時格式。`npm run test:today` 已納入此檔案。
+- 日期測試涵蓋 2026-07-04、2026-08-02、2026-08-04、顯式目標日期、無效／
+  未來／mismatch guard、支出 allocation、復原、整日刪除、十次切換與重載。
+- 導覽測試涵蓋 Today／Calendar／Reports 組合、Calendar 精確日期導向 Today、
+  返回 Calendar，以及 KPI、工作狀態、平台收入、每日紀錄、支出與後續模組完整恢復。
+- KPI 測試涵蓋左對齊最大收入、等寬次級欄、目標 disclosure、0／29／59／60／
+  70／120 分鐘格式、數字／單位分層、總收入時薪口徑，以及主／次 KPI 語意 token。
+- 顯示大小契約驗證 Data／Controls／Structure 三層：主要資料 24／27／30px、
+  每日目標與平台輸入值 26／29／32px、切換控制固定 14px，結構標題與 Bottom
+  Navigation 不隨大字模式過度放大。
+- 日期卡測試涵蓋可操作的原生 date input、`max` 為台北今天、切換後唯一
+  `activeRecordDate` 重載、付款日期同步及未來日期拒絕。
+- Date Picker follow-up 另驗證 native appearance 未被移除、整張 WebKit picker
+  indicator 為 100% 觸發區、支援 `showPicker()` 時只開啟同一原生 input，並以
+  實際瀏覽器點擊後由原生日期面板接管、Escape 可返回頁面作 Smoke。
+- L2 必測 standard／comfort／large × 320／375／390／393／430px，Console、
+  overflow、Calendar → Today、多次切頁、Manifest、App Shell v29 與 offline。
+- 實體 iPhone Safari／installed PWA 是本次唯一 Human QA Gate；通過前不得 merge
+  `main` 或 Production deploy。
+- 2026-08-08 L1：`npm run release:check` Passed；完整 Node 403/403、Today
+  142/142、Calendar 69/69、Reports 89/89、AI 25/25、Driver 25/25、Integration
+  16/16；lint 0 errors／10 個既有 warnings，Inline JavaScript、Service Worker、
+  Manifest、build 與 `git diff --check` 均通過。
+- L2 本機瀏覽器：standard／comfort／large × 320／375／390／393／430px 共
+  15 組皆 `scrollWidth === clientWidth`；Calendar 2026-07-04 → Today 同時綁定
+  標題、每日紀錄日期與付款日期；連續導覽十輪後六個 Today 模組完整，Console
+  0 error／warning。
+- 2026-08-08 L2：標準／舒適／大字 × 五頁 × 320／375／390／393／430px 共
+  75 組 `scrollWidth === clientWidth`，Console 0 error／warning；390px 三模式主收入為 54.6／58.5／62.4px、
+  次要 KPI 28／31.2／35.1px、每日目標與平台收入 26／29／32px；字體切換與
+  Bottom Navigation 固定 14px。日期卡 enabled、`max=2026-08-08`；8/7 寫入收入後切到 8/8
+  不會帶入，再切回 8/7 可載入原值，支出付款日期全程同步，Console 0 error／warning。
+- Date Picker follow-up 在 320／375／390／393／430px 均維持 input 完整位於
+  日期卡內、native appearance、`max=2026-08-08`、零水平 overflow；390px 實際
+  點擊由原生日期面板接管，Console 0 error／warning。
+
 ## Current Sprint — Expense、Hourly Rate、Calendar Read-only 與 KPI
 
 - Calendar 測試以唯讀摘要為準：不得出現 `data-calendar-add`、

@@ -347,7 +347,7 @@ test("開始暫停繼續收工都先安全儲存再更新畫面", () => {
   const end = html.indexOf("function startRunNow(", start);
   const source = html.slice(start, end);
   assert.ok(source.indexOf("persistStatePayload(nextState, { updateMemory: true })") < source.indexOf("notifyRecordChanged("));
-  assert.match(html.slice(end), /commitTodayWorkSession\(entry\)/);
+  assert.match(html.slice(end), /commitTodayWorkSession\(targetDate, entry\)/);
 });
 
 test("手動小時與分鐘各自限制合法整數範圍", () => {

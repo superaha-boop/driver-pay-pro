@@ -927,3 +927,74 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
 - Production 390px 五頁 Smoke QA 通過，無 Console error／warning，無水平 overflow。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-046](docs/DECISION_LOG.md#d-046)。
+
+## D-047 — Calendar 唯讀與 Today 每日紀錄責任
+
+- Date: 2026-08-04
+- Decision:
+  1. Calendar 工作紀錄卡只負責查看歷史資料，不提供新增、編輯、刪除或支出
+     mutation；Today 是每日紀錄的唯一輸入與修改 owner。
+  2. 全 App 時薪固定使用總收入除以有效工時，支出只影響淨收入與成本分析。
+  3. 週報與月報共用支出分類 selector；首頁目標進度只收合底部區域。
+  4. 不改 `driverPayApp.v2`、WorkRecord schema、`expenseAllocations` 或 Supabase。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-047](docs/DECISION_LOG.md#d-047)。
+
+## D-048 — Active Record Date and Today KPI Production Hotfix
+
+- Date: 2026-08-04
+- Decision:
+  1. `activeRecordDate` 是 Today 唯一 session 日期；所有 Daily Record mutation
+     必須顯式傳入同一目標日期並通過 guard，不得 fallback 到今天。
+  2. Calendar 維持唯讀；有效過去日期以 `新增紀錄／編輯這天` 導向 Today。
+     Calendar 不再搬動、掛載或擁有 Daily Record 表單。
+  3. Today 返回時完整恢復並重繪 KPI、工作狀態、平台收入、每日紀錄、支出與
+     其他資料，從來源修正 Calendar → Today 半頁渲染。
+  4. Today KPI 的今日收入是左對齊最大數字，工時／時薪為等寬兩欄；只有目標
+     進度可收合，KPI 工時使用簡潔分鐘／小時格式。標準顯示模式重用舊版已
+     驗證的 `50–64px` 主收入與 `26–32px` 次要 KPI 比例。
+  5. App Shell candidate 更新為 v27；Human QA 前只 Push Hotfix branch 與
+     Public Preview，不 merge main、不 Production deploy。
+  6. Today 每日紀錄日期卡恢復為唯一可操作日期入口；只能選今天或過去日期，
+     選擇後直接更新 `activeRecordDate`，支出付款日期同步且不建立第二份 state。
+- Reason: 舊 Calendar editor 搬移 Today 實體 DOM，且寫入路徑混用多個日期來源，
+  形成 Production 資料完整性與導航渲染 Release Blocker。
+- Impact: Today／Calendar routing and presentation、write guards、tests、docs、v27；
+  `driverPayApp.v2`、WorkRecord、allocation、Manifest、Supabase 與正式資料不變。
+
+## D-049 — Semantic Display Size and KPI Hierarchy
+
+- Date: 2026-08-08
+- Decision:
+  1. `settings.displaySize` 與 `data-display-size` 維持唯一顯示偏好，但不再以
+     13／17／22px 對頁面文字等比例放大；改為 Data／Controls／Structure 三層。
+  2. Today 主收入與次要工時／時薪分別使用 `--font-kpi-primary` 與
+     `--font-kpi-secondary`；三者共用 system font、700、line-height 1 與
+     tabular numerals。工時單位使用較小的 `--font-kpi-unit`。
+  3. 每日目標與平台收入輸入值重用 `--font-input-value`，standard／comfort／
+     large 固定為 26／29／32px；一般主數據使用 24／27／30px。
+  4. 頁面／卡片標題、Driver 分類、Header、Logo、Bottom Navigation 固定或
+     只小幅變化；字體切換控制本身固定 14px。
+  5. Calendar 日期的既有 14／16／20px 與 Today circle 34／36／40px 契約不變。
+     App Shell candidate 更新為 v28；Human QA 前不 merge main、不 Production。
+- Reason: 舊規則放大大量結構文字，卻讓每日目標與主要資料缺少清楚級差，造成
+  視覺優先順序反轉及大字模式擁擠。語意 token 可讓數據真正可讀，同時穩定版面。
+- Impact: Design System typography、Today／Driver／Reports／AI presentation、
+  tests、docs 與 v28；設定來源、計算、WorkRecord、storage key、Manifest、
+  Supabase、main 與 Production 不變。
+
+## D-050 — Today Daily Record Native Date Picker
+
+- Date: 2026-08-08
+- Decision:
+  1. Today 每日紀錄日期卡繼續使用唯一原生 `input[type="date"]`，整張日期卡都是
+     Picker 觸發區，不建立自訂月曆或第二份日期 state。
+  2. Date input 保留 native appearance；WebKit picker indicator 覆蓋完整卡片。
+     支援 `showPicker()` 時作直接開啟增強，不支援時保留原生點擊 fallback。
+  3. 選擇結果仍只進入 `activeRecordDate`，僅允許今天或過去日期；收入、工時、
+     支出、其他資料及付款日期沿用同一日期 guard。
+  4. App Shell 更新為 v29。
+- Reason: `appearance: none` 移除了 Chrome／部分 WebKit 的原生日期面板觸發區，
+  導致點擊日期卡只顯示焦點框而無法選日。
+- Impact: Today date-picker presentation／interaction、tests、docs 與 v29；
+  `driverPayApp.v2`、WorkRecord、計算、Manifest、Supabase 與正式資料不變。

@@ -170,15 +170,17 @@ contract(32, "Driver 分類 aria-expanded 完整", () => {
 contract(33, "顯示大小只有標準舒適大字", () => {
   assert.deepEqual([...driver.matchAll(/name="displaySize" value="([^"]+)"/g)].map(match => match[1]), ["standard", "comfort", "large"]);
 });
-contract(34, "Standard body token 為 13px", () => assert.match(designSystem, /--display-body-size: 13px/));
-contract(35, "Comfort body token 為 17px", () => assert.match(designSystem, /data-display-size="comfort"[\s\S]*?--display-body-size: 17px/));
-contract(36, "Large body token 為 22px", () => assert.match(designSystem, /data-display-size="large"[\s\S]*?--display-body-size: 22px/));
-contract(37, "Comfort secondary token 為 15px", () => assert.match(designSystem, /data-display-size="comfort"[\s\S]*?--display-secondary-size: 15px/));
-contract(38, "Large secondary token 為 19px", () => assert.match(designSystem, /data-display-size="large"[\s\S]*?--display-secondary-size: 19px/));
-contract(39, "大字與舒適有明確級差", () => {
-  const [comfortBody, largeBody, comfortSecondary, largeSecondary] = [17, 22, 15, 19];
-  assert.ok(largeBody > comfortBody);
-  assert.ok(largeSecondary > comfortSecondary);
+contract(34, "Standard data token 為 24px", () => assert.match(designSystem, /--font-data: 24px/));
+contract(35, "Comfort data token 為 27px", () => assert.match(designSystem, /data-display-size="comfort"[\s\S]*?--font-data: 27px/));
+contract(36, "Large data token 為 30px", () => assert.match(designSystem, /data-display-size="large"[\s\S]*?--font-data: 30px/));
+contract(37, "Comfort structural title 維持 18px", () => assert.match(designSystem, /data-display-size="comfort"[\s\S]*?--font-section-title: 18px/));
+contract(38, "Large navigation 維持 14px", () => assert.match(designSystem, /data-display-size="large"[\s\S]*?--font-navigation: 14px/));
+contract(39, "主要數據的模式級差大於結構文字", () => {
+  const [standardData, comfortData, largeData] = [24, 27, 30];
+  const [standardTitle, comfortTitle, largeTitle] = [18, 18, 19];
+  assert.ok(comfortData > standardData && largeData > comfortData);
+  assert.equal(comfortTitle, standardTitle);
+  assert.ok(largeTitle - standardTitle < largeData - standardData);
 });
 contract(40, "五個主要頁面共用 root 顯示模式", () => {
   assert.match(functionSource("applyDisplaySize"), /document\.documentElement\.dataset\.displaySize = normalized/);

@@ -70,15 +70,20 @@ styles/design-system.css
 
 #### Global display size
 
-Driver 的「顯示大小」以 `<html data-display-size>` 控制全 App 同一套分層
-typography，不使用 `zoom` 或 `transform: scale()`：
+Driver 的「顯示大小」以 `<html data-display-size>` 控制全 App 同一套語意
+typography，不使用 `zoom`、`transform: scale()` 或單一全域 font-size：
 
-- `standard`：一般閱讀 13px、次要文字 12px，保留既有資訊密度。
-- `comfort`：一般閱讀 17px、次要文字 15px，控制與按鈕文字 17px。
-- `large`：一般閱讀 22px、次要文字 19px，控制 22px、按鈕 20px；主要
-  KPI 與頁面主標題只維持或小幅調整。
+- Data：主要 KPI、金額、工時與目標值明顯逐級放大。`--font-data` 為
+  24／27／30px，`--font-input-value` 為 26／29／32px；Today 主 KPI 與次 KPI
+  使用各自的 responsive token。
+- Controls：按鈕與一般輸入只適度放大，避免觸控元件因文字換行而破版。
+- Structure：頁面／卡片標題、Driver 分類、Header、Logo、Bottom Navigation
+  固定或只小幅變化；顯示大小三個選項本身固定 14px。
 
-實作 token 包含 `--display-body-size`、`--display-secondary-size`、
+實作 token 包含 `--font-kpi-primary`、`--font-kpi-secondary`、`--font-kpi-unit`、
+`--font-data`、`--font-input-value`、`--font-button`、`--font-body`、
+`--font-secondary`、`--font-section-title`、`--font-navigation`，以及相容既有
+元件的 `--display-body-size`、`--display-secondary-size`、
 `--display-caption-size`、`--display-control-size`、
 `--display-calendar-month-size`、`--display-calendar-weekday-size`、
 `--display-calendar-date-size`、`--display-calendar-today-button-size`、

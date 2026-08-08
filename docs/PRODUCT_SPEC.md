@@ -53,7 +53,8 @@ Do not add a sixth primary destination. Secondary screens must remain within the
 
 ### 3.1 Today
 
-Purpose: capture and monitor the current working day.
+Purpose: capture and monitor the current working day, and provide the single Daily
+Record Editor for an explicitly selected today or past date.
 
 Primary responsibilities:
 
@@ -65,11 +66,16 @@ Primary responsibilities:
   existing work details. The native button keeps status and chevron in the same
   44px row; work actions and detail content remain outside its event boundary.
 - Start, pause, resume, and end today's work session.
-- Enter or correct today's platform income.
-- Add today's expenses.
+- Enter or correct platform income for `activeRecordDate`.
+- Add or correct expenses for `activeRecordDate`.
 - Review today's expense count and total beside the expense flow, then remove one
   category in place with a short undo window without deleting the day's record.
-- Record today's shift, weather, orders, distance, and note.
+- Record shift, weather, orders, distance, and note for `activeRecordDate`.
+- Let the Daily Record date card select today or a past date directly. A valid change
+  updates the single `activeRecordDate` and reloads that exact day's income, work time,
+  expenses, and supporting data; the expense payment date follows the same date.
+- Keep `activeRecordDate` session-only and bind every Daily Record mutation to it;
+  missing, invalid, future, or mismatched dates must fail without a fallback to today.
 - Provide immediate save and work-status feedback.
 - Keep work time, expense entry, and supporting data as three independent collapsed
   sections in the same Today form: "工時設定", "新增支出", and "其他資料".
@@ -93,7 +99,7 @@ Primary responsibilities:
 
 Today must not become:
 
-- A history browser.
+- A history browser; Calendar remains responsible for locating historical dates.
 - A weekly or monthly analysis page.
 - A persistent settings page.
 - A place to create future records.
@@ -109,7 +115,7 @@ Target information order:
 
 ### 3.2 Calendar
 
-Purpose: locate a date and manage a past work record in context.
+Purpose: locate a date and read a past work record in context.
 
 Primary responsibilities:
 
@@ -117,11 +123,9 @@ Primary responsibilities:
 - Distinguish today, the selected date, recorded days, and days without records.
 - Show a concise monthly overview.
 - Open the selected date's Work Record Card below the calendar.
-- Create a missing past record.
-- Edit or delete an existing past record.
-- Keep past-record viewing and editing below the month grid through the five inline
-  sections Income, Work Time, Expenses, Other Data, and More Actions. The same
-  reusable form DOM is moved into that context; no full-page or Modal editor exists.
+- Provide a direct `新增紀錄` or `編輯這天` handoff to Today's single Daily Record
+  Editor for a valid past date.
+- Never mount, move, duplicate, or expose the Daily Record form inside Calendar.
 
 Calendar must not:
 
@@ -215,9 +219,9 @@ Every writable capability has exactly one Primary owner.
 | Add or edit today's expense | Primary | View | Link | Link | None |
 | Record today's shift/weather/note | Primary | View | Link | Link | None |
 | Locate a historical date | None | Primary | Link | Link | None |
-| Create a missing past record | None | Primary | None | None | None |
-| Edit a past record | None | Primary | Link | Link | None |
-| Delete a work record | None | Primary | Link | Link | None |
+| Create a missing past record | Primary | Link | None | None | None |
+| Edit a past record | Primary | Link | Link | Link | None |
+| Delete a work record | Primary | Link | Link | Link | None |
 | View weekly/monthly/platform analysis | View | View | Primary | View | None |
 | Generate structured operational insights | View | Link | View | Primary | None |
 | Configure platforms and input modes | None | None | None | None | Primary |
@@ -232,8 +236,10 @@ Every writable capability has exactly one Primary owner.
 
 ### 5.1 Legal creation paths
 
-- Today creates or updates only today's record.
-- Calendar creates or updates only past records.
+- Today creates or updates only the explicit valid `activeRecordDate`, which may be
+  today or a past date.
+- Calendar never creates, updates, or deletes records; it hands an exact valid date
+  to Today.
 - Future dates are read-only and cannot create records.
 - Reports and AI are read-only and may only link to Calendar for corrections.
 
