@@ -4,9 +4,12 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## PWA First-tap and Driver Labels — Release Candidate
+## PWA First-tap and Driver Labels — Production Released
 
-- Branch：`codex/pwa-first-tap-driver-labels-20260808`；base：`4924018`。
+- Branch：`codex/pwa-first-tap-driver-labels-20260808`；功能 commit：`4b52464`；
+  `main` merge commit：`f415e3fc118aba0836c033ccf9f3940b3522b853`。
+- Production：`https://driver-pay-app.vercel.app`；Vercel deployment：
+  `36n9EHH5rH8MPdxi4cNfZHi9yLAe`，狀態 `Deployment has completed`。
 - 根本原因不是日期或支出各自的控制元件，而是 Service Worker 在 App 已可操作後
   使用 `skipWaiting()`／`clients.claim()` 接管，`controllerchange` 再強制
   `window.location.reload()`；第一次觸控若剛好發生在此時會被重載中斷。
@@ -16,6 +19,8 @@
   展開狀態與資料來源不變。
 - App Shell：`driver-pay-pro-v32`。不改 `driverPayApp.v2`、WorkRecord、計算、
   Manifest、Supabase 或正式資料。
+- Production 390px：日期與新增支出第一次 click 均生效；Driver 四個短標題正確，
+  無水平 overflow，Console 0 error／warning。
 
 ## Driver Typography and Native Date First-tap — Released
 

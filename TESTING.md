@@ -1,6 +1,6 @@
 # Driver Pay Pro Testing
 
-## Candidate — PWA First-tap and Driver Labels
+## Released — PWA First-tap and Driver Labels
 
 - `npm test`：407/407 Passed。
 - 新增契約確認：頁面不註冊 `controllerchange` 強制 reload；Service Worker 不含
@@ -15,7 +15,12 @@
 - 320／375／390／393／430px：全部無水平 overflow。390px 乾淨啟動後，新增
   支出第一次 click 即展開；可見日期 input 第一次 click 即取得原生控制焦點，
   選日同步 Daily Record 與付款日期；Driver 標題正確。Console 0 error／warning。
-- App Shell candidate：`driver-pay-pro-v32`；Production smoke 尚待部署後核對。
+- Production：`https://driver-pay-app.vercel.app`，deployment
+  `36n9EHH5rH8MPdxi4cNfZHi9yLAe`，對應 merge commit `f415e3f`，App Shell
+  `driver-pay-pro-v32`。
+- Production 390px：新增支出第一次 click 即展開；日期第一次 click 即取得原生
+  date control；Driver 四個短標題正確；無水平 overflow，Console 0
+  error／warning。
 
 ## Released Hotfix — Driver Typography and Native Date First-tap
 

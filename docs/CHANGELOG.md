@@ -25,6 +25,9 @@
 - Driver 四個第一層名稱精簡為「常用／收支／資料／系統」，內容、順序、摘要
   與 disclosure 行為不變。
 - App Shell 更新為 `driver-pay-pro-v32`；資料 key、schema、計算與 Manifest 不變。
+- 功能 commit `4b52464` 已合併至 `main`；merge commit：
+  `f415e3fc118aba0836c033ccf9f3940b3522b853`。Vercel Production deployment
+  `36n9EHH5rH8MPdxi4cNfZHi9yLAe` 已完成。
 
 ### 2026-08-08 — Driver Typography and Native Date First-tap Hotfix
 

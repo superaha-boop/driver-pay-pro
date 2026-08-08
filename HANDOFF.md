@@ -4,9 +4,13 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
-## PWA First-tap and Driver Labels — Release Candidate
+## PWA First-tap and Driver Labels — Production Released
 
-- Branch：`codex/pwa-first-tap-driver-labels-20260808`；base：`4924018`。
+- Branch：`codex/pwa-first-tap-driver-labels-20260808`；base：`4924018`；功能
+  commit：`4b52464`；`main` merge commit：
+  `f415e3fc118aba0836c033ccf9f3940b3522b853`。
+- Production：`https://driver-pay-app.vercel.app`；Vercel deployment：
+  `36n9EHH5rH8MPdxi4cNfZHi9yLAe`，狀態成功。
 - 首次載入後日期與「新增支出」都可能需要第二次點擊的共同根因，已定位為舊
   Service Worker 更新流程：install `skipWaiting()`、activate `clients.claim()`，
   並由頁面的 `controllerchange` 強制 reload。這會在 UI 已可操作後中斷當下觸控。
@@ -18,6 +22,9 @@ GitHub：`superaha-boop/driver-pay-pro`
   `clients.claim()` 回歸。App Shell 更新為 `driver-pay-pro-v32`。
 - 不改 `driverPayApp.v2`、WorkRecord、canonical calculations、Manifest、
   Supabase 或正式資料。
+- Production 390px smoke：新增支出第一次 click 即展開；可見日期 input 第一次
+  click 即取得原生控制；Driver 標題為「常用／收支／資料／系統」；無水平
+  overflow，Console 0 error／warning。
 
 ## Driver Typography and Native Date First-tap — Production Released
 
