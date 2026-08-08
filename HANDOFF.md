@@ -4,11 +4,14 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
-## Active Record Date and Today KPI Hotfix — Ready for Preview QA
+## Active Record Date and Today KPI Hotfix — Production Released
 
-- Branch：`hotfix/active-record-date`；Production base：
-  `568688ffa0407b91b3f3268ff03151d5d8aff81f`。只允許 Push 此 Hotfix branch
-  與建立 Public Preview；Human QA 前不得 merge `main` 或 Production deploy。
+- 功能 Branch：`hotfix/active-record-date`；日期 Picker follow-up commit：
+  `fde37a1`。已合併至 `main`，merge commit：
+  `719dc9cecad85dbb7e164959938917edafb5211f`；GitHub 與 Vercel 狀態均成功。
+- Production：`https://driver-pay-app.vercel.app`；Vercel deployment：
+  `4cSAPvqZ4njbUZYSu6nhyGDFDQHR`，對應上述 merge commit，App Shell 為
+  `driver-pay-pro-v29`。
 - 根本原因一：舊 Calendar inline editor 曾把 Today 的實體
   `#sharedIncomePanel`／`#sharedDetailPanel` 搬進 `#recordEditorContent`；若關閉
   還原流程未完成，Today 只剩 KPI 與工作狀態。現在 Calendar 只透過精確日期
@@ -39,6 +42,9 @@ GitHub：`superaha-boop/driver-pay-pro`
   static Production validation 與 `git diff --check` 通過，lint 0 errors／10 個
   既有 warnings。320～430px 無 overflow，日期 input 完整位於卡片內，390px
   實際點擊由原生 Picker 接管，Console 0 error／warning。
+- Production smoke：正式站回傳 HTTP 200；日期卡在 390px 可切換至 2026/8/7，
+  日期標題與工時／新增支出／其他資料同步載入，`scrollWidth === clientWidth`
+  且 Console 0 error／warning。Manifest 有效，線上 Service Worker 已是 v29。
 - L1：release check Passed；402/402 Node、Today 141/141、Calendar 69/69、
   Reports 89/89、AI／Driver 各 25/25、Integration 16/16；lint 0 errors／10 個
   既有 warnings。L2 的精確日期 handoff、十輪切頁完整重繪與 Console 檢查均

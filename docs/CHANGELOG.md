@@ -16,7 +16,7 @@
 
 ## Unreleased
 
-### 2026-08-08 — Today Daily Record Native Date Picker Hotfix
+### 2026-08-08 — Today Daily Record Native Date Picker Hotfix Production Release
 
 - 修正每日紀錄日期卡只取得焦點、不開啟原生月曆的回歸；透明 date input 恢復
   native appearance，WebKit picker indicator 覆蓋完整日期卡。
@@ -24,6 +24,12 @@
   fallback。選定日期仍只更新 `activeRecordDate`，支出付款日期同步，未來日期禁止。
 - App Shell 更新為 `driver-pay-pro-v29`；資料 key、WorkRecord、計算、Manifest
   與 Supabase 不變。
+- 功能 commit `fde37a1` 已合併至 `main`；merge commit：
+  `719dc9cecad85dbb7e164959938917edafb5211f`。Vercel Production deployment
+  `4cSAPvqZ4njbUZYSu6nhyGDFDQHR` 已完成，正式網址：
+  `https://driver-pay-app.vercel.app`。
+- 正式站 390px 已驗證可切換過去日期並載入同日工時、支出與其他資料；HTTP、
+  Manifest、Service Worker v29、Console 與水平 overflow 檢查均通過。
 
 ### 2026-08-08 — Semantic Display Size and KPI Hierarchy
 

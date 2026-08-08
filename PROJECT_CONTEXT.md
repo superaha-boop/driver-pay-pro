@@ -4,11 +4,14 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## Active Record Date and Today KPI Production Hotfix — Human QA Candidate
+## Active Record Date and Today KPI Production Hotfix — Released
 
-- Hotfix branch：`hotfix/active-record-date`；base 是 Production `main`
-  `568688ffa0407b91b3f3268ff03151d5d8aff81f`。Human QA 前不合併 `main`、
-  不部署 Production。
+- Hotfix branch：`hotfix/active-record-date`；日期 Picker follow-up commit：
+  `fde37a1`。已合併至 `main`，merge commit：
+  `719dc9cecad85dbb7e164959938917edafb5211f`，並由既有 Vercel Git Integration
+  完成 Production deployment `4cSAPvqZ4njbUZYSu6nhyGDFDQHR`。
+- Production URL：`https://driver-pay-app.vercel.app`；App Shell：
+  `driver-pay-pro-v29`。
 - `activeRecordDate` 是 Today 唯一 session 日期來源。Calendar 維持唯讀，過去
   日期的「新增紀錄／編輯這天」把精確日期交給 Today 唯一 Daily Record Editor。
 - 所有 Today 收入、工時、支出、其他資料、復原與整日刪除均顯式綁定目標日期；
@@ -34,6 +37,9 @@
 - Follow-up 驗證為 403/403 Node、Today 142/142；320／375／390／393／430px
   原生 date input 均完整位於卡片內且無水平 overflow，390px 實際點擊可由原生
   Picker 接管，Console 0 error／warning。
+- Production 390px smoke 已確認可切換至過去日期，工時、支出與其他資料編輯區
+  跟隨同一日期載入；無水平 overflow，Console 0 error／warning，Manifest 與
+  Service Worker v29 正常。
 - Repository 無法直接讀取 iPhone Production origin 的 localStorage；2026-07-04、
   2026-08-02、2026-08-04 的正式資料稽核需 Product Owner 提供備份匯出或在裝置
   執行唯讀診斷。Hotfix 不會自動搬移、刪除或猜測修復任何紀錄。
