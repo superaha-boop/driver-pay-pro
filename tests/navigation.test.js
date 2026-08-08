@@ -133,8 +133,10 @@ test("Calendar 只讀摘要保留日期上下文", () => {
 test("切回 Today 會重繪衍生摘要但不重置輸入草稿", () => {
   const source = extractFunction("setView");
   assert.match(source, /if \(view === "today"\)/);
+  assert.match(source, /restoreSharedEditorToToday\(\)/);
+  assert.match(source, /renderInputs\(activeRecordDate\)/);
   assert.match(source, /renderStats\(\)/);
-  assert.match(source, /renderRecentIncome\(\)/);
+  assert.match(source, /renderRecentIncome\(activeRecordDate\)/);
   assert.match(source, /updateWorkControls\(\)/);
   assert.match(source, /updateQuickPreview\(\)/);
   assert.doesNotMatch(source, /resetForm\(\)/);

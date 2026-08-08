@@ -41,7 +41,7 @@ const renderStats = () => functionSource("renderStats");
 
 contract(1, "今日收入 Header 整排可點", () => {
   assert.match(renderStats(), /<button class="today-income-toggle" id="todayIncomeToggle"/);
-  assert.match(html, /\.today-income-toggle\s*\{[\s\S]*?width: 100%[\s\S]*?min-height: 64px/);
+  assert.match(html, /\.today-income-toggle\s*\{[\s\S]*?width: 100%[\s\S]*?min-height: 112px/);
 });
 contract(2, "收合時今日收入標題仍顯示", () => assert.match(renderStats(), /today-summary-label">今日收入/));
 contract(3, "收合時今日收入金額仍顯示", () => assert.match(renderStats(), /today-income">\$\{money\(todaySummary\.total\)\}/));
@@ -155,7 +155,7 @@ contract(43, "Calendar targeted tests 保留於 release gate", () => assert.matc
 contract(44, "Reports targeted tests 保留於 release gate", () => assert.match(packageJson.scripts["test:reports"], /reports/));
 contract(45, "AI targeted tests 保留於 release gate", () => assert.match(packageJson.scripts["test:ai"], /ai\.test\.js/));
 contract(46, "Integration targeted tests 保留於 release gate", () => assert.match(packageJson.scripts["test:integration"], /integration\.test\.js/));
-contract(47, "PWA App Shell 遞增至 v26 且 storage key 不變", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v26"/);
+contract(47, "PWA App Shell 遞增至 v27 且 storage key 不變", () => {
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v27"/);
   assert.match(html, /const storageKey = "driverPayApp\.v2"/);
 });

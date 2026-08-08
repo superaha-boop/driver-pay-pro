@@ -62,6 +62,10 @@
   --display-calendar-today-circle-size: 34px;
   --display-calendar-row-height: 70px;
   --display-nav-label-size: 14px;
+  --today-revenue-label-size: 15px;
+  --today-revenue-value-size: clamp(50px, 14vw, 64px);
+  --today-secondary-label-size: 13px;
+  --today-secondary-value-size: clamp(26px, 7vw, 32px);
   --display-body-line-height: 1.55;
   --display-secondary-color: var(--color-text-secondary);
 
@@ -164,6 +168,10 @@ html[data-display-size="comfort"] {
   --display-calendar-today-circle-size: 36px;
   --display-calendar-row-height: 76px;
   --display-nav-label-size: 15px;
+  --today-revenue-label-size: 17px;
+  --today-revenue-value-size: clamp(54px, 15vw, 68px);
+  --today-secondary-label-size: 15px;
+  --today-secondary-value-size: clamp(29px, 8vw, 36px);
   --display-body-line-height: 1.65;
   --display-secondary-color: #506159;
 }
@@ -189,6 +197,10 @@ html[data-display-size="large"] {
   --display-calendar-today-circle-size: 40px;
   --display-calendar-row-height: 84px;
   --display-nav-label-size: 17px;
+  --today-revenue-label-size: 19px;
+  --today-revenue-value-size: clamp(58px, 16vw, 72px);
+  --today-secondary-label-size: 17px;
+  --today-secondary-value-size: clamp(32px, 9vw, 40px);
   --display-body-line-height: 1.72;
   --display-secondary-color: #46534c;
 }

@@ -802,3 +802,21 @@
 - 全 App 時薪固定使用總收入除以有效工時，支出只影響淨收入與成本分析。
 - 週報與月報共用支出分類 selector；首頁目標進度只收合底部區域。
 - 本決策不改 `driverPayApp.v2`、WorkRecord schema、`expenseAllocations` 或 Supabase。
+
+## D-048
+
+- Date: 2026-08-04
+- Decision:
+  - Today 使用唯一 session-only `activeRecordDate`；所有收入、工時、支出、其他
+    資料、復原及整日刪除都必須顯式綁定並通過日期 guard，不 fallback 到今天。
+  - Calendar 維持唯讀，只將精確有效日期交給 Today 的唯一 Daily Record Editor；
+    不再搬動 Today 表單 DOM。
+  - 返回 Today 時完整恢復所有模組；Today KPI 使用左對齊最大收入、等寬工時／
+    時薪與簡潔時間格式，只有目標進度可收合；標準模式主／次 KPI 使用已驗證的
+    `50–64px`／`26–32px` 比例。
+  - Today 每日紀錄日期卡可直接選今天或過去日期，並更新同一個
+    `activeRecordDate`；付款日期同步，未來日期仍禁止。
+  - App Shell candidate 為 `driver-pay-pro-v27`；Human QA 前不 merge、不 Production。
+- Reason: 日期來源分歧與 Calendar DOM 搬移是跨日期寫入及半頁渲染的共同根因。
+- Impact: HTML／CSS／Service Worker、tests、docs；資料 key、schema、Manifest、
+  Supabase 與正式資料不變。

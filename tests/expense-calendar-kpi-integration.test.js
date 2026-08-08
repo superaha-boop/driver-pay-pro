@@ -136,26 +136,25 @@ test("Calendar 顯示精簡唯讀摘要，不提供分區編輯", () => {
   assert.doesNotMatch(source, /data-calendar-section|data-calendar-add|recordEditorSave|recordEditorDelete/);
 });
 
-test("Calendar 原地編輯重用 Today 的同一組表單 DOM", () => {
-  const move = extractFunction("moveSharedEditorToCalendar");
-  assert.match(move, /sharedIncomePanel/);
-  assert.match(move, /sharedDetailPanel/);
+test("Calendar 歷史修改導向 Today 且不搬動表單 DOM", () => {
+  const open = extractFunction("openRecordDateInToday");
+  assert.match(open, /setActiveRecordDate\(targetDate\)/);
+  assert.match(open, /navigateTo\("today"\)/);
+  assert.doesNotMatch(html, /function moveSharedEditorToCalendar/);
   assert.equal((html.match(/id="entryForm"/g) || []).length, 1);
   assert.equal((html.match(/id="detailForm"/g) || []).length, 1);
 });
 
-test("Calendar 只有支出區會顯示已記錄支出清單", () => {
-  assert.match(html, /\.calendar-expense-list\[hidden\][\s\S]*?display: none/);
-  const source = extractFunction("applyCalendarEditorSection");
-  assert.match(source, /calendarExpenseList\.hidden = section !== "expenses"/);
+test("Calendar 歷史日期只提供前往 Today 的入口", () => {
+  const source = extractFunction("renderCalendarRecordCard");
+  assert.match(source, /data-calendar-open-today-record/);
+  assert.doesNotMatch(source, /data-calendar-section|data-calendar-add/);
 });
 
-test("Calendar 切換主要編輯區不清除同一份草稿", () => {
+test("Legacy Calendar editor adapter 只轉交 Today", () => {
   const open = extractFunction("openCalendarRecordEditor");
-  assert.match(open, /recordEditorState\.activeSection = section/);
-  assert.match(open, /applyCalendarEditorSection\(\)/);
-  const sameDateBranch = open.slice(open.indexOf("recordEditorState.open &&"), open.indexOf("const existing"));
-  assert.doesNotMatch(sameDateBranch, /blankEntry|fillEntryFields/);
+  assert.match(open, /openRecordDateInToday\(normalizedDate\)/);
+  assert.doesNotMatch(open, /recordEditorState|blankEntry|fillEntryFields|append/);
 });
 
 test("Calendar 支出移除立即持久化並可復原", () => {
@@ -231,12 +230,12 @@ test("Calendar 時薪顯示沿用 canonical 品質門檻", () => {
   assert.match(source, /資料異常/);
 });
 
-test("Today KPI 主收入置中且次要 KPI 值在標籤上方", () => {
+test("Today KPI 主收入左對齊且次要 KPI 標籤在數字上方", () => {
   const source = extractFunction("renderStats");
   assert.match(source, /today-income-copy/);
-  assert.match(source, /<div><span>今日工時<\/span><strong>\$\{formatHours\(todaySummary\.hours\)\}<\/strong><\/div>/);
+  assert.match(source, /<div><span>今日工時<\/span><strong>\$\{formatWorkDurationCompact\(todaySummary\.durationMs \/ workTimeUnits\.minuteMs\)\}<\/strong><\/div>/);
   assert.match(source, /<div><span>\$\{todayHourlyLabel\}<\/span><strong>\$\{money\(todaySummary\.hourly\)\}<\/strong><\/div>/);
-  assert.match(html, /\.today-income-copy[\s\S]*?justify-items: center/);
+  assert.match(html, /\.today-income-copy[\s\S]*?justify-items: start/);
 });
 
 test("Today KPI 依工作狀態切換目前與平均時薪標籤", () => {
@@ -248,6 +247,6 @@ test("Today KPI 依工作狀態切換目前與平均時薪標籤", () => {
 test("資料 key、schema 與 App Shell 只做核准範圍變更", () => {
   assert.match(html, /const storageKey = "driverPayApp\.v2"/);
   assert.match(html, /expenseAllocations/);
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v26"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v27"/);
   assert.doesNotMatch(html, /supabase|migration/i);
 });

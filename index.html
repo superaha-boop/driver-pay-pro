@@ -1451,15 +1451,15 @@
     .today-income-toggle {
       width: 100%;
       min-width: 0;
-      min-height: 64px;
-      padding: 10px 16px 10px 18px;
+      min-height: 112px;
+      padding: 14px 16px 12px 18px;
       display: grid;
-      grid-template-columns: 24px minmax(0, 1fr) 24px;
-      align-items: center;
-      gap: 9px;
+      grid-template-columns: minmax(0, 1fr) 24px;
+      align-items: start;
+      gap: 10px;
       color: inherit;
       background: transparent;
-      text-align: center;
+      text-align: left;
     }
 
     .today-income-toggle:focus-visible {
@@ -1470,26 +1470,29 @@
     .today-summary-label {
       display: block;
       color: rgba(255, 255, 255, .72);
-      font-size: 15px;
+      font-size: var(--today-revenue-label-size);
       font-weight: 700;
+      line-height: 1.2;
       white-space: nowrap;
     }
 
     .today-income-copy {
       min-width: 0;
       display: grid;
-      justify-items: center;
-      gap: 4px;
+      justify-items: start;
+      align-content: start;
+      gap: 6px;
     }
 
     .today-income {
       min-width: 0;
       overflow: hidden;
-      font-size: clamp(34px, 10vw, 46px);
+      max-width: 100%;
+      font-size: var(--today-revenue-value-size);
       line-height: 1;
       letter-spacing: -.04em;
       font-variant-numeric: tabular-nums;
-      text-align: center;
+      text-align: left;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
@@ -1518,20 +1521,25 @@
     .today-secondary span {
       display: block;
       color: rgba(255, 255, 255, .7);
-      font-size: 13px;
+      font-size: var(--today-secondary-label-size);
       line-height: 1.2;
     }
 
     .today-secondary strong {
       display: block;
-      font-size: clamp(26px, 7vw, 32px);
+      max-width: 100%;
+      overflow: hidden;
+      font-size: var(--today-secondary-value-size);
       line-height: 1.12;
       letter-spacing: -.02em;
       font-variant-numeric: tabular-nums;
       margin-top: 4px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .today-income-toggle .app-chevron {
+      margin-top: 2px;
       transition: transform var(--motion-normal) var(--ease-standard);
     }
 
@@ -1545,6 +1553,53 @@
 
     .today-goal-details[hidden] {
       display: none;
+    }
+
+    .today-record-context {
+      min-width: 0;
+      padding: 12px 14px;
+      border: var(--border-default);
+      border-radius: var(--radius-md);
+      background: var(--color-warning-soft);
+      display: grid;
+      gap: 8px;
+    }
+
+    .today-record-context[hidden],
+    .today-record-date-status[hidden] {
+      display: none;
+    }
+
+    .today-record-context-copy {
+      min-width: 0;
+      display: grid;
+      gap: 2px;
+    }
+
+    .today-record-context-copy strong {
+      font-size: var(--font-size-card-title);
+      line-height: var(--line-height-title);
+    }
+
+    .today-record-context-copy span {
+      color: var(--color-text-secondary);
+      font-size: var(--display-secondary-size);
+    }
+
+    .today-record-context-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .today-record-date-status {
+      margin: 0;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      background: var(--color-danger-soft);
+      color: var(--color-danger);
+      font-size: var(--display-secondary-size);
+      font-weight: 600;
     }
 
     .today-goal {
@@ -4690,15 +4745,13 @@
       .work-status-row .home-heading > span,
       .panel-head h3,
       .section-heading,
-      .collapsible summary,
-      .today-summary-label
+      .collapsible summary
     ) {
       font-size: var(--display-body-size);
       line-height: var(--display-body-line-height);
     }
 
     html:not([data-display-size="standard"]) #view-today :is(
-      .today-secondary span,
       .today-goal-status,
       .income-unit
     ) {
@@ -5049,7 +5102,7 @@
       }
 
       .today-secondary strong {
-        font-size: 22px;
+        font-size: min(var(--today-secondary-value-size), 34px);
         white-space: nowrap;
       }
 
@@ -6305,6 +6358,9 @@
           </div>
         </section>
 
+        <section class="today-record-context" id="todayRecordContext" aria-live="polite" hidden></section>
+        <p class="today-record-date-status" id="todayRecordDateStatus" role="alert" aria-live="assertive" aria-atomic="true" hidden></p>
+
         <span id="sharedIncomePanelAnchor" hidden></span>
         <div class="panel" id="sharedIncomePanel">
           <div class="panel-head income-panel-head">
@@ -6420,7 +6476,7 @@
                 <div class="collapsible-body">
                   <section class="today-expense-manager" id="todayExpenseManager" aria-label="今日支出">
                     <button class="today-expense-toggle" id="todayExpenseToggle" type="button" aria-expanded="false" aria-controls="todayExpenseList">
-                      <span>今日支出</span>
+                      <span id="todayExpenseLabel">今日支出</span>
                       <span class="today-expense-toggle-meta">
                         <strong id="todayExpenseTotal">$0</strong>
                         <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
@@ -6489,13 +6545,14 @@
                 </div>
               </details>
               <button class="button save-button" type="submit">儲存詳細紀錄</button>
+              <button class="button danger active-record-delete hidden" id="deleteActiveRecord" type="button">刪除這天的全部紀錄</button>
             </form>
           </div>
         </div>
 
         <div class="panel" id="recentIncomePanel">
           <div class="panel-head">
-            <h3>Yoxi 今日明細</h3>
+            <h3 id="recentIncomeTitle">Yoxi 今日明細</h3>
           </div>
           <div class="panel-body recent-list" id="recentIncomeList"></div>
         </div>
@@ -6901,18 +6958,19 @@
     let pwaSetupError = null;
     const state = loadState();
     let activeView = "today";
+    let activeRecordDate = todayString();
     let reportsState = createReportsState(todayString());
     let reportsRefreshFrame = 0;
     let aiRefreshFrame = 0;
     let activeReportView = reportsState.activeReportTab;
     let overviewVisible = false;
-    let expenseDraft = createExpenseDraft();
+    let expenseDraft = createExpenseDraft(activeRecordDate);
     let expenseSaveInProgress = false;
     let expenseToastTimer = 0;
     let expenseUndoTimer = 0;
     let lastExpenseRemoval = null;
     let todayExpenseListOpen = false;
-    let todayExpenseListDate = todayString();
+    let todayExpenseListDate = activeRecordDate;
     let expenseShortcutStatus = "";
     let displaySizeStatus = "";
     let displaySizeStatusType = "";
@@ -6974,8 +7032,11 @@
       expenseInputs: document.getElementById("expenseInputs"),
       todayExpenseManager: document.getElementById("todayExpenseManager"),
       todayExpenseToggle: document.getElementById("todayExpenseToggle"),
+      todayExpenseLabel: document.getElementById("todayExpenseLabel"),
       todayExpenseTotal: document.getElementById("todayExpenseTotal"),
       todayExpenseList: document.getElementById("todayExpenseList"),
+      todayRecordContext: document.getElementById("todayRecordContext"),
+      todayRecordDateStatus: document.getElementById("todayRecordDateStatus"),
       entryDateCard: document.getElementById("entryDateCard"),
       appToast: document.getElementById("appToast"),
       entryForm: document.getElementById("entryForm"),
@@ -7032,6 +7093,7 @@
       entryId: document.getElementById("entryId"),
       formTitle: document.getElementById("formTitle"),
       cancelEdit: document.getElementById("cancelEdit"),
+      deleteActiveRecord: document.getElementById("deleteActiveRecord"),
       calendarGrid: document.getElementById("calendarGrid"),
       calendarMonthTitle: document.getElementById("calendarMonthTitle"),
       calendarPreviousMonth: document.getElementById("calendarPreviousMonth"),
@@ -7081,6 +7143,7 @@
       workActual: document.getElementById("workActual"),
       recentIncomeList: document.getElementById("recentIncomeList"),
       recentIncomePanel: document.getElementById("recentIncomePanel"),
+      recentIncomeTitle: document.getElementById("recentIncomeTitle"),
       sideNet: document.getElementById("sideNet"),
       sideGoal: document.getElementById("sideGoal"),
       heroNet: document.getElementById("heroNet"),
@@ -7399,6 +7462,100 @@
       if (dateOnlyParts(candidate)) return candidate;
       const safeFallback = String(fallback || "");
       return dateOnlyParts(safeFallback) ? safeFallback : "";
+    }
+
+    const activeRecordDateErrorMessage = "日期狀態異常，未儲存。請重新選擇日期。";
+
+    function isEditableRecordDate(value) {
+      const normalized = normalizeDateKey(value);
+      return Boolean(normalized && normalized <= todayString());
+    }
+
+    function setActiveRecordStatus(message = "") {
+      if (!els.todayRecordDateStatus) return;
+      els.todayRecordDateStatus.textContent = message;
+      els.todayRecordDateStatus.hidden = !message;
+    }
+
+    function renderActiveRecordContext() {
+      if (!els.todayRecordContext) return;
+      const historical = activeRecordDate !== todayString();
+      els.todayRecordContext.hidden = !historical;
+      els.todayRecordContext.innerHTML = historical ? `
+        <div class="today-record-context-copy">
+          <strong>正在編輯歷史紀錄</strong>
+          <span>${escapeHtml(formatFullDate(activeRecordDate))}</span>
+        </div>
+        <div class="today-record-context-actions">
+          <button class="ds-button ds-button--secondary" type="button" data-active-record-today>回到今天</button>
+          <button class="ds-button ds-button--text" type="button" data-active-record-calendar>返回月曆</button>
+        </div>
+      ` : "";
+    }
+
+    function activeRecordBindingSnapshot(targetDate, options = {}) {
+      const target = normalizeDateKey(targetDate);
+      const displayedDate = normalizeDateKey(document.getElementById("date")?.value);
+      const expenseDate = options.expenseDate === undefined
+        ? ""
+        : normalizeDateKey(options.expenseDate);
+      const recordId = String(options.recordId || els.entryId?.value || "");
+      const boundRecord = recordId ? state.entries.find(entry => entry.id === recordId) : null;
+      return {
+        target,
+        activeRecordDate,
+        displayedDate,
+        expenseDate,
+        boundRecordDate: normalizeDateKey(boundRecord?.date),
+        valid: Boolean(
+          target
+          && isEditableRecordDate(target)
+          && target === activeRecordDate
+          && displayedDate === activeRecordDate
+          && (options.expenseDate === undefined || expenseDate === activeRecordDate)
+          && (!boundRecord || boundRecord.date === activeRecordDate)
+        )
+      };
+    }
+
+    function validateActiveRecordWrite(targetDate, options = {}) {
+      const binding = activeRecordBindingSnapshot(targetDate, options);
+      if (binding.valid) return true;
+      setActiveRecordStatus(activeRecordDateErrorMessage);
+      setTodaySaveStatus(activeRecordDateErrorMessage, "error");
+      if (options.expense) {
+        expenseDraft.status = activeRecordDateErrorMessage;
+        expenseDraft.statusType = "error";
+        renderExpenseForm();
+      }
+      console.error("Daily Record 日期綁定驗證失敗，已阻止寫入。", binding);
+      return false;
+    }
+
+    function setActiveRecordDate(dateKey, options = {}) {
+      const target = normalizeDateKey(dateKey);
+      if (!isEditableRecordDate(target)) {
+        setActiveRecordStatus(activeRecordDateErrorMessage);
+        console.error("無法設定 Daily Record 日期。", { requestedDate: dateKey, activeRecordDate });
+        return false;
+      }
+      window.clearTimeout(todayWorkSaveTimer);
+      todayWorkSaveTimer = 0;
+      pendingTodayRecordSave = null;
+      lastExpenseRemoval = null;
+      window.clearTimeout(expenseUndoTimer);
+      lastIncomeAddition = null;
+      window.clearTimeout(incomeUndoTimer);
+      activeRecordDate = target;
+      todayExpenseListDate = target;
+      todayExpenseListOpen = false;
+      expenseDraft = createExpenseDraft(target);
+      weatherManualOverride = false;
+      setWeatherAutoStatus("");
+      setActiveRecordStatus("");
+      resetForm(target, { preserveDisclosure: Boolean(options.preserveDisclosure) });
+      renderActiveRecordContext();
+      return true;
     }
 
     function monthKeyFromDate(dateKey) {
@@ -7863,6 +8020,14 @@
       return minutePart ? `${hours} 小時 ${minutePart} 分` : `${hours} 小時`;
     }
 
+    function formatWorkDurationCompact(totalMinutes) {
+      const minutes = Math.max(0, Math.round(Number(totalMinutes || 0)));
+      if (minutes < 60) return `${minutes}分鐘`;
+      const hours = Math.floor(minutes / 60);
+      const remainder = minutes % 60;
+      return remainder ? `${hours}小時${remainder}分鐘` : `${hours}小時`;
+    }
+
     function clockWorkDurationMs(entry) {
       const result = validateWorkTimeRange(entry);
       if (!result.valid || !result.complete) return 0;
@@ -8019,8 +8184,7 @@
     }
 
     function selectedIncomeDate() {
-      const selectedDate = document.getElementById("date")?.value;
-      return /^\d{4}-\d{2}-\d{2}$/.test(selectedDate || "") ? selectedDate : todayString();
+      return normalizeDateKey(activeRecordDate);
     }
 
     function ensureEntryForDate(date = todayString()) {
@@ -8034,6 +8198,48 @@
       entry.expenseNotes ||= {};
       return entry;
     }
+
+    function auditRecordDates(dateKeys = ["2026-07-04", "2026-08-02", "2026-08-04"]) {
+      const requested = [...new Set((Array.isArray(dateKeys) ? dateKeys : []).map(normalizeDateKey).filter(Boolean))];
+      return requested.map(date => {
+        const records = state.entries.filter(entry => entry?.date === date);
+        return {
+          date,
+          exists: records.length > 0,
+          duplicateCount: Math.max(0, records.length - 1),
+          records: records.map(entry => {
+            const expenseCategories = Object.keys(entry.expenses || {});
+            const allocationCategories = Object.keys(entry.expenseAllocations || {});
+            return {
+              id: entry.id,
+              incomes: { ...(entry.incomes || {}) },
+              work: {
+                startTime: entry.startTime || "",
+                endTime: entry.endTime || "",
+                breakMinutes: Number(entry.breakMinutes || 0),
+                manualHours: Number(entry.manualHours || 0)
+              },
+              expenses: { ...(entry.expenses || {}) },
+              expenseAllocations: cloneStatePayload(entry.expenseAllocations || {}),
+              orphanAllocations: allocationCategories.filter(category => !expenseCategories.includes(category)),
+              incomeRecordDateMismatches: (entry.incomeRecords || [])
+                .filter(record => normalizeDateKey(record?.date) && record.date !== date)
+                .map(record => ({ id: record.id, date: record.date, platform: record.platform })),
+              note: String(entry.note || ""),
+              other: {
+                shift: entry.shift || "",
+                tips: Number(entry.tips || 0),
+                orders: Number(entry.orders || 0),
+                km: Number(entry.km || 0),
+                weather: entry.weather || ""
+              }
+            };
+          })
+        };
+      });
+    }
+
+    window.auditDriverPayRecords = auditRecordDates;
 
     function orderedHomePlatforms() {
       const defaultOrder = new Map(defaultPlatforms.map((name, index) => [name, index]));
@@ -8693,7 +8899,7 @@
       return includeToday && dateString === todayString() ? `今天・${date}` : date;
     }
 
-    function dateCardMarkup({ id, value, label, required = false, inlineToday = false, compactMobile = false }) {
+    function dateCardMarkup({ id, value, label, required = false, inlineToday = false, compactMobile = false, locked = false, max = "" }) {
       const isToday = value === todayString();
       const displayValue = inlineToday && isToday ? `今天・${formatFullDate(value)}` : formatFullDate(value);
       return `
@@ -8702,14 +8908,21 @@
             <strong class="date-card-value${compactMobile ? " compact-mobile-date" : ""}" data-date-display${inlineToday ? " data-date-inline" : ""}${compactMobile ? ` data-short-date="${escapeAttr(formatShortDate(value, inlineToday))}"` : ""}>${escapeHtml(displayValue)}</strong>
             ${inlineToday ? "" : `<small class="date-card-today" data-date-today${isToday ? "" : " hidden"}>今天</small>`}
           </span>
-          <input type="date" id="${escapeAttr(id)}" value="${escapeAttr(value)}" aria-label="${escapeAttr(label)}"${required ? " required" : ""}>
+          <input type="date" id="${escapeAttr(id)}" value="${escapeAttr(value)}" aria-label="${escapeAttr(label)}"${required ? " required" : ""}${max ? ` max="${escapeAttr(max)}"` : ""}${locked ? " disabled aria-readonly=\"true\"" : ""}>
         </label>
       `;
     }
 
-    function renderEntryDateCard(value = todayString()) {
+    function renderEntryDateCard(value = activeRecordDate) {
       if (!els.entryDateCard) return;
-      els.entryDateCard.innerHTML = dateCardMarkup({ id: "date", value, label: "日期", required: true, inlineToday: true });
+      els.entryDateCard.innerHTML = dateCardMarkup({
+        id: "date",
+        value,
+        label: "選擇要修改的每日紀錄日期",
+        required: true,
+        inlineToday: true,
+        max: todayString()
+      });
     }
 
     function syncDateCardDisplay(input) {
@@ -9043,7 +9256,7 @@
           ${expenseDraft.mode === "recurring" ? recurringExpenseMarkup(amount) : ""}
           ${expenseDraft.mode === "allocated" ? allocatedExpenseMarkup(amount, months) : ""}
           <div class="expense-date-note-row">
-            ${dateCardMarkup({ id: "smartExpenseDate", value: expenseDraft.paymentDate, label: "付款日期", inlineToday: true, compactMobile: true })}
+            ${dateCardMarkup({ id: "smartExpenseDate", value: activeRecordDate, label: "付款日期，與每日紀錄日期相同", inlineToday: true, compactMobile: true, locked: true })}
             <button class="expense-note-toggle" type="button" data-expense-toggle-note aria-expanded="${String(expenseDraft.noteOpen)}">${expenseDraft.noteOpen ? "收起備註" : expenseDraft.note ? "備註 ✓" : "＋備註"}</button>
           </div>
           <div class="expense-note-area">
@@ -9060,9 +9273,13 @@
       `;
     }
 
-    function renderTodayExpenseList(date = todayString()) {
+    function renderTodayExpenseList(date = activeRecordDate) {
       if (!els.todayExpenseManager || !els.todayExpenseList) return;
-      const safeDate = normalizeDateKey(date, todayString());
+      const safeDate = normalizeDateKey(date);
+      if (!safeDate || safeDate !== activeRecordDate) {
+        els.todayExpenseManager.hidden = true;
+        return;
+      }
       if (todayExpenseListDate !== safeDate) {
         todayExpenseListDate = safeDate;
         todayExpenseListOpen = false;
@@ -9079,10 +9296,11 @@
         .filter(item => item.amount > 0);
       const total = expenses.reduce((sum, item) => sum + item.amount, 0);
       els.todayExpenseTotal.textContent = `${expenses.length} 筆・${money(total)}`;
+      els.todayExpenseLabel.textContent = safeDate === todayString() ? "今日支出" : `${formatFullDate(safeDate)}支出`;
       els.todayExpenseToggle.setAttribute("aria-expanded", String(todayExpenseListOpen));
       els.todayExpenseToggle.setAttribute(
         "aria-label",
-        `今日支出 ${expenses.length} 筆・${money(total)}，${todayExpenseListOpen ? "已展開，按兩下收合" : "已收合，按兩下展開"}`
+        `${safeDate === todayString() ? "今日" : formatFullDate(safeDate)}支出 ${expenses.length} 筆・${money(total)}，${todayExpenseListOpen ? "已展開，按兩下收合" : "已收合，按兩下展開"}`
       );
       els.todayExpenseList.hidden = !todayExpenseListOpen;
       els.todayExpenseList.innerHTML = expenses.length ? expenses.map(item => `
@@ -9096,11 +9314,11 @@
             <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 15H6L5 6M10 11v6M14 11v6"></path></svg>
           </button>
         </div>
-      `).join("") : `<p class="today-expense-empty">今天尚未新增支出</p>`;
+      `).join("") : `<p class="today-expense-empty">${safeDate === todayString() ? "今天" : "這天"}尚未新增支出</p>`;
     }
 
-    function removeTodayExpense(category) {
-      const date = todayString();
+    function removeTodayExpense(date, category) {
+      if (!validateActiveRecordWrite(date)) return false;
       const current = entryForDate(date);
       if (!current || !Object.prototype.hasOwnProperty.call(current.expenses || {}, category)) return false;
       const amount = Number(current.expenses[category] || 0);
@@ -9136,7 +9354,7 @@
       showToast(`已移除 ${category} ${money(amount)}`, {
         actionLabel: "復原",
         duration: 5000,
-        onAction: undoLastExpenseRemoval,
+        onAction: () => undoLastExpenseRemoval(date),
         onExpire: () => {
           if (lastExpenseRemoval === action) lastExpenseRemoval = null;
         }
@@ -9144,12 +9362,13 @@
       return true;
     }
 
-    function undoLastExpenseRemoval() {
+    function undoLastExpenseRemoval(date) {
       const action = lastExpenseRemoval;
       if (!action) {
         showToast("已無可復原的支出");
         return false;
       }
+      if (!validateActiveRecordWrite(date) || action.date !== date) return false;
       const current = state.entries.find(entry => entry.id === action.entryId && entry.date === action.date);
       if (!current || Object.prototype.hasOwnProperty.call(current.expenses || {}, action.category)) {
         window.clearTimeout(expenseUndoTimer);
@@ -9250,7 +9469,7 @@
       showToast(`已移除 ${category} ${money(action.amount)}`, {
         actionLabel: "復原",
         duration: 5000,
-        onAction: undoLastExpenseRemoval,
+        onAction: () => undoLastExpenseRemoval(action.date),
         onExpire: () => {
           if (lastExpenseRemoval === action) lastExpenseRemoval = null;
         }
@@ -9372,10 +9591,11 @@
       window.setTimeout(() => button?.classList.remove("selected"), 450);
     }
 
-    function saveSmartExpense() {
+    function saveSmartExpense(targetDate) {
       const category = String(expenseDraft.category || "").trim();
       const amount = Number(expenseDraft.amount);
       const paymentDate = expenseDraft.paymentDate;
+      if (!validateActiveRecordWrite(targetDate, { expenseDate: paymentDate, expense: true })) return false;
       if (!category) {
         expenseDraft.status = "請先選擇支出類別。";
         expenseDraft.statusType = "error";
@@ -9496,7 +9716,7 @@
       showToast(`已儲存 ${category} ${money(amount)}`);
     }
 
-    function renderIncomeInputs(date = selectedIncomeDate()) {
+    function renderIncomeInputs(date = activeRecordDate) {
       const entry = recordEditorState.open && recordEditorState.date === date
         ? recordEditorState.draft
         : entryForDate(date);
@@ -9520,10 +9740,10 @@
       updateRateHints();
     }
 
-    function renderInputs() {
-      renderIncomeInputs();
+    function renderInputs(date = activeRecordDate) {
+      renderIncomeInputs(date);
       renderExpenseForm();
-      renderTodayExpenseList();
+      renderTodayExpenseList(date);
     }
 
     function escapeHtml(value) {
@@ -9561,7 +9781,6 @@
           <button class="today-income-toggle" id="todayIncomeToggle" type="button"
             aria-expanded="${String(todayGoalExpanded)}" aria-controls="todayGoalDetails"
             aria-label="今日目標進度，${todayGoalExpanded ? "已展開，按兩下收合" : "已收合，按兩下展開"}">
-            <span aria-hidden="true"></span>
             <span class="today-income-copy">
               <span class="today-summary-label">今日收入</span>
               <strong class="today-income">${money(todaySummary.total)}</strong>
@@ -9571,7 +9790,7 @@
             </svg>
           </button>
           <div class="today-secondary" aria-label="今日工時與時薪">
-            <div><span>今日工時</span><strong>${formatHours(todaySummary.hours)}</strong></div>
+            <div><span>今日工時</span><strong>${formatWorkDurationCompact(todaySummary.durationMs / workTimeUnits.minuteMs)}</strong></div>
             <div><span>${todayHourlyLabel}</span><strong>${money(todaySummary.hourly)}</strong></div>
           </div>
           <div class="today-goal-details" id="todayGoalDetails"${todayGoalExpanded ? "" : " hidden"}>
@@ -9849,7 +10068,9 @@
             : "這裡只顯示歷史資料；請回到今天輸入或修改紀錄。";
         const action = isToday
           ? `<button class="ds-button ds-button--primary" type="button" data-calendar-go-today>前往今天</button>`
-          : "";
+          : isFuture
+            ? ""
+            : `<button class="ds-button ds-button--primary" type="button" data-calendar-open-today-record="${escapeAttr(selectedDate)}">新增紀錄</button>`;
         els.calendarRecordContent.innerHTML = `
           ${calendarRecordHeader()}
           <div class="ds-empty-state ds-empty-state--compact">
@@ -9883,12 +10104,12 @@
         weather ? `<div class="calendar-support-row"><span>天氣</span><strong>${escapeHtml(weather)}</strong></div>` : "",
         note ? `<div class="calendar-note">${escapeHtml(note)}</div>` : ""
       ].filter(Boolean).join("");
-      const goToday = selectedDate !== calendarState.today
-        ? `<button class="ds-button ds-button--text" type="button" data-calendar-go-today>前往今天</button>`
+      const editInToday = selectedDate !== calendarState.today
+        ? `<button class="ds-button ds-button--text" type="button" data-calendar-open-today-record="${escapeAttr(selectedDate)}">編輯這天</button>`
         : "";
 
       els.calendarRecordContent.innerHTML = `
-        ${calendarRecordHeader(goToday)}
+        ${calendarRecordHeader(editInToday)}
         <div class="calendar-readonly-summary" aria-label="工作紀錄摘要">
           <section class="calendar-record-section calendar-readonly-section" aria-labelledby="calendarIncomeSummaryTitle">
             <h4 class="ds-card-title" id="calendarIncomeSummaryTitle">收入</h4>
@@ -10064,6 +10285,18 @@
         displayedMonth: calendarState.displayedMonth,
         source: String(options.source || "")
       };
+    }
+
+    function openRecordDateInToday(dateKey) {
+      const targetDate = normalizeDateKey(dateKey);
+      if (!isEditableRecordDate(targetDate)) {
+        announceCalendar("這個日期無法編輯");
+        return false;
+      }
+      if (recordEditorState.open) finishRecordEditorClose({ restoreFocus: false, render: false });
+      if (!setActiveRecordDate(targetDate)) return false;
+      navigateTo("today");
+      return true;
     }
 
     function retryCalendarRead() {
@@ -11277,12 +11510,15 @@
       return `<span class="chip">${escapeHtml(name)}<button title="移除" data-remove-${type}="${escapeAttr(name)}">×</button></span>`;
     }
 
-    function renderRecentIncome(date = selectedIncomeDate()) {
+    function renderRecentIncome(date = activeRecordDate) {
       const entry = entryForDate(date);
       const records = Array.isArray(entry?.incomeRecords)
         ? entry.incomeRecords.filter(record => String(record.platform).toLowerCase() === "yoxi").slice().reverse()
         : [];
       els.recentIncomePanel.classList.toggle("hidden", !records.length);
+      els.recentIncomeTitle.textContent = date === todayString()
+        ? "Yoxi 今日明細"
+        : `Yoxi ${formatFullDate(date)}明細`;
       if (!records.length) {
         els.recentIncomeList.innerHTML = `<div class="empty compact">新增 Yoxi 收入後，每一筆紀錄會顯示在這裡。</div>`;
         return;
@@ -11359,7 +11595,7 @@
     }
 
     function updateWorkControls() {
-      const entry = entryForDate();
+      const entry = entryForDate(todayString());
       const status = workStatus(entry);
       const details = sessionDetails(entry);
       const labels = {
@@ -11404,7 +11640,7 @@
     }
 
     function weatherTargetDate() {
-      return normalizeDateKey(document.getElementById("date")?.value) || todayString();
+      return normalizeDateKey(activeRecordDate);
     }
 
     function saveWeatherAutoConsent(value) {
@@ -11455,7 +11691,7 @@
       weatherDetectionAttemptedDates.add(date);
       if (weatherSuggestionCache?.date === date && weatherSuggestionCache.expiresAt > Date.now()) {
         if (!weatherManualOverride || manual) {
-          updateCurrentWeather(weatherSuggestionCache.weather, { source: "auto" });
+          updateCurrentWeather(date, weatherSuggestionCache.weather, { source: "auto" });
           setWeatherAutoStatus(`已使用最近偵測：${weatherSuggestionCache.weather}`);
         }
         return true;
@@ -11479,7 +11715,7 @@
             expiresAt: Date.now() + WEATHER_CACHE_TTL_MS
           };
           if (weatherTargetDate() !== date || weatherManualOverride && !manual) return false;
-          updateCurrentWeather(weather, { source: "auto" });
+          updateCurrentWeather(date, weather, { source: "auto" });
           setWeatherAutoStatus(`已自動偵測：${weather}`);
           return true;
         } catch (error) {
@@ -11516,8 +11752,9 @@
       window.requestAnimationFrame(() => els.weatherPermissionLater.focus());
     }
 
-    function updateCurrentWeather(weather, options = {}) {
+    function updateCurrentWeather(targetDate, weather, options = {}) {
       if (!weather) return;
+      if (!validateActiveRecordWrite(targetDate)) return false;
       const source = options.source === "auto" ? "auto" : "manual";
       if (source === "manual") {
         weatherManualOverride = true;
@@ -11530,7 +11767,7 @@
         markRecordEditorDirty();
         return;
       }
-      const date = document.getElementById("date").value || todayString();
+      const date = targetDate;
       const entry = ensureEntryForDate(date);
       const previous = entry.weather || "";
       entry.weatherHistory = Array.isArray(entry.weatherHistory) ? entry.weatherHistory : [];
@@ -11553,8 +11790,9 @@
       renderEntries();
     }
 
-    function updateCurrentShift(shift) {
+    function updateCurrentShift(targetDate, shift) {
       if (!shift) return;
+      if (!validateActiveRecordWrite(targetDate)) return false;
       if (recordEditorState.open) {
         recordEditorState.draft.shift = shift;
         document.getElementById("shift").value = shift;
@@ -11562,7 +11800,7 @@
         markRecordEditorDirty();
         return;
       }
-      const date = document.getElementById("date").value || todayString();
+      const date = targetDate;
       const entry = ensureEntryForDate(date);
       entry.shift = shift;
       document.getElementById("shift").value = shift;
@@ -11589,10 +11827,12 @@
     }
 
     function refreshToday() {
-      renderInputs();
+      renderActiveRecordContext();
+      renderEntryDateCard(activeRecordDate);
+      renderInputs(activeRecordDate);
       renderStats();
       updateDailyGoal();
-      renderRecentIncome();
+      renderRecentIncome(activeRecordDate);
       updateWorkControls();
       renderEntries();
       renderWeeks();
@@ -11602,7 +11842,9 @@
     }
 
     function renderAll() {
-      renderInputs();
+      renderActiveRecordContext();
+      renderEntryDateCard(activeRecordDate);
+      renderInputs(activeRecordDate);
       renderStats();
       renderEntries();
       renderWeeks();
@@ -11610,7 +11852,7 @@
       renderPlatformReport();
       renderAiAnalysis();
       renderSettings();
-      renderRecentIncome();
+      renderRecentIncome(activeRecordDate);
       updateWorkControls();
       updateQuickPreview();
     }
@@ -11811,10 +12053,18 @@
       document.body.dataset.activeView = view;
       document.getElementById("newEntry").classList.toggle("hidden", view === "today");
       if (view === "today") {
-        // Repaint the Today-owned summaries when returning from another view.
-        // Keep the active form draft intact; only derived/read-only regions refresh.
+        if (recordEditorState.open) finishRecordEditorClose({ restoreFocus: false, render: false });
+        restoreSharedEditorToToday();
+        els.sharedIncomePanel.classList.remove("hidden");
+        els.sharedDetailPanel.classList.remove("hidden");
+        [els.workTimeSection, els.expenseSection, els.otherDataSection].forEach(section => {
+          section.hidden = false;
+        });
+        renderActiveRecordContext();
+        renderEntryDateCard(activeRecordDate);
+        renderInputs(activeRecordDate);
         renderStats();
-        renderRecentIncome();
+        renderRecentIncome(activeRecordDate);
         updateWorkControls();
         updateQuickPreview();
       }
@@ -11968,7 +12218,7 @@
         markRecordEditorDirty();
         return true;
       }
-      if (saveTodayWorkTimeFromForm()) return true;
+      if (saveTodayWorkTimeFromForm(activeRecordDate)) return true;
 
       document.getElementById("startTime").value = previousValues.startTime;
       document.getElementById("endTime").value = previousValues.endTime;
@@ -12017,30 +12267,40 @@
       els.todaySaveStatus.dataset.status = type || (message ? "pending" : "idle");
     }
 
-    function resetForm() {
+    function resetForm(date = activeRecordDate, options = {}) {
+      const targetDate = normalizeDateKey(date);
+      if (!targetDate || targetDate !== activeRecordDate) return false;
       els.entryForm.reset();
       els.detailForm.reset();
       els.entryId.value = "";
-      document.getElementById("date").value = todayString();
+      renderEntryDateCard(targetDate);
+      document.getElementById("date").value = targetDate;
       syncDateCardDisplay(document.getElementById("date"));
-      renderIncomeInputs(todayString());
+      renderIncomeInputs(targetDate);
       document.getElementById("breakMinutes").value = 0;
       document.getElementById("tips").value = 0;
       document.getElementById("orders").value = 0;
       document.getElementById("km").value = 0;
       document.querySelectorAll("[data-income]").forEach(input => input.value = 0);
-      expenseDraft = createExpenseDraft(todayString());
+      expenseDraft = createExpenseDraft(targetDate);
       renderExpenseForm();
-      const todayEntry = state.entries.find(entry => entry.date === todayString());
-      if (todayEntry) {
-        fillEntryFields(todayEntry);
+      const activeEntry = state.entries.find(entry => entry.date === targetDate);
+      els.deleteActiveRecord.classList.toggle("hidden", !activeEntry);
+      if (activeEntry) {
+        fillEntryFields(activeEntry, targetDate);
       } else {
         setWorkTimeInputMode("clock", {});
       }
-      els.formTitle.textContent = "每日紀錄";
+      els.formTitle.textContent = targetDate === todayString()
+        ? "每日紀錄"
+        : `每日紀錄・${formatFullDate(targetDate)}`;
       els.cancelEdit.classList.add("hidden");
-      document.querySelectorAll("#detailForm details").forEach(details => details.open = false);
-      els.workTimeSection.open = Boolean(state.settings.timeDetailsOpen);
+      if (!options.preserveDisclosure) {
+        document.querySelectorAll("#detailForm details").forEach(details => details.open = false);
+      }
+      els.workTimeSection.open = options.preserveDisclosure
+        ? els.workTimeSection.open
+        : Boolean(state.settings.timeDetailsOpen);
       els.workTimeToggle.setAttribute("aria-expanded", String(els.workTimeSection.open));
       els.expenseSectionToggle.setAttribute("aria-expanded", "false");
       els.otherDataToggle.setAttribute("aria-expanded", "false");
@@ -12050,12 +12310,20 @@
       weatherManualOverride = false;
       setWeatherAutoStatus("");
       syncDetailChoiceButtons();
+      renderTodayExpenseList(targetDate);
+      renderRecentIncome(targetDate);
       updateQuickPreview();
+      return true;
     }
 
-    function fillEntryFields(entry) {
+    function fillEntryFields(entry, targetDate = activeRecordDate) {
+      if (!entry || entry.date !== targetDate || targetDate !== activeRecordDate) {
+        setActiveRecordStatus(activeRecordDateErrorMessage);
+        return false;
+      }
       els.entryId.value = entry.id;
-      document.getElementById("date").value = entry.date;
+      renderEntryDateCard(targetDate);
+      document.getElementById("date").value = targetDate;
       syncDateCardDisplay(document.getElementById("date"));
       renderIncomeInputs(entry.date);
       document.getElementById("shift").value = entry.shift || "早班";
@@ -12075,13 +12343,14 @@
       expenseDraft = createExpenseDraft(entry.date);
       renderExpenseForm();
       syncDetailChoiceButtons();
+      return true;
     }
 
     function editEntry(id) {
       const entry = state.entries.find(item => item.id === id);
       if (!entry) return;
+      if (!setActiveRecordDate(entry.date)) return;
       navigateTo("today");
-      fillEntryFields(entry);
       setManualEntryExpanded(true);
       const detailSections = document.querySelectorAll("#detailForm details");
       detailSections.forEach(details => details.open = false);
@@ -12098,25 +12367,30 @@
       els.workTimeToggle.setAttribute("aria-expanded", String(detailSections[0].open));
       els.expenseSectionToggle.setAttribute("aria-expanded", String(detailSections[1].open));
       els.otherDataToggle.setAttribute("aria-expanded", String(detailSections[2].open));
-      els.formTitle.textContent = "編輯紀錄";
+      els.formTitle.textContent = `每日紀錄・${formatFullDate(activeRecordDate)}`;
       els.cancelEdit.classList.remove("hidden");
       updateQuickPreview();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function deleteEntry(id) {
-      if (!confirm("確定要刪除這筆紀錄嗎？")) return;
-      state.entries = state.entries.filter(entry => entry.id !== id);
-      saveState();
+    function deleteEntry(targetDate, id) {
+      if (!validateActiveRecordWrite(targetDate, { recordId: id })) return false;
+      if (!confirm(`確定要刪除 ${formatFullDate(targetDate)} 的全部紀錄嗎？`)) return false;
+      const nextState = cloneStatePayload(state);
+      nextState.entries = nextState.entries.filter(entry => !(entry.id === id && entry.date === targetDate));
+      if (!persistStatePayload(nextState, { updateMemory: true })) return false;
+      notifyRecordChanged(targetDate, "today-delete");
       renderAll();
+      resetForm(targetDate);
+      return true;
     }
 
-    function formData() {
+    function formData(targetDate = activeRecordDate) {
       const manualWorkMinutes = syncManualWorkTimeParts();
       const incomes = {};
       document.querySelectorAll("[data-income]").forEach(input => incomes[input.dataset.income] = Number(input.value || 0));
       const id = els.entryId.value || makeId();
-      const date = document.getElementById("date").value;
+      const date = normalizeDateKey(targetDate);
       const existingEntry = recordEditorState.open
         ? recordEditorState.draft
         : state.entries.find(item => item.id === id) || state.entries.find(item => item.date === date);
@@ -12185,8 +12459,9 @@
       return "";
     }
 
-    function saveTodayWorkTimeFromForm() {
+    function saveTodayWorkTimeFromForm(targetDate) {
       if (recordEditorState.open) return false;
+      if (!validateActiveRecordWrite(targetDate)) return false;
       window.clearTimeout(todayWorkSaveTimer);
       todayWorkSaveTimer = 0;
       const manualPartsError = validateManualWorkTimeParts();
@@ -12194,7 +12469,7 @@
         setTodaySaveStatus(manualPartsError, "error");
         return false;
       }
-      const draft = formData();
+      const draft = formData(targetDate);
       const previous = state.entries.find(item => item.id === draft.id)
         || state.entries.find(item => item.date === draft.date);
       const hasWorkValue = Boolean(draft.startTime || draft.endTime || draft.breakMinutes || draft.manualHours);
@@ -12246,11 +12521,12 @@
       return true;
     }
 
-    function scheduleTodayWorkTimeSave() {
+    function scheduleTodayWorkTimeSave(targetDate) {
       if (recordEditorState.open) return;
+      if (!validateActiveRecordWrite(targetDate)) return;
       window.clearTimeout(todayWorkSaveTimer);
       setTodaySaveStatus("儲存中…", "saving");
-      todayWorkSaveTimer = window.setTimeout(saveTodayWorkTimeFromForm, 350);
+      todayWorkSaveTimer = window.setTimeout(() => saveTodayWorkTimeFromForm(targetDate), 350);
     }
 
     function showMissingWorkTimePrompt() {
@@ -12259,7 +12535,8 @@
       window.requestAnimationFrame(() => els.missingWorkAdd.focus());
     }
 
-    function saveTodayDetailRecord(options = {}) {
+    function saveTodayDetailRecord(targetDate, options = {}) {
+      if (!validateActiveRecordWrite(targetDate)) return false;
       const { allowMissingWorkTime = false } = options;
       const manualPartsError = validateManualWorkTimeParts();
       if (manualPartsError) {
@@ -12267,7 +12544,7 @@
         showToast(manualPartsError);
         return false;
       }
-      const draft = formData();
+      const draft = formData(targetDate);
       if (entryTotal(draft) <= 0) {
         setTodaySaveStatus("請先輸入收入金額。", "error");
         showToast("請先輸入收入金額");
@@ -12311,7 +12588,7 @@
       notifyRecordChanged(entry.date, "today-update");
       const missingWorkTime = quality.status === "missing-work-time";
       renderAll();
-      resetForm();
+      resetForm(targetDate);
       if (missingWorkTime) {
         setTodaySaveStatus("已儲存；工時尚未完成", "success");
       }
@@ -12372,22 +12649,9 @@
       window.requestAnimationFrame(() => els.recordEditorConfirmCancel.focus());
     }
 
-    function moveSharedEditorToCalendar() {
-      els.recordEditorContent.append(els.sharedIncomePanel, els.sharedDetailPanel);
-    }
-
     function restoreSharedEditorToToday() {
       els.sharedIncomePanelAnchor.after(els.sharedIncomePanel);
       els.sharedDetailPanelAnchor.after(els.sharedDetailPanel);
-    }
-
-    function calendarEditorReturnSelector(trigger) {
-      if (!(trigger instanceof HTMLElement)) return "";
-      if (trigger.hasAttribute("data-calendar-add")) return "[data-calendar-add]";
-      if (trigger.hasAttribute("data-calendar-section")) {
-        return `[data-calendar-section="${trigger.dataset.calendarSection}"]`;
-      }
-      return "";
     }
 
     function applyCalendarEditorSection() {
@@ -12432,49 +12696,9 @@
 
     function openCalendarRecordEditor(date, trigger = document.activeElement, requestedSection = "income") {
       const normalizedDate = normalizeDateKey(date);
-      if (!normalizedDate || normalizedDate >= todayString() || stateLoadError) return;
-      const section = ["income", "work", "expenses", "other", "more"].includes(requestedSection)
-        ? requestedSection
-        : "income";
-      if (recordEditorState.open && recordEditorState.date === normalizedDate) {
-        if (recordEditorState.activeSection === section) {
-          requestRecordEditorClose();
-          return;
-        }
-        recordEditorState.activeSection = section;
-        recordEditorState.returnFocus = trigger instanceof HTMLElement ? trigger : recordEditorState.returnFocus;
-        recordEditorState.returnFocusSelector = calendarEditorReturnSelector(trigger);
-        applyCalendarEditorSection();
-        return;
-      }
-      if (recordEditorState.open) finishRecordEditorClose({ restoreFocus: false, render: false });
-      const existing = entryForDate(normalizedDate);
-      recordEditorState = {
-        open: true,
-        mode: existing ? "edit" : "create",
-        date: normalizedDate,
-        initialRecord: existing ? cloneStatePayload(existing) : null,
-        draft: existing ? cloneStatePayload(existing) : blankEntry(normalizedDate),
-        dirty: false,
-        saving: false,
-        activeSection: section,
-        returnFocus: trigger instanceof HTMLElement ? trigger : null,
-        returnFocusSelector: calendarEditorReturnSelector(trigger)
-      };
-      moveSharedEditorToCalendar();
-      fillEntryFields(recordEditorState.draft);
-      setManualEntryExpanded(true);
-      const dateInput = document.getElementById("date");
-      dateInput.value = normalizedDate;
-      dateInput.disabled = true;
-      syncDateCardDisplay(dateInput);
-      els.formTitle.textContent = existing ? "編輯工作紀錄" : "新增工作紀錄";
-      els.detailForm.querySelector(".save-button").textContent = "儲存修改";
-      setRecordEditorStatus(
-        navigator.onLine ? "" : "離線，可儲存在此裝置",
-        navigator.onLine ? "idle" : "offline"
-      );
-      applyCalendarEditorSection();
+      void trigger;
+      void requestedSection;
+      return openRecordDateInToday(normalizedDate);
     }
 
     function finishRecordEditorClose(options) {
@@ -12501,7 +12725,7 @@
       els.sharedIncomePanel.classList.remove("hidden");
       els.sharedDetailPanel.classList.remove("hidden");
       [els.workTimeSection, els.expenseSection, els.otherDataSection].forEach(section => section.hidden = false);
-      resetForm();
+      resetForm(activeRecordDate);
       if (render) renderCalendar();
       if (!restoreFocus) return;
       window.requestAnimationFrame(() => {
@@ -12511,21 +12735,6 @@
         const selectedDateCell = els.calendarGrid.querySelector(`[data-calendar-date="${returnDate}"]`);
         const focusTarget = returnFocus?.isConnected ? returnFocus : replacement || selectedDateCell;
         focusTarget?.focus();
-      });
-    }
-
-    function requestRecordEditorClose() {
-      if (!recordEditorState.open || recordEditorState.saving) return;
-      if (!recordEditorState.dirty) {
-        finishRecordEditorClose();
-        return;
-      }
-      showRecordEditorConfirm({
-        title: "放棄尚未儲存的修改？",
-        message: `${formatCalendarFullDate(recordEditorState.date)}的變更尚未儲存。`,
-        acceptLabel: "放棄修改",
-        destructive: true,
-        onAccept: finishRecordEditorClose
       });
     }
 
@@ -12690,7 +12899,24 @@
       URL.revokeObjectURL(url);
     }
 
-    function commitTodayWorkSession(nextEntry) {
+    function realtimeTodayContextReady() {
+      if (activeRecordDate === todayString()) return true;
+      showToast("請先回到今天，再使用即時工作控制");
+      return false;
+    }
+
+    function commitTodayWorkSession(targetDate, nextEntry) {
+      const today = todayString();
+      if (targetDate !== today || nextEntry?.date !== today || activeRecordDate !== today) {
+        setActiveRecordStatus(activeRecordDateErrorMessage);
+        console.error("即時工作紀錄日期驗證失敗，已阻止寫入。", {
+          targetDate,
+          entryDate: nextEntry?.date,
+          activeRecordDate,
+          today
+        });
+        return false;
+      }
       const nextState = cloneStatePayload(state);
       const index = nextState.entries.findIndex(item => item.id === nextEntry.id);
       if (index >= 0) nextState.entries[index] = nextEntry;
@@ -12700,7 +12926,7 @@
         return false;
       }
       notifyRecordChanged(nextEntry.date, "work-session");
-      resetForm();
+      resetForm(activeRecordDate);
       refreshToday();
       return true;
     }
@@ -12719,7 +12945,8 @@
     }
 
     function requestContinueWork() {
-      const entry = entryForDate();
+      if (!realtimeTodayContextReady()) return false;
+      const entry = entryForDate(todayString());
       if (!entry || workStatus(entry) !== "stopped") {
         showToast("目前沒有可繼續的已收工時段");
         return false;
@@ -12798,7 +13025,7 @@
         pausedAt: null,
         endedAt: null
       };
-      return commitTodayWorkSession(entry);
+      return commitTodayWorkSession(binding.date, entry);
     }
 
     function resolveContinueWorkAction() {
@@ -12810,11 +13037,11 @@
         return;
       }
       if (action.type === "legacy-clock") {
-        const entry = entryForDate();
+        const entry = entryForDate(todayString());
         if (!entry || entry.id !== action.entryId) return;
         syncManualWorkTimeInput(0);
         setWorkTimeInputMode("clock", formData());
-        if (saveTodayWorkTimeFromForm()) {
+        if (saveTodayWorkTimeFromForm(activeRecordDate)) {
           showToast("已改用開始／結束時間，可再次選擇「再跑一段」");
         }
         return;
@@ -12823,9 +13050,11 @@
     }
 
     function startRunNow() {
-      const existingEntry = entryForDate();
+      if (!realtimeTodayContextReady()) return false;
+      const targetDate = todayString();
+      const existingEntry = entryForDate(targetDate);
       if (existingEntry && workStatus(existingEntry) !== "idle") return false;
-      const entry = existingEntry ? cloneStatePayload(existingEntry) : blankEntry();
+      const entry = existingEntry ? cloneStatePayload(existingEntry) : blankEntry(targetDate);
       const now = new Date();
       entry.startTime ||= currentTimeString();
       entry.endTime = "";
@@ -12839,11 +13068,13 @@
         pausedAt: null,
         endedAt: null
       };
-      commitTodayWorkSession(entry);
+      commitTodayWorkSession(targetDate, entry);
     }
 
     function pauseRunNow() {
-      const existingEntry = entryForDate();
+      if (!realtimeTodayContextReady()) return false;
+      const targetDate = todayString();
+      const existingEntry = entryForDate(targetDate);
       const entry = existingEntry ? cloneStatePayload(existingEntry) : null;
       if (!entry || workStatus(entry) !== "running") return;
       const now = new Date();
@@ -12862,11 +13093,13 @@
       entry.workSession.status = "paused";
       entry.workSession.pausedAt = now.toISOString();
       entry.workSession.segmentStartedAt = null;
-      commitTodayWorkSession(entry);
+      commitTodayWorkSession(targetDate, entry);
     }
 
     function resumeRunNow() {
-      const existingEntry = entryForDate();
+      if (!realtimeTodayContextReady()) return false;
+      const targetDate = todayString();
+      const existingEntry = entryForDate(targetDate);
       const entry = existingEntry ? cloneStatePayload(existingEntry) : null;
       if (!entry?.workSession || entry.workSession.status !== "paused") return;
       const now = new Date();
@@ -12876,11 +13109,13 @@
       entry.workSession.segmentStartedAt = now.toISOString();
       entry.workSession.pausedAt = null;
       entry.breakMinutes = Math.floor(entry.workSession.accumulatedBreakMs / 60000);
-      commitTodayWorkSession(entry);
+      commitTodayWorkSession(targetDate, entry);
     }
 
     function endRunNow() {
-      const existingEntry = entryForDate();
+      if (!realtimeTodayContextReady()) return false;
+      const targetDate = todayString();
+      const existingEntry = entryForDate(targetDate);
       const entry = existingEntry ? cloneStatePayload(existingEntry) : null;
       if (!entry || !["running", "paused"].includes(workStatus(entry))) return;
       const now = new Date();
@@ -12908,7 +13143,7 @@
       entry.workSession.pausedAt = null;
       entry.endTime = currentTimeString();
       entry.breakMinutes = Math.floor(Number(entry.workSession.accumulatedBreakMs || 0) / 60000);
-      commitTodayWorkSession(entry);
+      commitTodayWorkSession(targetDate, entry);
     }
 
     function restoreIncomeInput(input, platform, total) {
@@ -12948,16 +13183,17 @@
       showToast(`已加入 ${money(action.amount)}`, {
         actionLabel: "復原",
         duration: 5000,
-        onAction: undoLastIncomeAddition
+        onAction: () => undoLastIncomeAddition(action.date)
       });
     }
 
-    function undoLastIncomeAddition() {
+    function undoLastIncomeAddition(targetDate) {
       const action = lastIncomeAddition;
       if (!action) {
         showToast("已無可復原的收入");
         return;
       }
+      if (!validateActiveRecordWrite(targetDate) || action.date !== targetDate) return false;
       const entry = entryForDate(action.date);
       const records = Array.isArray(entry?.incomeRecords) ? entry.incomeRecords : [];
       const recordIndex = records.findIndex(record => record.id === action.recordId);
@@ -12985,37 +13221,18 @@
       showToast(`已復原 ${money(action.amount)}`);
     }
 
-    function commitInlineIncome(input) {
+    function commitInlineIncome(targetDate, input) {
       if (!input || input.dataset.committed === "true") return;
       input.dataset.committed = "true";
       const platformId = input.dataset.platformId;
       const profile = platformProfileById(platformId);
       const platform = profile?.name;
-      const date = /^\d{4}-\d{2}-\d{2}$/.test(input.dataset.incomeDate || "")
-        ? input.dataset.incomeDate
-        : selectedIncomeDate();
+      const date = normalizeDateKey(input.dataset.incomeDate);
       const mode = input.dataset.incomeMode || "total";
       const raw = String(input.value || "").trim().replaceAll(",", "");
       const amount = raw === "" ? 0 : Number(raw);
-      if (recordEditorState.open) {
-        const invalid = !profile
-          || !platform
-          || date !== recordEditorState.date
-          || mode !== "total"
-          || input.dataset.invalidAmount === "negative"
-          || !Number.isSafeInteger(amount)
-          || amount < 0
-          || amount > maxPlatformIncome;
-        const previousDraftAmount = Number(recordEditorState.draft?.incomes?.[platform] || 0);
-        if (invalid) {
-          restoreIncomeInput(input, platform || input.dataset.inlineIncome || "平台", previousDraftAmount);
-          setRecordEditorStatus("平台收入必須是 0 至 99,999,999 的整數。", "error");
-          return;
-        }
-        recordEditorState.draft.incomes ||= {};
-        recordEditorState.draft.incomes[platform] = amount;
-        restoreIncomeInput(input, platform, amount);
-        markRecordEditorDirty();
+      if (!validateActiveRecordWrite(targetDate) || date !== targetDate) {
+        input.dataset.committed = "false";
         return;
       }
       const existingEntry = entryForDate(date);
@@ -13102,18 +13319,19 @@
       }
     }
 
-    function startIncomeAdd(platformId) {
+    function startIncomeAdd(targetDate, platformId) {
+      if (!validateActiveRecordWrite(targetDate)) return;
       const profile = platformProfileById(platformId);
       if (!profile || platformInputMode(profile.name) !== "incremental") return;
       let input = els.incomeInputs.querySelector(`[data-platform-id="${cssEscape(platformId)}"]`);
       if (!input) return;
       if (document.activeElement === input && input.dataset.incomeMode === "total") {
-        commitInlineIncome(input);
+        commitInlineIncome(targetDate, input);
         input = els.incomeInputs.querySelector(`[data-platform-id="${cssEscape(platformId)}"]`);
         if (!input) return;
       }
       if (input.dataset.incomeMode === "add") return;
-      const date = selectedIncomeDate();
+      const date = targetDate;
       const previous = Number(entryForDate(date)?.incomes?.[profile.name] || 0);
       const addButton = input.closest(".platform-income-row")?.querySelector("[data-income-add]");
       if (addButton) addButton.disabled = true;
@@ -13129,8 +13347,9 @@
       input.select();
     }
 
-    function updateIncomeRecord(recordId) {
-      const entry = entryForDate(selectedIncomeDate());
+    function updateIncomeRecord(targetDate, recordId) {
+      if (!validateActiveRecordWrite(targetDate)) return false;
+      const entry = entryForDate(targetDate);
       const record = entry?.incomeRecords?.find(item => item.id === recordId);
       const input = els.recentIncomeList.querySelector(`[data-record-amount="${cssEscape(recordId)}"]`);
       const amount = Number(input?.value || 0);
@@ -13144,18 +13363,19 @@
       record.updatedAt = new Date().toISOString();
       if (saveState()) notifyRecordChanged(entry.date, "income-record-edit");
       refreshToday();
-      resetForm();
+      resetForm(targetDate);
     }
 
-    function deleteIncomeRecord(recordId) {
-      const entry = entryForDate(selectedIncomeDate());
+    function deleteIncomeRecord(targetDate, recordId) {
+      if (!validateActiveRecordWrite(targetDate)) return false;
+      const entry = entryForDate(targetDate);
       const record = entry?.incomeRecords?.find(item => item.id === recordId);
       if (!entry || !record) return;
       entry.incomes[record.platform] = Math.max(0, Number(entry.incomes?.[record.platform] || 0) - Number(record.amount || 0));
       entry.incomeRecords = entry.incomeRecords.filter(item => item.id !== recordId);
       if (saveState()) notifyRecordChanged(entry.date, "income-record-delete");
       refreshToday();
-      resetForm();
+      resetForm(targetDate);
     }
 
     function renderBrandAttribution() {
@@ -13192,8 +13412,15 @@
     }
 
     els.navButtons.forEach(button => button.addEventListener("click", () => navigateTo(button.dataset.view)));
-    document.getElementById("newEntry").addEventListener("click", () => { resetForm(); navigateTo("today"); });
-    els.cancelEdit.addEventListener("click", resetForm);
+    document.getElementById("newEntry").addEventListener("click", () => {
+      setActiveRecordDate(todayString());
+      navigateTo("today");
+    });
+    els.cancelEdit.addEventListener("click", () => setActiveRecordDate(todayString()));
+    els.deleteActiveRecord.addEventListener("click", () => {
+      const entry = entryForDate(activeRecordDate);
+      if (entry) deleteEntry(activeRecordDate, entry.id);
+    });
     document.getElementById("exportCsv").addEventListener("click", exportCsv);
     els.startRun.addEventListener("click", startRunNow);
     els.pauseRun.addEventListener("click", pauseRunNow);
@@ -13237,6 +13464,17 @@
       renderStats();
       document.getElementById("todayIncomeToggle")?.focus();
     });
+    els.todayRecordContext.addEventListener("click", event => {
+      if (event.target.closest("[data-active-record-today]")) {
+        setActiveRecordDate(todayString());
+        return;
+      }
+      if (event.target.closest("[data-active-record-calendar]")) {
+        const returnDate = activeRecordDate;
+        openCalendar({ selectedDate: returnDate, source: "today-history" });
+        navigateTo("calendar");
+      }
+    });
     els.manualEntryToggle.addEventListener("click", () => {
       setManualEntryExpanded(els.manualEntryToggle.getAttribute("aria-expanded") !== "true");
     });
@@ -13252,7 +13490,7 @@
       const shouldSave = pendingTodayRecordSave;
       pendingTodayRecordSave = null;
       els.missingWorkTimeDialog.close();
-      if (shouldSave) saveTodayDetailRecord({ allowMissingWorkTime: true });
+      if (shouldSave) saveTodayDetailRecord(activeRecordDate, { allowMissingWorkTime: true });
     });
     els.weatherPermissionDialog.addEventListener("cancel", () => {
       setWeatherAutoStatus("可繼續手動選擇天氣。");
@@ -13291,8 +13529,13 @@
     });
     els.calendarRecordCard.addEventListener("click", event => {
       if (event.target.closest("[data-calendar-go-today]")) {
-        resetForm();
+        setActiveRecordDate(todayString());
         navigateTo("today");
+      }
+      const editToday = event.target.closest("[data-calendar-open-today-record]");
+      if (editToday) {
+        openRecordDateInToday(editToday.dataset.calendarOpenTodayRecord);
+        return;
       }
       const addTrigger = event.target.closest("[data-calendar-add]");
       if (addTrigger) openCalendarRecordEditor(calendarState.selectedDate, addTrigger, "income");
@@ -13409,28 +13652,38 @@
         commitCalendarRecord();
         return;
       }
-      saveTodayDetailRecord();
+      saveTodayDetailRecord(activeRecordDate);
     });
 
     els.detailForm.addEventListener("input", event => {
-      if (event.target.id === "date") syncDateCardDisplay(event.target);
+      if (event.target.id === "date") {
+        syncDateCardDisplay(event.target);
+      }
       if (["manualHoursPart", "manualMinutesPart"].includes(event.target.id)) {
         syncManualWorkTimeParts();
       }
       if (recordEditorState.open && event.target.id !== "date") markRecordEditorDirty();
       if (["startTime", "endTime", "breakMinutes", "manualHoursPart", "manualMinutesPart"].includes(event.target.id)) {
-        scheduleTodayWorkTimeSave();
+        scheduleTodayWorkTimeSave(activeRecordDate);
       }
       updateQuickPreview();
     });
     els.detailForm.addEventListener("change", event => {
       if (event.target.id === "date") {
+        const requestedDate = normalizeDateKey(event.target.value);
+        if (!isEditableRecordDate(requestedDate)) {
+          setActiveRecordStatus("只能選擇今天或過去日期。");
+          renderEntryDateCard(activeRecordDate);
+          return;
+        }
+        if (requestedDate !== activeRecordDate) {
+          setActiveRecordDate(requestedDate, { preserveDisclosure: true });
+          return;
+        }
         syncDateCardDisplay(event.target);
-        renderIncomeInputs(event.target.value || todayString());
-        renderRecentIncome(event.target.value || todayString());
       }
       if (["startTime", "endTime", "breakMinutes", "manualHoursPart", "manualMinutesPart"].includes(event.target.id)) {
-        saveTodayWorkTimeFromForm();
+        saveTodayWorkTimeFromForm(activeRecordDate);
       }
       updateQuickPreview();
     });
@@ -13448,12 +13701,12 @@
     els.todayExpenseManager.addEventListener("click", event => {
       const removeButton = event.target.closest("[data-today-expense-remove]");
       if (removeButton) {
-        removeTodayExpense(removeButton.dataset.todayExpenseRemove);
+        removeTodayExpense(activeRecordDate, removeButton.dataset.todayExpenseRemove);
         return;
       }
       if (!event.target.closest("#todayExpenseToggle")) return;
       todayExpenseListOpen = !todayExpenseListOpen;
-      renderTodayExpenseList(todayString());
+      renderTodayExpenseList(activeRecordDate);
     });
     els.otherDataSection.addEventListener("toggle", event => {
       const expanded = event.currentTarget.open;
@@ -13465,8 +13718,8 @@
       if (!button) return;
       const field = button.dataset.detailChoice;
       const value = button.dataset.choiceValue;
-      if (field === "weather") updateCurrentWeather(value);
-      if (field === "shift") updateCurrentShift(value);
+      if (field === "weather") updateCurrentWeather(activeRecordDate, value);
+      if (field === "shift") updateCurrentShift(activeRecordDate, value);
       updateQuickPreview();
     });
 
@@ -13484,20 +13737,14 @@
         updateExpensePreview();
       }
       if (event.target.id === "smartExpenseDate") {
-        expenseDraft.paymentDate = event.target.value;
+        if (event.target.value !== activeRecordDate) {
+          expenseDraft.status = activeRecordDateErrorMessage;
+          expenseDraft.statusType = "error";
+          renderExpenseForm();
+          return;
+        }
+        expenseDraft.paymentDate = activeRecordDate;
         syncDateCardDisplay(event.target);
-        if (!expenseDraft.startMonthChanged && /^\d{4}-\d{2}/.test(event.target.value)) {
-          expenseDraft.startMonth = event.target.value.slice(0, 7);
-        }
-        if (!expenseDraft.recurringStartMonthChanged && /^\d{4}-\d{2}/.test(event.target.value)) {
-          expenseDraft.recurringStartMonth = event.target.value.slice(0, 7);
-        }
-        if (/^\d{4}-\d{2}-\d{2}$/.test(event.target.value)) {
-          expenseDraft.recurringDay = Number(event.target.value.slice(-2));
-        }
-        expenseDraft.status = "";
-        expenseDraft.statusType = "";
-        updateExpensePreview();
       }
       if (event.target.id === "expenseStartMonth") {
         expenseDraft.startMonth = event.target.value;
@@ -13591,7 +13838,7 @@
         renderExpenseForm();
         return;
       }
-      if (saveButton) saveSmartExpense();
+      if (saveButton) saveSmartExpense(activeRecordDate);
     });
 
     els.expenseInputs.addEventListener("focusin", event => {
@@ -13632,21 +13879,21 @@
 
     els.incomeInputs.addEventListener("focusout", event => {
       const input = event.target.closest("[data-inline-income]");
-      if (input) commitInlineIncome(input);
+      if (input) commitInlineIncome(activeRecordDate, input);
     });
 
     els.incomeInputs.addEventListener("pointerdown", event => {
       const button = event.target.closest("[data-income-add]");
       if (!button) return;
       event.preventDefault();
-      startIncomeAdd(button.dataset.incomeAdd);
+      startIncomeAdd(activeRecordDate, button.dataset.incomeAdd);
     });
 
     els.recentIncomeList.addEventListener("click", event => {
       const updateButton = event.target.closest("[data-update-income-record]");
       const deleteButton = event.target.closest("[data-delete-income-record]");
-      if (updateButton) updateIncomeRecord(updateButton.dataset.updateIncomeRecord);
-      if (deleteButton) deleteIncomeRecord(deleteButton.dataset.deleteIncomeRecord);
+      if (updateButton) updateIncomeRecord(activeRecordDate, updateButton.dataset.updateIncomeRecord);
+      if (deleteButton) deleteIncomeRecord(activeRecordDate, deleteButton.dataset.deleteIncomeRecord);
     });
 
     document.querySelectorAll("[data-report-view]").forEach(button => {
@@ -13817,7 +14064,7 @@
     renderBrandAttribution();
     renderEntryDateCard(todayString());
     renderAll();
-    resetForm();
+    resetForm(activeRecordDate);
     const initialRoute = parseAppRoute(location.hash, location.search);
     if (initialRoute.view === "calendar" && initialRoute.calendarDate) {
       applyRoute(initialRoute);

@@ -927,3 +927,37 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
 - Production 390px 五頁 Smoke QA 通過，無 Console error／warning，無水平 overflow。
 
 本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-046](docs/DECISION_LOG.md#d-046)。
+
+## D-047 — Calendar 唯讀與 Today 每日紀錄責任
+
+- Date: 2026-08-04
+- Decision:
+  1. Calendar 工作紀錄卡只負責查看歷史資料，不提供新增、編輯、刪除或支出
+     mutation；Today 是每日紀錄的唯一輸入與修改 owner。
+  2. 全 App 時薪固定使用總收入除以有效工時，支出只影響淨收入與成本分析。
+  3. 週報與月報共用支出分類 selector；首頁目標進度只收合底部區域。
+  4. 不改 `driverPayApp.v2`、WorkRecord schema、`expenseAllocations` 或 Supabase。
+
+本條目同步記錄於 [`docs/DECISION_LOG.md` 的 D-047](docs/DECISION_LOG.md#d-047)。
+
+## D-048 — Active Record Date and Today KPI Production Hotfix
+
+- Date: 2026-08-04
+- Decision:
+  1. `activeRecordDate` 是 Today 唯一 session 日期；所有 Daily Record mutation
+     必須顯式傳入同一目標日期並通過 guard，不得 fallback 到今天。
+  2. Calendar 維持唯讀；有效過去日期以 `新增紀錄／編輯這天` 導向 Today。
+     Calendar 不再搬動、掛載或擁有 Daily Record 表單。
+  3. Today 返回時完整恢復並重繪 KPI、工作狀態、平台收入、每日紀錄、支出與
+     其他資料，從來源修正 Calendar → Today 半頁渲染。
+  4. Today KPI 的今日收入是左對齊最大數字，工時／時薪為等寬兩欄；只有目標
+     進度可收合，KPI 工時使用簡潔分鐘／小時格式。標準顯示模式重用舊版已
+     驗證的 `50–64px` 主收入與 `26–32px` 次要 KPI 比例。
+  5. App Shell candidate 更新為 v27；Human QA 前只 Push Hotfix branch 與
+     Public Preview，不 merge main、不 Production deploy。
+  6. Today 每日紀錄日期卡恢復為唯一可操作日期入口；只能選今天或過去日期，
+     選擇後直接更新 `activeRecordDate`，支出付款日期同步且不建立第二份 state。
+- Reason: 舊 Calendar editor 搬移 Today 實體 DOM，且寫入路徑混用多個日期來源，
+  形成 Production 資料完整性與導航渲染 Release Blocker。
+- Impact: Today／Calendar routing and presentation、write guards、tests、docs、v27；
+  `driverPayApp.v2`、WorkRecord、allocation、Manifest、Supabase 與正式資料不變。

@@ -16,6 +16,20 @@
 
 ## Unreleased
 
+### 2026-08-04 — Active Record Date and Today KPI Production Hotfix Candidate
+
+- 新增 session-only `activeRecordDate` 與統一日期綁定 guard；收入、工時、支出、
+  其他資料、復原與整日刪除不再各自猜測或 fallback 到今天。
+- Calendar 維持唯讀並把精確日期交給 Today 唯一 Daily Record Editor；不再搬動
+  Today 表單 DOM，返回 Today 時完整恢復 KPI、工作狀態、平台收入及每日紀錄。
+- Today KPI 改為左對齊最大今日收入與等寬次級 KPI；新增簡潔工作時數格式。
+- 標準模式 KPI 恢復參考版 `50–64px` 主收入與 `26–32px` 次要數字比例。
+- 每日紀錄日期卡恢復可操作，可直接切換今天或過去日期；所有欄位與付款日期
+  仍由同一 `activeRecordDate` 隔離，未來日期禁止。
+- 新增 57 項 Hotfix contract，App Shell 更新為 `driver-pay-pro-v27`。
+- 不改 `driverPayApp.v2`、WorkRecord、allocation、Manifest、Supabase 或正式資料；
+  Human QA 前不 merge `main`、不 Production deploy。
+
 ### 2026-08-04 — Expense、Hourly Rate、Calendar Read-only 與 KPI Sprint
 
 - 首頁綠色摘要卡保留兩段式 disclosure，收入成為主要視覺焦點，底部目標進度預設收合。

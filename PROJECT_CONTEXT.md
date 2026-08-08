@@ -1,8 +1,31 @@
 # Driver Pay Pro 專案固定背景
 
-更新日期：2026-08-04
+更新日期：2026-08-08
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
+
+## Active Record Date and Today KPI Production Hotfix — Human QA Candidate
+
+- Hotfix branch：`hotfix/active-record-date`；base 是 Production `main`
+  `568688ffa0407b91b3f3268ff03151d5d8aff81f`。Human QA 前不合併 `main`、
+  不部署 Production。
+- `activeRecordDate` 是 Today 唯一 session 日期來源。Calendar 維持唯讀，過去
+  日期的「新增紀錄／編輯這天」把精確日期交給 Today 唯一 Daily Record Editor。
+- 所有 Today 收入、工時、支出、其他資料、復原與整日刪除均顯式綁定目標日期；
+  無效、未來或跨日期 mismatch 會阻止寫入，不再 fallback 到今天。
+- Calendar 不再移動 `#sharedIncomePanel`／`#sharedDetailPanel`。返回 Today 時會
+  恢復並重繪 KPI、工作狀態、平台收入、每日紀錄、支出與其他資料，修正半頁渲染。
+- Today KPI 將今日收入置於左上並作為最大數字；今日工時與平均時薪為等寬兩欄；
+  目標進度仍是唯一可收合區。標準模式以 `50–64px` 主收入與 `26–32px` 次要
+  KPI 恢復參考版 2:1 比例；工時使用 `0分鐘`、`1小時10分鐘` 等簡潔格式。
+- 每日紀錄日期卡已恢復可操作；原生 date input 可選今天或過去日期，選擇後
+  直接切換同一 `activeRecordDate` 並載入該日全部欄位。付款日期仍鎖定跟隨，
+  不允許未來日期，也不建立第二份日期 state。
+- App Shell candidate：`driver-pay-pro-v27`。`driverPayApp.v2`、WorkRecord、
+  `expenseAllocations`、Manifest、Supabase 與正式資料均不變。
+- Repository 無法直接讀取 iPhone Production origin 的 localStorage；2026-07-04、
+  2026-08-02、2026-08-04 的正式資料稽核需 Product Owner 提供備份匯出或在裝置
+  執行唯讀診斷。Hotfix 不會自動搬移、刪除或猜測修復任何紀錄。
 
 ## Expense、Hourly Rate、Calendar Read-only 與 KPI — Current Sprint
 

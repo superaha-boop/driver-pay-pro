@@ -51,7 +51,7 @@ test("今日工作狀態整條標題列是唯一工作明細控制", () => {
   assert.doesNotMatch(section, /class="work-time-overview"|class="work-details-toggle"|>工作明細</);
   assert.match(html, /\.work-status-row\s*\{[\s\S]*?width:\s*100%[\s\S]*?min-height:\s*44px/);
   assert.match(html, /\.work-status-row:focus-visible\s*\{/);
-  assert.match(extractFunction("renderStats"), /今日工時<\/span><strong>\$\{formatHours\(todaySummary\.hours\)\}/);
+  assert.match(extractFunction("renderStats"), /今日工時<\/span><strong>\$\{formatWorkDurationCompact\(todaySummary\.durationMs \/ workTimeUnits\.minuteMs\)\}/);
 });
 
 test("工作狀態標題列同步 expanded、狀態朗讀與 chevron", () => {
@@ -114,7 +114,7 @@ test("有收入無工時只在主動儲存時顯示友善提醒", () => {
 test("補上工時保留表單並定位，稍後再補只提交一次", () => {
   const listeners = html.slice(html.indexOf('els.missingWorkTimeDialog.addEventListener'), html.indexOf('els.toggleOverview.addEventListener'));
   assert.match(listeners, /setManualEntryExpanded\(true, \{ revealWorkTime: true \}\)/);
-  assert.match(listeners, /saveTodayDetailRecord\(\{ allowMissingWorkTime: true \}\)/);
+  assert.match(listeners, /saveTodayDetailRecord\(activeRecordDate, \{ allowMissingWorkTime: true \}\)/);
   assert.match(listeners, /pendingTodayRecordSave = null/);
   assert.doesNotMatch(listeners, /resetForm\(\)/);
 });
@@ -148,7 +148,7 @@ test("工時只顯示一種輸入方式且切換前需要確認", () => {
   const apply = extractFunction("applyWorkTimeModeSwitch");
   assert.match(request, /切換後會清除開始時間、結束時間與休息時間/);
   assert.match(request, /切換後會清除手動工時/);
-  assert.match(apply, /saveTodayWorkTimeFromForm\(\)/);
+  assert.match(apply, /saveTodayWorkTimeFromForm\(activeRecordDate\)/);
   assert.match(apply, /previousValues/);
   assert.doesNotMatch(apply, /saveState\(\)/);
 });

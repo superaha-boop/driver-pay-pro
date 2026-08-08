@@ -1,5 +1,34 @@
 # Driver Pay Pro Testing
 
+## Current Hotfix — Active Record Date and Today KPI
+
+- `tests/active-record-date-hotfix.test.js` 固定 57 項：日期隔離 21、導航完整渲染
+  16、Today KPI／工時格式 20。`npm run test:today` 已納入此檔案。
+- 日期測試涵蓋 2026-07-04、2026-08-02、2026-08-04、顯式目標日期、無效／
+  未來／mismatch guard、支出 allocation、復原、整日刪除、十次切換與重載。
+- 導覽測試涵蓋 Today／Calendar／Reports 組合、Calendar 精確日期導向 Today、
+  返回 Calendar，以及 KPI、工作狀態、平台收入、每日紀錄、支出與後續模組完整恢復。
+- KPI 測試涵蓋左對齊最大收入、等寬次級欄、目標 disclosure、0／29／59／60／
+  70／120 分鐘格式、總收入時薪口徑，以及參考版主／次 KPI 2:1 字級比例。
+- 日期卡測試涵蓋可操作的原生 date input、`max` 為台北今天、切換後唯一
+  `activeRecordDate` 重載、付款日期同步及未來日期拒絕。
+- L2 必測 standard／comfort／large × 320／375／390／393／430px，Console、
+  overflow、Calendar → Today、多次切頁、Manifest、App Shell v27 與 offline。
+- 實體 iPhone Safari／installed PWA 是本次唯一 Human QA Gate；通過前不得 merge
+  `main` 或 Production deploy。
+- 2026-08-08 L1：`npm run release:check` Passed；完整 Node 399/399、Today
+  139/139、Calendar 69/69、Reports 88/88、AI 24/24、Driver 24/24、Integration
+  16/16；lint 0 errors／9 個既有 warnings，Inline JavaScript、Service Worker、
+  Manifest、build 與 `git diff --check` 均通過。
+- L2 本機瀏覽器：standard／comfort／large × 320／375／390／393／430px 共
+  15 組皆 `scrollWidth === clientWidth`；Calendar 2026-07-04 → Today 同時綁定
+  標題、每日紀錄日期與付款日期；連續導覽十輪後六個 Today 模組完整，Console
+  0 error／warning。
+- 2026-08-08 L2：標準／舒適／大字 × 320／375／390／393／430px 共 15 組
+  `scrollWidth === clientWidth`；390px 標準模式主收入為 `54.6px`、次要 KPI
+  為 `27.3px`。日期卡 enabled、`max=2026-08-08`；8/7 寫入收入後切到 8/8
+  不會帶入，再切回 8/7 可載入原值，支出付款日期全程同步，Console 0 error／warning。
+
 ## Current Sprint — Expense、Hourly Rate、Calendar Read-only 與 KPI
 
 - Calendar 測試以唯讀摘要為準：不得出現 `data-calendar-add`、

@@ -1,8 +1,38 @@
 # Driver Pay Pro 開發交接摘要
 
-更新日期：2026-08-04
+更新日期：2026-08-08
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
+
+## Active Record Date and Today KPI Hotfix — Ready for Preview QA
+
+- Branch：`hotfix/active-record-date`；Production base：
+  `568688ffa0407b91b3f3268ff03151d5d8aff81f`。只允許 Push 此 Hotfix branch
+  與建立 Public Preview；Human QA 前不得 merge `main` 或 Production deploy。
+- 根本原因一：舊 Calendar inline editor 曾把 Today 的實體
+  `#sharedIncomePanel`／`#sharedDetailPanel` 搬進 `#recordEditorContent`；若關閉
+  還原流程未完成，Today 只剩 KPI 與工作狀態。現在 Calendar 只透過精確日期
+  導向 Today，`setView("today")` 亦完整恢復並重繪所有必要模組。
+- 根本原因二：舊寫入路徑混用 `#date`、`expenseDraft.paymentDate`、
+  `todayString()` 與 fallback 日期。現在 `activeRecordDate` 是唯一 session 日期，
+  所有 mutation 必須顯式傳入並通過 `validateActiveRecordWrite()`。
+- Today 歷史模式顯示「正在編輯歷史紀錄」、完整日期、回到今天／返回月曆；
+  每日紀錄日期卡可直接選今天或過去日期，付款日期鎖定跟隨同一天。日期 mismatch
+  顯示「日期狀態異常，未儲存。請重新選擇日期。」並停止寫入。
+- Today KPI 已使用左對齊最大今日收入、等寬今日工時／平均時薪、右側 disclosure
+  chevron；只有目標進度收合。標準模式主收入／次要 KPI 使用參考版
+  `50–64px`／`26–32px` 比例。新增 `formatWorkDurationCompact()`。
+- 新增 `tests/active-record-date-hotfix.test.js` 57 項：日期隔離 21、導航 16、
+  KPI／工時格式 20。App Shell candidate 為 `driver-pay-pro-v27`。
+- L1：release check Passed；399/399 Node、Today 139/139、Calendar 69/69、
+  Reports 88/88、AI／Driver 各 24/24、Integration 16/16；lint 0 errors／9 個
+  既有 warnings。L2 的 15 組 responsive matrix、7/4 精確日期 handoff、十輪
+  切頁完整重繪與 Console 檢查均通過。2026-08-08 再驗證三種顯示模式 ×
+  320／375／390／393／430px 共 15 組無 overflow；390px 標準模式主收入
+  `54.6px`、次要 KPI `27.3px`，日期卡可選 8/7／8/8 且資料互不串寫。
+- 不改 `driverPayApp.v2`、WorkRecord、`expenseAllocations`、Manifest、Supabase
+  或正式資料。iPhone 正式 localStorage 無法由 repo 直接讀取；資料稽核需要裝置
+  匯出，Hotfix 僅提供 `window.auditDriverPayRecords()` 唯讀診斷。
 
 ## Expense、Hourly Rate、Calendar Read-only 與 KPI — Production Released
 
