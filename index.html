@@ -2501,6 +2501,7 @@
     .date-card input[type="date"] {
       position: absolute;
       inset: 0;
+      z-index: 1;
       width: 100%;
       min-width: 0;
       max-width: 100%;
@@ -2514,6 +2515,7 @@
       box-shadow: none;
       opacity: 0;
       cursor: pointer;
+      touch-action: manipulation;
       -webkit-appearance: auto;
       appearance: auto;
     }
@@ -6843,17 +6845,6 @@
     </form>
   </dialog>
 
-  <dialog class="record-editor-confirm" id="workModeDialog" aria-labelledby="workModeDialogTitle">
-    <div class="record-editor-confirm__body">
-      <h2 class="ds-card-title" id="workModeDialogTitle">切換工時輸入方式？</h2>
-      <p class="ds-secondary" id="workModeDialogMessage"></p>
-      <div class="record-editor-confirm__actions">
-        <button class="ds-button ds-button--secondary" id="workModeDialogCancel" type="button">取消</button>
-        <button class="ds-button ds-button--primary" id="workModeDialogAccept" type="button">確認切換</button>
-      </div>
-    </div>
-  </dialog>
-
   <dialog class="record-editor-confirm" id="continueWorkDialog" aria-labelledby="continueWorkDialogTitle">
     <div class="record-editor-confirm__body">
       <h2 class="ds-card-title" id="continueWorkDialogTitle">繼續今天的工作？</h2>
@@ -7004,7 +6995,7 @@
     let weatherManualOverride = false;
     let weatherSuggestionCache = null;
     let workTimeInputMode = "clock";
-    let pendingWorkMode = "";
+    let workTimeModeDraft = { date: "", clock: null, manualMinutes: null };
     let pendingContinueWork = null;
     const weatherDetectionAttemptedDates = new Set();
     let calendarState = createCalendarState(todayString());
@@ -7076,10 +7067,6 @@
       weatherPermissionDialog: document.getElementById("weatherPermissionDialog"),
       weatherPermissionLater: document.getElementById("weatherPermissionLater"),
       weatherPermissionAllow: document.getElementById("weatherPermissionAllow"),
-      workModeDialog: document.getElementById("workModeDialog"),
-      workModeDialogMessage: document.getElementById("workModeDialogMessage"),
-      workModeDialogCancel: document.getElementById("workModeDialogCancel"),
-      workModeDialogAccept: document.getElementById("workModeDialogAccept"),
       continueWorkDialog: document.getElementById("continueWorkDialog"),
       continueWorkDialogTitle: document.getElementById("continueWorkDialogTitle"),
       continueWorkDialogMessage: document.getElementById("continueWorkDialogMessage"),
@@ -8945,16 +8932,6 @@
         inlineToday: true,
         max: todayString()
       });
-    }
-
-    function openNativeDatePicker(input) {
-      if (!input || input.disabled || typeof input.showPicker !== "function") return false;
-      try {
-        input.showPicker();
-        return true;
-      } catch {
-        return false;
-      }
     }
 
     function syncDateCardDisplay(input) {
@@ -12217,48 +12194,47 @@
         : "";
     }
 
-    function requestWorkTimeModeSwitch() {
-      pendingWorkMode = workTimeInputMode === "clock" ? "manual" : "clock";
-      els.workModeDialogMessage.textContent = pendingWorkMode === "manual"
-        ? "切換後會清除開始時間、結束時間與休息時間，改用手動輸入的工時。"
-        : "切換後會清除手動工時，改用開始時間、結束時間與休息時間。";
-      els.workModeDialog.showModal();
-      window.requestAnimationFrame(() => els.workModeDialogCancel.focus());
+    function resetWorkTimeModeDraft(date = activeRecordDate) {
+      workTimeModeDraft = {
+        date: normalizeDateKey(date) || "",
+        clock: null,
+        manualMinutes: null
+      };
     }
 
-    function applyWorkTimeModeSwitch() {
-      const targetMode = pendingWorkMode;
-      pendingWorkMode = "";
+    function switchWorkTimeInputMode() {
+      const targetMode = workTimeInputMode === "clock" ? "manual" : "clock";
       if (!["clock", "manual"].includes(targetMode) || targetMode === workTimeInputMode) return false;
-      const previousMode = workTimeInputMode;
-      const previousValues = {
+      if (workTimeModeDraft.date !== activeRecordDate) resetWorkTimeModeDraft(activeRecordDate);
+      const currentClockValues = {
         startTime: document.getElementById("startTime").value,
         endTime: document.getElementById("endTime").value,
-        breakMinutes: document.getElementById("breakMinutes").value,
-        manualMinutes: manualWorkMinutesFromForm()
+        breakMinutes: document.getElementById("breakMinutes").value
       };
+      const currentManualMinutes = manualWorkMinutesFromForm();
+      window.clearTimeout(todayWorkSaveTimer);
+      todayWorkSaveTimer = 0;
+      setTodaySaveStatus("");
+
       if (targetMode === "manual") {
+        workTimeModeDraft.clock = currentClockValues;
+        const manualMinutes = workTimeModeDraft.manualMinutes ?? currentManualMinutes;
         document.getElementById("startTime").value = "";
         document.getElementById("endTime").value = "";
         document.getElementById("breakMinutes").value = 0;
+        syncManualWorkTimeInput(manualMinutes);
       } else {
+        workTimeModeDraft.manualMinutes = currentManualMinutes;
+        const clock = workTimeModeDraft.clock ?? currentClockValues;
         syncManualWorkTimeInput(0);
+        document.getElementById("startTime").value = clock.startTime;
+        document.getElementById("endTime").value = clock.endTime;
+        document.getElementById("breakMinutes").value = clock.breakMinutes;
       }
       setWorkTimeInputMode(targetMode, formData());
       updateQuickPreview();
-      if (recordEditorState.open) {
-        markRecordEditorDirty();
-        return true;
-      }
-      if (saveTodayWorkTimeFromForm(activeRecordDate)) return true;
-
-      document.getElementById("startTime").value = previousValues.startTime;
-      document.getElementById("endTime").value = previousValues.endTime;
-      document.getElementById("breakMinutes").value = previousValues.breakMinutes;
-      syncManualWorkTimeInput(previousValues.manualMinutes);
-      setWorkTimeInputMode(previousMode, formData());
-      updateQuickPreview();
-      return false;
+      if (recordEditorState.open) markRecordEditorDirty();
+      return true;
     }
 
     function syncManualWorkTimeInput(totalMinutes) {
@@ -12302,6 +12278,7 @@
     function resetForm(date = activeRecordDate, options = {}) {
       const targetDate = normalizeDateKey(date);
       if (!targetDate || targetDate !== activeRecordDate) return false;
+      resetWorkTimeModeDraft(targetDate);
       els.entryForm.reset();
       els.detailForm.reset();
       els.entryId.value = "";
@@ -13460,20 +13437,7 @@
     els.endRun.addEventListener("click", endRunNow);
     els.continueRun.addEventListener("click", requestContinueWork);
     els.modifyWorkTime.addEventListener("click", () => setManualEntryExpanded(true, { revealWorkTime: true }));
-    els.workModeToggle.addEventListener("click", requestWorkTimeModeSwitch);
-    els.workModeDialog.addEventListener("cancel", event => {
-      event.preventDefault();
-      pendingWorkMode = "";
-      els.workModeDialog.close();
-    });
-    els.workModeDialogCancel.addEventListener("click", () => {
-      pendingWorkMode = "";
-      els.workModeDialog.close();
-    });
-    els.workModeDialogAccept.addEventListener("click", () => {
-      els.workModeDialog.close();
-      applyWorkTimeModeSwitch();
-    });
+    els.workModeToggle.addEventListener("click", switchWorkTimeInputMode);
     els.continueWorkDialog.addEventListener("cancel", event => {
       event.preventDefault();
       pendingContinueWork = null;
@@ -13685,10 +13649,6 @@
         return;
       }
       saveTodayDetailRecord(activeRecordDate);
-    });
-
-    els.detailForm.addEventListener("click", event => {
-      if (event.target.id === "date") openNativeDatePicker(event.target);
     });
 
     els.detailForm.addEventListener("input", event => {

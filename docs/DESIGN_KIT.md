@@ -37,8 +37,8 @@ Design System 採漸進式導入；本文件不授權一次性重寫首頁、月
 - 收入：數字鍵盤
 
 日期卡可以用自訂文字呈現，但必須由同一個原生 `input[type="date"]` 覆蓋完整
-44px 以上觸控區。不得以 `appearance: none` 移除原生 Picker 入口；支援
-`showPicker()` 時只作增強，不得取代 Safari／PWA 的原生點擊 fallback。
+44px 以上觸控區。不得以 `appearance: none` 移除原生 Picker 入口；Today 日期卡
+不得在同一次 click 疊加 `showPicker()`，避免 iPhone 第一次點擊只取得焦點。
 
 ### One-Hand First
 
@@ -206,6 +206,8 @@ Design System 採漸進式導入；本文件不授權一次性重寫首頁、月
   44px；狀態與 chevron 同列，不另放「工作明細」空白操作列。
 - 開始、暫停、繼續、收工、再跑一段、修改時間與明細內容不屬於標題列
   點擊範圍，不得因事件冒泡誤切換明細。
+- 「改用手動工時／改用開始／結束時間」一次點擊即切換，不使用確認 Dialog；
+  切換本身不保存或刪除工時，另一模式草稿只保留於目前 session。
 
 計算：
 

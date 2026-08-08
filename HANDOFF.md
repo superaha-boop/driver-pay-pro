@@ -4,6 +4,22 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
+## Today First-tap Date Picker and Direct Work-time Switch — Current Sprint
+
+- Branch：`codex/today-first-tap-direct-work-mode-20260808`；base：`3b7cb9f`。
+- 日期卡移除 click 冒泡後再次呼叫 `showPicker()` 的路徑；整張卡只使用同一個
+  原生 date input，保留 native appearance、完整 WebKit indicator 與 44px 以上
+  觸控區，目標是 iPhone Safari／PWA 第一次點擊即開啟。
+- 工時輸入模式改為一次點擊直接切換；確認 Dialog 已移除。離開模式的 clock／
+  manual 草稿只保留於目前日期的 session cache，切換本身不呼叫 persistence，
+  使用者實際修改目前模式欄位後才沿用既有 autosave。
+- App Shell candidate：`driver-pay-pro-v30`。不改 `driverPayApp.v2`、WorkRecord、
+  canonical 工時計算、Calendar／Reports／AI、Manifest、Supabase 或正式資料。
+- L1：`npm run release:check` Passed；403/403 Node、Today 142/142、Calendar
+  69/69、Reports 89/89、AI／Driver 各 25/25、Integration 16/16；lint 0 errors／
+  10 個既有 warnings。320／375／390／393／430px 無 overflow，日期 input 完整
+  位於卡片內；clock／manual 雙向一次點擊切換、雙方草稿還原及 Console 均通過。
+
 ## Active Record Date and Today KPI Hotfix — Production Released
 
 - 功能 Branch：`hotfix/active-record-date`；日期 Picker follow-up commit：

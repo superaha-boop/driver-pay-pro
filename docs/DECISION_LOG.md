@@ -853,3 +853,19 @@
   focus，無法開啟 Picker。
 - Impact: Today date-picker interaction、tests、docs、v29；資料 key、schema、
   計算、Manifest、Supabase 與正式資料不變。
+
+## D-051
+
+- Date: 2026-08-08
+- Decision:
+  - D-050 的 `showPicker()` click 增強由本決策取代；Today 日期卡只走完整覆蓋
+    卡片的原生 date input，不建立第二條開啟路徑。
+  - D-036 的工時模式切換確認由本決策取代；一次點擊直接切換 clock／manual，
+    不顯示 Dialog。
+  - 另一模式草稿只保留於目前日期的 session；切換本身不 persistence，實際
+    修改目前模式欄位後才走既有安全 autosave。
+  - App Shell 更新為 v30；資料 key、WorkRecord 與 canonical 工時計算不變。
+- Reason: 修正 iPhone 第一次點日期卡只 focus，並移除非破壞性工時切換的多餘
+  確認步驟。
+- Impact: Today interaction、tests、docs、v30；其他頁面、schema、Manifest、
+  Supabase 與正式資料不變。
