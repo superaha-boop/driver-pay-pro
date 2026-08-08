@@ -4,9 +4,14 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
-## Driver Typography and Native Date First-tap — Current Candidate
+## Driver Typography and Native Date First-tap — Production Released
 
-- Branch：`codex/driver-typography-date-first-tap-20260808`；base：`a99701f`。
+- Branch：`codex/driver-typography-date-first-tap-20260808`；base：`a99701f`；功能
+  commit：`a7850cf`；已合併至 `main`，merge commit：
+  `25d7e973c98925be054f69659afd6642acc2c7a6`。
+- Production：`https://driver-pay-app.vercel.app`；Vercel deployment：
+  `JD4TKPq2wrgmsZAoDKidiPgpQp8s`，狀態成功，App Shell 為
+  `driver-pay-pro-v31`。
 - v30 在實體 iPhone Safari／PWA 仍需第二次點日期。根本實作問題是原生 date input
   整體 `opacity: 0`；v31 將 input 本體保持可命中，只隱藏原生內部文字與 indicator，
   不新增 `showPicker()` 或第二份日期 state。
@@ -14,7 +19,14 @@ GitHub：`superaha-boop/driver-pay-pro`
   14／13／15px 修正為 14／15／16px；字體選項固定 14px。
 - Today 主收入與次要 KPI 改用獨立安全下限 token，維持既有大數字比例。
 - 本機三模式 × 320／375／390／393／430px 無 overflow；日期 input 完整位於
-  日期卡內，選 8/7 後標題、歷史 context 與付款日期同步。App Shell v31。
+  日期卡內，選 8/7 後標題、歷史 context 與付款日期同步。
+- Production 390px：每日目標 28／34／40px、副標題 14／15／16px、切換選項
+  固定 14px；Today 主收入 54.6／58.5／62.4px、次要 KPI
+  28／31.2／35.1px。日期 input 為可命中的 native control，選 8/7 後 context
+  正確更新；Console 0 error／warning、無水平 overflow。
+- `npm run release:check` Passed：404/404 Node、Today 142/142、Calendar 69/69、
+  Reports 90/90、AI／Driver 各 26/26、Integration 16/16；lint 0 errors／10 個
+  既有 warnings。
 
 ## Today First-tap Date Picker and Direct Work-time Switch — Production Released
 

@@ -25,6 +25,12 @@
 - Today 日期卡不再把整個原生 date input 設為 `opacity: 0`；只隱藏內部文字與
   indicator，保留唯一原生控制與同一 `activeRecordDate`。
 - App Shell 更新為 `driver-pay-pro-v31`；資料 key、schema、計算與 Manifest 不變。
+- 功能 commit `a7850cf` 已合併至 `main`；merge commit：
+  `25d7e973c98925be054f69659afd6642acc2c7a6`。Vercel Production deployment
+  `JD4TKPq2wrgmsZAoDKidiPgpQp8s` 已完成，正式網址：
+  `https://driver-pay-app.vercel.app`。
+- 正式站 390px 已驗證三種字級、日期切換、Console 與水平 overflow；實體
+  iPhone 第一次點擊列為發布後 Human QA。
 
 ### 2026-08-08 — Today First-tap Date Picker and Direct Work-time Switch
 

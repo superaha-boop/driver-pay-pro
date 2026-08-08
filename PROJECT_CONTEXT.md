@@ -4,16 +4,20 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## Driver Typography and Native Date First-tap — Current Candidate
+## Driver Typography and Native Date First-tap — Released
 
-- Branch：`codex/driver-typography-date-first-tap-20260808`；base：`a99701f`。
+- Branch：`codex/driver-typography-date-first-tap-20260808`；功能 commit：
+  `a7850cf`；`main` merge commit：
+  `25d7e973c98925be054f69659afd6642acc2c7a6`。
+- Production：`https://driver-pay-app.vercel.app`；Vercel deployment
+  `JD4TKPq2wrgmsZAoDKidiPgpQp8s`；App Shell `driver-pay-pro-v31`。
 - v30 實體 iPhone QA 證實全透明 date input 第一次仍只 focus。v31 保留唯一原生
   input，但 input 本體改為 `opacity: 1`，只隱藏內部文字與 indicator；選日仍只
   更新 `activeRecordDate`。
 - Driver 每日目標值為 28／34／40px；「管理常用設定」為 14／15／16px；字體
   選項固定 14px。Today KPI 使用獨立安全下限，不因本次 Driver 調整縮小。
-- 本機 390px 已量測三模式單調增加；320／375／390／393／430px 無 overflow，
-  日期 input 完整位於父卡片內。App Shell candidate：`driver-pay-pro-v31`。
+- 本機與 Production 390px 已量測三模式單調增加；320／375／390／393／430px
+  無 overflow，日期 input 完整位於父卡片內。正式站 Console 0 error／warning。
 - 不改 `settings.displaySize`、`driverPayApp.v2`、WorkRecord、計算、Manifest、
   Supabase 或正式資料。
 

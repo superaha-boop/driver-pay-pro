@@ -1,6 +1,6 @@
 # Driver Pay Pro Testing
 
-## Current Hotfix — Driver Typography and Native Date First-tap
+## Released Hotfix — Driver Typography and Native Date First-tap
 
 - Driver 390px computed sizes：每日目標 28／34／40px；「管理常用設定」
   14／15／16px；字體選項固定 14px。
@@ -9,7 +9,14 @@
   input 均完整位於父卡片內。
 - 日期 input computed `opacity: 1`、native appearance、透明內部文字；選 8/7 後
   `activeRecordDate` context 與付款日期同步。Console 0 error／warning。
-- App Shell candidate：v31；實體 iPhone 第一次點擊仍列為本次 Human QA 必測。
+- `npm run release:check` Passed：404/404 Node、Today 142/142、Calendar 69/69、
+  Reports 90/90、AI／Driver 各 26/26、Integration 16/16；lint 0 errors／10 個
+  既有 warnings，Inline JavaScript、Service Worker、Manifest、Production
+  validation 與 `git diff --check` 均通過。
+- Production 390px smoke：每日目標 28／34／40px、副標題 14／15／16px、字體
+  選項固定 14px；Today 主收入 54.6／58.5／62.4px、次要 KPI
+  28／31.2／35.1px；日期切換到 2026-08-07 正確，Console 0 error／warning、
+  無水平 overflow。App Shell v31；實體 iPhone 第一次點擊仍是發布後 QA 項目。
 
 ## Released Hotfix — First-tap Date Picker and Direct Work-time Mode Switch
 
