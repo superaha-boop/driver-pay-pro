@@ -8899,7 +8899,7 @@
       return includeToday && dateString === todayString() ? `今天・${date}` : date;
     }
 
-    function dateCardMarkup({ id, value, label, required = false, inlineToday = false, compactMobile = false, locked = false }) {
+    function dateCardMarkup({ id, value, label, required = false, inlineToday = false, compactMobile = false, locked = false, max = "" }) {
       const isToday = value === todayString();
       const displayValue = inlineToday && isToday ? `今天・${formatFullDate(value)}` : formatFullDate(value);
       return `
@@ -8908,14 +8908,21 @@
             <strong class="date-card-value${compactMobile ? " compact-mobile-date" : ""}" data-date-display${inlineToday ? " data-date-inline" : ""}${compactMobile ? ` data-short-date="${escapeAttr(formatShortDate(value, inlineToday))}"` : ""}>${escapeHtml(displayValue)}</strong>
             ${inlineToday ? "" : `<small class="date-card-today" data-date-today${isToday ? "" : " hidden"}>今天</small>`}
           </span>
-          <input type="date" id="${escapeAttr(id)}" value="${escapeAttr(value)}" aria-label="${escapeAttr(label)}"${required ? " required" : ""}${locked ? " disabled aria-readonly=\"true\"" : ""}>
+          <input type="date" id="${escapeAttr(id)}" value="${escapeAttr(value)}" aria-label="${escapeAttr(label)}"${required ? " required" : ""}${max ? ` max="${escapeAttr(max)}"` : ""}${locked ? " disabled aria-readonly=\"true\"" : ""}>
         </label>
       `;
     }
 
     function renderEntryDateCard(value = activeRecordDate) {
       if (!els.entryDateCard) return;
-      els.entryDateCard.innerHTML = dateCardMarkup({ id: "date", value, label: "每日紀錄日期", required: true, inlineToday: true, locked: true });
+      els.entryDateCard.innerHTML = dateCardMarkup({
+        id: "date",
+        value,
+        label: "選擇要修改的每日紀錄日期",
+        required: true,
+        inlineToday: true,
+        max: todayString()
+      });
     }
 
     function syncDateCardDisplay(input) {
@@ -13650,11 +13657,6 @@
 
     els.detailForm.addEventListener("input", event => {
       if (event.target.id === "date") {
-        if (event.target.value !== activeRecordDate) {
-          setActiveRecordStatus(activeRecordDateErrorMessage);
-          renderEntryDateCard(activeRecordDate);
-          return;
-        }
         syncDateCardDisplay(event.target);
       }
       if (["manualHoursPart", "manualMinutesPart"].includes(event.target.id)) {
@@ -13668,14 +13670,17 @@
     });
     els.detailForm.addEventListener("change", event => {
       if (event.target.id === "date") {
-        if (event.target.value !== activeRecordDate) {
-          setActiveRecordStatus(activeRecordDateErrorMessage);
+        const requestedDate = normalizeDateKey(event.target.value);
+        if (!isEditableRecordDate(requestedDate)) {
+          setActiveRecordStatus("只能選擇今天或過去日期。");
           renderEntryDateCard(activeRecordDate);
           return;
         }
+        if (requestedDate !== activeRecordDate) {
+          setActiveRecordDate(requestedDate, { preserveDisclosure: true });
+          return;
+        }
         syncDateCardDisplay(event.target);
-        renderIncomeInputs(activeRecordDate);
-        renderRecentIncome(activeRecordDate);
       }
       if (["startTime", "endTime", "breakMinutes", "manualHoursPart", "manualMinutesPart"].includes(event.target.id)) {
         saveTodayWorkTimeFromForm(activeRecordDate);
