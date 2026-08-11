@@ -16,13 +16,15 @@
 
 ## Unreleased
 
-### 2026-08-11 — Installed-PWA Date Picker Single Activation Candidate
+### 2026-08-11 — Installed-PWA Date Picker Single Activation Release Approved
 
 - 修正 v34 日期欄位早期 focus 與同一次原生啟用衝突，造成 iPhone installed PWA
   月曆開啟約 0.5 秒後立即關閉。
 - 日期改為 standalone 有效 touchend 單次開啟；只有成功時才抑制後續 click，
   不支援時保留原生 fallback。其他三個 Today 入口維持原行為。
 - App Shell candidate 升至 `driver-pay-pro-v35`；資料與 Manifest 不變。
+- Product Owner 實體 iPhone installed-PWA Human QA 已通過：日期 Picker 第一次
+  點擊後持續顯示且可選日期，High Priority 問題為無；已核准正式發布。
 
 ### 2026-08-11 — Today Installed-PWA First-input Unification Released
 

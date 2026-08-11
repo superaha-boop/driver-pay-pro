@@ -1131,8 +1131,8 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
      或拋錯時不攔截，維持原生 fallback。
   4. 三個 disclosure 維持 D-056 的 details touchend 路徑；不建立自訂月曆、第二份
      日期 state、全域 listener、透明遮罩或 synthetic click。
-  5. App Shell candidate 更新為 v35，需通過實體 iPhone installed-PWA Human QA
-     才能合併與正式部署。
+  5. App Shell candidate 更新為 v35；Product Owner 已完成實體 iPhone
+     installed-PWA Human QA，日期 Picker 可持續顯示並選取日期，核准合併與正式部署。
 - Reason: 正式環境無 Runtime error，且 v34 差異與「開啟約 0.5 秒後關閉」症狀
   精確對應同一次觸控的雙重日期啟用。
 - Impact: Today standalone date activation、tests、docs、v35；無資料 key、
