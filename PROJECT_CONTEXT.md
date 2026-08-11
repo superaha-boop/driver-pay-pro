@@ -4,7 +4,7 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## Installed-PWA Native Date Focus Hotfix — Ready for Human QA
+## Installed-PWA Native Date Focus Hotfix — Release Candidate Approved
 
 - Branch：`codex/date-picker-pointerdown-20260811`；base：`7979674`。
 - v35 Production 經 Product Owner 反覆完全關閉／重開測試後，日期 Picker 五次皆
@@ -23,8 +23,11 @@
   交回原生點擊，不再呼叫 `showPicker()`。
 - 沒有自訂月曆、第二份日期 state、資料模型、storage key、Manifest、Supabase 或
   正式資料變更。
-- App Shell candidate 為 `driver-pay-pro-v37`。必須完成 Public Preview 的實體
-  iPhone installed-PWA 多次冷啟動 Human QA 才能進 Production。
+- Product Owner 已於 2026-08-11 完成 Public Preview 的實體 iPhone
+  installed-PWA 多次冷啟動 Human QA；直接日期及工時／支出／其他資料後再開日期
+  均穩定通過，High Priority 問題為無，Release Candidate 已核准正式發布。
+- App Shell 為 `driver-pay-pro-v37`；功能 commit 為 `6639cec`。下一步是重新執行
+  Release Check、一般合併 `main` 並核對 Production Deployment。
 
 ## Installed-PWA Date Picker Single Activation — Production Released
 

@@ -997,7 +997,7 @@
 ## D-059 — Installed-PWA native date focus and isolated touch state
 
 - Date: 2026-08-11
-- Status: Ready for Human QA
+- Status: Human QA Passed；Release Candidate Approved
 - Decision:
   - v36 pointerdown `showPicker()` candidate 實體 QA 失敗，禁止合併與 Production。
   - 移除 disclosure capture pointerdown 強制 focus；details 仍在 touchend 切換。
@@ -1010,3 +1010,6 @@
   `showPicker()`。WebKit issue 261703 亦說明 iOS 此 API 並非可靠啟動路徑。
 - Impact: `index.html`、v37 App Shell、tests 與交接文件；無 UI、資料模型、storage
   key、計算、Manifest、Supabase 或正式資料變更。
+- Validation: Product Owner 於 2026-08-11 完成實體 iPhone installed-PWA 多次
+  冷啟動，以及直接日期、工時→日期、支出→日期、其他資料→日期交錯操作；全部
+  通過且無 High Priority 問題。

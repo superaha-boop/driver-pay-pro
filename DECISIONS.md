@@ -1180,3 +1180,6 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   issue 261703 記錄 iOS `showPicker()` 不可靠，且 iOS picker 實際綁定 input focus。
 - Impact: Today standalone touch activation、tests、docs、v37；不改 UI、資料 key、
   WorkRecord、計算、Manifest、Supabase 或正式資料。
+- Validation: Product Owner 已於 2026-08-11 完成實體 iPhone installed-PWA
+  多次冷啟動與 disclosure→日期交錯 Human QA；全部通過且無 High Priority 問題，
+  Release Candidate Approved。

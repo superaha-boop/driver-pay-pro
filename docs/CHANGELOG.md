@@ -24,6 +24,9 @@
   touchend 聚焦真正原生 date input；已聚焦時保留完整 native click。
 - 日期與 disclosure 使用獨立 touch intent，click suppression 依控制項隔離；新增
   disclosure → 日期交錯回歸。App Shell candidate 升至 v37。
+- Product Owner 實體 iPhone installed-PWA 多次冷啟動與直接日期、工時→日期、
+  支出→日期、其他資料→日期 Human QA 全部通過；無 High Priority 問題，Release
+  Candidate Approved。
 
 ### 2026-08-11 — Installed-PWA Date Picker Pointerdown Hotfix Candidate
 
