@@ -4,29 +4,22 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
-## Installed PWA First-input Diagnostics — Awaiting One Device Trace
+## Installed PWA First-input Recovery — Release Candidate
 
 - Current branch：`codex/pwa-first-input-diagnostics-20260811`；base：`a6d4703`。
-- v32 Production 在實體 iPhone 主畫面 App 仍會發生首次操作需點第二次；Safari
-  分頁正常。先前 D-053 已修除的 Service Worker 中途接管／reload 是真實風險，
-  但不足以解釋目前殘留症狀。
-- `index.html` 已加入啟動最早期、只存記憶體的事件 trace，涵蓋第一下的
-  pointer／touch／click、focus／visibility／pageshow、App listeners/render ready、
-  Date change 與三個 disclosure toggle handler，以及受控 worker／cache 狀態。
-- Trace 不讀取或輸出任何欄位值、收入、工時、支出、文字內容或 localStorage；
-  Driver「系統」的「複製診斷結果」只在 standalone 或
-  `?pwa-diagnostic=1` 顯示。
-- 本機乾淨 origin 第一次點「新增支出」即展開；舊本機 origin 曾被既有
-  Service Worker cache 提供舊 HTML，顯示 persistent PWA state 需要納入實機證據，
-  但這不是正式根因結論。
-- 下一步只需一次實體測試：用 Preview 加到主畫面、完全關閉後從圖示打開，對
-  日期或「新增支出」點一次，不論成功與否都到 Driver → 系統複製結果並貼回。
-  Trace 將分辨：系統未送事件、只有 pointer/touch 沒有 click、handler 已執行但
-  DOM 被後續 render 還原，或載入了舊 worker/cache。
-- 收到 trace 後才在同一 branch 實作最小根治，移除暫時診斷 UI，再進行完整
-  release 與實體 PWA Human QA。現在不得 merge `main` 或 Production deploy。
-- 不改 `driverPayApp.v2`、WorkRecord、計算、Manifest、Supabase 或正式資料；
-  Service Worker 仍為 `driver-pay-pro-v32`。
+- Product Owner 的第二次自然啟動 trace 已確認：standalone、受 active Service
+  Worker 控制、無 waiting／installing，cache 精確為 `driver-pay-pro-v32`。
+- 「新增支出」第一次有效點擊完整觸發 pointer／touch／click，既有 toggle handler
+  下一毫秒將 details 設為 `open: true`。App 於 196ms interactive ready、862ms
+  pageshow，之後無 reload 或狀態回復。
+- 這排除元件、事件 handler、v32 worker 與「WebView 先取得 focus」假說；根因
+  範圍收斂為正式 origin 先前留下的 pre-v32 worker／cache 安裝狀態。
+- 暫時診斷 script、Driver 診斷 UI、copy handler 與 diagnostic tests 均已移除；
+  正式產品不保留事件追蹤或診斷入口。
+- App Shell 升至 `driver-pay-pro-v33`，沿用安全 deferred activation：不
+  `skipWaiting()`、不 `clients.claim()`、不 `controllerchange` reload。v33 會建立
+  乾淨 cache 並在頁面自然關閉後接管。
+- 不改 `driverPayApp.v2`、WorkRecord、計算、Manifest、Supabase 或正式資料。
 
 ## PWA First-tap and Driver Labels — Production Released
 

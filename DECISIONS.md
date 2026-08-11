@@ -1074,3 +1074,24 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   連續猜測元件 CSS 或事件種類已多次無法根治，必須先量到第一次實體事件鏈。
 - Impact: `index.html` 的暫時診斷、diagnostic tests、handoff／testing／decision／
   technical-debt 文件與 Preview；正式產品功能與資料契約不變。
+
+## D-055 — Remove Diagnostics and Refresh the Production App Shell
+
+- Date: 2026-08-11
+- Decision:
+  1. Product Owner 的第二次 installed-PWA trace 已在 active v32 Worker 控制、唯一
+     v32 cache 的狀態下完成；「新增支出」第一次有效點擊完整產生 down／up、
+     touch、click，既有 handler 下一毫秒將 details 設為 open。
+  2. 這份證據排除元件 handler、v32 controlled path、render rollback 與 WebView
+     focus takeover；正式 origin 殘留症狀歸因於 pre-v32 Worker／cache 安裝狀態。
+  3. 暫時 memory-only trace、Driver 診斷 UI、copy handler 與 diagnostic tests
+     必須在正式發布前完整移除；不得把使用者輸入事件追蹤帶入 Production。
+  4. App Shell 升至 v33，建立乾淨 cache 並淘汰舊 App Shell；沿用 deferred
+     activation，不 `skipWaiting()`、不 `clients.claim()`、不監聽
+     `controllerchange` reload。
+  5. 不加入透明遮罩、假點擊、全域 touch／pointer fallback 或元件專用補丁。
+     不改 Manifest、`driverPayApp.v2`、WorkRecord、計算、Supabase 或正式資料。
+- Reason: 兩次實體 trace 已提供未受控與 v32 受控啟動的對照；正式修復應清理舊
+  App Shell 狀態，而不是保留診斷或改寫正常的原生控制。
+- Impact: `sw.js` v33、cache contract tests、release／handoff 文件；正式 UI、
+  interaction、data model 與功能行為不變。

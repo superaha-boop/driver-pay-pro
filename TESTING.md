@@ -1,21 +1,19 @@
 # Driver Pay Pro Testing
 
-## Current — Installed PWA First-input Diagnostics
+## Current — Installed PWA First-input Recovery
 
-- Product Owner 實體範圍：只有從 iPhone 主畫面圖示打開的 standalone PWA 仍會
-  首次操作無反應；同一功能在 Safari 分頁正常。
-- 新增 `tests/pwa-first-input-diagnostic.test.js`，驗證診斷在 App 啟動程式前
-  安裝、涵蓋 pointer／touch／click 與 lifecycle、只記錄目標識別、不讀取
-  localStorage 或欄位值，並包含 Date／work／expense／other handler markers。
-- Driver 診斷入口只允許 standalone 或 `?pwa-diagnostic=1`，正常 Safari／正式
-  使用流程不顯示；診斷資料只存在記憶體，重新載入即消失。
-- `npm run release:check`：Passed；lint 0 errors／10 個既有 warnings，全部 Node
-  與專項測試、Inline JavaScript、Service Worker、Manifest、Production
-  validation 與 `git diff --check` 全部通過。
-- 本機乾淨 origin：第一次 click 即展開「新增支出」，診斷可複製；320／390／
-  430px 均 `scrollWidth === clientWidth`，Console 0 error／warning。
-- 尚未完成的唯一診斷 Gate：實體 iPhone 將非 Production Preview 加到主畫面後，
-  冷啟動只點一次並回傳 trace。收到證據前不得宣告 root cause 或 fix complete。
+- Product Owner trace 1：standalone 首次安裝啟動，Worker 未控制且 cache 為空；
+  App 可正常操作。
+- Product Owner trace 2：完全關閉後由同一主畫面圖示自然重開，Worker 已控制，
+  active=true、waiting=false、installing=false，唯一 cache 為 v32。
+- Trace 2 的「新增支出」一次點擊完整產生 pointerdown／touchstart／pointerup／
+  touchend／click；`expense-toggle-handler` 於下一毫秒執行且 `open=true`。
+- App listeners ready 113ms、interactive ready 196ms、pageshow 862ms；操作發生於
+  18.2 秒，期間沒有 reload、focus takeover、handler 重複或 render rollback。
+- 暫時診斷 code／UI／test 已從 release candidate 移除；release regression 必須
+  繼續禁止 `skipWaiting()`、`clients.claim()` 與 `controllerchange` reload。
+- App Shell candidate：`driver-pay-pro-v33`。需通過完整 `release:check`、Preview／
+  Production smoke、390px overflow、Console、Manifest 與 Service Worker 驗證。
 
 ## Released — PWA First-tap and Driver Labels
 

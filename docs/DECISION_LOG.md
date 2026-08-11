@@ -919,3 +919,21 @@
   還原或 stale worker/cache。
 - Impact: 暫時 diagnostics、tests、docs 與 Preview；不改 Service Worker v32、
   Manifest、資料 key、WorkRecord、計算、Supabase 或正式資料。
+
+## D-055
+
+- Date: 2026-08-11
+- Decision:
+  - 第二次實體 installed-PWA trace 在 active v32 Worker、唯一 v32 cache 下，確認
+    「新增支出」第一次有效點擊完整產生 pointer／touch／click，既有 handler
+    下一毫秒執行並 `open=true`。
+  - 排除元件、handler、v32 controlled path、render rollback 與 WebView focus
+    takeover；正式 origin 殘留範圍為 pre-v32 Worker／cache 安裝狀態。
+  - 正式發布前移除所有暫時事件 trace、Driver 診斷 UI、copy handler 與 diagnostic
+    tests；Production 不保存使用者操作事件。
+  - App Shell 升至 v33，透過既有 deferred activation 建立乾淨 cache；不使用
+    `skipWaiting()`、`clients.claim()` 或 `controllerchange` reload。
+  - 不加入假點擊、透明遮罩、全域 touch fallback 或資料模型修改。
+- Reason: 實體證據支持清理舊 App Shell 狀態，而不是修改運作正常的原生元件。
+- Impact: v33 cache、release tests、docs；UI、資料 key、WorkRecord、Manifest、
+  Supabase 與正式資料不變。

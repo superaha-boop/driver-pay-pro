@@ -4,23 +4,23 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## Installed PWA First-input Diagnostics — Current Sprint
+## Installed PWA First-input Recovery — Release Candidate
 
 - Branch：`codex/pwa-first-input-diagnostics-20260811`；base：`a6d4703`。
-- Product Owner 實體 iPhone 再驗證：問題只在由主畫面圖示冷啟動／恢復的
-  installed PWA 發生，Safari 分頁沒有；日期與原生 `details`「新增支出」等
-  不同元件都可能第一次無反應。
-- D-053 的中途 Service Worker 接管與 reload 風險確實已移除，但 v32 正式版仍可
-  重現，因此不得再把該機制宣告為殘留症狀的完整根因。
-- 本 Sprint 先加入只存在記憶體的 privacy-safe 事件診斷：記錄
-  `pointerdown/up`、`touchstart/end`、`click`、頁面生命週期、App ready marker、
-  目標元素識別與 Service Worker／cache 狀態；不讀取收入、工時、支出、輸入值
-  或 `driverPayApp.v2`。
-- 診斷入口只在 installed PWA 或 `?pwa-diagnostic=1` 顯示於 Driver「系統」，供
-  使用者複製一次實機 trace。收到 trace 前不加入假點擊遮罩、不全面改用
-  `touchstart`／`pointerdown`，也不宣告根治完成。
-- 本診斷版不改 Service Worker、Manifest、資料 key、WorkRecord、計算或正式資料；
-  App Shell 維持 `driver-pay-pro-v32`，只建立非 Production Preview。
+- Product Owner 已完成兩次實體 iPhone standalone trace：首次安裝啟動為未受控、
+  無 cache；第二次自然啟動為 `serviceWorkerControlled: true`、active worker、無
+  waiting／installing，且唯一 cache 為 `driver-pay-pro-v32`。
+- 第二次啟動的「新增支出」第一次有效點擊完整產生 pointer down／up、touch
+  start／end、click，下一毫秒由既有 `expense-toggle-handler` 接收並變成
+  `open: true`；App listeners 113ms、interactive ready 196ms、pageshow 862ms，
+  沒有中途 reload、render rollback 或 handler 重複。
+- 結論：原生 details、日期元件與 v32 受控 PWA 路徑均正常；正式版殘留症狀來自
+  production origin 的 pre-v32 worker／cache 安裝狀態，而非 standalone WebView
+  需要第一下取得 focus。
+- 暫時 memory-only 診斷與 Driver 診斷 UI 已移除；不保留全域 touch／pointer
+  listener，也不加入假點擊遮罩。App Shell 升至 `driver-pay-pro-v33`，以既有
+  deferred activation 安全建立乾淨 cache，仍不在互動中 claim 或 reload。
+- 不改 Manifest、`driverPayApp.v2`、WorkRecord、計算、Supabase 或正式資料。
 
 ## PWA First-tap and Driver Labels — Production Released
 

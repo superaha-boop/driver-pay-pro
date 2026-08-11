@@ -16,19 +16,17 @@
 
 ## Unreleased
 
-### 2026-08-11 — Installed PWA First-input Diagnostics
+### 2026-08-11 — Installed PWA First-input Recovery
 
-- 因 v32 正式版在實體 iPhone 主畫面 App 仍可重現首次操作需點第二次，先加入
-  privacy-safe、memory-only 的事件與生命週期 trace，釐清第一下是否抵達頁面、
-  是否產生 click、handler 是否執行及 DOM 是否被後續 render 還原。
-- Driver「系統」新增暫時的「首次操作診斷」，只在 standalone 或
-  `?pwa-diagnostic=1` 顯示；複製內容不包含收入、工時、支出、輸入值、介面文字
-  或 localStorage。
-- 新增自動測試防止診斷讀取業務資料、永久保存或漏記相關 handler；完整 release
-  check 通過。
-- 這是非 Production 診斷候選，不改 Service Worker v32、Manifest、
-  `driverPayApp.v2`、WorkRecord、計算或正式資料；收到一次實體 trace 後才進行
-  最小根治並移除診斷 UI。
+- 以 privacy-safe、memory-only trace 完成兩次實體 installed-PWA 診斷。第二次
+  自然啟動由 v32 Worker 控制且只有 v32 cache；「新增支出」第一次有效點擊完整
+  觸發 click 與既有 handler，立即展開。
+- 證據排除日期／支出元件、handler、v32 受控路徑與 WebView focus takeover；正式
+  origin 的殘留症狀鎖定為 pre-v32 worker／cache 安裝狀態。
+- 臨時診斷 script、Driver 診斷 UI、copy handler 與 diagnostic test 已完整移除，
+  正式產品不保留事件追蹤。
+- App Shell 升至 `driver-pay-pro-v33`，強制建立乾淨 App Shell cache；仍等待頁面
+  自然關閉後接管，不在互動中 reload。資料 key、schema、計算與 Manifest 不變。
 
 ### 2026-08-08 — PWA First-tap and Driver Labels
 
