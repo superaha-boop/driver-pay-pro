@@ -1,8 +1,26 @@
 # Driver Pay Pro 專案固定背景
 
-更新日期：2026-08-08
+更新日期：2026-08-11
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
+
+## Installed PWA First-input Recovery — Release Candidate
+
+- Branch：`codex/pwa-first-input-diagnostics-20260811`；base：`a6d4703`。
+- Product Owner 已完成兩次實體 iPhone standalone trace：首次安裝啟動為未受控、
+  無 cache；第二次自然啟動為 `serviceWorkerControlled: true`、active worker、無
+  waiting／installing，且唯一 cache 為 `driver-pay-pro-v32`。
+- 第二次啟動的「新增支出」第一次有效點擊完整產生 pointer down／up、touch
+  start／end、click，下一毫秒由既有 `expense-toggle-handler` 接收並變成
+  `open: true`；App listeners 113ms、interactive ready 196ms、pageshow 862ms，
+  沒有中途 reload、render rollback 或 handler 重複。
+- 結論：原生 details、日期元件與 v32 受控 PWA 路徑均正常；正式版殘留症狀來自
+  production origin 的 pre-v32 worker／cache 安裝狀態，而非 standalone WebView
+  需要第一下取得 focus。
+- 暫時 memory-only 診斷與 Driver 診斷 UI 已移除；不保留全域 touch／pointer
+  listener，也不加入假點擊遮罩。App Shell 升至 `driver-pay-pro-v33`，以既有
+  deferred activation 安全建立乾淨 cache，仍不在互動中 claim 或 reload。
+- 不改 Manifest、`driverPayApp.v2`、WorkRecord、計算、Supabase 或正式資料。
 
 ## PWA First-tap and Driver Labels — Production Released
 

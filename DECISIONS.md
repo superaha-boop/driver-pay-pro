@@ -1051,3 +1051,47 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   使當下第一次觸控被中斷；分別修改元件無法徹底解決。
 - Impact: PWA update lifecycle、Driver labels、tests、docs 與 v32；
   `driverPayApp.v2`、WorkRecord、計算、Manifest、Supabase 與正式資料不變。
+
+## D-054 — Evidence-first Installed PWA First-input Diagnostics
+
+- Date: 2026-08-11
+- Decision:
+  1. D-053 對 Service Worker 中途接管／reload 的修正維持有效，但實體 iPhone
+     installed PWA 在 v32 仍重現首次操作無反應，因此 D-053 不再被視為殘留
+     症狀的完整根因。
+  2. 第二次修正前，先由 App 啟動最早期安裝 memory-only、privacy-safe trace，
+     記錄 pointer／touch／click、頁面生命週期、App ready markers、目標元素識別
+     與 worker/cache 狀態；禁止讀取或保存業務資料、輸入值及 localStorage。
+  3. 診斷 UI 只在 standalone 或明確的 `?pwa-diagnostic=1` 顯示，並只建立
+     非 Production Preview。收到一次實體 iPhone trace 後才選擇最小根治，完成後
+     移除暫時診斷 UI。
+  4. 不採用透明遮罩製造假點擊，也不在沒有證據時把全 App 控制改綁
+     `touchstart`／`pointerdown`；兩者都可能吞掉使用者真正第一次操作、造成雙重
+     觸發或破壞原生日期、捲動與 Accessibility。
+  5. 診斷版不改 Service Worker v32、Manifest、`driverPayApp.v2`、WorkRecord、
+     計算、Supabase 或正式資料；不 merge `main`、不 Production deploy。
+- Reason: 桌面 Browser 與 Safari 分頁無法重現 installed PWA 的冷啟動事件路徑；
+  連續猜測元件 CSS 或事件種類已多次無法根治，必須先量到第一次實體事件鏈。
+- Impact: `index.html` 的暫時診斷、diagnostic tests、handoff／testing／decision／
+  technical-debt 文件與 Preview；正式產品功能與資料契約不變。
+
+## D-055 — Remove Diagnostics and Refresh the Production App Shell
+
+- Date: 2026-08-11
+- Decision:
+  1. Product Owner 的第二次 installed-PWA trace 已在 active v32 Worker 控制、唯一
+     v32 cache 的狀態下完成；「新增支出」第一次有效點擊完整產生 down／up、
+     touch、click，既有 handler 下一毫秒將 details 設為 open。
+  2. 這份證據排除元件 handler、v32 controlled path、render rollback 與 WebView
+     focus takeover；正式 origin 殘留症狀歸因於 pre-v32 Worker／cache 安裝狀態。
+  3. 暫時 memory-only trace、Driver 診斷 UI、copy handler 與 diagnostic tests
+     必須在正式發布前完整移除；不得把使用者輸入事件追蹤帶入 Production。
+  4. App Shell 升至 v33，建立乾淨 cache 並淘汰舊 App Shell；沿用 deferred
+     activation，不 `skipWaiting()`、不 `clients.claim()`、不監聽
+     `controllerchange` reload。
+  5. 不加入透明遮罩、假點擊、全域 touch／pointer fallback 或元件專用補丁。
+     不改 Manifest、`driverPayApp.v2`、WorkRecord、計算、Supabase 或正式資料。
+- Reason: 兩次實體 trace 已提供未受控與 v32 受控啟動的對照；正式修復應清理舊
+  App Shell 狀態，而不是保留診斷或改寫正常的原生控制。
+- Impact: `sw.js` v33、cache contract tests、release／handoff 文件；正式 UI、
+  interaction、data model 與功能行為不變。

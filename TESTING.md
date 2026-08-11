@@ -1,5 +1,20 @@
 # Driver Pay Pro Testing
 
+## Current — Installed PWA First-input Recovery
+
+- Product Owner trace 1：standalone 首次安裝啟動，Worker 未控制且 cache 為空；
+  App 可正常操作。
+- Product Owner trace 2：完全關閉後由同一主畫面圖示自然重開，Worker 已控制，
+  active=true、waiting=false、installing=false，唯一 cache 為 v32。
+- Trace 2 的「新增支出」一次點擊完整產生 pointerdown／touchstart／pointerup／
+  touchend／click；`expense-toggle-handler` 於下一毫秒執行且 `open=true`。
+- App listeners ready 113ms、interactive ready 196ms、pageshow 862ms；操作發生於
+  18.2 秒，期間沒有 reload、focus takeover、handler 重複或 render rollback。
+- 暫時診斷 code／UI／test 已從 release candidate 移除；release regression 必須
+  繼續禁止 `skipWaiting()`、`clients.claim()` 與 `controllerchange` reload。
+- App Shell candidate：`driver-pay-pro-v33`。需通過完整 `release:check`、Preview／
+  Production smoke、390px overflow、Console、Manifest 與 Service Worker 驗證。
+
 ## Released — PWA First-tap and Driver Labels
 
 - `npm test`：407/407 Passed。

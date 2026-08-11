@@ -900,3 +900,40 @@
   實際共同來源是 Service Worker 在 UI 已互動後重新載入頁面。
 - Impact: PWA lifecycle、Driver labels、tests、docs、v32；無 schema、storage key、
   Manifest、Supabase 或正式資料變更。
+
+## D-054
+
+- Date: 2026-08-11
+- Decision:
+  - D-053 的 deferred Service Worker activation 維持；但因 v32 實體 installed PWA
+    仍重現首次操作無反應，不再宣告該 reload 是殘留症狀的完整根因。
+  - 第二次修正前先加入啟動最早期、只存記憶體的事件 trace，記錄
+    pointer／touch／click、pageshow／focus／visibility、App ready markers、目標
+    元素識別與 worker/cache 狀態；不讀取收入、工時、支出、輸入值或 storage。
+  - 診斷入口只在 standalone 或 `?pwa-diagnostic=1` 顯示，只部署非 Production
+    Preview；收到一份實體 iPhone trace 後實作最小根治並移除診斷 UI。
+  - 拒絕以透明遮罩假點擊或無證據的全域 touch／pointer fallback 掩蓋問題，避免
+    雙重觸發、破壞原生 Picker、捲動及 Accessibility。
+- Reason: Safari 分頁與桌面乾淨 origin 均無法重現，必須量到 installed WebView
+  的第一個實體事件鏈，才能區分系統未送事件、click 未合成、handler 後被 render
+  還原或 stale worker/cache。
+- Impact: 暫時 diagnostics、tests、docs 與 Preview；不改 Service Worker v32、
+  Manifest、資料 key、WorkRecord、計算、Supabase 或正式資料。
+
+## D-055
+
+- Date: 2026-08-11
+- Decision:
+  - 第二次實體 installed-PWA trace 在 active v32 Worker、唯一 v32 cache 下，確認
+    「新增支出」第一次有效點擊完整產生 pointer／touch／click，既有 handler
+    下一毫秒執行並 `open=true`。
+  - 排除元件、handler、v32 controlled path、render rollback 與 WebView focus
+    takeover；正式 origin 殘留範圍為 pre-v32 Worker／cache 安裝狀態。
+  - 正式發布前移除所有暫時事件 trace、Driver 診斷 UI、copy handler 與 diagnostic
+    tests；Production 不保存使用者操作事件。
+  - App Shell 升至 v33，透過既有 deferred activation 建立乾淨 cache；不使用
+    `skipWaiting()`、`clients.claim()` 或 `controllerchange` reload。
+  - 不加入假點擊、透明遮罩、全域 touch fallback 或資料模型修改。
+- Reason: 實體證據支持清理舊 App Shell 狀態，而不是修改運作正常的原生元件。
+- Impact: v33 cache、release tests、docs；UI、資料 key、WorkRecord、Manifest、
+  Supabase 與正式資料不變。

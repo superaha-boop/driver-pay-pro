@@ -16,6 +16,18 @@
 
 ## Unreleased
 
+### 2026-08-11 — Installed PWA First-input Recovery
+
+- 以 privacy-safe、memory-only trace 完成兩次實體 installed-PWA 診斷。第二次
+  自然啟動由 v32 Worker 控制且只有 v32 cache；「新增支出」第一次有效點擊完整
+  觸發 click 與既有 handler，立即展開。
+- 證據排除日期／支出元件、handler、v32 受控路徑與 WebView focus takeover；正式
+  origin 的殘留症狀鎖定為 pre-v32 worker／cache 安裝狀態。
+- 臨時診斷 script、Driver 診斷 UI、copy handler 與 diagnostic test 已完整移除，
+  正式產品不保留事件追蹤。
+- App Shell 升至 `driver-pay-pro-v33`，強制建立乾淨 App Shell cache；仍等待頁面
+  自然關閉後接管，不在互動中 reload。資料 key、schema、計算與 Manifest 不變。
+
 ### 2026-08-08 — PWA First-tap and Driver Labels
 
 - 修正 App 首次開啟後第一次點日期或「新增支出」可能被吞掉：Service Worker

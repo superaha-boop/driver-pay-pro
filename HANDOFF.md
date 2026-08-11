@@ -1,8 +1,25 @@
 # Driver Pay Pro 開發交接摘要
 
-更新日期：2026-08-08
+更新日期：2026-08-11
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
+
+## Installed PWA First-input Recovery — Release Candidate
+
+- Current branch：`codex/pwa-first-input-diagnostics-20260811`；base：`a6d4703`。
+- Product Owner 的第二次自然啟動 trace 已確認：standalone、受 active Service
+  Worker 控制、無 waiting／installing，cache 精確為 `driver-pay-pro-v32`。
+- 「新增支出」第一次有效點擊完整觸發 pointer／touch／click，既有 toggle handler
+  下一毫秒將 details 設為 `open: true`。App 於 196ms interactive ready、862ms
+  pageshow，之後無 reload 或狀態回復。
+- 這排除元件、事件 handler、v32 worker 與「WebView 先取得 focus」假說；根因
+  範圍收斂為正式 origin 先前留下的 pre-v32 worker／cache 安裝狀態。
+- 暫時診斷 script、Driver 診斷 UI、copy handler 與 diagnostic tests 均已移除；
+  正式產品不保留事件追蹤或診斷入口。
+- App Shell 升至 `driver-pay-pro-v33`，沿用安全 deferred activation：不
+  `skipWaiting()`、不 `clients.claim()`、不 `controllerchange` reload。v33 會建立
+  乾淨 cache 並在頁面自然關閉後接管。
+- 不改 `driverPayApp.v2`、WorkRecord、計算、Manifest、Supabase 或正式資料。
 
 ## PWA First-tap and Driver Labels — Production Released
 
