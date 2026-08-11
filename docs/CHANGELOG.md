@@ -16,7 +16,7 @@
 
 ## Unreleased
 
-### 2026-08-11 — Installed-PWA Native Date Focus Hotfix Candidate
+### 2026-08-11 — Installed-PWA Native Date Focus Hotfix Released
 
 - v36 Public Preview 實體 QA 失敗；點過工時、支出或其他資料後，日期 Picker 經常
   需要多次點擊。v36 不得合併或部署 Production。
@@ -27,6 +27,11 @@
 - Product Owner 實體 iPhone installed-PWA 多次冷啟動與直接日期、工時→日期、
   支出→日期、其他資料→日期 Human QA 全部通過；無 High Priority 問題，Release
   Candidate Approved。
+- 功能 commit `6639cec` 與 QA 文件 commit `422310b` 已一般合併至 `main`；merge
+  commit：`5b45618ad9029e4a47036e9e1ce72e596afc0018`。Vercel Production deployment
+  `dpl_6kfjT63qpgo8pqN1gxj1ejVcdc3C` 為 `READY`，正式 App Shell 為 v37。
+- 正式站、Manifest 與 Service Worker HTTP 200；390px 無水平 overflow，Console
+  與 Vercel Runtime errors 均為 0。
 
 ### 2026-08-11 — Installed-PWA Date Picker Pointerdown Hotfix Candidate
 

@@ -960,7 +960,7 @@
 ## D-057 — Installed-PWA date picker single activation
 
 - Date: 2026-08-11
-- Status: Human QA Passed；Release Candidate Approved
+- Status: Production Released
 - Decision:
   - v34 日期 input 的 pointerdown early focus 由本決策取代，避免與同一觸控的原生
     activation 形成開啟後立即關閉。
@@ -997,7 +997,7 @@
 ## D-059 — Installed-PWA native date focus and isolated touch state
 
 - Date: 2026-08-11
-- Status: Human QA Passed；Release Candidate Approved
+- Status: Production Released
 - Decision:
   - v36 pointerdown `showPicker()` candidate 實體 QA 失敗，禁止合併與 Production。
   - 移除 disclosure capture pointerdown 強制 focus；details 仍在 touchend 切換。
@@ -1012,4 +1012,7 @@
   key、計算、Manifest、Supabase 或正式資料變更。
 - Validation: Product Owner 於 2026-08-11 完成實體 iPhone installed-PWA 多次
   冷啟動，以及直接日期、工時→日期、支出→日期、其他資料→日期交錯操作；全部
-  通過且無 High Priority 問題。
+  通過且無 High Priority 問題。功能 commit `6639cec` 與 QA 文件 commit `422310b`
+  已一般合併至 `main`（merge commit `5b45618`）；Vercel Production deployment
+  `dpl_6kfjT63qpgo8pqN1gxj1ejVcdc3C` 為 `READY`，390px 無水平 overflow、Console
+  與 Runtime errors 均為 0，正式 App Shell 為 v37。

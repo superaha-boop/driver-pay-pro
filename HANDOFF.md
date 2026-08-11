@@ -4,7 +4,7 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
-## Installed-PWA Native Date Focus Hotfix — Release Candidate Approved
+## Installed-PWA Native Date Focus Hotfix — Production Released
 
 - Branch：`codex/date-picker-pointerdown-20260811`；base：`7979674`。
 - Product Owner 在 v35 Production 依序關閉 Safari 正式站分頁、完全關閉 PWA、等待
@@ -24,8 +24,14 @@ GitHub：`superaha-boop/driver-pay-pro`
 - Product Owner 已完成實體 iPhone installed-PWA 多次冷啟動與交錯操作 Human QA；
   直接日期及工時／支出／其他資料後再開日期均穩定通過，High Priority 問題為無，
   Release Candidate 已核准正式發布。
-- 下一步：重新執行 Release Check、一般合併 `main`、Push 並核對 Production 的
-  commit、Service Worker v37、Manifest 與正式網址。
+- QA 文件 commit：`422310bdef6939da366dcc85c5cf751b5b3850ee`；已一般合併並
+  推送 `main`，merge commit：`5b45618ad9029e4a47036e9e1ce72e596afc0018`。
+- Production：`https://driver-pay-app.vercel.app`；deployment
+  `dpl_6kfjT63qpgo8pqN1gxj1ejVcdc3C`，狀態 `READY`，來源為上述 `main` merge
+  commit。正式站、Manifest 與 Service Worker HTTP 200，App Shell 為 v37。
+- Production 390px 無水平 overflow，Console 0 error／warning，發布後 Runtime
+  errors 為 0。未使用 force push／rebase／reset，未修改資料、Schema、storage
+  key、Manifest 或 Supabase。
 
 ## Installed-PWA Date Picker Single Activation — Production Released
 

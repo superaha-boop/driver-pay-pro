@@ -1182,4 +1182,6 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   WorkRecord、計算、Manifest、Supabase 或正式資料。
 - Validation: Product Owner 已於 2026-08-11 完成實體 iPhone installed-PWA
   多次冷啟動與 disclosure→日期交錯 Human QA；全部通過且無 High Priority 問題，
-  Release Candidate Approved。
+  Release Candidate Approved。功能 commit `6639cec` 與 QA 文件 commit `422310b`
+  已一般合併至 `main`（merge commit `5b45618`）；Vercel Production deployment
+  `dpl_6kfjT63qpgo8pqN1gxj1ejVcdc3C` 為 `READY`，正式 App Shell 為 v37。

@@ -4,9 +4,10 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## Installed-PWA Native Date Focus Hotfix — Release Candidate Approved
+## Installed-PWA Native Date Focus Hotfix — Production Released
 
-- Branch：`codex/date-picker-pointerdown-20260811`；base：`7979674`。
+- Branch：`codex/date-picker-pointerdown-20260811`；base：`7979674`；已一般合併至
+  `main`，merge commit：`5b45618ad9029e4a47036e9e1ce72e596afc0018`。
 - v35 Production 經 Product Owner 反覆完全關閉／重開測試後，日期 Picker 五次皆
   無法可靠開啟；因此先前一次 Human QA 不足以涵蓋長期 Production installed-PWA
   冷啟動狀態，D-057 的 touchend 方案不再視為完成根治。
@@ -26,8 +27,13 @@
 - Product Owner 已於 2026-08-11 完成 Public Preview 的實體 iPhone
   installed-PWA 多次冷啟動 Human QA；直接日期及工時／支出／其他資料後再開日期
   均穩定通過，High Priority 問題為無，Release Candidate 已核准正式發布。
-- App Shell 為 `driver-pay-pro-v37`；功能 commit 為 `6639cec`。下一步是重新執行
-  Release Check、一般合併 `main` 並核對 Production Deployment。
+- App Shell 為 `driver-pay-pro-v37`；功能 commit 為 `6639cec`，QA 文件 commit
+  為 `422310b`。合併前與合併後 `npm run release:check` 均完整通過。
+- Production：`https://driver-pay-app.vercel.app`；deployment
+  `dpl_6kfjT63qpgo8pqN1gxj1ejVcdc3C`，狀態 `READY`，來源為 `main` 上述 merge
+  commit。正式站、Manifest 與 Service Worker 均回傳 HTTP 200，App Shell 為 v37。
+- Production 390px：無水平 overflow、Console 0 error／warning；發布後 Vercel
+  Runtime errors 為 0。資料 key、schema、Manifest、Supabase 與正式資料未變。
 
 ## Installed-PWA Date Picker Single Activation — Production Released
 
