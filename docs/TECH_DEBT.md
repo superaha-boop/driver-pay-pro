@@ -41,7 +41,7 @@ Priority:
 | TD-026 | Historical platform income is keyed by platform display name rather than a stable platform ID. | Renaming a custom platform can split historical ranking, while silently merging names could corrupt attribution. | P1 | Stable-ID migration requires a separate approved data Sprint | Partially resolved in Sprint 5B2：核准的內建別名在讀取層合併，未知自訂平台安全保留；自訂平台重新命名後的歷史穩定 ID 仍未解決，且未改寫資料。 |
 | TD-027 | 今日自動天氣依賴瀏覽器定位與 Open-Meteo 即時可用性，且真實 iOS 權限行為無法由 Node 測試完整覆蓋。 | 權限、網路或外部服務失敗時無法自動帶入，但不得影響 Local-first 核心紀錄。 | P2 | 每次觸及天氣、權限或 PWA 發布時做真機回歸 | Open／monitored；目前無 API key、只做使用者同意後一次性定位、精確位置不保存、30 分鐘 session 快取，所有失敗安全回到手動流程。 |
 | TD-028 | Service Worker 曾在 App 已可操作後立即接管並強制 reload。 | 更新時機若與第一次觸控重疊，日期或支出等無關控制都可能看似需要點第二次，且未儲存輸入可能中斷。 | P1 | Resolved by D-053 candidate | Resolved in v32 candidate：移除 `skipWaiting()`、`clients.claim()` 與 `controllerchange` reload；保留更新檢查，waiting worker 於既有 clients 自然關閉後生效，並新增 release guard。 |
-| TD-029 | Installed PWA 從 iPhone 主畫面冷啟動／恢復後，日期 Picker 第一次操作仍可能未生效；Safari 分頁正常。 | 日期可能需要重複點擊或完全無法可靠開啟，妨礙歷史資料編輯；桌面模擬無法完整重現 iOS standalone native activation。 | P1 | D-058 candidate；等待實體 iPhone 多次冷啟動 QA | Reopened：v35 Production 完全關閉後重開的五次測試皆失敗，D-057 單次 QA 不足；v36 candidate 改由最早 pointerdown 單次開啟，尚未完成 Human QA。 |
+| TD-029 | Installed PWA 從 iPhone 主畫面冷啟動／恢復後，日期 Picker 第一次操作仍可能未生效；Safari 分頁正常。 | 日期可能需要重複點擊或完全無法可靠開啟，妨礙歷史資料編輯；桌面模擬無法完整重現 iOS standalone native activation。 | P1 | D-059 candidate；等待實體 iPhone 交錯操作與多次冷啟動 QA | Reopened：v35 Production 與 v36 Preview 均未根治；v36 在 disclosure 後失敗率上升。v37 candidate 移除 iOS 不可靠的 `showPicker()` 與 summary 強制 focus，改走 touchend 原生 input focus，尚未完成 Human QA。 |
 
 ## Maintenance Rules
 

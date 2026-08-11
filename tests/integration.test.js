@@ -68,7 +68,7 @@ test("五個主分頁與 session context 保持既有契約", () => {
 });
 
 test("Local-first V1 App Shell、Manifest 與 release source 保持安全", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v36"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v37"/);
   assert.match(serviceWorker, /"\.\/index\.html"/);
   assert.match(serviceWorker, /"\.\/styles\/design-system\.css"/);
   assert.equal(manifest.start_url, "./");

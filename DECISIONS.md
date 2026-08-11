@@ -1160,3 +1160,23 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   的第一個使用者啟用仍有效。既有 trace 已證明 pointerdown 能最早抵達網頁。
 - Impact: Today 日期啟動時機、tests、docs、v36；不改資料 key、WorkRecord、計算、
   Manifest、Supabase 或正式資料。
+
+## D-059 — Use Native iOS Date Focus and Isolate Disclosure Touch State
+
+- Date: 2026-08-11
+- Decision:
+  1. D-058 candidate 經 Product Owner 多次實機 QA 失敗，不得合併或部署 Production。
+     日期直接操作與 disclosure 後操作皆可能需要多次點擊。
+  2. Today disclosure 不再於 capture-phase pointerdown 強制 focus；其 touchend 仍直接
+     切換既有 details，鍵盤與一般 Safari 原生路徑不變。
+  3. installed PWA 日期不再呼叫 `showPicker()`。有效 touchend 只聚焦真正原生 date
+     input；input 已聚焦時不攔截，讓 iOS native click 自行開啟 Picker。
+  4. 日期與 disclosure 使用獨立 touch intent；click suppression 以 WeakMap 綁定
+     實際控制項，不能由前一個入口污染下一個入口。
+  5. App Shell candidate 更新為 v37；Human QA 必須包含冷啟動直接點日期，以及依序
+     工時→日期、支出→日期、其他資料→日期的交錯測試。
+- Reason: 實機症狀與既有 trace 都顯示 summary activeElement 會殘留；v36 又在父層
+  capture pointerdown、焦點尚未交給日期 input 前呼叫 `showPicker()`。WebKit 官方
+  issue 261703 記錄 iOS `showPicker()` 不可靠，且 iOS picker 實際綁定 input focus。
+- Impact: Today standalone touch activation、tests、docs、v37；不改 UI、資料 key、
+  WorkRecord、計算、Manifest、Supabase 或正式資料。

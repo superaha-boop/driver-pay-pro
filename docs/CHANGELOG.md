@@ -16,6 +16,15 @@
 
 ## Unreleased
 
+### 2026-08-11 — Installed-PWA Native Date Focus Hotfix Candidate
+
+- v36 Public Preview 實體 QA 失敗；點過工時、支出或其他資料後，日期 Picker 經常
+  需要多次點擊。v36 不得合併或部署 Production。
+- 移除 disclosure pointerdown 強制 focus 與日期 `showPicker()`。日期改在有效
+  touchend 聚焦真正原生 date input；已聚焦時保留完整 native click。
+- 日期與 disclosure 使用獨立 touch intent，click suppression 依控制項隔離；新增
+  disclosure → 日期交錯回歸。App Shell candidate 升至 v37。
+
 ### 2026-08-11 — Installed-PWA Date Picker Pointerdown Hotfix Candidate
 
 - v35 Production 在完全關閉後重開的五次日期 Picker 測試皆失敗；正式 commit、

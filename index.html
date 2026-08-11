@@ -13426,8 +13426,9 @@
         || window.matchMedia?.("(display-mode: standalone)")?.matches === true;
     }
 
-    let installedPwaTouchIntent = null;
-    let installedPwaSuppressedClick = null;
+    let installedPwaDateTouchIntent = null;
+    let installedPwaDisclosureTouchIntent = null;
+    const installedPwaSuppressedClicks = new WeakMap();
 
     function installedPwaFirstInputControl(target) {
       if (!(target instanceof Element)) return null;
@@ -13440,49 +13441,12 @@
       return control?.tagName === "INPUT" && control.type === "date";
     }
 
-    function primeInstalledPwaFirstInput(event) {
-      if (!isInstalledPwaMode() || activeView !== "today") return;
-      if (event.pointerType && event.pointerType !== "touch") return;
+    function installedPwaTouchIntent(event, expectedControl) {
+      if (!isInstalledPwaMode() || activeView !== "today" || event.touches?.length !== 1) return null;
       const control = installedPwaFirstInputControl(event.target);
-      if (!control) return;
-      if (isInstalledPwaDateInput(control)) return;
-      if (document.activeElement === control) return;
-      try {
-        control.focus({ preventScroll: true });
-      } catch {
-        control.focus();
-      }
-    }
-
-    function activateInstalledPwaDateInputOnPointerDown(event) {
-      if (!isInstalledPwaMode() || activeView !== "today" || event.pointerType !== "touch") return;
-      const control = installedPwaFirstInputControl(event.target);
-      if (!isInstalledPwaDateInput(control) || typeof control.showPicker !== "function") return;
-      try {
-        control.showPicker();
-      } catch {
-        return;
-      }
-      installedPwaTouchIntent = null;
-      if (event.cancelable) event.preventDefault();
-      installedPwaSuppressedClick = { control, until: performance.now() + 700 };
-    }
-
-    function beginInstalledPwaFirstInput(event) {
-      primeInstalledPwaFirstInput(event);
-      if (!isInstalledPwaMode() || activeView !== "today" || event.touches?.length !== 1) {
-        installedPwaTouchIntent = null;
-        return;
-      }
-      const control = installedPwaFirstInputControl(event.target);
-      if (!control) return;
-      if (isInstalledPwaDateInput(control)) {
-        installedPwaTouchIntent = null;
-        return;
-      }
-      installedPwaSuppressedClick = null;
+      if (!control || !expectedControl(control)) return null;
       const touch = event.touches[0];
-      installedPwaTouchIntent = {
+      return {
         control,
         x: touch.clientX,
         y: touch.clientY,
@@ -13490,20 +13454,52 @@
       };
     }
 
+    function beginInstalledPwaFirstInput(event) {
+      installedPwaDateTouchIntent = installedPwaTouchIntent(event, isInstalledPwaDateInput);
+      installedPwaDisclosureTouchIntent = installedPwaTouchIntent(
+        event,
+        control => control.tagName === "SUMMARY"
+      );
+    }
+
     function trackInstalledPwaFirstInput(event) {
-      if (!installedPwaTouchIntent || event.touches?.length !== 1) return;
+      if (event.touches?.length !== 1) return;
       const touch = event.touches[0];
-      if (
-        Math.abs(touch.clientX - installedPwaTouchIntent.x) > 10
-        || Math.abs(touch.clientY - installedPwaTouchIntent.y) > 10
-      ) {
-        installedPwaTouchIntent.moved = true;
+      [installedPwaDateTouchIntent, installedPwaDisclosureTouchIntent].forEach(intent => {
+        if (!intent) return;
+        if (
+          Math.abs(touch.clientX - intent.x) > 24
+          || Math.abs(touch.clientY - intent.y) > 24
+        ) {
+          intent.moved = true;
+        }
+      });
+    }
+
+    function suppressInstalledPwaClick(control) {
+      installedPwaSuppressedClicks.set(control, performance.now() + 700);
+    }
+
+    function activateInstalledPwaDateInput(event) {
+      const intent = installedPwaDateTouchIntent;
+      installedPwaDateTouchIntent = null;
+      if (!intent || intent.moved || !isInstalledPwaMode() || activeView !== "today") return;
+      const control = installedPwaFirstInputControl(event.target);
+      if (!isInstalledPwaDateInput(control) || control !== intent.control) return;
+      if (document.activeElement === control) return;
+      try {
+        control.focus({ preventScroll: true });
+      } catch {
+        control.focus();
       }
+      if (document.activeElement !== control) return;
+      if (event.cancelable) event.preventDefault();
+      suppressInstalledPwaClick(control);
     }
 
     function activateInstalledPwaFirstInput(event) {
-      const intent = installedPwaTouchIntent;
-      installedPwaTouchIntent = null;
+      const intent = installedPwaDisclosureTouchIntent;
+      installedPwaDisclosureTouchIntent = null;
       if (!intent || intent.moved || !isInstalledPwaMode() || activeView !== "today") return;
       const control = installedPwaFirstInputControl(event.target);
       if (!control || control !== intent.control) return;
@@ -13513,29 +13509,29 @@
       if (event.cancelable) event.preventDefault();
       details.open = !details.open;
       control.setAttribute("aria-expanded", String(details.open));
-      installedPwaSuppressedClick = { control, until: performance.now() + 700 };
+      suppressInstalledPwaClick(control);
     }
 
     function suppressInstalledPwaDisclosureClick(event) {
-      const pending = installedPwaSuppressedClick;
-      if (!pending) return;
-      installedPwaSuppressedClick = null;
-      if (performance.now() > pending.until) return;
       const control = installedPwaFirstInputControl(event.target);
-      if (control !== pending.control) return;
+      if (!control) return;
+      const until = installedPwaSuppressedClicks.get(control);
+      if (!until) return;
+      installedPwaSuppressedClicks.delete(control);
+      if (performance.now() > until) return;
       event.preventDefault();
       event.stopImmediatePropagation();
     }
 
     function setupInstalledPwaFirstInput() {
       const passiveCapture = { capture: true, passive: true };
-      els.sharedDetailPanel.addEventListener("pointerdown", primeInstalledPwaFirstInput, passiveCapture);
-      els.sharedDetailPanel.addEventListener("pointerdown", activateInstalledPwaDateInputOnPointerDown, { capture: true, passive: false });
       els.sharedDetailPanel.addEventListener("touchstart", beginInstalledPwaFirstInput, passiveCapture);
       els.sharedDetailPanel.addEventListener("touchmove", trackInstalledPwaFirstInput, passiveCapture);
+      els.sharedDetailPanel.addEventListener("touchend", activateInstalledPwaDateInput, { capture: true, passive: false });
       els.sharedDetailPanel.addEventListener("touchend", activateInstalledPwaFirstInput, { capture: true, passive: false });
       els.sharedDetailPanel.addEventListener("touchcancel", () => {
-        installedPwaTouchIntent = null;
+        installedPwaDateTouchIntent = null;
+        installedPwaDisclosureTouchIntent = null;
       }, passiveCapture);
       els.sharedDetailPanel.addEventListener("click", suppressInstalledPwaDisclosureClick, true);
     }

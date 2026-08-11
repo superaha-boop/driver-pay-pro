@@ -1,4 +1,4 @@
-const CACHE_NAME = "driver-pay-pro-v36";
+const CACHE_NAME = "driver-pay-pro-v37";
 const APP_SHELL = [
   "./",
   "./index.html",
