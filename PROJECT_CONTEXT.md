@@ -4,9 +4,11 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## Installed PWA First-input Recovery — Release Candidate
+## Installed PWA First-input Recovery — Production Released
 
-- Branch：`codex/pwa-first-input-diagnostics-20260811`；base：`a6d4703`。
+- Branch：`codex/pwa-first-input-diagnostics-20260811`；base：`a6d4703`；功能
+  commit：`0202945a702da9ab0e210e5447d4b483b92ed7ec`；已合併至 `main`，
+  merge commit：`e98774c4b2c8b41a92e141724b83db660784b9b7`。
 - Product Owner 已完成兩次實體 iPhone standalone trace：首次安裝啟動為未受控、
   無 cache；第二次自然啟動為 `serviceWorkerControlled: true`、active worker、無
   waiting／installing，且唯一 cache 為 `driver-pay-pro-v32`。
@@ -21,6 +23,11 @@
   listener，也不加入假點擊遮罩。App Shell 升至 `driver-pay-pro-v33`，以既有
   deferred activation 安全建立乾淨 cache，仍不在互動中 claim 或 reload。
 - 不改 Manifest、`driverPayApp.v2`、WorkRecord、計算、Supabase 或正式資料。
+- Production：`https://driver-pay-app.vercel.app`；Vercel deployment：
+  `dpl_G6D1bUn4owSqkPYbpEUEGmqFuZDp`，狀態 `READY`，對應上述 `main` merge
+  commit。正式站 HTTP 200、Manifest 正常、Service Worker 為 v33。
+- Production 390px smoke：無水平 overflow、Console 0 error／warning，臨時診斷
+  UI 不存在，「新增支出」第一次 click 立即展開。
 
 ## PWA First-tap and Driver Labels — Production Released
 

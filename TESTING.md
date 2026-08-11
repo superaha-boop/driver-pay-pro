@@ -1,6 +1,6 @@
 # Driver Pay Pro Testing
 
-## Current — Installed PWA First-input Recovery
+## Released — Installed PWA First-input Recovery
 
 - Product Owner trace 1：standalone 首次安裝啟動，Worker 未控制且 cache 為空；
   App 可正常操作。
@@ -12,8 +12,17 @@
   18.2 秒，期間沒有 reload、focus takeover、handler 重複或 render rollback。
 - 暫時診斷 code／UI／test 已從 release candidate 移除；release regression 必須
   繼續禁止 `skipWaiting()`、`clients.claim()` 與 `controllerchange` reload。
-- App Shell candidate：`driver-pay-pro-v33`。需通過完整 `release:check`、Preview／
-  Production smoke、390px overflow、Console、Manifest 與 Service Worker 驗證。
+- App Shell：`driver-pay-pro-v33`。功能分支與合併後 `main` 的完整
+  `npm run release:check` 均通過：407/407 Node、Today 142/142、Calendar
+  69/69、Reports 90/90、AI 26/26、Driver 27/27、Integration 17/17；lint
+  0 errors／10 個既有 warnings，Inline JavaScript、Service Worker、Manifest、
+  Production validation 與 `git diff --check` 全部通過。
+- Production deployment `dpl_G6D1bUn4owSqkPYbpEUEGmqFuZDp` 對應 merge commit
+  `e98774c4b2c8b41a92e141724b83db660784b9b7`，狀態 `READY`。正式網址 HTTP
+  200，線上 Service Worker 為 v33，Manifest `display: standalone`。
+- Production 390px：`scrollWidth === clientWidth === 390`、Console 0
+  error／warning、診斷入口為 0；「新增支出」第一次 click 後 `open=true` 且
+  `aria-expanded=true`。
 
 ## Released — PWA First-tap and Driver Labels
 

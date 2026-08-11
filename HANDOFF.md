@@ -4,9 +4,12 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
-## Installed PWA First-input Recovery — Release Candidate
+## Installed PWA First-input Recovery — Production Released
 
-- Current branch：`codex/pwa-first-input-diagnostics-20260811`；base：`a6d4703`。
+- 功能 branch：`codex/pwa-first-input-diagnostics-20260811`；base：`a6d4703`；
+  功能 commit：`0202945a702da9ab0e210e5447d4b483b92ed7ec`。
+- 已合併並推送 `main`；merge commit：
+  `e98774c4b2c8b41a92e141724b83db660784b9b7`。
 - Product Owner 的第二次自然啟動 trace 已確認：standalone、受 active Service
   Worker 控制、無 waiting／installing，cache 精確為 `driver-pay-pro-v32`。
 - 「新增支出」第一次有效點擊完整觸發 pointer／touch／click，既有 toggle handler
@@ -20,6 +23,13 @@ GitHub：`superaha-boop/driver-pay-pro`
   `skipWaiting()`、不 `clients.claim()`、不 `controllerchange` reload。v33 會建立
   乾淨 cache 並在頁面自然關閉後接管。
 - 不改 `driverPayApp.v2`、WorkRecord、計算、Manifest、Supabase 或正式資料。
+- Production：`https://driver-pay-app.vercel.app`；deployment
+  `dpl_G6D1bUn4owSqkPYbpEUEGmqFuZDp`，狀態 `READY`。正式站 HTTP 200、
+  Manifest 正常、Service Worker v33；390px 無水平 overflow、Console 0
+  error／warning，「新增支出」第一次 click 即展開。
+- 完整 `npm run release:check` 在功能分支與合併後 `main` 均通過：407/407 Node、
+  Today 142/142、Calendar 69/69、Reports 90/90、AI 26/26、Driver 27/27、
+  Integration 17/17；lint 0 errors／10 個既有 warnings。
 
 ## PWA First-tap and Driver Labels — Production Released
 

@@ -27,6 +27,12 @@
   正式產品不保留事件追蹤。
 - App Shell 升至 `driver-pay-pro-v33`，強制建立乾淨 App Shell cache；仍等待頁面
   自然關閉後接管，不在互動中 reload。資料 key、schema、計算與 Manifest 不變。
+- 功能 commit `0202945a702da9ab0e210e5447d4b483b92ed7ec` 已合併至 `main`；merge
+  commit：`e98774c4b2c8b41a92e141724b83db660784b9b7`。Vercel Production
+  deployment `dpl_G6D1bUn4owSqkPYbpEUEGmqFuZDp` 已完成，正式網址：
+  `https://driver-pay-app.vercel.app`。
+- 正式站已驗證 HTTP 200、Service Worker v33、Manifest、390px 無 overflow、
+  Console 0 error／warning，以及「新增支出」第一次 click 立即展開。
 
 ### 2026-08-08 — PWA First-tap and Driver Labels
 
