@@ -76,6 +76,8 @@ test("日期隔離 01：每日紀錄日期卡可選今天或過去日期並使�
 test("日期 Picker：原生控制本體可命中，第一次點擊不只聚焦透明覆蓋層", () => {
   const dateInputCss = html.match(/\.date-card input\[type="date"\] \{[\s\S]*?\n    \}/)?.[0] || "";
   const dateCard = extractFunction("dateCardMarkup");
+  const renderDateCard = extractFunction("renderEntryDateCard");
+  const primer = extractFunction("primeInstalledPwaFirstInput");
   assert.match(dateInputCss, /-webkit-appearance: auto/);
   assert.match(dateInputCss, /appearance: auto/);
   assert.match(dateInputCss, /z-index: 1/);
@@ -88,6 +90,9 @@ test("日期 Picker：原生控制本體可命中，第一次點擊不只聚焦�
   assert.match(html, /\.date-card input\[type="date"\]::-webkit-calendar-picker-indicator[\s\S]*?inset: 0[\s\S]*?width: 100%[\s\S]*?height: 100%[\s\S]*?opacity: 0/);
   assert.match(dateCard, /<label class="date-card[\s\S]*?for="\$\{escapeAttr\(id\)\}"/);
   assert.match(dateCard, /<input type="date" id="\$\{escapeAttr\(id\)\}"/);
+  assert.match(dateCard, /primeFirstInput \? " data-pwa-first-input"/);
+  assert.match(renderDateCard, /primeFirstInput: true/);
+  assert.match(primer, /control\.focus\(\{ preventScroll: true \}\)/);
   assert.doesNotMatch(html, /openNativeDatePicker|\.showPicker\(/);
 });
 

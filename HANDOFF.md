@@ -4,6 +4,26 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
+## Today Installed-PWA First-input Unification — Human QA Candidate
+
+- Branch：`codex/today-first-input-unification-20260811`；base：`fab1d1b`。
+- v33 Production 的「新增支出」第一次觸控正常，但 Product Owner 冷啟動實測確認
+  日期、工時設定與其他資料仍需第二次。既有 trace 已捕捉「其他資料」收到 touch
+  start／end 卻沒有 click，因此 D-055 的舊 cache 結論不足以涵蓋全部入口。
+- `index.html` 只在 installed PWA 的 Today `#sharedDetailPanel` 對四個指定控制先
+  focus。日期保留唯一原生 date input 與 default Picker；工時、支出、其他資料在
+  未滑動的 touchend 切換現有 details，並抑制同一觸控的後續 click。
+- 未建立第二份展開 state、全頁 touch handler、透明遮罩、自訂月曆或
+  `showPicker()`；滑鼠、鍵盤、一般 Safari 行為不變。
+- App Shell candidate：`driver-pay-pro-v34`。資料 key、schema、計算、Manifest、
+  Supabase 與正式資料不變。
+- `npm run release:check` Passed：408/408 Node、Today 143/143、Calendar 69/69、
+  Reports 90/90、AI 26/26、Driver 27/27、Integration 17/17；lint 0 errors／10 個
+  既有 warnings，其餘 release gates 全部通過。
+- 自動驗證完成後需 Push 功能分支並建立 iPhone 可直接開啟的 Public Preview。
+  唯一必要 Human QA：完全關閉 Preview PWA 後重開，依序確認日期、工時、支出、
+  其他資料第一次觸控皆生效，滑動不誤展開。通過前不得宣告根治或部署 Production。
+
 ## Installed PWA First-input Recovery — Production Released
 
 - 功能 branch：`codex/pwa-first-input-diagnostics-20260811`；base：`a6d4703`；

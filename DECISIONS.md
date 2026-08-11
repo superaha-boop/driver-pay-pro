@@ -1095,3 +1095,26 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   App Shell 狀態，而不是保留診斷或改寫正常的原生控制。
 - Impact: `sw.js` v33、cache contract tests、release／handoff 文件；正式 UI、
   interaction、data model 與功能行為不變。
+
+## D-056 — Unify Today First Input in Installed PWA
+
+- Date: 2026-08-11
+- Decision:
+  1. D-055「全部殘留症狀只來自舊 cache」的結論由本決策修正：v33 Production
+     冷啟動後，只有新增支出第一次觸控正常；日期、工時設定與其他資料仍可能需
+     第二次觸控。
+  2. 既有 installed-PWA trace 中「其他資料」收到 trusted pointer／touch start
+     與 touchend，卻沒有產生 click，故不能再假設所有原生 summary 都會完成 click
+     合成。
+  3. Today 四個指定入口在 standalone 的最早 trusted touch 先 focus 真正控制；
+     date input 保留 native default action，不呼叫 `showPicker()`。
+  4. 工時、支出與其他資料的 summary 在未滑動 touchend 切換原本 details，並只
+     抑制同一觸控可能補送的 click；不建立第二份展開 state。
+  5. fallback 只限 `#sharedDetailPanel`、Today、standalone 與帶標記控制；不掛
+     document／window、不使用透明遮罩或 synthetic `.click()`。
+  6. App Shell candidate 更新為 v34，需通過一次實體 iPhone installed-PWA 冷啟動
+     Human QA 才能合併與正式部署。
+- Reason: 使用者在 v33 正式版重現三個指定入口需要第二次操作，且實體事件資料
+  已直接證明其中一個失敗鏈停在 touchend、未產生 click。
+- Impact: Today 日期與三個 disclosure 的 standalone input activation、tests、
+  docs、v34；無資料 key、WorkRecord、計算、Manifest、Supabase 或正式資料變更。
