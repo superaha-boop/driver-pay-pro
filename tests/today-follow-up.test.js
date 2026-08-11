@@ -138,15 +138,17 @@ test("每日紀錄保留工時、支出與其他資料三個獨立收合區塊",
   }
 });
 
-test("Installed PWA 冷啟動先啟用每日紀錄控制且不製造假點擊", () => {
+test("Installed PWA 日期與 disclosure 使用獨立 touchend 管線且日期只走原生焦點", () => {
   const detail = html.slice(html.indexOf('id="sharedDetailPanel"'), html.indexOf('id="recentIncomePanel"'));
   const mode = extractFunction("isInstalledPwaMode");
   const findControl = extractFunction("installedPwaFirstInputControl");
   const isDateInput = extractFunction("isInstalledPwaDateInput");
-  const primer = extractFunction("primeInstalledPwaFirstInput");
+  const makeIntent = extractFunction("installedPwaTouchIntent");
   const begin = extractFunction("beginInstalledPwaFirstInput");
   const track = extractFunction("trackInstalledPwaFirstInput");
-  const activate = extractFunction("activateInstalledPwaFirstInput");
+  const rememberSuppressedClick = extractFunction("suppressInstalledPwaClick");
+  const activateDate = extractFunction("activateInstalledPwaDateInput");
+  const activateDisclosure = extractFunction("activateInstalledPwaFirstInput");
   const suppressClick = extractFunction("suppressInstalledPwaDisclosureClick");
   const setup = extractFunction("setupInstalledPwaFirstInput");
   assert.match(detail, /id="workTimeToggle" data-pwa-first-input/);
@@ -154,36 +156,45 @@ test("Installed PWA 冷啟動先啟用每日紀錄控制且不製造假點擊", 
   assert.match(detail, /id="otherDataToggle" data-pwa-first-input/);
   assert.match(mode, /navigator\.standalone === true/);
   assert.match(mode, /display-mode: standalone/);
-  assert.match(primer, /activeView !== "today"/);
-  assert.match(primer, /event\.pointerType !== "touch"/);
   assert.match(findControl, /closest\("\[data-pwa-first-input\]"\)/);
   assert.match(findControl, /els\.sharedDetailPanel\.contains\(control\)/);
   assert.match(isDateInput, /control\?\.tagName === "INPUT" && control\.type === "date"/);
-  assert.match(primer, /isInstalledPwaDateInput\(control\)\) return/);
-  assert.match(primer, /control\.focus\(\{ preventScroll: true \}\)/);
-  assert.doesNotMatch(primer, /preventDefault|\.click\(|showPicker|\.open\s*=/);
-  assert.match(setup, /els\.sharedDetailPanel\.addEventListener\("pointerdown", primeInstalledPwaFirstInput/);
+  assert.match(makeIntent, /expectedControl\(control\)/);
+  assert.match(begin, /installedPwaDateTouchIntent = installedPwaTouchIntent\(event, isInstalledPwaDateInput\)/);
+  assert.match(begin, /control => control\.tagName === "SUMMARY"/);
+  assert.doesNotMatch(begin, /\.focus\(/);
+  assert.doesNotMatch(setup, /pointerdown/);
   assert.match(setup, /addEventListener\("touchstart", beginInstalledPwaFirstInput/);
   assert.match(setup, /addEventListener\("touchmove", trackInstalledPwaFirstInput/);
+  assert.match(setup, /addEventListener\("touchend", activateInstalledPwaDateInput/);
   assert.match(setup, /addEventListener\("touchend", activateInstalledPwaFirstInput, \{ capture: true, passive: false \}\)/);
   assert.match(setup, /addEventListener\("click", suppressInstalledPwaDisclosureClick, true\)/);
   assert.doesNotMatch(setup, /document\.addEventListener|window\.addEventListener/);
-  assert.match(track, /> 10/);
-  assert.match(activate, /isInstalledPwaDateInput\(control\)/);
-  assert.match(activate, /typeof control\.showPicker !== "function"/);
-  assert.match(activate, /control\.showPicker\(\)/);
-  assert.match(activate, /control\.tagName !== "SUMMARY"/);
-  assert.match(activate, /details\.open = !details\.open/);
-  assert.match(activate, /event\.cancelable/);
+  assert.match(track, /> 24/);
+  assert.match(activateDate, /installedPwaDateTouchIntent/);
+  assert.match(activateDate, /isInstalledPwaDateInput\(control\)/);
+  assert.match(activateDate, /document\.activeElement === control/);
+  assert.match(activateDate, /control\.focus\(\{ preventScroll: true \}\)/);
+  assert.match(activateDate, /document\.activeElement !== control/);
+  assert.match(activateDate, /event\.preventDefault\(\)/);
+  assert.doesNotMatch(activateDate, /showPicker/);
+  assert.doesNotMatch(activateDisclosure, /\.focus\(|showPicker/);
+  assert.match(activateDisclosure, /control\.tagName !== "SUMMARY"/);
+  assert.match(activateDisclosure, /details\.open = !details\.open/);
+  assert.match(activateDisclosure, /event\.cancelable/);
+  assert.match(rememberSuppressedClick, /installedPwaSuppressedClicks\.set\(control/);
+  assert.match(suppressClick, /installedPwaSuppressedClicks\.get\(control\)/);
+  assert.match(suppressClick, /installedPwaSuppressedClicks\.delete\(control\)/);
   assert.match(suppressClick, /event\.stopImmediatePropagation\(\)/);
-  assert.doesNotMatch(`${begin}\n${track}\n${activate}\n${suppressClick}`, /\.click\(/);
+  assert.doesNotMatch(`${activateDate}\n${begin}\n${track}\n${activateDisclosure}\n${suppressClick}`, /\.click\(/);
   assert.match(html, /setupInstalledPwaFirstInput\(\);[\s\S]*?setupPwa\(\);/);
   assert.match(html, /\.details-panel \.detail-section summary \{[\s\S]*?touch-action: manipulation/);
 
   let focusOptions = null;
   let prevented = false;
-  let stopped = false;
+  let stopped;
   const details = { open: false };
+  const documentState = { activeElement: {} };
   class FakeElement {
     constructor(tagName = "SUMMARY", type = "") {
       this.tagName = tagName;
@@ -199,6 +210,7 @@ test("Installed PWA 冷啟動先啟用每日紀錄控制且不製造假點擊", 
     }
     focus(options) {
       focusOptions = options;
+      documentState.activeElement = this;
     }
     showPicker() {
       this.pickerOpenCount += 1;
@@ -214,21 +226,14 @@ test("Installed PWA 冷啟動先啟用每日紀錄控制且不製造假點擊", 
     activeView: "today",
     Element: FakeElement,
     els: { sharedDetailPanel: { contains: value => value instanceof FakeElement } },
-    document: { activeElement: {} },
+    document: documentState,
     performance: { now: () => 100 }
   });
   vm.runInContext(
-    `${mode}\nlet installedPwaTouchIntent = null;\nlet installedPwaSuppressedClick = null;\n${findControl}\n${isDateInput}\n${primer}\n${begin}\n${track}\n${activate}\n${suppressClick}\n` +
-      `globalThis.handlers = { primeInstalledPwaFirstInput, beginInstalledPwaFirstInput, trackInstalledPwaFirstInput, activateInstalledPwaFirstInput, suppressInstalledPwaDisclosureClick };`,
+    `${mode}\nlet installedPwaDateTouchIntent = null;\nlet installedPwaDisclosureTouchIntent = null;\nconst installedPwaSuppressedClicks = new WeakMap();\n${findControl}\n${isDateInput}\n${makeIntent}\n${begin}\n${track}\n${rememberSuppressedClick}\n${activateDate}\n${activateDisclosure}\n${suppressClick}\n` +
+      `globalThis.handlers = { beginInstalledPwaFirstInput, trackInstalledPwaFirstInput, activateInstalledPwaDateInput, activateInstalledPwaFirstInput, suppressInstalledPwaDisclosureClick };`,
     context
   );
-  context.handlers.primeInstalledPwaFirstInput({ pointerType: "touch", target: control });
-  assert.equal(focusOptions.preventScroll, true);
-
-  focusOptions = null;
-  context.handlers.primeInstalledPwaFirstInput({ pointerType: "mouse", target: control });
-  assert.equal(focusOptions, null);
-
   context.handlers.beginInstalledPwaFirstInput({ target: control, touches: [{ clientX: 20, clientY: 30 }] });
   context.handlers.activateInstalledPwaFirstInput({
     target: control,
@@ -238,17 +243,11 @@ test("Installed PWA 冷啟動先啟用每日紀錄控制且不製造假點擊", 
   assert.equal(prevented, true);
   assert.equal(details.open, true);
   assert.equal(control.attributes["aria-expanded"], "true");
-
-  context.handlers.suppressInstalledPwaDisclosureClick({
-    target: control,
-    preventDefault() { prevented = true; },
-    stopImmediatePropagation() { stopped = true; }
-  });
-  assert.equal(stopped, true);
+  assert.equal(focusOptions, null);
 
   prevented = false;
   context.handlers.beginInstalledPwaFirstInput({ target: control, touches: [{ clientX: 20, clientY: 30 }] });
-  context.handlers.trackInstalledPwaFirstInput({ touches: [{ clientX: 35, clientY: 30 }] });
+  context.handlers.trackInstalledPwaFirstInput({ touches: [{ clientX: 45, clientY: 30 }] });
   context.handlers.activateInstalledPwaFirstInput({
     target: control,
     cancelable: true,
@@ -259,18 +258,20 @@ test("Installed PWA 冷啟動先啟用每日紀錄控制且不製造假點擊", 
 
   const dateInput = new FakeElement("INPUT", "date");
   focusOptions = null;
-  context.handlers.primeInstalledPwaFirstInput({ pointerType: "touch", target: dateInput });
-  assert.equal(focusOptions, null);
-
   prevented = false;
-  context.handlers.beginInstalledPwaFirstInput({ target: dateInput, touches: [{ clientX: 20, clientY: 30 }] });
-  context.handlers.activateInstalledPwaFirstInput({
+  context.handlers.beginInstalledPwaFirstInput({
+    target: dateInput,
+    touches: [{ clientX: 20, clientY: 30 }]
+  });
+  context.handlers.activateInstalledPwaDateInput({
     target: dateInput,
     cancelable: true,
     preventDefault() { prevented = true; }
   });
   assert.equal(prevented, true);
-  assert.equal(dateInput.pickerOpenCount, 1);
+  assert.equal(dateInput.pickerOpenCount, 0);
+  assert.equal(focusOptions.preventScroll, true);
+  assert.equal(details.open, true);
 
   stopped = false;
   context.handlers.suppressInstalledPwaDisclosureClick({
@@ -279,13 +280,30 @@ test("Installed PWA 冷啟動先啟用每日紀錄控制且不製造假點擊", 
     stopImmediatePropagation() { stopped = true; }
   });
   assert.equal(stopped, true);
-  assert.equal(dateInput.pickerOpenCount, 1);
+  assert.equal(dateInput.pickerOpenCount, 0);
+
+  focusOptions = null;
+  prevented = false;
+  context.handlers.beginInstalledPwaFirstInput({
+    target: dateInput,
+    touches: [{ clientX: 20, clientY: 30 }]
+  });
+  context.handlers.activateInstalledPwaDateInput({
+    target: dateInput,
+    cancelable: true,
+    preventDefault() { prevented = true; }
+  });
+  assert.equal(focusOptions, null);
+  assert.equal(prevented, false);
 
   const movedDateInput = new FakeElement("INPUT", "date");
   prevented = false;
-  context.handlers.beginInstalledPwaFirstInput({ target: movedDateInput, touches: [{ clientX: 20, clientY: 30 }] });
-  context.handlers.trackInstalledPwaFirstInput({ touches: [{ clientX: 35, clientY: 30 }] });
-  context.handlers.activateInstalledPwaFirstInput({
+  context.handlers.beginInstalledPwaFirstInput({
+    target: movedDateInput,
+    touches: [{ clientX: 20, clientY: 30 }]
+  });
+  context.handlers.trackInstalledPwaFirstInput({ touches: [{ clientX: 45, clientY: 30 }] });
+  context.handlers.activateInstalledPwaDateInput({
     target: movedDateInput,
     cancelable: true,
     preventDefault() { prevented = true; }
@@ -293,23 +311,15 @@ test("Installed PWA 冷啟動先啟用每日紀錄控制且不製造假點擊", 
   assert.equal(movedDateInput.pickerOpenCount, 0);
   assert.equal(prevented, false);
 
-  const nativeFallbackDateInput = new FakeElement("INPUT", "date");
-  nativeFallbackDateInput.showPicker = undefined;
+  const focusFallbackDateInput = new FakeElement("INPUT", "date");
+  focusFallbackDateInput.focus = options => { focusOptions = options; };
   prevented = false;
-  context.handlers.beginInstalledPwaFirstInput({ target: nativeFallbackDateInput, touches: [{ clientX: 20, clientY: 30 }] });
-  context.handlers.activateInstalledPwaFirstInput({
-    target: nativeFallbackDateInput,
-    cancelable: true,
-    preventDefault() { prevented = true; }
+  context.handlers.beginInstalledPwaFirstInput({
+    target: focusFallbackDateInput,
+    touches: [{ clientX: 20, clientY: 30 }]
   });
-  assert.equal(prevented, false);
-
-  const throwingDateInput = new FakeElement("INPUT", "date");
-  throwingDateInput.showPicker = () => { throw new Error("picker unavailable"); };
-  prevented = false;
-  context.handlers.beginInstalledPwaFirstInput({ target: throwingDateInput, touches: [{ clientX: 20, clientY: 30 }] });
-  context.handlers.activateInstalledPwaFirstInput({
-    target: throwingDateInput,
+  context.handlers.activateInstalledPwaDateInput({
+    target: focusFallbackDateInput,
     cancelable: true,
     preventDefault() { prevented = true; }
   });

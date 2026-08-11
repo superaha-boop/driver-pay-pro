@@ -73,12 +73,12 @@ test("日期隔離 01：每日紀錄日期卡可選今天或過去日期並使�
   assert.match(html, /setActiveRecordDate\(requestedDate, \{ preserveDisclosure: true \}\)/);
 });
 
-test("日期 Picker：原生控制本體可命中，第一次點擊不只聚焦透明覆蓋層", () => {
+test("日期 Picker：原生控制本體可命中，touchend 只交接原生焦點", () => {
   const dateInputCss = html.match(/\.date-card input\[type="date"\] \{[\s\S]*?\n    \}/)?.[0] || "";
   const dateCard = extractFunction("dateCardMarkup");
   const renderDateCard = extractFunction("renderEntryDateCard");
-  const primer = extractFunction("primeInstalledPwaFirstInput");
-  const dateActivation = extractFunction("activateInstalledPwaFirstInput");
+  const dateActivation = extractFunction("activateInstalledPwaDateInput");
+  const setup = extractFunction("setupInstalledPwaFirstInput");
   assert.match(dateInputCss, /-webkit-appearance: auto/);
   assert.match(dateInputCss, /appearance: auto/);
   assert.match(dateInputCss, /z-index: 1/);
@@ -93,11 +93,15 @@ test("日期 Picker：原生控制本體可命中，第一次點擊不只聚焦�
   assert.match(dateCard, /<input type="date" id="\$\{escapeAttr\(id\)\}"/);
   assert.match(dateCard, /primeFirstInput \? " data-pwa-first-input"/);
   assert.match(renderDateCard, /primeFirstInput: true/);
-  assert.match(primer, /isInstalledPwaDateInput\(control\)\) return/);
-  assert.match(dateActivation, /typeof control\.showPicker !== "function"/);
-  assert.match(dateActivation, /control\.showPicker\(\)/);
-  assert.match(dateActivation, /installedPwaSuppressedClick = \{ control, until:/);
-  assert.doesNotMatch(primer, /\.showPicker\(/);
+  assert.match(dateActivation, /installedPwaDateTouchIntent/);
+  assert.match(dateActivation, /document\.activeElement === control/);
+  assert.match(dateActivation, /control\.focus\(\{ preventScroll: true \}\)/);
+  assert.match(dateActivation, /document\.activeElement !== control/);
+  assert.match(dateActivation, /event\.preventDefault\(\)/);
+  assert.match(dateActivation, /suppressInstalledPwaClick\(control\)/);
+  assert.doesNotMatch(dateActivation, /showPicker/);
+  assert.match(setup, /addEventListener\("touchend", activateInstalledPwaDateInput/);
+  assert.doesNotMatch(setup, /pointerdown/);
 });
 
 test("日期隔離 02：支出日期由 activeRecordDate 建立", () => {

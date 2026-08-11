@@ -976,3 +976,40 @@
   activation 時序一致。
 - Impact: `index.html`、v35 App Shell、tests 與交接文件；無資料模型、storage key、
   計算、Manifest、Supabase 或正式資料變更。
+
+## D-058 — Installed-PWA date picker earliest pointerdown
+
+- Date: 2026-08-11
+- Status: Human QA Failed；Superseded by D-059
+- Decision:
+  - D-057 的 touchend 日期啟動由最早 trusted touch pointerdown 取代；日期不再受
+    10px 位移 gate 影響。
+  - `showPicker()` 成功後才 prevent default 並抑制同次 click；失敗時保留原生
+    fallback。
+  - 三個 Today disclosure 維持既有 touchend 路徑，不新增自訂月曆、第二份 state、
+    遮罩、假點擊或全域 listener。
+  - App Shell candidate 為 v36；必須完成實體 iPhone installed-PWA 多次冷啟動 QA。
+- Reason: v35 Production 在受控重開測試連續五次失敗；部署與伺服器錯誤已排除，
+  問題留在 touchend 啟動時序。既有 trace 證明 pointerdown 是可靠送達的最早事件。
+- Impact: `index.html`、v36 App Shell、tests 與交接文件；無資料模型、storage key、
+  計算、Manifest、Supabase 或正式資料變更。
+
+## D-059 — Installed-PWA native date focus and isolated touch state
+
+- Date: 2026-08-11
+- Status: Human QA Passed；Release Candidate Approved
+- Decision:
+  - v36 pointerdown `showPicker()` candidate 實體 QA 失敗，禁止合併與 Production。
+  - 移除 disclosure capture pointerdown 強制 focus；details 仍在 touchend 切換。
+  - 日期不再使用 iOS 不可靠的 `showPicker()`；有效 touchend 只聚焦真正的原生
+    date input，已聚焦時保留 native click。
+  - 日期／disclosure touch intent 分離，suppression 依控制項隔離。
+  - App Shell candidate 為 v37；QA 必測直接日期與三組 disclosure→日期序列。
+- Reason: Product Owner 證實 disclosure 後日期失敗率升高；既有 trace 與程式碼均
+  顯示 summary 焦點殘留，而日期在 capture pointerdown 尚未取得焦點時呼叫
+  `showPicker()`。WebKit issue 261703 亦說明 iOS 此 API 並非可靠啟動路徑。
+- Impact: `index.html`、v37 App Shell、tests 與交接文件；無 UI、資料模型、storage
+  key、計算、Manifest、Supabase 或正式資料變更。
+- Validation: Product Owner 於 2026-08-11 完成實體 iPhone installed-PWA 多次
+  冷啟動，以及直接日期、工時→日期、支出→日期、其他資料→日期交錯操作；全部
+  通過且無 High Priority 問題。

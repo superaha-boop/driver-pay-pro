@@ -4,6 +4,29 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
+## Installed-PWA Native Date Focus Hotfix — Release Candidate Approved
+
+- Branch：`codex/date-picker-pointerdown-20260811`；base：`7979674`。
+- Product Owner 在 v35 Production 依序關閉 Safari 正式站分頁、完全關閉 PWA、等待
+  後重開，連續五次日期 Picker 測試皆失敗；正式部署、Git commit、v35 App Shell
+  與 Runtime error 均已排除，問題不是使用者操作或 GitHub／Vercel漏更新。
+- v36 Public Preview 實機 QA 失敗：日期在直接操作與先開啟工時／支出／其他資料
+  後皆可能需要多次點擊，禁止合併或正式部署。
+- 既有實機 trace 已顯示 summary focus 會跨事件殘留；程式也確認三個 disclosure
+  在 capture pointerdown 強制 focus，而日期於下一個 capture pointerdown 尚未取得
+  焦點前呼叫 `showPicker()`。WebKit iOS 官方 issue 顯示此 API 不是可靠原生路徑。
+- v37 candidate 移除 disclosure 強制 focus 與日期 `showPicker()`；日期、disclosure
+  各自使用 touch intent，日期只在有效 touchend 聚焦真正原生 input，已聚焦時讓
+  native click 自行重開。suppression 改以控制項 WeakMap 隔離。
+- 資料、計算、日期綁定、Manifest 與其他頁面不變；App Shell candidate 為 v37。
+- 功能 commit：`6639cec5ab76edcaa59c050e5d3dd7881a2041de`；Public Preview
+  deployment：`dpl_AC28Z9xXJvo6N37xX8UuQsMDAyau`，狀態 `READY`。
+- Product Owner 已完成實體 iPhone installed-PWA 多次冷啟動與交錯操作 Human QA；
+  直接日期及工時／支出／其他資料後再開日期均穩定通過，High Priority 問題為無，
+  Release Candidate 已核准正式發布。
+- 下一步：重新執行 Release Check、一般合併 `main`、Push 並核對 Production 的
+  commit、Service Worker v37、Manifest 與正式網址。
+
 ## Installed-PWA Date Picker Single Activation — Production Released
 
 - Branch：`codex/date-picker-single-activation-20260811`；base：`eb9e0bd`。

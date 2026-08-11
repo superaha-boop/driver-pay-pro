@@ -4,6 +4,31 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
+## Installed-PWA Native Date Focus Hotfix — Release Candidate Approved
+
+- Branch：`codex/date-picker-pointerdown-20260811`；base：`7979674`。
+- v35 Production 經 Product Owner 反覆完全關閉／重開測試後，日期 Picker 五次皆
+  無法可靠開啟；因此先前一次 Human QA 不足以涵蓋長期 Production installed-PWA
+  冷啟動狀態，D-057 的 touchend 方案不再視為完成根治。
+- 正式站已核對為最新 commit、Service Worker v35、Manifest standalone，且最近
+  一小時 Runtime errors 為 0；問題範圍收斂至 iOS standalone 日期啟動事件時序。
+- v36 Public Preview 實機反覆測試失敗：直接點日期偶爾成功，但在工時、支出或
+  其他資料 disclosure 後，日期經常需要多次才開啟。v36 不得進 Production。
+- 根因是 disclosure 的 capture-phase `pointerdown` 強制 focus 會讓 summary 成為
+  active element；下一次日期又在焦點尚未轉移前呼叫 iOS 不可靠的 `showPicker()`。
+  WebKit 官方紀錄指出 iOS 原生 picker 綁定 input focus，`showPicker()` 並非可靠
+  啟動路徑。
+- v37 candidate 拆開日期與 disclosure intent／suppression；disclosure 不再強制
+  focus。日期於有效 touchend 只把焦點交給真正的原生 date input，已聚焦時完全
+  交回原生點擊，不再呼叫 `showPicker()`。
+- 沒有自訂月曆、第二份日期 state、資料模型、storage key、Manifest、Supabase 或
+  正式資料變更。
+- Product Owner 已於 2026-08-11 完成 Public Preview 的實體 iPhone
+  installed-PWA 多次冷啟動 Human QA；直接日期及工時／支出／其他資料後再開日期
+  均穩定通過，High Priority 問題為無，Release Candidate 已核准正式發布。
+- App Shell 為 `driver-pay-pro-v37`；功能 commit 為 `6639cec`。下一步是重新執行
+  Release Check、一般合併 `main` 並核對 Production Deployment。
+
 ## Installed-PWA Date Picker Single Activation — Production Released
 
 - Branch：`codex/date-picker-single-activation-20260811`；base：`eb9e0bd`。
