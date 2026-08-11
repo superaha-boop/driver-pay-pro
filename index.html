@@ -13436,11 +13436,16 @@
       return control;
     }
 
+    function isInstalledPwaDateInput(control) {
+      return control?.tagName === "INPUT" && control.type === "date";
+    }
+
     function primeInstalledPwaFirstInput(event) {
       if (!isInstalledPwaMode() || activeView !== "today") return;
       if (event.pointerType && event.pointerType !== "touch") return;
       const control = installedPwaFirstInputControl(event.target);
       if (!control) return;
+      if (isInstalledPwaDateInput(control)) return;
       if (document.activeElement === control) return;
       try {
         control.focus({ preventScroll: true });
@@ -13478,12 +13483,24 @@
       }
     }
 
-    function activateInstalledPwaDisclosure(event) {
+    function activateInstalledPwaFirstInput(event) {
       const intent = installedPwaTouchIntent;
       installedPwaTouchIntent = null;
       if (!intent || intent.moved || !isInstalledPwaMode() || activeView !== "today") return;
       const control = installedPwaFirstInputControl(event.target);
-      if (!control || control !== intent.control || control.tagName !== "SUMMARY") return;
+      if (!control || control !== intent.control) return;
+      if (isInstalledPwaDateInput(control)) {
+        if (typeof control.showPicker !== "function") return;
+        try {
+          control.showPicker();
+        } catch {
+          return;
+        }
+        if (event.cancelable) event.preventDefault();
+        installedPwaSuppressedClick = { control, until: performance.now() + 700 };
+        return;
+      }
+      if (control.tagName !== "SUMMARY") return;
       const details = control.closest("details");
       if (!details) return;
       if (event.cancelable) event.preventDefault();
@@ -13508,7 +13525,7 @@
       els.sharedDetailPanel.addEventListener("pointerdown", primeInstalledPwaFirstInput, passiveCapture);
       els.sharedDetailPanel.addEventListener("touchstart", beginInstalledPwaFirstInput, passiveCapture);
       els.sharedDetailPanel.addEventListener("touchmove", trackInstalledPwaFirstInput, passiveCapture);
-      els.sharedDetailPanel.addEventListener("touchend", activateInstalledPwaDisclosure, { capture: true, passive: false });
+      els.sharedDetailPanel.addEventListener("touchend", activateInstalledPwaFirstInput, { capture: true, passive: false });
       els.sharedDetailPanel.addEventListener("touchcancel", () => {
         installedPwaTouchIntent = null;
       }, passiveCapture);

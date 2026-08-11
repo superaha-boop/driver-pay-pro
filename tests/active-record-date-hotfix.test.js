@@ -78,6 +78,7 @@ test("日期 Picker：原生控制本體可命中，第一次點擊不只聚焦�
   const dateCard = extractFunction("dateCardMarkup");
   const renderDateCard = extractFunction("renderEntryDateCard");
   const primer = extractFunction("primeInstalledPwaFirstInput");
+  const dateActivation = extractFunction("activateInstalledPwaFirstInput");
   assert.match(dateInputCss, /-webkit-appearance: auto/);
   assert.match(dateInputCss, /appearance: auto/);
   assert.match(dateInputCss, /z-index: 1/);
@@ -92,8 +93,11 @@ test("日期 Picker：原生控制本體可命中，第一次點擊不只聚焦�
   assert.match(dateCard, /<input type="date" id="\$\{escapeAttr\(id\)\}"/);
   assert.match(dateCard, /primeFirstInput \? " data-pwa-first-input"/);
   assert.match(renderDateCard, /primeFirstInput: true/);
-  assert.match(primer, /control\.focus\(\{ preventScroll: true \}\)/);
-  assert.doesNotMatch(html, /openNativeDatePicker|\.showPicker\(/);
+  assert.match(primer, /isInstalledPwaDateInput\(control\)\) return/);
+  assert.match(dateActivation, /typeof control\.showPicker !== "function"/);
+  assert.match(dateActivation, /control\.showPicker\(\)/);
+  assert.match(dateActivation, /installedPwaSuppressedClick = \{ control, until:/);
+  assert.doesNotMatch(primer, /\.showPicker\(/);
 });
 
 test("日期隔離 02：支出日期由 activeRecordDate 建立", () => {

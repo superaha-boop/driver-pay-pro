@@ -1118,3 +1118,22 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   已直接證明其中一個失敗鏈停在 touchend、未產生 click。
 - Impact: Today 日期與三個 disclosure 的 standalone input activation、tests、
   docs、v34；無資料 key、WorkRecord、計算、Manifest、Supabase 或正式資料變更。
+
+## D-057 — Use One Installed-PWA Date Picker Activation
+
+- Date: 2026-08-11
+- Decision:
+  1. v34 對日期 input 的最早期 `pointerdown → focus()` 由本決策取代；實體 iPhone
+     證明 Picker 會先開啟，再被同一次原生啟用關閉。
+  2. 日期不再於 pointerdown／touchstart 提前 focus。standalone 未滑動 touchend
+     對同一原生 date input 只呼叫一次 `showPicker()`。
+  3. 只有 `showPicker()` 成功後才阻止 default 並抑制同觸控後續 click；API 不存在
+     或拋錯時不攔截，維持原生 fallback。
+  4. 三個 disclosure 維持 D-056 的 details touchend 路徑；不建立自訂月曆、第二份
+     日期 state、全域 listener、透明遮罩或 synthetic click。
+  5. App Shell candidate 更新為 v35，需通過實體 iPhone installed-PWA Human QA
+     才能合併與正式部署。
+- Reason: 正式環境無 Runtime error，且 v34 差異與「開啟約 0.5 秒後關閉」症狀
+  精確對應同一次觸控的雙重日期啟用。
+- Impact: Today standalone date activation、tests、docs、v35；無資料 key、
+  WorkRecord、計算、Manifest、Supabase 或正式資料變更。

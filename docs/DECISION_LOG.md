@@ -956,3 +956,20 @@
   的 touchend-without-click 失敗鏈。
 - Impact: `index.html`、v34 App Shell、tests 與交接文件；無資料模型、storage key、
   計算、Manifest、Supabase 或正式資料變更。
+
+## D-057 — Installed-PWA date picker single activation
+
+- Date: 2026-08-11
+- Status: Approved implementation；Human QA pending
+- Decision:
+  - v34 日期 input 的 pointerdown early focus 由本決策取代，避免與同一觸控的原生
+    activation 形成開啟後立即關閉。
+  - standalone 日期只在未滑動 touchend 對同一原生 input 呼叫一次
+    `showPicker()`；成功後才 prevent default 並抑制後續 click。
+  - 不支援或失敗時保留原生 fallback；三個 disclosure、Safari、滑鼠、鍵盤與
+    Accessibility 維持既有路徑。
+  - App Shell candidate 為 v35；實體 iPhone installed-PWA Human QA 通過後才發布。
+- Reason: Production 無 Runtime error，實體症狀與 v34 新增 early focus 的雙重
+  activation 時序一致。
+- Impact: `index.html`、v35 App Shell、tests 與交接文件；無資料模型、storage key、
+  計算、Manifest、Supabase 或正式資料變更。

@@ -4,6 +4,23 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
+## Installed-PWA Date Picker Single Activation — Human QA Candidate
+
+- Branch：`codex/date-picker-single-activation-20260811`；base：`eb9e0bd`。
+- v34 Production 中，日期 Picker 於實體 iPhone installed PWA 開啟約 0.5 秒後關閉；
+  正式站無 Runtime error，Git 差異確認 v34 新增的日期 `pointerdown → focus()` 與
+  同一觸控原生啟用形成雙重啟用。
+- 日期現在不再於 pointerdown／touchstart 提前 focus。standalone 有效 touchend
+  只對同一原生 date input 呼叫一次 `showPicker()`，成功後才攔截 default 與補送
+  click；不支援／失敗時保留原生 fallback。
+- 工時、支出、其他資料不改；App Shell candidate 為 `driver-pay-pro-v35`。
+- `npm run release:check` Passed：408/408 Node、Today 143/143、Calendar 69/69、
+  Reports 90/90、AI 26/26、Driver 27/27、Integration 17/17；lint 0 errors／10 個
+  既有 warnings，Inline JavaScript、Service Worker、Manifest、Production
+  validation 與 `git diff --check` 全部通過。
+- Human QA 只需完全關閉 Preview PWA 後重開，點一次日期並確認月曆持續顯示、
+  可選日期；再確認工時、支出、其他資料第一次觸控仍正常。通過前不進 Production。
+
 ## Today Installed-PWA First-input Unification — Production Released
 
 - Branch：`codex/today-first-input-unification-20260811`；base：`fab1d1b`。
