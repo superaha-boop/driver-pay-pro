@@ -5274,6 +5274,8 @@
       padding: 7px 12px 7px 16px;
       gap: 10px;
       outline: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .details-panel .detail-section summary:focus-visible {
@@ -6420,7 +6422,7 @@
               </div>
               <div class="quick-preview" id="quickPreview"></div>
               <details class="collapsible detail-section work-section" id="workTimeSection">
-                <summary id="workTimeToggle" aria-expanded="false" aria-controls="workTimeContent">
+                <summary id="workTimeToggle" data-pwa-first-input aria-expanded="false" aria-controls="workTimeContent">
                   <span class="detail-summary-main">
                     <span class="section-heading detail-summary-title">
                       <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -6483,7 +6485,7 @@
                 </div>
               </details>
               <details class="collapsible detail-section expense-section" id="expenseSection">
-                <summary id="expenseSectionToggle" aria-expanded="false" aria-controls="expenseInputs">
+                <summary id="expenseSectionToggle" data-pwa-first-input aria-expanded="false" aria-controls="expenseInputs">
                   <span class="section-heading detail-summary-title">
                     <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                       <path d="M4 2v20l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2V2l-2 2-2-2-2 2-2-2-2 2-2-2-2 2Z"></path>
@@ -6507,7 +6509,7 @@
                 </div>
               </details>
               <details class="collapsible detail-section other-section" id="otherDataSection">
-                <summary id="otherDataToggle" aria-expanded="false" aria-controls="otherDataContent">
+                <summary id="otherDataToggle" data-pwa-first-input aria-expanded="false" aria-controls="otherDataContent">
                   <span class="section-heading detail-summary-title">
                     <svg class="section-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                       <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5Z"></path>
@@ -8913,7 +8915,7 @@
       return includeToday && dateString === todayString() ? `今天・${date}` : date;
     }
 
-    function dateCardMarkup({ id, value, label, required = false, inlineToday = false, compactMobile = false, locked = false, max = "" }) {
+    function dateCardMarkup({ id, value, label, required = false, inlineToday = false, compactMobile = false, locked = false, max = "", primeFirstInput = false }) {
       const isToday = value === todayString();
       const displayValue = inlineToday && isToday ? `今天・${formatFullDate(value)}` : formatFullDate(value);
       return `
@@ -8922,7 +8924,7 @@
             <strong class="date-card-value${compactMobile ? " compact-mobile-date" : ""}" data-date-display${inlineToday ? " data-date-inline" : ""}${compactMobile ? ` data-short-date="${escapeAttr(formatShortDate(value, inlineToday))}"` : ""}>${escapeHtml(displayValue)}</strong>
             ${inlineToday ? "" : `<small class="date-card-today" data-date-today${isToday ? "" : " hidden"}>今天</small>`}
           </span>
-          <input type="date" id="${escapeAttr(id)}" value="${escapeAttr(value)}" aria-label="${escapeAttr(label)}"${required ? " required" : ""}${max ? ` max="${escapeAttr(max)}"` : ""}${locked ? " disabled aria-readonly=\"true\"" : ""}>
+          <input type="date" id="${escapeAttr(id)}" value="${escapeAttr(value)}" aria-label="${escapeAttr(label)}"${primeFirstInput ? " data-pwa-first-input" : ""}${required ? " required" : ""}${max ? ` max="${escapeAttr(max)}"` : ""}${locked ? " disabled aria-readonly=\"true\"" : ""}>
         </label>
       `;
     }
@@ -8935,7 +8937,8 @@
         label: "選擇要修改的每日紀錄日期",
         required: true,
         inlineToday: true,
-        max: todayString()
+        max: todayString(),
+        primeFirstInput: true
       });
     }
 
@@ -13418,6 +13421,100 @@
       }
     }
 
+    function isInstalledPwaMode() {
+      return navigator.standalone === true
+        || window.matchMedia?.("(display-mode: standalone)")?.matches === true;
+    }
+
+    let installedPwaTouchIntent = null;
+    let installedPwaSuppressedClick = null;
+
+    function installedPwaFirstInputControl(target) {
+      if (!(target instanceof Element)) return null;
+      const control = target.closest("[data-pwa-first-input]");
+      if (!control || control.disabled || !els.sharedDetailPanel.contains(control)) return null;
+      return control;
+    }
+
+    function primeInstalledPwaFirstInput(event) {
+      if (!isInstalledPwaMode() || activeView !== "today") return;
+      if (event.pointerType && event.pointerType !== "touch") return;
+      const control = installedPwaFirstInputControl(event.target);
+      if (!control) return;
+      if (document.activeElement === control) return;
+      try {
+        control.focus({ preventScroll: true });
+      } catch {
+        control.focus();
+      }
+    }
+
+    function beginInstalledPwaFirstInput(event) {
+      installedPwaSuppressedClick = null;
+      primeInstalledPwaFirstInput(event);
+      if (!isInstalledPwaMode() || activeView !== "today" || event.touches?.length !== 1) {
+        installedPwaTouchIntent = null;
+        return;
+      }
+      const control = installedPwaFirstInputControl(event.target);
+      if (!control) return;
+      const touch = event.touches[0];
+      installedPwaTouchIntent = {
+        control,
+        x: touch.clientX,
+        y: touch.clientY,
+        moved: false
+      };
+    }
+
+    function trackInstalledPwaFirstInput(event) {
+      if (!installedPwaTouchIntent || event.touches?.length !== 1) return;
+      const touch = event.touches[0];
+      if (
+        Math.abs(touch.clientX - installedPwaTouchIntent.x) > 10
+        || Math.abs(touch.clientY - installedPwaTouchIntent.y) > 10
+      ) {
+        installedPwaTouchIntent.moved = true;
+      }
+    }
+
+    function activateInstalledPwaDisclosure(event) {
+      const intent = installedPwaTouchIntent;
+      installedPwaTouchIntent = null;
+      if (!intent || intent.moved || !isInstalledPwaMode() || activeView !== "today") return;
+      const control = installedPwaFirstInputControl(event.target);
+      if (!control || control !== intent.control || control.tagName !== "SUMMARY") return;
+      const details = control.closest("details");
+      if (!details) return;
+      if (event.cancelable) event.preventDefault();
+      details.open = !details.open;
+      control.setAttribute("aria-expanded", String(details.open));
+      installedPwaSuppressedClick = { control, until: performance.now() + 700 };
+    }
+
+    function suppressInstalledPwaDisclosureClick(event) {
+      const pending = installedPwaSuppressedClick;
+      if (!pending) return;
+      installedPwaSuppressedClick = null;
+      if (performance.now() > pending.until) return;
+      const control = installedPwaFirstInputControl(event.target);
+      if (control !== pending.control) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+
+    function setupInstalledPwaFirstInput() {
+      const passiveCapture = { capture: true, passive: true };
+      els.sharedDetailPanel.addEventListener("pointerdown", primeInstalledPwaFirstInput, passiveCapture);
+      els.sharedDetailPanel.addEventListener("touchstart", beginInstalledPwaFirstInput, passiveCapture);
+      els.sharedDetailPanel.addEventListener("touchmove", trackInstalledPwaFirstInput, passiveCapture);
+      els.sharedDetailPanel.addEventListener("touchend", activateInstalledPwaDisclosure, { capture: true, passive: false });
+      els.sharedDetailPanel.addEventListener("touchcancel", () => {
+        installedPwaTouchIntent = null;
+      }, passiveCapture);
+      els.sharedDetailPanel.addEventListener("click", suppressInstalledPwaDisclosureClick, true);
+    }
+
     els.navButtons.forEach(button => button.addEventListener("click", () => navigateTo(button.dataset.view)));
     document.getElementById("newEntry").addEventListener("click", () => {
       setActiveRecordDate(todayString());
@@ -14066,6 +14163,7 @@
       navigateTo(initialRoute.view, initialRoute.reportView, true);
     }
     updateOverviewVisibility();
+    setupInstalledPwaFirstInput();
     setupPwa();
     scheduleCalendarMidnightRefresh();
     window.addEventListener("popstate", () => applyRoute(parseAppRoute(location.hash, location.search)));

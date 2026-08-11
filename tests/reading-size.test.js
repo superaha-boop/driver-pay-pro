@@ -202,5 +202,5 @@ test("Today KPI 共用數字字體規格且工時單位降階", () => {
 });
 
 test("HTML、CSS 與 JavaScript 變更同步更新 App Shell cache", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v33"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v34"/);
 });

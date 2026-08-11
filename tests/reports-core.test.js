@@ -358,7 +358,7 @@ test("Reports 狀態不再讀寫 legacy localStorage 設定並保留唯讀介面
   assert.doesNotMatch(html.match(/<section id="view-reports"[\s\S]*?<\/section>\s*<section id="view-ai"/)?.[0] || "", /data-calendar-(?:add|edit|delete)/);
 });
 
-test("Local-first V1.1 Hotfix App Shell 使用 Service Worker cache v33", () => {
-  assert.match(serviceWorker, /driver-pay-pro-v33/);
+test("Local-first V1.1 Hotfix App Shell 使用 Service Worker cache v34", () => {
+  assert.match(serviceWorker, /driver-pay-pro-v34/);
   assert.doesNotMatch(serviceWorker, /driver-pay-pro-v11/);
 });

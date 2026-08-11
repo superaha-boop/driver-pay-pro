@@ -4,6 +4,26 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
+## Today Installed-PWA First-input Unification — Human QA Passed
+
+- Branch：`codex/today-first-input-unification-20260811`；base：`fab1d1b`。
+- Product Owner 確認 v33 Production 冷啟動後只有「新增支出」第一次點擊正常；
+  每日紀錄日期、工時設定與其他資料仍需第二次點擊。先前 trace 中「其他資料」
+  已收到 trusted pointerdown／touchstart／touchend，卻沒有 pointerup／click，證明
+  不能再把所有控制都交給後續合成 click。
+- Today 每日紀錄四個指定入口共用 installed-PWA first-input path。最早期 trusted
+  touch 先 focus 真正控制；日期仍保留原生 `input[type="date"]` default action，
+  不呼叫 `showPicker()`。三個 `<summary>` 在有效 touchend 直接切換原本
+  `<details>.open`，並抑制同一觸控可能補送的 click，避免雙重切換。
+- 觸控 fallback 僅限 standalone、Today、`#sharedDetailPanel` 與四個帶標記的控制；
+  10px 以上位移視為捲動，不切換。Safari、滑鼠、鍵盤與 Accessibility 保留原生
+  路徑；不加入全頁遮罩、假點擊或第二份 disclosure state。
+- Product Owner 已於 2026-08-11 完成公開 Preview 的實體 iPhone installed-PWA
+  冷啟動 Human QA：日期、工時設定、新增支出、其他資料第一次觸控全部成功，
+  所有既有問題均確認解決，Release Candidate Approved。
+- App Shell：`driver-pay-pro-v34`。不改 `driverPayApp.v2`、WorkRecord、計算、
+  Manifest、Supabase 或正式資料；已授權進入 `main` 與 Production 發布流程。
+
 ## Installed PWA First-input Recovery — Production Released
 
 - Branch：`codex/pwa-first-input-diagnostics-20260811`；base：`a6d4703`；功能

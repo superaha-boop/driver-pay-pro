@@ -4,6 +4,28 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
+## Today Installed-PWA First-input Unification — Human QA Passed
+
+- Branch：`codex/today-first-input-unification-20260811`；base：`fab1d1b`。
+- v33 Production 的「新增支出」第一次觸控正常，但 Product Owner 冷啟動實測確認
+  日期、工時設定與其他資料仍需第二次。既有 trace 已捕捉「其他資料」收到 touch
+  start／end 卻沒有 click，因此 D-055 的舊 cache 結論不足以涵蓋全部入口。
+- `index.html` 只在 installed PWA 的 Today `#sharedDetailPanel` 對四個指定控制先
+  focus。日期保留唯一原生 date input 與 default Picker；工時、支出、其他資料在
+  未滑動的 touchend 切換現有 details，並抑制同一觸控的後續 click。
+- 未建立第二份展開 state、全頁 touch handler、透明遮罩、自訂月曆或
+  `showPicker()`；滑鼠、鍵盤、一般 Safari 行為不變。
+- App Shell candidate：`driver-pay-pro-v34`。資料 key、schema、計算、Manifest、
+  Supabase 與正式資料不變。
+- `npm run release:check` Passed：408/408 Node、Today 143/143、Calendar 69/69、
+  Reports 90/90、AI 26/26、Driver 27/27、Integration 17/17；lint 0 errors／10 個
+  既有 warnings，其餘 release gates 全部通過。
+- Product Owner 已於 2026-08-11 完成 Public Preview 的唯一一次實體 iPhone
+  installed-PWA 冷啟動 Human QA；日期、工時、支出、其他資料第一次觸控全部
+  成功，所有問題均確認解決，Release Candidate Approved。
+- 下一步已獲授權：再跑完整 release gate、一般合併 `main`、Push `main` 並確認
+  Vercel Production。不得 force push、rebase、修改資料或 Schema。
+
 ## Installed PWA First-input Recovery — Production Released
 
 - 功能 branch：`codex/pwa-first-input-diagnostics-20260811`；base：`a6d4703`；
