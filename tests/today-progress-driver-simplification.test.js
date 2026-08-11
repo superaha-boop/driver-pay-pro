@@ -155,7 +155,7 @@ contract(43, "Calendar targeted tests 保留於 release gate", () => assert.matc
 contract(44, "Reports targeted tests 保留於 release gate", () => assert.match(packageJson.scripts["test:reports"], /reports/));
 contract(45, "AI targeted tests 保留於 release gate", () => assert.match(packageJson.scripts["test:ai"], /ai\.test\.js/));
 contract(46, "Integration targeted tests 保留於 release gate", () => assert.match(packageJson.scripts["test:integration"], /integration\.test\.js/));
-contract(47, "PWA App Shell 遞增至 v35 且 storage key 不變", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v35"/);
+contract(47, "PWA App Shell 遞增至 v36 且 storage key 不變", () => {
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v36"/);
   assert.match(html, /const storageKey = "driverPayApp\.v2"/);
 });

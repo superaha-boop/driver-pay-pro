@@ -4,6 +4,20 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
+## Installed-PWA Date Picker Pointerdown Hotfix — Ready for Human QA
+
+- Branch：`codex/date-picker-pointerdown-20260811`；base：`7979674`。
+- Product Owner 在 v35 Production 依序關閉 Safari 正式站分頁、完全關閉 PWA、等待
+  後重開，連續五次日期 Picker 測試皆失敗；正式部署、Git commit、v35 App Shell
+  與 Runtime error 均已排除，問題不是使用者操作或 GitHub／Vercel漏更新。
+- 日期不再依賴 touchend 或 10px 位移判定。installed PWA 的最早 touch
+  pointerdown 直接對唯一原生 date input 呼叫一次 `showPicker()`；成功後才阻止
+  default 並抑制同次後續 click。不支援／拋錯時仍保留原生 fallback。
+- 三個 Today disclosure、資料、計算、日期綁定、Manifest 與其他頁面不變；App
+  Shell candidate 為 v36。
+- 自動驗證完成後建立 Public Preview；Production 必須等待實體 iPhone 多次冷啟動
+  Human QA，不得僅以一次成功取代反覆測試。
+
 ## Installed-PWA Date Picker Single Activation — Production Released
 
 - Branch：`codex/date-picker-single-activation-20260811`；base：`eb9e0bd`。

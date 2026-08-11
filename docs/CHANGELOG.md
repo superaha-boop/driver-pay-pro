@@ -16,6 +16,16 @@
 
 ## Unreleased
 
+### 2026-08-11 — Installed-PWA Date Picker Pointerdown Hotfix Candidate
+
+- v35 Production 在完全關閉後重開的五次日期 Picker 測試皆失敗；正式 commit、
+  v35 App Shell 與 Runtime errors 已排除，重新開啟 TD-029。
+- 日期改由最早 trusted touch pointerdown 單次呼叫唯一原生 input 的
+  `showPicker()`，不再等待 touchend 或套用 10px 位移 gate；成功後仍抑制同次
+  後續 click，避免再次關閉。
+- 工時、支出與其他資料不變；App Shell candidate 升至 v36。等待 Public Preview
+  的實體 iPhone installed-PWA 多次冷啟動 Human QA。
+
 ### 2026-08-11 — Installed-PWA Date Picker Single Activation Released
 
 - 修正 v34 日期欄位早期 focus 與同一次原生啟用衝突，造成 iPhone installed PWA

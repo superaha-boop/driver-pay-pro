@@ -1139,3 +1139,24 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   精確對應同一次觸控的雙重日期啟用。
 - Impact: Today standalone date activation、tests、docs、v35；無資料 key、
   WorkRecord、計算、Manifest、Supabase 或正式資料變更。
+
+## D-058 — Open Installed-PWA Date Picker on Earliest Pointerdown
+
+- Date: 2026-08-11
+- Decision:
+  1. D-057 的「未滑動 touchend 才呼叫 `showPicker()`」由本決策取代；Product
+     Owner 在 v35 Production 完全關閉後重開，連續五次皆無法可靠開啟日期 Picker。
+  2. standalone Today 日期只在最早 trusted touch `pointerdown` 對同一原生 date
+     input 呼叫一次 `showPicker()`；不等待 click／touchend，也不套用 disclosure
+     的 10px 位移取消。
+  3. 只有 API 成功後才 prevent default 並抑制同次後續 click；API 不存在或拋錯時
+     不攔截原生 fallback。
+  4. 工時、支出與其他資料繼續使用 D-056 的 touchend details 路徑；不建立自訂
+     月曆、第二份日期 state、遮罩、synthetic click 或全域 listener。
+  5. App Shell candidate 更新為 v36；必須以 Public Preview 做實體 iPhone
+     installed-PWA 多次冷啟動驗證，不能再以單次成功宣告根治。
+- Reason: 正式站版本、部署與 Runtime errors 已排除；v35 唯一日期特殊路徑仍把
+  Picker 延遲到 touchend 並以 10px 位移 gate 取消，無法保證 iOS standalone 冷啟動
+  的第一個使用者啟用仍有效。既有 trace 已證明 pointerdown 能最早抵達網頁。
+- Impact: Today 日期啟動時機、tests、docs、v36；不改資料 key、WorkRecord、計算、
+  Manifest、Supabase 或正式資料。

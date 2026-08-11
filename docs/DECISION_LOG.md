@@ -976,3 +976,20 @@
   activation 時序一致。
 - Impact: `index.html`、v35 App Shell、tests 與交接文件；無資料模型、storage key、
   計算、Manifest、Supabase 或正式資料變更。
+
+## D-058 — Installed-PWA date picker earliest pointerdown
+
+- Date: 2026-08-11
+- Status: Ready for Human QA
+- Decision:
+  - D-057 的 touchend 日期啟動由最早 trusted touch pointerdown 取代；日期不再受
+    10px 位移 gate 影響。
+  - `showPicker()` 成功後才 prevent default 並抑制同次 click；失敗時保留原生
+    fallback。
+  - 三個 Today disclosure 維持既有 touchend 路徑，不新增自訂月曆、第二份 state、
+    遮罩、假點擊或全域 listener。
+  - App Shell candidate 為 v36；必須完成實體 iPhone installed-PWA 多次冷啟動 QA。
+- Reason: v35 Production 在受控重開測試連續五次失敗；部署與伺服器錯誤已排除，
+  問題留在 touchend 啟動時序。既有 trace 證明 pointerdown 是可靠送達的最早事件。
+- Impact: `index.html`、v36 App Shell、tests 與交接文件；無資料模型、storage key、
+  計算、Manifest、Supabase 或正式資料變更。

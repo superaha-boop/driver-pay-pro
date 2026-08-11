@@ -59,7 +59,7 @@ test("Fixture 只存在測試目錄且不會進入 Production 或 App Shell", ()
   assert.doesNotMatch(html, /v1-regression\.json|__TEST_DATA__/);
   assert.doesNotMatch(serviceWorker, /tests\/|fixtures\//);
   assert.equal(fixture.expected.storageKey, "driverPayApp.v2");
-  assert.equal(fixture.expected.serviceWorkerCache, "driver-pay-pro-v35");
+  assert.equal(fixture.expected.serviceWorkerCache, "driver-pay-pro-v36");
 });
 
 test("AI 與 Driver 唯讀 renderer 不寫回 WorkRecord", () => {
@@ -116,8 +116,8 @@ test("事件與 autosave 不會重複註冊或建立無限制 timer", () => {
   assert.equal((html.match(/window\.addEventListener\("storage"/g) || []).length, 0);
 });
 
-test("Service Worker v35 更新、清舊 cache 並保留 navigation fallback", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v35"/);
+test("Service Worker v36 更新、清舊 cache 並保留 navigation fallback", () => {
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v36"/);
   assert.match(serviceWorker, /keys\.filter\(key => key !== CACHE_NAME\)\.map\(key => caches\.delete\(key\)\)/);
   assert.match(serviceWorker, /event\.request\.mode === "navigate"/);
   assert.match(serviceWorker, /isNavigation && !response\.ok/);
