@@ -900,3 +900,22 @@
   實際共同來源是 Service Worker 在 UI 已互動後重新載入頁面。
 - Impact: PWA lifecycle、Driver labels、tests、docs、v32；無 schema、storage key、
   Manifest、Supabase 或正式資料變更。
+
+## D-054
+
+- Date: 2026-08-11
+- Decision:
+  - D-053 的 deferred Service Worker activation 維持；但因 v32 實體 installed PWA
+    仍重現首次操作無反應，不再宣告該 reload 是殘留症狀的完整根因。
+  - 第二次修正前先加入啟動最早期、只存記憶體的事件 trace，記錄
+    pointer／touch／click、pageshow／focus／visibility、App ready markers、目標
+    元素識別與 worker/cache 狀態；不讀取收入、工時、支出、輸入值或 storage。
+  - 診斷入口只在 standalone 或 `?pwa-diagnostic=1` 顯示，只部署非 Production
+    Preview；收到一份實體 iPhone trace 後實作最小根治並移除診斷 UI。
+  - 拒絕以透明遮罩假點擊或無證據的全域 touch／pointer fallback 掩蓋問題，避免
+    雙重觸發、破壞原生 Picker、捲動及 Accessibility。
+- Reason: Safari 分頁與桌面乾淨 origin 均無法重現，必須量到 installed WebView
+  的第一個實體事件鏈，才能區分系統未送事件、click 未合成、handler 後被 render
+  還原或 stale worker/cache。
+- Impact: 暫時 diagnostics、tests、docs 與 Preview；不改 Service Worker v32、
+  Manifest、資料 key、WorkRecord、計算、Supabase 或正式資料。

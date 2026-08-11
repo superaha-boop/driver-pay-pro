@@ -11,6 +11,107 @@
   <meta name="format-detection" content="telephone=no">
   <script>
     (() => {
+      const events = [];
+      const maxEvents = 240;
+      const startedAt = Date.now();
+      const isStandalone = navigator.standalone === true
+        || window.matchMedia?.("(display-mode: standalone)").matches === true;
+
+      function targetDescriptor(target) {
+        if (!(target instanceof Element)) return { tag: "unknown", id: "" };
+        const interactive = target.closest("button, input, select, textarea, summary, [role='button'], [data-disclosure-scope]") || target;
+        return {
+          tag: interactive.tagName.toLowerCase(),
+          id: interactive.id || "",
+          type: interactive.getAttribute("type") || "",
+          detailsId: interactive.closest("details")?.id || "",
+          detailsOpen: interactive.closest("details")?.open ?? null,
+          ariaExpanded: interactive.getAttribute("aria-expanded")
+        };
+      }
+
+      function environmentSnapshot() {
+        const active = document.activeElement;
+        return {
+          readyState: document.readyState,
+          visibility: document.visibilityState,
+          hasFocus: document.hasFocus(),
+          activeElement: active instanceof Element ? active.id || active.tagName.toLowerCase() : "",
+          standalone: isStandalone,
+          serviceWorkerControlled: Boolean(navigator.serviceWorker?.controller)
+        };
+      }
+
+      function record(type, event = null, extra = {}) {
+        const item = {
+          sequence: events.length + 1,
+          atMs: Math.max(0, Date.now() - startedAt),
+          type,
+          ...environmentSnapshot(),
+          ...(event ? {
+            trusted: event.isTrusted,
+            defaultPrevented: event.defaultPrevented,
+            pointerType: event.pointerType || (event.touches ? "touch" : ""),
+            target: targetDescriptor(event.target)
+          } : {}),
+          ...extra
+        };
+        events.push(item);
+        if (events.length > maxEvents) events.splice(0, events.length - maxEvents);
+        return item;
+      }
+
+      const trace = Object.freeze({
+        version: "pwa-first-input-v1",
+        isStandalone,
+        record,
+        snapshot() {
+          return {
+            version: this.version,
+            capturedAt: new Date().toISOString(),
+            environment: {
+              standalone: isStandalone,
+              displayMode: window.matchMedia?.("(display-mode: standalone)").matches ? "standalone" : "browser",
+              viewport: `${window.innerWidth}x${window.innerHeight}`,
+              language: navigator.language || "",
+              serviceWorkerControlled: Boolean(navigator.serviceWorker?.controller)
+            },
+            events: events.slice()
+          };
+        }
+      });
+
+      Object.defineProperty(window, "__driverPayInputTrace", {
+        value: trace,
+        configurable: false,
+        enumerable: false,
+        writable: false
+      });
+
+      ["pointerdown", "pointerup", "touchstart", "touchend", "click"].forEach(type => {
+        document.addEventListener(type, event => record(type, event), { capture: true, passive: true });
+      });
+      window.addEventListener("pageshow", event => record("pageshow", event, { persisted: event.persisted }));
+      window.addEventListener("focus", event => record("window-focus", event));
+      window.addEventListener("blur", event => record("window-blur", event));
+      document.addEventListener("visibilitychange", event => record("visibilitychange", event));
+      record("trace-installed");
+      navigator.serviceWorker?.getRegistration?.().then(registration => {
+        record("service-worker-registration", null, {
+          active: Boolean(registration?.active),
+          waiting: Boolean(registration?.waiting),
+          installing: Boolean(registration?.installing)
+        });
+      }).catch(() => record("service-worker-registration-error"));
+      window.caches?.keys?.().then(cacheNames => {
+        record("cache-keys", null, {
+          cacheNames: cacheNames.filter(name => name.startsWith("driver-pay-pro-"))
+        });
+      }).catch(() => record("cache-keys-error"));
+    })();
+  </script>
+  <script>
+    (() => {
       try {
         const payload = JSON.parse(localStorage.getItem("driverPayApp.v2") || "null");
         const settings = payload?.settings || {};
@@ -6807,6 +6908,12 @@
               <div class="about-actions" aria-label="聯絡選項"><button class="about-action-row" type="button" disabled><span>Send Feedback</span><span class="about-action-meta">即將推出</span></button></div>
               <p class="about-legal"><span id="aboutCopyright"></span><br>All Rights Reserved.</p>
               <section class="driver-system-details" aria-labelledby="driverStatusDetailTitle"><h3 id="driverStatusDetailTitle">系統狀態</h3><dl class="driver-status-list" id="driverSystemStatusDetails"></dl></section>
+              <section class="driver-system-details" id="pwaInputDiagnostic" aria-labelledby="pwaInputDiagnosticTitle" hidden>
+                <h3 id="pwaInputDiagnosticTitle">啟動觸控診斷</h3>
+                <p class="ds-secondary">只記錄觸控與啟動順序，不包含收入、工時或支出內容。</p>
+                <button class="button secondary" id="copyPwaInputTrace" type="button">複製診斷結果</button>
+                <p class="ds-save-status" id="pwaInputDiagnosticStatus" role="status" aria-live="polite"></p>
+              </section>
             </div>
           </section>
         </div>
@@ -7127,6 +7234,9 @@
       driverSystemStatusBadge: document.getElementById("driverSystemStatusBadge"),
       driverSystemStatusContent: document.getElementById("driverSystemStatusContent"),
       driverSystemStatusDetails: document.getElementById("driverSystemStatusDetails"),
+      pwaInputDiagnostic: document.getElementById("pwaInputDiagnostic"),
+      copyPwaInputTrace: document.getElementById("copyPwaInputTrace"),
+      pwaInputDiagnosticStatus: document.getElementById("pwaInputDiagnosticStatus"),
       platformChips: document.getElementById("platformChips"),
       platformInputModeSettings: document.getElementById("platformInputModeSettings"),
       platformRateInputs: document.getElementById("platformRateInputs"),
@@ -11365,6 +11475,37 @@
           driverStatusRow("Service Worker", serviceWorkerStatus)
         ].join("");
       }
+      if (els.pwaInputDiagnostic) {
+        const queryEnabled = new URLSearchParams(location.search).has("pwa-diagnostic");
+        els.pwaInputDiagnostic.hidden = !(window.__driverPayInputTrace?.isStandalone || queryEnabled);
+      }
+    }
+
+    async function copyPwaInputTrace() {
+      const trace = window.__driverPayInputTrace;
+      if (!trace || !els.pwaInputDiagnosticStatus) return false;
+      trace.record("diagnostic-copy-requested");
+      const snapshot = trace.snapshot();
+      const payload = JSON.stringify(snapshot, null, 2);
+      try {
+        await navigator.clipboard.writeText(payload);
+      } catch {
+        const textarea = document.createElement("textarea");
+        textarea.value = payload;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.append(textarea);
+        textarea.select();
+        const copied = document.execCommand("copy");
+        textarea.remove();
+        if (!copied) {
+          els.pwaInputDiagnosticStatus.textContent = "無法複製，請稍後再試。";
+          return false;
+        }
+      }
+      els.pwaInputDiagnosticStatus.textContent = `已複製 ${snapshot.events.length} 筆，請貼到 Codex 對話。`;
+      return true;
     }
 
     function toggleDriverSystemStatus() {
@@ -13470,7 +13611,11 @@
       }
     });
     els.manualEntryToggle.addEventListener("click", () => {
+      window.__driverPayInputTrace?.record("manual-entry-handler-start");
       setManualEntryExpanded(els.manualEntryToggle.getAttribute("aria-expanded") !== "true");
+      window.__driverPayInputTrace?.record("manual-entry-handler-end", null, {
+        expanded: els.manualEntryToggle.getAttribute("aria-expanded")
+      });
     });
     els.missingWorkTimeDialog.addEventListener("cancel", () => {
       pendingTodayRecordSave = null;
@@ -13664,6 +13809,7 @@
     });
     els.detailForm.addEventListener("change", event => {
       if (event.target.id === "date") {
+        window.__driverPayInputTrace?.record("daily-date-change-handler", event);
         const requestedDate = normalizeDateKey(event.target.value);
         if (!isEditableRecordDate(requestedDate)) {
           setActiveRecordStatus("只能選擇今天或過去日期。");
@@ -13682,6 +13828,7 @@
       updateQuickPreview();
     });
     els.workTimeSection.addEventListener("toggle", event => {
+      window.__driverPayInputTrace?.record("work-time-toggle-handler", event, { open: event.currentTarget.open });
       els.workTimeToggle.setAttribute("aria-expanded", String(event.currentTarget.open));
       updateQuickPreview();
       if (!event.isTrusted) return;
@@ -13690,6 +13837,7 @@
       saveState();
     });
     els.expenseSection.addEventListener("toggle", event => {
+      window.__driverPayInputTrace?.record("expense-toggle-handler", event, { open: event.currentTarget.open });
       els.expenseSectionToggle.setAttribute("aria-expanded", String(event.currentTarget.open));
     });
     els.todayExpenseManager.addEventListener("click", event => {
@@ -13703,6 +13851,7 @@
       renderTodayExpenseList(activeRecordDate);
     });
     els.otherDataSection.addEventListener("toggle", event => {
+      window.__driverPayInputTrace?.record("other-data-toggle-handler", event, { open: event.currentTarget.open });
       const expanded = event.currentTarget.open;
       els.otherDataToggle.setAttribute("aria-expanded", String(expanded));
       if (expanded) offerAutomaticWeather();
@@ -14022,6 +14171,8 @@
       showToast(expenseShortcutStatus);
     });
 
+    els.copyPwaInputTrace?.addEventListener("click", copyPwaInputTrace);
+
     document.getElementById("view-settings").addEventListener("click", event => {
       const disclosureToggle = event.target.closest('[data-disclosure-scope="driver"]');
       if (disclosureToggle) {
@@ -14054,8 +14205,10 @@
       }
     });
 
+    window.__driverPayInputTrace?.record("app-listeners-ready");
     applyDisplaySize(state.settings.displaySize);
     renderBrandAttribution();
+    window.__driverPayInputTrace?.record("app-render-start");
     renderEntryDateCard(todayString());
     renderAll();
     resetForm(activeRecordDate);
@@ -14068,6 +14221,7 @@
     updateOverviewVisibility();
     setupPwa();
     scheduleCalendarMidnightRefresh();
+    window.__driverPayInputTrace?.record("app-interactive-ready");
     window.addEventListener("popstate", () => applyRoute(parseAppRoute(location.hash, location.search)));
     window.addEventListener("hashchange", () => applyRoute(parseAppRoute(location.hash, location.search)));
     window.addEventListener("driverpay:recordchange", handleRecordChanged);

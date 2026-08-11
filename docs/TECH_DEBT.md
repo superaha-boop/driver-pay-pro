@@ -1,6 +1,6 @@
 # Driver Pay Pro — Technical Debt Register
 
-Updated: 2026-08-04
+Updated: 2026-08-11
 
 This register records known limitations and follow-up work. An entry does not authorize implementation. Each item requires its own approved Sprint when scheduled.
 
@@ -41,6 +41,7 @@ Priority:
 | TD-026 | Historical platform income is keyed by platform display name rather than a stable platform ID. | Renaming a custom platform can split historical ranking, while silently merging names could corrupt attribution. | P1 | Stable-ID migration requires a separate approved data Sprint | Partially resolved in Sprint 5B2：核准的內建別名在讀取層合併，未知自訂平台安全保留；自訂平台重新命名後的歷史穩定 ID 仍未解決，且未改寫資料。 |
 | TD-027 | 今日自動天氣依賴瀏覽器定位與 Open-Meteo 即時可用性，且真實 iOS 權限行為無法由 Node 測試完整覆蓋。 | 權限、網路或外部服務失敗時無法自動帶入，但不得影響 Local-first 核心紀錄。 | P2 | 每次觸及天氣、權限或 PWA 發布時做真機回歸 | Open／monitored；目前無 API key、只做使用者同意後一次性定位、精確位置不保存、30 分鐘 session 快取，所有失敗安全回到手動流程。 |
 | TD-028 | Service Worker 曾在 App 已可操作後立即接管並強制 reload。 | 更新時機若與第一次觸控重疊，日期或支出等無關控制都可能看似需要點第二次，且未儲存輸入可能中斷。 | P1 | Resolved by D-053 candidate | Resolved in v32 candidate：移除 `skipWaiting()`、`clients.claim()` 與 `controllerchange` reload；保留更新檢查，waiting worker 於既有 clients 自然關閉後生效，並新增 release guard。 |
+| TD-029 | Installed PWA 從 iPhone 主畫面冷啟動／恢復後，第一次操作仍可能未生效；Safari 分頁正常。 | 日期、支出等不同控制元件的第一個操作可能需要重複，妨礙主要輸入流程；桌面模擬無法證明事件在 iOS standalone 的哪一層消失。 | P1 | Current diagnostic Sprint；取得一份實體 trace 後立即根治 | Open／instrumented：v32 已排除 TD-028 的中途 reload，但實機仍重現。非 Production 診斷版以 memory-only trace 區分事件未送達、click 未合成、handler 後狀態被還原或 stale worker/cache；收到證據前不套用假點擊或全域 touch fallback。 |
 
 ## Maintenance Rules
 

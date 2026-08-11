@@ -1,5 +1,22 @@
 # Driver Pay Pro Testing
 
+## Current — Installed PWA First-input Diagnostics
+
+- Product Owner 實體範圍：只有從 iPhone 主畫面圖示打開的 standalone PWA 仍會
+  首次操作無反應；同一功能在 Safari 分頁正常。
+- 新增 `tests/pwa-first-input-diagnostic.test.js`，驗證診斷在 App 啟動程式前
+  安裝、涵蓋 pointer／touch／click 與 lifecycle、只記錄目標識別、不讀取
+  localStorage 或欄位值，並包含 Date／work／expense／other handler markers。
+- Driver 診斷入口只允許 standalone 或 `?pwa-diagnostic=1`，正常 Safari／正式
+  使用流程不顯示；診斷資料只存在記憶體，重新載入即消失。
+- `npm run release:check`：Passed；lint 0 errors／10 個既有 warnings，全部 Node
+  與專項測試、Inline JavaScript、Service Worker、Manifest、Production
+  validation 與 `git diff --check` 全部通過。
+- 本機乾淨 origin：第一次 click 即展開「新增支出」，診斷可複製；320／390／
+  430px 均 `scrollWidth === clientWidth`，Console 0 error／warning。
+- 尚未完成的唯一診斷 Gate：實體 iPhone 將非 Production Preview 加到主畫面後，
+  冷啟動只點一次並回傳 trace。收到證據前不得宣告 root cause 或 fix complete。
+
 ## Released — PWA First-tap and Driver Labels
 
 - `npm test`：407/407 Passed。
