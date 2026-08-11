@@ -1,6 +1,6 @@
 # Driver Pay Pro Testing
 
-## Passed — Today Installed-PWA First-input Unification
+## Released — Today Installed-PWA First-input Unification
 
 - 自動契約覆蓋四個 Today 指定入口：日期、工時設定、新增支出、其他資料。
 - 日期 touch 只先 focus 真正的 native input，後續仍由 iOS default action 開啟；
@@ -16,6 +16,10 @@
   Reports 90/90、AI 26/26、Driver 27/27、Integration 17/17；lint 0 errors／10 個
   既有 warnings，Inline JavaScript、Service Worker、Manifest、Production
   validation 與 `git diff --check` 全部通過。
+- 合併後 `main` 再次執行相同完整 release check，全部通過。
+- Production deployment `dpl_3hRmCTYXGcTbvViye6VFNNr7X4ef` 為 `READY`；正式網址
+  HTTP 200、Manifest standalone、Service Worker `driver-pay-pro-v34`，發布後
+  Runtime errors 為 0。
 
 ## Released — Installed PWA First-input Recovery
 

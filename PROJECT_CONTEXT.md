@@ -4,7 +4,7 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## Today Installed-PWA First-input Unification — Human QA Passed
+## Today Installed-PWA First-input Unification — Production Released
 
 - Branch：`codex/today-first-input-unification-20260811`；base：`fab1d1b`。
 - Product Owner 確認 v33 Production 冷啟動後只有「新增支出」第一次點擊正常；
@@ -22,7 +22,13 @@
   冷啟動 Human QA：日期、工時設定、新增支出、其他資料第一次觸控全部成功，
   所有既有問題均確認解決，Release Candidate Approved。
 - App Shell：`driver-pay-pro-v34`。不改 `driverPayApp.v2`、WorkRecord、計算、
-  Manifest、Supabase 或正式資料；已授權進入 `main` 與 Production 發布流程。
+  Manifest、Supabase 或正式資料。
+- 功能 commit：`31afe484e61fbd224914bce685ff93677c6f7746`；QA 文件 commit：
+  `9d8d38ce14118d7ae3cadaefc6d56cf7bddc077f`；已一般合併並推送 `main`，
+  merge commit：`cc70178850a5d74c180489abc0b8e4e2eeca241b`。
+- Production：`https://driver-pay-app.vercel.app`；deployment
+  `dpl_3hRmCTYXGcTbvViye6VFNNr7X4ef`，狀態 `READY`。正式站 HTTP 200、Manifest
+  standalone、Service Worker v34，發布後 Runtime errors 為 0。
 
 ## Installed PWA First-input Recovery — Production Released
 
