@@ -1,6 +1,6 @@
 # Driver Pay Pro Testing
 
-## Candidate — Today Installed-PWA First-input Unification
+## Passed — Today Installed-PWA First-input Unification
 
 - 自動契約覆蓋四個 Today 指定入口：日期、工時設定、新增支出、其他資料。
 - 日期 touch 只先 focus 真正的 native input，後續仍由 iOS default action 開啟；
@@ -9,8 +9,9 @@
   click 會被抑制。位移超過 10px 不切換；滑鼠、一般 Safari 與鍵盤維持原路徑。
 - Listener 僅掛在 `#sharedDetailPanel`，不掛 document／window；沒有透明遮罩或
   synthetic `.click()`。
-- App Shell candidate：`driver-pay-pro-v34`。完整 release check 與手機尺寸驗證
-  完成後，仍須使用公開 Preview 做一次實體 iPhone installed-PWA 冷啟動驗收。
+- App Shell：`driver-pay-pro-v34`。Product Owner 已於 2026-08-11 使用公開
+  Preview 完成實體 iPhone installed-PWA 冷啟動驗收；日期、工時設定、新增支出、
+  其他資料第一次觸控全部成功，所有問題均確認解決。
 - `npm run release:check`：Passed；408/408 Node、Today 143/143、Calendar 69/69、
   Reports 90/90、AI 26/26、Driver 27/27、Integration 17/17；lint 0 errors／10 個
   既有 warnings，Inline JavaScript、Service Worker、Manifest、Production

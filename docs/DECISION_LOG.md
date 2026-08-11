@@ -941,7 +941,7 @@
 ## D-056 — Today installed-PWA first-input unification
 
 - Date: 2026-08-11
-- Status: Approved implementation；Human QA pending
+- Status: Human QA Passed；Release Candidate Approved
 - Decision:
   - v33 後仍重現的日期、工時與其他資料第二次操作問題，不再歸因於舊 cache；
     既有 trace 已證明 summary 可收到 touchend 而沒有 click。
@@ -950,7 +950,8 @@
     切換既有 details 並抑制同觸控後續 click。
   - 作用域固定為 Today `#sharedDetailPanel`，不建立全域 listener、遮罩、假點擊、
     自訂月曆或第二份展開 state。
-  - App Shell candidate 為 v34，實體 iPhone installed-PWA Human QA 通過後才發布。
+  - App Shell 為 v34；Product Owner 已完成實體 iPhone installed-PWA Human QA，
+    四個入口第一次觸控全部成功並核准正式發布。
 - Reason: 修正冷啟動後四個相鄰入口首次操作不一致，並直接處理 trace 中已觀察到
   的 touchend-without-click 失敗鏈。
 - Impact: `index.html`、v34 App Shell、tests 與交接文件；無資料模型、storage key、

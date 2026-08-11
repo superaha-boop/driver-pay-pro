@@ -1112,8 +1112,8 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
      抑制同一觸控可能補送的 click；不建立第二份展開 state。
   5. fallback 只限 `#sharedDetailPanel`、Today、standalone 與帶標記控制；不掛
      document／window、不使用透明遮罩或 synthetic `.click()`。
-  6. App Shell candidate 更新為 v34，需通過一次實體 iPhone installed-PWA 冷啟動
-     Human QA 才能合併與正式部署。
+  6. App Shell 更新為 v34；Product Owner 已完成實體 iPhone installed-PWA 冷啟動
+     Human QA，四個入口第一次觸控全部成功，核准合併與正式部署。
 - Reason: 使用者在 v33 正式版重現三個指定入口需要第二次操作，且實體事件資料
   已直接證明其中一個失敗鏈停在 touchend、未產生 click。
 - Impact: Today 日期與三個 disclosure 的 standalone input activation、tests、

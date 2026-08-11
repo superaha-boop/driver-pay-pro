@@ -4,7 +4,7 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
-## Today Installed-PWA First-input Unification — Human QA Candidate
+## Today Installed-PWA First-input Unification — Human QA Passed
 
 - Branch：`codex/today-first-input-unification-20260811`；base：`fab1d1b`。
 - v33 Production 的「新增支出」第一次觸控正常，但 Product Owner 冷啟動實測確認
@@ -20,9 +20,11 @@ GitHub：`superaha-boop/driver-pay-pro`
 - `npm run release:check` Passed：408/408 Node、Today 143/143、Calendar 69/69、
   Reports 90/90、AI 26/26、Driver 27/27、Integration 17/17；lint 0 errors／10 個
   既有 warnings，其餘 release gates 全部通過。
-- 自動驗證完成後需 Push 功能分支並建立 iPhone 可直接開啟的 Public Preview。
-  唯一必要 Human QA：完全關閉 Preview PWA 後重開，依序確認日期、工時、支出、
-  其他資料第一次觸控皆生效，滑動不誤展開。通過前不得宣告根治或部署 Production。
+- Product Owner 已於 2026-08-11 完成 Public Preview 的唯一一次實體 iPhone
+  installed-PWA 冷啟動 Human QA；日期、工時、支出、其他資料第一次觸控全部
+  成功，所有問題均確認解決，Release Candidate Approved。
+- 下一步已獲授權：再跑完整 release gate、一般合併 `main`、Push `main` 並確認
+  Vercel Production。不得 force push、rebase、修改資料或 Schema。
 
 ## Installed PWA First-input Recovery — Production Released
 

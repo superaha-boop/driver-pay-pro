@@ -16,14 +16,15 @@
 
 ## Unreleased
 
-### 2026-08-11 — Today Installed-PWA First-input Unification Candidate
+### 2026-08-11 — Today Installed-PWA First-input Unification Human QA Passed
 
 - 每日紀錄日期、工時設定、新增支出與其他資料納入同一個 standalone
   first-input path，修正冷啟動後只有部分入口第一次觸控有效的不一致。
 - 日期仍使用唯一原生 date input；三個 disclosure 對有效 touchend 切換既有
   details，並避免後續 click 造成雙重切換。滑動、Safari、滑鼠與鍵盤維持原行為。
 - App Shell 升至 `driver-pay-pro-v34`；資料 key、WorkRecord、計算、Manifest 與
-  Supabase 均不變。狀態為待實體 iPhone Preview Human QA，不宣告 Production。
+  Supabase 均不變。Product Owner 已完成實體 iPhone installed-PWA 冷啟動 QA，
+  四個入口第一次觸控全部成功，Release Candidate Approved。
 
 ### 2026-08-11 — Installed PWA First-input Recovery
 
