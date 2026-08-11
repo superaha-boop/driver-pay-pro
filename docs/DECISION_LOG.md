@@ -941,7 +941,7 @@
 ## D-056 — Today installed-PWA first-input unification
 
 - Date: 2026-08-11
-- Status: Human QA Passed；Release Candidate Approved
+- Status: Production Released
 - Decision:
   - v33 後仍重現的日期、工時與其他資料第二次操作問題，不再歸因於舊 cache；
     既有 trace 已證明 summary 可收到 touchend 而沒有 click。
@@ -970,6 +970,8 @@
     Accessibility 維持既有路徑。
   - App Shell candidate 為 v35；Product Owner 實體 iPhone installed-PWA Human QA
     已通過，日期 Picker 第一次點擊後持續顯示並可選日期，核准正式發布。
+  - 已一般合併並推送 `main`；merge commit `bd73287`，Vercel Production
+    deployment `dpl_EgEUuhhtMiySJgpXXwHfAtHs4Lp8` 為 `READY`。
 - Reason: Production 無 Runtime error，實體症狀與 v34 新增 early focus 的雙重
   activation 時序一致。
 - Impact: `index.html`、v35 App Shell、tests 與交接文件；無資料模型、storage key、

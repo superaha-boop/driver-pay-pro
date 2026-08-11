@@ -1,6 +1,6 @@
 # Driver Pay Pro Testing
 
-## Human QA Passed — Installed-PWA Date Picker Single Activation
+## Released — Installed-PWA Date Picker Single Activation
 
 - 日期 input 不再由 `primeInstalledPwaFirstInput()` 提前 focus。
 - standalone 有效 touchend 只呼叫一次同一 input 的 `showPicker()`；成功後才
@@ -14,6 +14,11 @@
   Reports 90/90、AI 26/26、Driver 27/27、Integration 17/17；lint 0 errors／10 個
   既有 warnings，Inline JavaScript、Service Worker、Manifest、Production
   validation 與 `git diff --check` 全部通過。
+- 合併後 `main` 再次執行相同完整 release check，全部通過；merge commit：
+  `bd73287b8e38f221258ec1ae82a1d17ade47905e`。
+- Production deployment `dpl_EgEUuhhtMiySJgpXXwHfAtHs4Lp8` 為 `READY`；正式
+  網址、Manifest 與 Service Worker 均為 HTTP 200，Manifest standalone、App Shell
+  v35。390px 無水平 overflow、Console 0 error／warning，Runtime errors 為 0。
 
 ## Released — Today Installed-PWA First-input Unification
 

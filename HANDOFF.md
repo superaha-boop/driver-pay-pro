@@ -4,7 +4,7 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
-## Installed-PWA Date Picker Single Activation — Human QA Passed
+## Installed-PWA Date Picker Single Activation — Production Released
 
 - Branch：`codex/date-picker-single-activation-20260811`；base：`eb9e0bd`。
 - v34 Production 中，日期 Picker 於實體 iPhone installed PWA 開啟約 0.5 秒後關閉；
@@ -21,6 +21,15 @@ GitHub：`superaha-boop/driver-pay-pro`
 - Product Owner 已於 2026-08-11 完成實體 iPhone installed-PWA Human QA：完全
   關閉後重開，日期第一次點擊即開啟並持續顯示，可正常選擇日期；工時、支出與
   其他資料亦正常。High Priority 問題為無，Release Candidate 已核准正式發布。
+- 功能 commit：`83c038ee50619ad6747487ccae33cf22129e2a74`；QA 文件 commit：
+  `c61e7f0e42d1f29236e189cbcbd239167c092cb6`；`main` merge commit：
+  `bd73287b8e38f221258ec1ae82a1d17ade47905e`。
+- Production：`https://driver-pay-app.vercel.app`；deployment
+  `dpl_EgEUuhhtMiySJgpXXwHfAtHs4Lp8`，狀態 `READY`，Service Worker v35，
+  Manifest standalone。390px 無水平 overflow、Console 0 error／warning，發布後
+  Runtime errors 為 0。
+- 發布未使用 force push／rebase／reset，未修改資料、Schema、storage key、
+  Manifest 或 Supabase。
 
 ## Today Installed-PWA First-input Unification — Production Released
 

@@ -4,7 +4,7 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## Installed-PWA Date Picker Single Activation — Human QA Passed
+## Installed-PWA Date Picker Single Activation — Production Released
 
 - Branch：`codex/date-picker-single-activation-20260811`；base：`eb9e0bd`。
 - v34 Production 已解決四個 Today 入口首次觸控，但 Product Owner 實體 iPhone
@@ -19,6 +19,14 @@
 - Product Owner 已於 2026-08-11 完成實體 iPhone installed-PWA Human QA：日期
   Picker 第一次點擊後持續顯示且可選日期，其他 Today 入口亦正常；High Priority
   問題為無，Release Candidate 已核准進入 `main` 與 Production 發布流程。
+- 功能 commit：`83c038ee50619ad6747487ccae33cf22129e2a74`；QA 文件 commit：
+  `c61e7f0e42d1f29236e189cbcbd239167c092cb6`；已一般合併並推送 `main`，merge
+  commit：`bd73287b8e38f221258ec1ae82a1d17ade47905e`。
+- Production：`https://driver-pay-app.vercel.app`；deployment
+  `dpl_EgEUuhhtMiySJgpXXwHfAtHs4Lp8`，狀態 `READY`，對應上述 merge commit。
+  正式站、Manifest 與 Service Worker 均回傳 HTTP 200，App Shell 為 v35。
+- Production 390px：無水平 overflow、Console 0 error／warning；發布後 Runtime
+  errors 為 0。資料 key、schema、Manifest、Supabase 與正式資料未變。
 
 ## Today Installed-PWA First-input Unification — Production Released
 

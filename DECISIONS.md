@@ -1133,6 +1133,8 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
      日期 state、全域 listener、透明遮罩或 synthetic click。
   5. App Shell candidate 更新為 v35；Product Owner 已完成實體 iPhone
      installed-PWA Human QA，日期 Picker 可持續顯示並選取日期，核准合併與正式部署。
+  6. 已一般合併至 `main` 並由既有 Vercel Git Integration 正式發布；Production
+     deployment `dpl_EgEUuhhtMiySJgpXXwHfAtHs4Lp8` 對應 merge commit `bd73287`。
 - Reason: 正式環境無 Runtime error，且 v34 差異與「開啟約 0.5 秒後關閉」症狀
   精確對應同一次觸控的雙重日期啟用。
 - Impact: Today standalone date activation、tests、docs、v35；無資料 key、
