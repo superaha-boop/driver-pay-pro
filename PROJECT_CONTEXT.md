@@ -4,6 +4,22 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
+## Installed-PWA Date Picker Single Activation — Human QA Passed
+
+- Branch：`codex/date-picker-single-activation-20260811`；base：`eb9e0bd`。
+- v34 Production 已解決四個 Today 入口首次觸控，但 Product Owner 實體 iPhone
+  installed-PWA 驗證發現日期 Picker 開啟約 0.5 秒後立即關閉。
+- 根因是日期 input 與 disclosure 共用最早期 `pointerdown → focus()`；iOS 先因
+  focus 開啟 Picker，同一次觸控的原生啟用又將它關閉，形成雙重啟用。
+- v35 將日期排除於早期 focus。standalone 日期只在未滑動的有效 `touchend` 呼叫
+  一次同一原生 input 的 `showPicker()`；成功後才阻止 default／後續 click。
+  不支援或呼叫失敗時不攔截，完整退回原生行為。
+- 工時、支出、其他資料維持 v34 已驗收的 details touchend 路徑。沒有自訂月曆、
+  第二份日期 state、資料模型、storage key、Manifest、Supabase 或正式資料變更。
+- Product Owner 已於 2026-08-11 完成實體 iPhone installed-PWA Human QA：日期
+  Picker 第一次點擊後持續顯示且可選日期，其他 Today 入口亦正常；High Priority
+  問題為無，Release Candidate 已核准進入 `main` 與 Production 發布流程。
+
 ## Today Installed-PWA First-input Unification — Production Released
 
 - Branch：`codex/today-first-input-unification-20260811`；base：`fab1d1b`。
