@@ -64,7 +64,7 @@ const resetForm = extractFunction("resetForm");
 const renderContext = extractFunction("renderActiveRecordContext");
 
 test("日期隔離 01：每日紀錄日期卡可選今天或過去日期並使用 activeRecordDate", () => {
-  assert.match(renderContext, /formatFullDate\(activeRecordDate\)/);
+  assert.match(renderContext, /aria-label[\s\S]*?formatFullDate\(activeRecordDate\)/);
   assert.match(resetForm, /renderEntryDateCard\(targetDate\)/);
   const dateCard = extractFunction("renderEntryDateCard");
   assert.match(dateCard, /max: todayString\(\)/);
@@ -106,7 +106,8 @@ test("日期 Picker：原生控制本體可命中，touchend 只交接原生焦�
 
 test("日期隔離 02：支出日期由 activeRecordDate 建立", () => {
   assert.match(setActiveDate, /expenseDraft = createExpenseDraft\(target\)/);
-  assert.match(extractFunction("renderExpenseForm"), /dateCardMarkup\(\{ id: "smartExpenseDate", value: activeRecordDate[\s\S]*?locked: true \}\)/);
+  assert.doesNotMatch(extractFunction("renderExpenseForm"), /smartExpenseDate|dateCardMarkup/);
+  assert.match(extractFunction("saveSmartExpense"), /const paymentDate = expenseDraft\.paymentDate[\s\S]*?validateActiveRecordWrite\(targetDate, \{ expenseDate: paymentDate, expense: true \}\)/);
 });
 
 for (const [number, label, key, value] of [
@@ -239,7 +240,8 @@ test("日期隔離 21：日期選擇器拒絕未來日期且支出日期仍同�
   assert.match(dateCard, /max: todayString\(\)/);
   assert.match(html, /if \(!isEditableRecordDate\(requestedDate\)\)/);
   assert.match(html, /只能選擇今天或過去日期/);
-  assert.match(extractFunction("renderExpenseForm"), /value: activeRecordDate[\s\S]*?locked: true/);
+  assert.doesNotMatch(extractFunction("renderExpenseForm"), /smartExpenseDate/);
+  assert.match(extractFunction("createExpenseDraft"), /paymentDate: safeDate/);
 });
 
 const renderStats = extractFunction("renderStats");
