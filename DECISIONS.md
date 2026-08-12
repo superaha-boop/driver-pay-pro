@@ -1203,3 +1203,7 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   `activeRecordDate` 唯一決定；備註獨佔一排也浪費手機垂直空間。
 - Impact: Today 支出呈現、相關回歸測試、文件與 v38 App Shell；無 Calendar、
   資料模型、storage key、計算、Supabase 或正式資料變更。
+- Validation: Product Owner 已於 2026-08-12 完成 Public Preview Human QA 並確認
+  正常。功能 commit `bbb7392` 已一般合併至 `main`（merge commit `c49fb765`）；
+  Vercel Production deployment `dpl_zCca7z7VGmMsnreB5nHhcJiE2yyZ` 為 `READY`，
+  正式 App Shell 為 v38。

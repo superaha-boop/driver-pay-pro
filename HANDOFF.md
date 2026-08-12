@@ -4,7 +4,7 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
-## Today Expense Date Simplification — Release Candidate
+## Today Expense Date Simplification — Production Released
 
 - Branch：`codex/today-expense-date-simplify-20260812`；base：`6bd16ba`。
 - Today Daily Record Editor 只保留唯一原生日期卡；「每日紀錄」與「支出紀錄」
@@ -12,9 +12,14 @@ GitHub：`superaha-boop/driver-pay-pro`
 - 支出付款日仍由 `activeRecordDate` 唯一決定，Calendar、WorkRecord、計算、
   `driverPayApp.v2`、Manifest 與 Supabase 均不變。
 - 金額與備註入口同排；備註輸入框只在展開後顯示。
-- v37 installed-PWA 日期／disclosure touch 管線未修改，App Shell candidate 為 v38。
-- Today 143/143 及 320／375／390／393／430px 本機瀏覽器驗證通過；完整 Release
-  Check、Commit、Push、main merge 與 Production 狀態仍須以本次後續結果更新。
+- v37 installed-PWA 日期／disclosure touch 管線未修改，App Shell 為 v38。
+- Today 143/143、全部 408/408 Node tests 及 320／375／390／393／430px 本機
+  瀏覽器驗證通過；Product Owner 已確認 Preview 測試正常。
+- 功能 commit：`bbb7392f658d8c2d3e2272f83658735c51cb39a3`；已一般合併並
+  推送 `main`，merge commit：`c49fb7654dc8d32a0c0ce68a8cac5e31df81894f`。
+- Production：`https://driver-pay-app.vercel.app`；deployment
+  `dpl_zCca7z7VGmMsnreB5nHhcJiE2yyZ` 為 `READY`。正式站與 Manifest HTTP 200，
+  Service Worker v38，390px 無水平 overflow，Console 與 Runtime errors 為 0。
 
 ## Installed-PWA Native Date Focus Hotfix — Production Released
 

@@ -1020,7 +1020,7 @@
 ## D-060 — Today single visible date and compact expense note
 
 - Date: 2026-08-12
-- Status: Release Candidate
+- Status: Production Released
 - Decision:
   - Today Daily Record Editor 只保留唯一原生日期卡作為可見日期與操作入口。
   - 標題固定為「每日紀錄」，支出摘要固定為「支出紀錄」；支出付款日直接沿用
@@ -1031,3 +1031,7 @@
   iPhone Picker 的已驗證路徑。
 - Impact: Today UI、tests、docs、v38；無資料模型、storage key、計算、Manifest、
   Supabase 或正式資料變更。
+- Validation: Product Owner 已確認 Preview 測試正常並明確核准合併與正式部署。
+  功能 commit `bbb7392`、main merge commit `c49fb765`；Production deployment
+  `dpl_zCca7z7VGmMsnreB5nHhcJiE2yyZ` 為 `READY`。正式站與 Manifest HTTP 200，
+  Service Worker v38，390px 無水平 overflow，Console 與 Runtime errors 為 0。
