@@ -16,12 +16,14 @@ GitHub：`superaha-boop/driver-pay-pro`
   saving → durable persistence → saved → summary refresh → reset → 五秒 Snackbar Undo。
 - 支出 Undo 連同 category amount、allocation 與 note 回復；小費 Undo 只回復同日期
   最近一筆加入。日期切換會清除舊 Undo，避免作用到其他日期。
+- 小費五秒 Undo 過期後仍可點「這天已記錄」旁的「修改」，在同一個輸入中校正
+  當天小費總額；可改為 0，成功後才離開修改模式，失敗保留輸入。
 - 儲存失敗不清草稿、不顯示成功、不變更 summary；重複點擊由 in-progress／saved
   guard 阻止。既有 auto-save 欄位沒有新增多餘儲存按鈕。
-- `index.html`、`sw.js`、回歸測試與永久文件是本次預期變更。App Shell v39；
+- `index.html`、`sw.js`、回歸測試與永久文件是本次預期變更。App Shell v40；
   `driverPayApp.v2`、WorkRecord schema、Manifest、Calendar edit ownership 與
   Supabase 均未變。
-- 目前自動測試 421/421 Passed；Public Preview、瀏覽器／responsive／PWA 最終
+- 目前自動測試 423/423 Passed；Public Preview、瀏覽器／responsive／PWA 最終
   evidence 完成後，狀態才可標記 `Ready for Final Human QA`。
 
 ## Today Expense Date Simplification — Production Released

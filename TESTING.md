@@ -10,15 +10,16 @@
 - Expense save：驗證 saving → persistence → saved、summary、reset、Snackbar、Undo、
   storage read-back；失敗保留 amount／note、不顯示成功且可 retry。
 - Tip save：驗證單筆加入、KPI／時薪 refresh、reset、Snackbar、同日期 Undo、重複提交
-  guard 與 persistence failure。
+  guard 與 persistence failure；Undo 過期後可切換同一輸入校正當天總額，允許歸零，
+  failure 保留修改值且日期切換退出修改模式。
 - Today KPI：覆蓋 0、29、59、60、61、70、120、126 分鐘；精密計時器仍為
   `00:00:00`，時薪為 gross income ÷ effective hours，目標 disclosure 不隱藏三大 KPI。
 - Navigation：Today ↔ Calendar 十次、Reports／AI／Driver 返回、歷史 Calendar →
   Today；全頁完整 render 且 Console 無 uncaught error。
 - Responsive／PWA：320／375／390／393／430px × standard／comfort／large，檢查
-  KPI、amount/note、Snackbar、Bottom Navigation、Manifest、v39 offline App Shell 與
+  KPI、amount/note、Snackbar、Bottom Navigation、Manifest、v40 offline App Shell 與
   `driverPayApp.v2` 保留。
-- 目前全部 Node tests：421/421 Passed。實體 iPhone Safari／installed PWA 只在最後
+- 目前全部 Node tests：423/423 Passed。實體 iPhone Safari／installed PWA 只在最後
   Public Preview 做一次 Human QA。
 
 ## Released — Installed-PWA Date Picker Single Activation

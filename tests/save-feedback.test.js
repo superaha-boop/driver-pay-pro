@@ -117,9 +117,35 @@ test("支出復原精確回復金額、備註與 allocation，不影響其他類
 test("小費使用專用輸入與儲存按鈕，但仍寫回既有 tips 欄位", () => {
   assert.match(html, /id="tipAmount"[\s\S]*?id="saveTip"[\s\S]*?id="tips"/);
   assert.match(html, /id="tipSavedTotal"/);
+  assert.match(html, /id="editTipTotal"[\s\S]*?>修改</);
   assert.equal((html.match(/id="tips"/g) || []).length, 1);
   assert.match(extractFunction("formData"), /tips: Number\(document\.getElementById\("tips"\)\.value \|\| 0\)/);
   assert.match(extractFunction("saveTip"), /entry\.tips = request\.beforeTips \+ request\.amount/);
+});
+
+test("已記錄小費可切換成總額校正，並重用同一個輸入與 tips 欄位", () => {
+  const render = extractFunction("renderTipSaveFeedback");
+  const edit = extractFunction("setTipEditMode");
+  assert.match(render, /tipEditMode \? "小費總額" : "小費"/);
+  assert.match(render, /tipEditMode \? "輸入新總額" : "輸入小費"/);
+  assert.match(render, /tipEditMode \? "儲存修改" : "儲存小費"/);
+  assert.match(render, /storedTips <= 0 && !tipEditMode/);
+  assert.match(edit, /tipDraftAmount = tipEditMode \? String\(storedTips\) : ""/);
+  assert.equal((html.match(/id="tipAmount"/g) || []).length, 1);
+});
+
+test("小費總額校正綁定 activeRecordDate，persistent 成功後才更新並允許歸零", () => {
+  const correction = extractFunction("saveTipCorrection");
+  assert.match(correction, /validateActiveRecordWrite\(targetDate, \{ tipDate \}\)/);
+  assert.match(correction, /nextTips < 0/);
+  assert.match(correction, /entry\.tips = request\.nextTips/);
+  assert.match(correction, /if \(!recordHasMeaningfulContent\(entry\)\)/);
+  const persistence = correction.indexOf("persistStatePayload(nextState, { updateMemory: true })");
+  const clearDraft = correction.indexOf('tipDraftAmount = ""');
+  const success = correction.indexOf('"saved", "✓ 已儲存"');
+  assert.ok(persistence >= 0 && clearDraft > persistence && success > persistence);
+  assert.match(correction, /儲存失敗・再試一次/);
+  assert.match(correction, /notifyRecordChanged\(request\.targetDate, "tip-correction"\)/);
 });
 
 test("小費成功刷新收入 KPI、清空輸入並提供日期綁定復原", () => {
@@ -152,6 +178,7 @@ test("日期切換會清除跨日期 Undo 與手動儲存狀態，不會 fallbac
   assert.match(setDate, /lastExpenseAddition = null/);
   assert.match(setDate, /lastTipAddition = null/);
   assert.match(setDate, /tipDraftAmount = ""/);
+  assert.match(setDate, /tipEditMode = false/);
   assert.match(setDate, /activeRecordDate = target/);
   assert.doesNotMatch(setDate, /activeRecordDate = todayString/);
 });
@@ -161,5 +188,6 @@ test("Snackbar、按鈕與同排輸入保留 mobile touch 與 Bottom Navigation 
   assert.match(html, /\.app-toast-action\s*\{[\s\S]*?min-height:\s*44px/);
   assert.match(html, /\.expense-note-toggle\s*\{[\s\S]*?min-height:\s*52px/);
   assert.match(html, /\.tip-save-button\s*\{[\s\S]*?min-height:\s*44px/);
+  assert.match(html, /\.tip-edit-button\s*\{[\s\S]*?min-height:\s*44px/);
   assert.match(html, /\.tip-save-row\s*\{[\s\S]*?minmax\(0, 1fr\)/);
 });

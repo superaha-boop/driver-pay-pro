@@ -18,10 +18,13 @@
 - 顯式儲存採共用 feedback：先顯示「儲存中…」，persistent write 成功後才顯示
   「✓ 已儲存」、更新 summary、清除草稿與提供五秒日期綁定 Undo；失敗保留草稿且
   不更新假 summary。
+- 小費五秒復原消失後，仍可從「這天已記錄」旁的「修改」直接校正當天小費總額；
+  修改模式重用同一個輸入與既有 `tips` 欄位，允許改為 0，並維持 active-date 與
+  persistent-first guard。
 - Today KPI 保持收入左上且為最大數值，工時使用自然分鐘／小時格式，時薪持續使用
-  總收入除以有效工時。App Shell candidate 為 `driver-pay-pro-v39`；storage key 仍為
+  總收入除以有效工時。App Shell candidate 為 `driver-pay-pro-v40`；storage key 仍為
   `driverPayApp.v2`，無 migration、Supabase 或正式資料變更。
-- 自動測試目前 421/421 Passed；實體 iPhone Safari／installed PWA Final Human QA
+- 自動測試目前 423/423 Passed；實體 iPhone Safari／installed PWA Final Human QA
   尚待 Public Preview 完成後執行一次。
 
 ## Today Expense Date Simplification — Production Released

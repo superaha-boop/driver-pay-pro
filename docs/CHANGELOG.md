@@ -24,9 +24,11 @@
   amount 與 96–112px note action 同排。
 - 支出與小費新增採 persistent-first Saving／Saved feedback、summary refresh、draft
   reset、五秒 Snackbar Undo；失敗不顯示假成功。
+- 小費五秒 Undo 過期後仍可直接校正當天總額；「修改」重用原小費輸入與既有
+  `tips` 欄位，可安全改為 0，成功前不清除輸入或離開修改模式。
 - Today KPI 與自然工時格式維持 canonical gross hourly formula；App Shell candidate
-  升至 v39，資料 key、schema、Manifest 與 Production 均未變。
-- 全部 Node tests 421/421 Passed；等待 Public Preview 的一次 Final Human QA。
+  升至 v40，資料 key、schema、Manifest 與 Production 均未變。
+- 全部 Node tests 423/423 Passed；等待 Public Preview 的一次 Final Human QA。
 
 ### 2026-08-12 — Today Expense Date Simplification Released
 

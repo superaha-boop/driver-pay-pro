@@ -2898,9 +2898,32 @@
       font-size: 13px;
     }
 
+    .tip-saved-copy {
+      min-width: 0;
+    }
+
     .tip-save-meta strong {
       color: var(--text-primary);
       font-variant-numeric: tabular-nums;
+    }
+
+    .tip-edit-button {
+      min-width: 52px;
+      min-height: 44px;
+      margin: 0;
+      padding: 0 8px;
+      border: 0;
+      border-radius: var(--radius-control);
+      color: var(--brand-700);
+      background: transparent;
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .tip-edit-button:focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 1px;
     }
 
     .tip-save-status {
@@ -6575,7 +6598,7 @@
                 </summary>
                 <div class="collapsible-body fields" id="otherDataContent">
                   <div class="tip-save-field">
-                    <label for="tipAmount">小費</label>
+                    <label for="tipAmount" id="tipAmountLabel">小費</label>
                     <div class="tip-save-row">
                       <span class="tip-amount-wrap">
                         <span class="tip-amount-prefix" aria-hidden="true">$</span>
@@ -6585,8 +6608,8 @@
                     </div>
                     <input type="hidden" id="tips" value="0" data-tip-date="">
                     <div class="tip-save-meta">
-                      <span>這天已記錄</span>
-                      <strong id="tipSavedTotal">$0</strong>
+                      <span class="tip-saved-copy">這天已記錄 <strong id="tipSavedTotal">$0</strong></span>
+                      <button class="tip-edit-button" id="editTipTotal" type="button" aria-expanded="false" aria-controls="tipAmount" hidden>修改</button>
                     </div>
                     <p class="ds-save-status tip-save-status" id="tipSaveStatus" role="status" aria-live="polite" aria-atomic="true"></p>
                   </div>
@@ -7055,6 +7078,7 @@
     let expenseAdditionUndoTimer = 0;
     let lastExpenseAddition = null;
     let tipDraftAmount = "";
+    let tipEditMode = false;
     let tipSaveInProgress = false;
     let detailSaveInProgress = false;
     let tipUndoTimer = 0;
@@ -7139,8 +7163,10 @@
       manualEntryContent: document.getElementById("manualEntryContent"),
       todaySaveStatus: document.getElementById("todaySaveStatus"),
       tipAmount: document.getElementById("tipAmount"),
+      tipAmountLabel: document.getElementById("tipAmountLabel"),
       saveTip: document.getElementById("saveTip"),
       tipSavedTotal: document.getElementById("tipSavedTotal"),
+      editTipTotal: document.getElementById("editTipTotal"),
       tipSaveStatus: document.getElementById("tipSaveStatus"),
       recordEditorInline: document.getElementById("recordEditorInline"),
       recordEditorContent: document.getElementById("recordEditorContent"),
@@ -7647,6 +7673,7 @@
       lastTipAddition = null;
       window.clearTimeout(tipUndoTimer);
       tipDraftAmount = "";
+      tipEditMode = false;
       tipSaveInProgress = false;
       detailSaveInProgress = false;
       ["expense", "tip", "detail"].forEach(kind => {
@@ -9093,28 +9120,52 @@
     }
 
     function renderTipSaveFeedback() {
-      if (!els.tipAmount || !els.saveTip || !els.tipSaveStatus || !els.tipSavedTotal) return;
+      if (!els.tipAmount || !els.saveTip || !els.tipSaveStatus || !els.tipSavedTotal || !els.editTipTotal) return;
       const feedback = manualSaveFeedback.tip;
       const amount = Number(tipDraftAmount || 0);
       const storedTips = Number(entryForDate(activeRecordDate)?.tips || 0);
       els.tipAmount.value = tipDraftAmount;
       els.tipAmount.dataset.tipDate = activeRecordDate;
+      els.tipAmount.min = tipEditMode ? "0" : "1";
+      els.tipAmount.placeholder = tipEditMode ? "輸入新總額" : "輸入小費";
+      if (els.tipAmountLabel) els.tipAmountLabel.textContent = tipEditMode ? "小費總額" : "小費";
       const hiddenTips = document.getElementById("tips");
       if (hiddenTips) {
         hiddenTips.value = storedTips;
         hiddenTips.dataset.tipDate = activeRecordDate;
       }
       els.tipSavedTotal.textContent = money(storedTips);
-      els.saveTip.textContent = manualSaveButtonText("tip", "儲存小費");
+      els.editTipTotal.hidden = storedTips <= 0 && !tipEditMode;
+      els.editTipTotal.textContent = tipEditMode ? "取消" : "修改";
+      els.editTipTotal.setAttribute("aria-expanded", String(tipEditMode));
+      els.editTipTotal.disabled = tipSaveInProgress || ["saving", "saved"].includes(feedback.status);
+      els.saveTip.textContent = manualSaveButtonText("tip", tipEditMode ? "儲存修改" : "儲存小費");
+      const validAmount = tipEditMode
+        ? Number.isSafeInteger(amount) && amount >= 0 && amount <= maxPlatformIncome && amount !== storedTips
+        : Number.isSafeInteger(amount) && amount > 0 && amount <= maxPlatformIncome;
       els.saveTip.disabled = tipSaveInProgress
         || feedback.status === "saved"
-        || !Number.isSafeInteger(amount)
-        || amount <= 0
-        || amount > maxPlatformIncome;
+        || !validAmount;
       els.tipSaveStatus.textContent = feedback.message;
       els.tipSaveStatus.dataset.status = feedback.status;
       els.tipSaveStatus.setAttribute("role", feedback.status === "error" ? "alert" : "status");
       els.tipSaveStatus.setAttribute("aria-live", feedback.status === "error" ? "assertive" : "polite");
+    }
+
+    function setTipEditMode(editing) {
+      if (tipSaveInProgress) return false;
+      const storedTips = Number(entryForDate(activeRecordDate)?.tips || 0);
+      if (editing && storedTips <= 0) return false;
+      window.clearTimeout(manualSaveFeedback.tip.timer);
+      manualSaveFeedback.tip = { status: "idle", message: "", timer: 0 };
+      tipEditMode = Boolean(editing);
+      tipDraftAmount = tipEditMode ? String(storedTips) : "";
+      renderTipSaveFeedback();
+      if (tipEditMode) {
+        els.tipAmount.focus();
+        els.tipAmount.select();
+      }
+      return true;
     }
 
     function renderDetailSaveFeedback() {
@@ -10137,6 +10188,68 @@
           beforeTips: request.beforeTips,
           afterTips: entry.tips
         });
+      });
+      return true;
+    }
+
+    function saveTipCorrection(targetDate) {
+      if (!tipEditMode || tipSaveInProgress) return false;
+      const tipDate = normalizeDateKey(els.tipAmount?.dataset.tipDate || document.getElementById("tips")?.dataset.tipDate);
+      const nextTips = Number(tipDraftAmount || els.tipAmount?.value || 0);
+      if (!validateActiveRecordWrite(targetDate, { tipDate })) return false;
+      if (!Number.isSafeInteger(nextTips) || nextTips < 0 || nextTips > maxPlatformIncome) {
+        setManualSaveFeedback("tip", "error", "請輸入 0 至 99,999,999 的整數小費總額。");
+        els.tipAmount?.focus();
+        return false;
+      }
+      const previousEntry = entryForDate(targetDate);
+      const beforeTips = Number(previousEntry?.tips || 0);
+      if (nextTips === beforeTips) {
+        setManualSaveFeedback("tip", "error", "小費金額沒有變更。");
+        return false;
+      }
+      const request = { targetDate, tipDate, beforeTips, nextTips };
+      tipSaveInProgress = true;
+      setManualSaveFeedback("tip", "saving", "儲存中…");
+      runPersistentSaveAfterFeedbackPaint(() => {
+        if (!validateActiveRecordWrite(request.targetDate, { tipDate: request.tipDate })) {
+          tipSaveInProgress = false;
+          setManualSaveFeedback("tip", "error", activeRecordDateErrorMessage);
+          return;
+        }
+        const current = entryForDate(request.targetDate);
+        if (Number(current?.tips || 0) !== request.beforeTips) {
+          tipSaveInProgress = false;
+          setManualSaveFeedback("tip", "error", "小費狀態已變更，請重新修改。");
+          return;
+        }
+        const nextState = cloneStatePayload(state);
+        const entry = nextState.entries.find(item => item.date === request.targetDate);
+        if (!entry) {
+          tipSaveInProgress = false;
+          setManualSaveFeedback("tip", "error", "找不到這天的小費紀錄，請重新整理後再試。");
+          return;
+        }
+        entry.tips = request.nextTips;
+        if (!recordHasMeaningfulContent(entry)) {
+          nextState.entries = nextState.entries.filter(item => item.id !== entry.id);
+        }
+        const saved = persistStatePayload(nextState, { updateMemory: true });
+        tipSaveInProgress = false;
+        if (!saved) {
+          setManualSaveFeedback("tip", "error", "儲存失敗・再試一次");
+          showToast("小費修改失敗，請再試一次");
+          return;
+        }
+        window.clearTimeout(tipUndoTimer);
+        lastTipAddition = null;
+        tipDraftAmount = "";
+        tipEditMode = false;
+        document.getElementById("tips").value = request.nextTips;
+        notifyRecordChanged(request.targetDate, "tip-correction");
+        renderAll();
+        setManualSaveFeedback("tip", "saved", "✓ 已儲存", { resetAfter: 1300 });
+        showToast(`✓ 小費已修改為 ${money(request.nextTips)}`);
       });
       return true;
     }
@@ -14299,8 +14412,13 @@
       if (expanded) offerAutomaticWeather();
     });
     els.detailForm.addEventListener("click", event => {
+      if (event.target.closest("#editTipTotal")) {
+        setTipEditMode(!tipEditMode);
+        return;
+      }
       if (event.target.closest("#saveTip")) {
-        saveTip(activeRecordDate);
+        if (tipEditMode) saveTipCorrection(activeRecordDate);
+        else saveTip(activeRecordDate);
         return;
       }
       const button = event.target.closest("[data-detail-choice]");
@@ -14315,7 +14433,8 @@
     els.detailForm.addEventListener("keydown", event => {
       if (event.target.id !== "tipAmount" || event.key !== "Enter") return;
       event.preventDefault();
-      saveTip(activeRecordDate);
+      if (tipEditMode) saveTipCorrection(activeRecordDate);
+      else saveTip(activeRecordDate);
     });
 
     els.expenseInputs.addEventListener("input", event => {
