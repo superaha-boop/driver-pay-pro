@@ -74,6 +74,9 @@ Primary responsibilities:
 - Let the Daily Record date card select today or a past date directly. A valid change
   updates the single `activeRecordDate` and reloads that exact day's income, work time,
   expenses, and supporting data; the expense payment date follows the same date.
+- Show that active date only once in the Daily Record Editor. The section title remains
+  `每日紀錄`, the expense summary remains `支出紀錄`, and expense entry must not repeat
+  a second payment-date control because payment is already bound to `activeRecordDate`.
 - Keep the native date input itself hit-test visible for first-tap iPhone behavior;
   custom card copy may hide native inner text, but must not make the whole input fully
   transparent or add a competing `showPicker()` click path.
@@ -88,6 +91,8 @@ Primary responsibilities:
 - Keep expense shortcuts compact and preserve the current draft when a shortcut is
   selected. The category and expense-mode values act as the two direct selection
   buttons and continue to open the complete existing option sources.
+- Keep the expense amount as the dominant control and place the compact note disclosure
+  beside it; the note field appears on the following row only while expanded.
 - Work time uses one derived input mode at a time: complete clock fields take
   precedence; otherwise legacy manual hours are used. Switching modes is a direct,
   non-destructive UI action without a confirmation dialog. The inactive mode's draft

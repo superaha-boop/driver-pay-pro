@@ -1185,3 +1185,21 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   Release Candidate Approved。功能 commit `6639cec` 與 QA 文件 commit `422310b`
   已一般合併至 `main`（merge commit `5b45618`）；Vercel Production deployment
   `dpl_6kfjT63qpgo8pqN1gxj1ejVcdc3C` 為 `READY`，正式 App Shell 為 v37。
+
+## D-060 — Keep One Visible Today Date and Pair Expense Amount with Note
+
+- Date: 2026-08-12
+- Decision:
+  1. Today Daily Record Editor 只顯示一個真正可操作的原生日期卡；標題固定為
+     「每日紀錄」，支出摘要固定為「支出紀錄」，不再重複顯示相同日期。
+  2. 支出付款日繼續直接綁定唯一 `activeRecordDate`；移除的只是重複顯示，沒有
+     新增日期 state、fallback 或資料欄位。
+  3. 支出金額與備註入口改為同一排；金額使用主要可伸縮欄位，備註維持至少
+     44px touch target，實際輸入框只在展開後顯示於下一排。
+  4. Calendar、installed-PWA v37 原生日期與 disclosure touch 管線、儲存、計算、
+     `driverPayApp.v2`、WorkRecord 與 Manifest 均不變。
+  5. App Shell 更新為 v38，以確保正式 PWA 在下次自然啟動取得本次 UI。
+- Reason: 同一畫面重複顯示四次相同日期增加閱讀負擔，付款日期又已由
+  `activeRecordDate` 唯一決定；備註獨佔一排也浪費手機垂直空間。
+- Impact: Today 支出呈現、相關回歸測試、文件與 v38 App Shell；無 Calendar、
+  資料模型、storage key、計算、Supabase 或正式資料變更。

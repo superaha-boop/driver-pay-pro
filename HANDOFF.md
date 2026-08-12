@@ -1,8 +1,20 @@
 # Driver Pay Pro 開發交接摘要
 
-更新日期：2026-08-11
+更新日期：2026-08-12
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
+
+## Today Expense Date Simplification — Release Candidate
+
+- Branch：`codex/today-expense-date-simplify-20260812`；base：`6bd16ba`。
+- Today Daily Record Editor 只保留唯一原生日期卡；「每日紀錄」與「支出紀錄」
+  不再重複日期，也不再顯示第二個鎖定付款日期列。
+- 支出付款日仍由 `activeRecordDate` 唯一決定，Calendar、WorkRecord、計算、
+  `driverPayApp.v2`、Manifest 與 Supabase 均不變。
+- 金額與備註入口同排；備註輸入框只在展開後顯示。
+- v37 installed-PWA 日期／disclosure touch 管線未修改，App Shell candidate 為 v38。
+- Today 143/143 及 320／375／390／393／430px 本機瀏覽器驗證通過；完整 Release
+  Check、Commit、Push、main merge 與 Production 狀態仍須以本次後續結果更新。
 
 ## Installed-PWA Native Date Focus Hotfix — Production Released
 

@@ -1016,3 +1016,18 @@
   已一般合併至 `main`（merge commit `5b45618`）；Vercel Production deployment
   `dpl_6kfjT63qpgo8pqN1gxj1ejVcdc3C` 為 `READY`，390px 無水平 overflow、Console
   與 Runtime errors 均為 0，正式 App Shell 為 v37。
+
+## D-060 — Today single visible date and compact expense note
+
+- Date: 2026-08-12
+- Status: Release Candidate
+- Decision:
+  - Today Daily Record Editor 只保留唯一原生日期卡作為可見日期與操作入口。
+  - 標題固定為「每日紀錄」，支出摘要固定為「支出紀錄」；支出付款日直接沿用
+    `activeRecordDate`，不再顯示第二個鎖定日期欄。
+  - 支出金額與備註入口同排，備註輸入框只在使用者展開後出現在下一排。
+  - Calendar 與 v37 installed-PWA first-input 管線不變；App Shell 更新為 v38。
+- Reason: 移除四次重複日期並減少一排表單高度，同時保持唯一日期來源與原生
+  iPhone Picker 的已驗證路徑。
+- Impact: Today UI、tests、docs、v38；無資料模型、storage key、計算、Manifest、
+  Supabase 或正式資料變更。

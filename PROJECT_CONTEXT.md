@@ -1,8 +1,21 @@
 # Driver Pay Pro 專案固定背景
 
-更新日期：2026-08-11
+更新日期：2026-08-12
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
+
+## Today Expense Date Simplification — Release Candidate
+
+- Branch：`codex/today-expense-date-simplify-20260812`；base：`6bd16ba`。
+- Today 每日紀錄只顯示一個原生日期卡；標題為「每日紀錄」，支出摘要為
+  「支出紀錄」，移除相同日期的重複文字與鎖定付款日期列。
+- 支出仍由唯一 `activeRecordDate` 綁定付款日；Calendar、資料模型、計算與
+  `driverPayApp.v2` 不變。
+- 支出金額與備註入口改為同排，金額為主要可伸縮欄位；備註輸入框只在展開後
+  出現於下一排。
+- v37 installed-PWA 日期與 disclosure first-input 路徑完全保留；App Shell candidate
+  為 v38。Today 143/143 與五種手機寬度本機驗證通過，待完整 Release Check、
+  Commit、Push、合併與 Production 核對。
 
 ## Installed-PWA Native Date Focus Hotfix — Production Released
 

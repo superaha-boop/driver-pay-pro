@@ -371,12 +371,21 @@ test("支出快捷與類別方式控制採精簡同列按鈕且保留完整選�
   assert.match(html, /selectExpenseCategory\(quick\.dataset\.expenseQuick, true, true\)/);
 });
 
-test("付款日期與備註同列且備註輸入只在展開後出現", () => {
+test("唯一日期入口保留，金額與備註同列且備註輸入只在展開後出現", () => {
   const source = extractFunction("renderExpenseForm");
-  assert.match(source, /class="expense-date-note-row"[\s\S]*?smartExpenseDate[\s\S]*?data-expense-toggle-note/);
+  const reset = extractFunction("resetForm");
+  const edit = extractFunction("editEntry");
+  const expenseList = extractFunction("renderTodayExpenseList");
+  assert.match(source, /class="expense-amount-note-row"[\s\S]*?smartExpenseAmount[\s\S]*?data-expense-toggle-note/);
   assert.match(source, /expenseDraft\.noteOpen \? `[\s\S]*?id="smartExpenseNote"/);
-  assert.match(html, /\.expense-date-note-row\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 13fr\) minmax\(0, 7fr\)/);
-  assert.match(html, /\.expense-note-toggle\s*\{[\s\S]*?min-height:\s*44px/);
+  assert.doesNotMatch(source, /smartExpenseDate|dateCardMarkup/);
+  assert.match(html, /\.expense-amount-note-row\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 4fr\) minmax\(72px, 1fr\)/);
+  assert.match(html, /\.expense-note-toggle\s*\{[\s\S]*?min-height:\s*52px/);
+  assert.match(reset, /els\.formTitle\.textContent = "每日紀錄"/);
+  assert.doesNotMatch(reset, /每日紀錄・/);
+  assert.match(edit, /els\.formTitle\.textContent = "每日紀錄"/);
+  assert.doesNotMatch(edit, /每日紀錄・/);
+  assert.match(expenseList, /els\.todayExpenseLabel\.textContent = "支出紀錄"/);
 });
 
 test("分月卡片移除預覽警語並保留精簡摘要", () => {

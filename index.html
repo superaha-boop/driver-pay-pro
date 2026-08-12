@@ -2795,43 +2795,35 @@
       gap: 9px;
     }
 
-    .expense-date-note-row {
+    .expense-amount-note-row {
       min-width: 0;
       display: grid;
-      grid-template-columns: minmax(0, 13fr) minmax(0, 7fr);
+      grid-template-columns: minmax(0, 4fr) minmax(72px, 1fr);
       gap: 8px;
       align-items: stretch;
     }
 
-    .expense-date-note-row .date-card-host,
-    .expense-date-note-row .date-card {
+    .expense-amount-note-row .expense-amount-wrap,
+    .expense-amount-note-row .expense-amount-input {
       min-width: 0;
+      width: 100%;
       height: 100%;
-    }
-
-    @media (max-width: 400px) {
-      .expense-date-note-row .date-card-value.compact-mobile-date {
-        font-size: 0;
-      }
-
-      .expense-date-note-row .date-card-value.compact-mobile-date::after {
-        content: attr(data-short-date);
-        font-size: 17px;
-        font-weight: 700;
-      }
     }
 
     .expense-note-toggle {
       width: 100%;
-      min-height: 44px;
-      padding: 0 10px;
+      min-width: 0;
+      min-height: 52px;
+      padding: 0 8px;
       border: 1px solid #dce4df;
       border-radius: 15px;
       color: #087653;
       background: #fafcfb;
       font-size: 14px;
       font-weight: 750;
+      line-height: 1.2;
       text-align: center;
+      white-space: nowrap;
     }
 
     .expense-note-field {
@@ -6495,9 +6487,9 @@
                   </span>
                 </summary>
                 <div class="collapsible-body">
-                  <section class="today-expense-manager" id="todayExpenseManager" aria-label="今日支出">
+                  <section class="today-expense-manager" id="todayExpenseManager" aria-label="支出紀錄">
                     <button class="today-expense-toggle" id="todayExpenseToggle" type="button" aria-expanded="false" aria-controls="todayExpenseList">
-                      <span id="todayExpenseLabel">今日支出</span>
+                      <span id="todayExpenseLabel">支出紀錄</span>
                       <span class="today-expense-toggle-meta">
                         <strong id="todayExpenseTotal">$0</strong>
                         <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
@@ -7487,10 +7479,13 @@
       if (!els.todayRecordContext) return;
       const historical = activeRecordDate !== todayString();
       els.todayRecordContext.hidden = !historical;
+      els.todayRecordContext.setAttribute(
+        "aria-label",
+        historical ? `正在編輯 ${formatFullDate(activeRecordDate)} 的歷史紀錄` : ""
+      );
       els.todayRecordContext.innerHTML = historical ? `
         <div class="today-record-context-copy">
           <strong>正在編輯歷史紀錄</strong>
-          <span>${escapeHtml(formatFullDate(activeRecordDate))}</span>
         </div>
         <div class="today-record-context-actions">
           <button class="ds-button ds-button--secondary" type="button" data-active-record-today>回到今天</button>
@@ -9254,12 +9249,23 @@
             <div class="expense-mode-options"${expenseDraft.modeOpen ? "" : " hidden"} role="group" aria-label="支出方式">
               ${modes.map(([value, label]) => `<button class="expense-mode-option${expenseDraft.mode === value ? " active" : ""}" type="button" data-expense-mode="${value}" aria-pressed="${String(expenseDraft.mode === value)}">${label}</button>`).join("")}
             </div>
-            <label class="smart-expense-field">金額
-              <span class="expense-amount-wrap">
-                <span class="expense-amount-prefix" aria-hidden="true">$</span>
-                <input class="expense-amount-input" type="text" inputmode="numeric" pattern="[0-9,]*" id="smartExpenseAmount" value="${escapeAttr(formatExpenseAmount(expenseDraft.amount))}" placeholder="輸入金額" aria-label="支出金額" autocomplete="off">
-              </span>
-            </label>
+            <div class="smart-expense-field expense-amount-field">
+              <label for="smartExpenseAmount">金額</label>
+              <div class="expense-amount-note-row">
+                <span class="expense-amount-wrap">
+                  <span class="expense-amount-prefix" aria-hidden="true">$</span>
+                  <input class="expense-amount-input" type="text" inputmode="numeric" pattern="[0-9,]*" id="smartExpenseAmount" value="${escapeAttr(formatExpenseAmount(expenseDraft.amount))}" placeholder="輸入金額" aria-label="支出金額" autocomplete="off">
+                </span>
+                <button class="expense-note-toggle" type="button" data-expense-toggle-note aria-expanded="${String(expenseDraft.noteOpen)}" aria-label="${expenseDraft.noteOpen ? "收起備註" : expenseDraft.note ? "修改備註" : "新增備註"}">${expenseDraft.noteOpen ? "收起" : expenseDraft.note ? "備註 ✓" : "＋備註"}</button>
+              </div>
+            </div>
+            <div class="expense-note-area">
+              ${expenseDraft.noteOpen ? `
+                <label class="expense-note-field">備註
+                  <input type="text" id="smartExpenseNote" maxlength="160" value="${escapeAttr(expenseDraft.note)}" placeholder="輸入地點或補充說明" autocomplete="off">
+                </label>
+              ` : ""}
+            </div>
             ${recentAmounts.length ? `
               <div class="expense-recent">
                 <span class="expense-recent-label">最近使用</span>
@@ -9272,17 +9278,6 @@
 
           ${expenseDraft.mode === "recurring" ? recurringExpenseMarkup(amount) : ""}
           ${expenseDraft.mode === "allocated" ? allocatedExpenseMarkup(amount, months) : ""}
-          <div class="expense-date-note-row">
-            ${dateCardMarkup({ id: "smartExpenseDate", value: activeRecordDate, label: "付款日期，與每日紀錄日期相同", inlineToday: true, compactMobile: true, locked: true })}
-            <button class="expense-note-toggle" type="button" data-expense-toggle-note aria-expanded="${String(expenseDraft.noteOpen)}">${expenseDraft.noteOpen ? "收起備註" : expenseDraft.note ? "備註 ✓" : "＋備註"}</button>
-          </div>
-          <div class="expense-note-area">
-            ${expenseDraft.noteOpen ? `
-              <label class="expense-note-field">備註
-                <input type="text" id="smartExpenseNote" maxlength="160" value="${escapeAttr(expenseDraft.note)}" placeholder="輸入地點或補充說明" autocomplete="off">
-              </label>
-            ` : ""}
-          </div>
           <span class="expense-existing-hint" id="expenseExistingHint"${existingAmount ? "" : " hidden"}>這天已有 ${money(existingAmount)}，儲存後會更新此類別。</span>
           <button class="expense-save-button" type="button" id="saveSmartExpense"${amount > 0 && !expenseSaveInProgress ? "" : " disabled"}>${expenseSaveInProgress ? "儲存中…" : "儲存支出"}</button>
           <p class="expense-form-status${expenseDraft.statusType === "error" ? " error" : ""}" id="expenseFormStatus" role="status">${escapeHtml(expenseDraft.status)}</p>
@@ -9313,7 +9308,7 @@
         .filter(item => item.amount > 0);
       const total = expenses.reduce((sum, item) => sum + item.amount, 0);
       els.todayExpenseTotal.textContent = `${expenses.length} 筆・${money(total)}`;
-      els.todayExpenseLabel.textContent = safeDate === todayString() ? "今日支出" : `${formatFullDate(safeDate)}支出`;
+      els.todayExpenseLabel.textContent = "支出紀錄";
       els.todayExpenseToggle.setAttribute("aria-expanded", String(todayExpenseListOpen));
       els.todayExpenseToggle.setAttribute(
         "aria-label",
@@ -12308,9 +12303,7 @@
       } else {
         setWorkTimeInputMode("clock", {});
       }
-      els.formTitle.textContent = targetDate === todayString()
-        ? "每日紀錄"
-        : `每日紀錄・${formatFullDate(targetDate)}`;
+      els.formTitle.textContent = "每日紀錄";
       els.cancelEdit.classList.add("hidden");
       if (!options.preserveDisclosure) {
         document.querySelectorAll("#detailForm details").forEach(details => details.open = false);
@@ -12384,7 +12377,7 @@
       els.workTimeToggle.setAttribute("aria-expanded", String(detailSections[0].open));
       els.expenseSectionToggle.setAttribute("aria-expanded", String(detailSections[1].open));
       els.otherDataToggle.setAttribute("aria-expanded", String(detailSections[2].open));
-      els.formTitle.textContent = `每日紀錄・${formatFullDate(activeRecordDate)}`;
+      els.formTitle.textContent = "每日紀錄";
       els.cancelEdit.classList.remove("hidden");
       updateQuickPreview();
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -13848,16 +13841,6 @@
         expenseDraft.statusType = "";
         updateExpensePreview();
       }
-      if (event.target.id === "smartExpenseDate") {
-        if (event.target.value !== activeRecordDate) {
-          expenseDraft.status = activeRecordDateErrorMessage;
-          expenseDraft.statusType = "error";
-          renderExpenseForm();
-          return;
-        }
-        expenseDraft.paymentDate = activeRecordDate;
-        syncDateCardDisplay(event.target);
-      }
       if (event.target.id === "expenseStartMonth") {
         expenseDraft.startMonth = event.target.value;
         expenseDraft.startMonthChanged = true;
@@ -13882,7 +13865,6 @@
 
     els.expenseInputs.addEventListener("change", event => {
       if (event.target.id === "smartExpenseCategory") selectExpenseCategory(event.target.value);
-      if (event.target.id === "smartExpenseDate") syncDateCardDisplay(event.target);
       if (event.target.id === "expenseRecurringDay") expenseDraft.recurringDay = Number(event.target.value);
       if (event.target.id === "expenseRecurringStartMonth") {
         expenseDraft.recurringStartMonth = event.target.value;

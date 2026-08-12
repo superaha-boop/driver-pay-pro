@@ -16,6 +16,15 @@
 
 ## Unreleased
 
+### 2026-08-12 — Today Expense Date Simplification
+
+- Today 每日紀錄只保留唯一原生日期卡；標題與支出摘要不再重複相同日期。
+- 支出付款日仍直接使用 `activeRecordDate`，沒有新增日期 state 或改變儲存口徑。
+- 支出金額與備註入口改為同排；備註欄只在展開後顯示於下一排。
+- Calendar 與 installed-PWA v37 first-input 管線不變；App Shell candidate 升至 v38。
+- Today 143/143 專項測試與 320／375／390／393／430px 本機瀏覽器驗證已通過，
+  等待完整 Release Check 與 Production 發布確認。
+
 ### 2026-08-11 — Installed-PWA Native Date Focus Hotfix Released
 
 - v36 Public Preview 實體 QA 失敗；點過工時、支出或其他資料後，日期 Picker 經常
