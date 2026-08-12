@@ -252,10 +252,10 @@ for (const [number, label, assertion] of [
   [1, "今日收入標籤左對齊", () => assert.match(html, /\.today-income-toggle[\s\S]*?text-align: left/)],
   [2, "今日收入金額左對齊", () => assert.match(html, /\.today-income[\s\S]*?text-align: left/)],
   [3, "今日收入字級大於次級 KPI", () => {
-    assert.match(css, /--font-kpi-primary: clamp\(50px, 14vw, 64px\)/);
-    assert.match(css, /--font-kpi-secondary: clamp\(28px, 7vw, 32px\)/);
-    assert.match(css, /--today-revenue-value-size: clamp\(50px, 14vw, 64px\)/);
-    assert.match(css, /--today-secondary-value-size: clamp\(28px, 7vw, 32px\)/);
+    assert.match(css, /--font-kpi-primary: clamp\(54px, 15vw, 64px\)/);
+    assert.match(css, /--font-kpi-secondary: clamp\(32px, 10vw, 42px\)/);
+    assert.match(css, /--today-revenue-value-size: clamp\(54px, 15vw, 64px\)/);
+    assert.match(css, /--today-secondary-value-size: clamp\(32px, 10vw, 42px\)/);
   }],
   [4, "Chevron 使用獨立 24px 欄位不擠壓收入", () => assert.match(html, /\.today-income-toggle[\s\S]*?grid-template-columns: minmax\(0, 1fr\) 24px/)],
   [5, "今日工時標籤位於數字上方", () => assert.match(renderStats, /<span>今日工時<\/span><strong class="today-work-duration">/)],
@@ -272,8 +272,10 @@ for (const [number, label, assertion] of [
   [13, "29 分鐘顯示 29分鐘", () => assert.equal(durationContext.format(29), "29分鐘")],
   [14, "59 分鐘顯示 59分鐘", () => assert.equal(durationContext.format(59), "59分鐘")],
   [15, "60 分鐘顯示 1小時", () => assert.equal(durationContext.format(60), "1小時")],
+  [23, "61 分鐘顯示 1小時1分鐘", () => assert.equal(durationContext.format(61), "1小時1分鐘")],
   [16, "70 分鐘顯示 1小時10分鐘", () => assert.equal(durationContext.format(70), "1小時10分鐘")],
   [17, "120 分鐘顯示 2小時", () => assert.equal(durationContext.format(120), "2小時")],
+  [24, "126 分鐘顯示 2小時6分鐘", () => assert.equal(durationContext.format(126), "2小時6分鐘")],
   [18, "KPI 不顯示 0小時00分", () => assert.doesNotMatch(renderStats, /0小時00分|padStart/)],
   [19, "精密工作狀態計算仍使用毫秒 canonical 邏輯", () => assert.match(extractFunction("sessionWorkDurationMs"), /accumulatedActiveMs[\s\S]*?nowMs[\s\S]*?clockDurationMs/)],
   [20, "平均時薪使用總收入除以工時", () => assert.match(extractFunction("summarize"), /hourly: hourlyRate\(total, durationMs\)/)],

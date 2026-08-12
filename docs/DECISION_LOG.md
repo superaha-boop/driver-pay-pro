@@ -1035,3 +1035,35 @@
   功能 commit `bbb7392`、main merge commit `c49fb765`；Production deployment
   `dpl_zCca7z7VGmMsnreB5nHhcJiE2yyZ` 為 `READY`。正式站與 Manifest HTTP 200，
   Service Worker v38，390px 無水平 overflow，Console 與 Runtime errors 為 0。
+
+## D-061 — Active-date-bound explicit save feedback
+
+- Date: 2026-08-12
+- Status: Public Preview Candidate；Final Human QA Pending
+- Decision:
+  - Today 的明確寫入與最近一次 Undo 都以 `activeRecordDate` 為唯一日期來源；顯示、
+    form 或 record 日期 mismatch 時保留草稿並阻止寫入，不 fallback 到今天。
+  - Calendar 只讀並傳遞精確日期；支出日期直接繼承 Active Date，不再建立第二控制。
+  - 支出 amount／note 同排；小費使用明確加入按鈕，但持久資料仍為既有 `tips`。
+  - 成功回饋必須在 `driverPayApp.v2` durable write 與 read-back 成功後才出現；成功後
+    更新 summary、清 draft 並提供五秒日期綁定 Undo，失敗保留 draft 可重試。
+- Reason: 同時消除跨日誤寫風險與「按了儲存但不知道是否成功」的不確定性。
+- Impact: `index.html`、tests、docs 與 v39；無 schema、storage key、Manifest、
+  Supabase、Calendar ownership 或 Production 變更。
+
+## D-062 — Tip addition with direct total correction
+
+- Date: 2026-08-12
+- Status: Public Preview Candidate；Human QA Pending
+- Decision:
+  - 小費預設維持單筆加入與五秒最近一次 Undo。
+  - Undo 過期後，可由「這天已記錄」旁的「修改」重用同一金額輸入，直接校正當天
+    小費總額；不建立第二個小費欄位或資料來源。
+  - 校正可設為 0；只有 `driverPayApp.v2` durable write 成功後才更新摘要、KPI、
+    清除草稿並離開修改模式。失敗保留值，可直接重試。
+  - 新增、校正與日期切換持續受 `activeRecordDate` guard 保護，資料仍寫入既有
+    WorkRecord `tips` 欄位。
+- Reason: 使用者可能在 Snackbar 消失後才發現輸入錯誤，必須能直接校正而不破壞
+  當天其他收入、工時、支出或資料。
+- Impact: Today 小費 UI、tests、docs 與 v40；無 schema、storage key、Manifest、
+  Calendar ownership、Reports／AI calculation、Supabase 或 Production 變更。

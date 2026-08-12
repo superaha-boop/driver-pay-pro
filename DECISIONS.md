@@ -1207,3 +1207,41 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   正常。功能 commit `bbb7392` 已一般合併至 `main`（merge commit `c49fb765`）；
   Vercel Production deployment `dpl_zCca7z7VGmMsnreB5nHhcJiE2yyZ` 為 `READY`，
   正式 App Shell 為 v38。
+
+## D-061 — Bind Explicit Saves and Undo to Active Date
+
+- Date: 2026-08-12
+- Status: Public Preview Candidate；Final Human QA Pending
+- Decision:
+  1. Today 是唯一 Daily Record Editor；收入、小費、工時、支出、其他資料、刪除與
+     Undo 都顯式使用合法 `activeRecordDate`。日期不一致時阻止寫入、保留草稿，
+     不得 fallback 到 today。
+  2. Calendar 維持唯讀，只將精確日期交給 Today；Calendar UI state 與 Today editor
+     state 分離，頁面返回必須完整 render。
+  3. 支出不再有獨立日期控制；amount 使用可伸縮主欄，note action 使用 96–112px
+     次欄。小費沿用既有 `tips` 欄位，不新增 schema。
+  4. 所有顯式儲存共用 `Saving → durable persistence → Saved → summary refresh →
+     reset → Snackbar/Undo`。只有 persistent write 成功才可顯示成功；失敗保留草稿。
+  5. 支出與小費 Undo 只允許最近一次、保存五秒、綁定原平台／分類與日期；切換日期
+     立即失效，避免跨日復原。
+- Reason: 防止歷史紀錄寫入今天、移除重複日期並讓使用者能從 summary、回饋與 Undo
+  確認資料確實寫入本機 canonical store。
+- Impact: Today UI／persistence guards／tests／docs／v39 App Shell；無 WorkRecord
+  schema、storage key、Calendar editor、Manifest、Supabase 或正式資料變更。
+
+## D-062 — Keep Tip Addition and Add Direct Total Correction
+
+- Date: 2026-08-12
+- Status: Public Preview Candidate；Human QA Pending
+- Decision:
+  1. 小費預設仍以「儲存小費」逐筆加入當天既有總額，成功後保留五秒最近一次復原。
+  2. 「這天已記錄」旁提供單一「修改」入口；啟用後重用同一個金額輸入，改為校正
+     當天小費總額，不建立第二份表單或資料來源。
+  3. 校正總額允許 0 至 99,999,999，成功前保留修改值與修改模式；persistent write
+     成功後才更新摘要、KPI 並離開修改模式。
+  4. 新增與校正都使用 `activeRecordDate` 與既有 `tips` 欄位；日期切換取消未儲存的
+     修改模式，防止跨日期寫入。
+- Reason: 五秒 Undo 過期後，使用者仍需要安全修正誤存的小費，不能依賴負數抵銷或
+  刪除整天紀錄。
+- Impact: Today 小費 UI／persistence／tests／docs／v40 App Shell；無 schema、storage
+  key、Calendar／Reports／AI formula、Manifest、Supabase 或 Production 變更。

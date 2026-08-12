@@ -379,7 +379,7 @@ test("唯一日期入口保留，金額與備註同列且備註輸入只在展�
   assert.match(source, /class="expense-amount-note-row"[\s\S]*?smartExpenseAmount[\s\S]*?data-expense-toggle-note/);
   assert.match(source, /expenseDraft\.noteOpen \? `[\s\S]*?id="smartExpenseNote"/);
   assert.doesNotMatch(source, /smartExpenseDate|dateCardMarkup/);
-  assert.match(html, /\.expense-amount-note-row\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 4fr\) minmax\(72px, 1fr\)/);
+  assert.match(html, /\.expense-amount-note-row\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\) minmax\(96px, 112px\)/);
   assert.match(html, /\.expense-note-toggle\s*\{[\s\S]*?min-height:\s*52px/);
   assert.match(reset, /els\.formTitle\.textContent = "每日紀錄"/);
   assert.doesNotMatch(reset, /每日紀錄・/);
@@ -403,8 +403,8 @@ test("新增支出使用獨立交易儲存且防止重複提交", () => {
   const source = extractFunction("saveSmartExpense");
   assert.match(source, /expenseSaveInProgress/);
   assert.match(source, /persistStatePayload\(nextState, \{ updateMemory: true \}\)/);
-  assert.match(source, /notifyRecordChanged\(paymentDate, "expense"\)/);
-  assert.match(source, /原有支出未變更/);
+  assert.match(source, /notifyRecordChanged\(request\.paymentDate, "expense"\)/);
+  assert.match(source, /儲存失敗・再試一次/);
   assert.doesNotMatch(source, /ensureEntryForDate\(paymentDate\)/);
 });
 

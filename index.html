@@ -2798,7 +2798,7 @@
     .expense-amount-note-row {
       min-width: 0;
       display: grid;
-      grid-template-columns: minmax(0, 4fr) minmax(72px, 1fr);
+      grid-template-columns: minmax(0, 1fr) minmax(96px, 112px);
       gap: 8px;
       align-items: stretch;
     }
@@ -2843,6 +2843,92 @@
       color: #17211d;
       background: #fafcfb;
       font-size: 16px;
+    }
+
+    .tip-save-field {
+      display: grid;
+      min-width: 0;
+      gap: 8px;
+    }
+
+    .tip-save-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(104px, 116px);
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .tip-amount-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .tip-amount-prefix {
+      position: absolute;
+      left: 14px;
+      z-index: 1;
+      color: var(--text-secondary);
+      font-weight: 700;
+      pointer-events: none;
+    }
+
+    .tip-amount-wrap input {
+      width: 100%;
+      min-width: 0;
+      padding-left: 32px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tip-save-button {
+      min-width: 0;
+      min-height: 44px;
+      padding-inline: 10px;
+      white-space: nowrap;
+    }
+
+    .tip-save-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-width: 0;
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .tip-saved-copy {
+      min-width: 0;
+    }
+
+    .tip-save-meta strong {
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tip-edit-button {
+      min-width: 52px;
+      min-height: 44px;
+      margin: 0;
+      padding: 0 8px;
+      border: 0;
+      border-radius: var(--radius-control);
+      color: var(--brand-700);
+      background: transparent;
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .tip-edit-button:focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 1px;
+    }
+
+    .tip-save-status {
+      min-height: 1.2em;
+      margin: 0;
     }
 
     #smartExpenseAmount {
@@ -2910,7 +2996,7 @@
     }
 
     .app-toast-action {
-      min-height: 36px;
+      min-height: 44px;
       padding: 0 2px;
       color: #aaf0d8;
       background: transparent;
@@ -6511,9 +6597,22 @@
                   </span>
                 </summary>
                 <div class="collapsible-body fields" id="otherDataContent">
-                  <label>小費
-                    <input type="number" inputmode="numeric" id="tips" min="0" step="1" value="0">
-                  </label>
+                  <div class="tip-save-field">
+                    <label for="tipAmount" id="tipAmountLabel">小費</label>
+                    <div class="tip-save-row">
+                      <span class="tip-amount-wrap">
+                        <span class="tip-amount-prefix" aria-hidden="true">$</span>
+                        <input type="number" inputmode="numeric" id="tipAmount" min="1" max="99999999" step="1" placeholder="輸入小費" autocomplete="off">
+                      </span>
+                      <button class="button secondary tip-save-button" id="saveTip" type="button">儲存小費</button>
+                    </div>
+                    <input type="hidden" id="tips" value="0" data-tip-date="">
+                    <div class="tip-save-meta">
+                      <span class="tip-saved-copy">這天已記錄 <strong id="tipSavedTotal">$0</strong></span>
+                      <button class="tip-edit-button" id="editTipTotal" type="button" aria-expanded="false" aria-controls="tipAmount" hidden>修改</button>
+                    </div>
+                    <p class="ds-save-status tip-save-status" id="tipSaveStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+                  </div>
                   <div class="direct-choice-field">
                     <span class="direct-choice-label">班別</span>
                     <div class="direct-choice-options" role="group" aria-label="選擇班別">
@@ -6968,9 +7067,22 @@
     let overviewVisible = false;
     let expenseDraft = createExpenseDraft(activeRecordDate);
     let expenseSaveInProgress = false;
+    const manualSaveFeedback = {
+      expense: { status: "idle", message: "", timer: 0 },
+      tip: { status: "idle", message: "", timer: 0 },
+      detail: { status: "idle", message: "", timer: 0 }
+    };
     let expenseToastTimer = 0;
     let expenseUndoTimer = 0;
     let lastExpenseRemoval = null;
+    let expenseAdditionUndoTimer = 0;
+    let lastExpenseAddition = null;
+    let tipDraftAmount = "";
+    let tipEditMode = false;
+    let tipSaveInProgress = false;
+    let detailSaveInProgress = false;
+    let tipUndoTimer = 0;
+    let lastTipAddition = null;
     let todayExpenseListOpen = false;
     let todayExpenseListDate = activeRecordDate;
     let expenseShortcutStatus = "";
@@ -7050,6 +7162,12 @@
       manualEntryToggle: document.getElementById("manualEntryToggle"),
       manualEntryContent: document.getElementById("manualEntryContent"),
       todaySaveStatus: document.getElementById("todaySaveStatus"),
+      tipAmount: document.getElementById("tipAmount"),
+      tipAmountLabel: document.getElementById("tipAmountLabel"),
+      saveTip: document.getElementById("saveTip"),
+      tipSavedTotal: document.getElementById("tipSavedTotal"),
+      editTipTotal: document.getElementById("editTipTotal"),
+      tipSaveStatus: document.getElementById("tipSaveStatus"),
       recordEditorInline: document.getElementById("recordEditorInline"),
       recordEditorContent: document.getElementById("recordEditorContent"),
       recordEditorStatus: document.getElementById("recordEditorStatus"),
@@ -7500,6 +7618,9 @@
       const expenseDate = options.expenseDate === undefined
         ? ""
         : normalizeDateKey(options.expenseDate);
+      const tipDate = options.tipDate === undefined
+        ? ""
+        : normalizeDateKey(options.tipDate);
       const recordId = String(options.recordId || els.entryId?.value || "");
       const boundRecord = recordId ? state.entries.find(entry => entry.id === recordId) : null;
       return {
@@ -7507,6 +7628,7 @@
         activeRecordDate,
         displayedDate,
         expenseDate,
+        tipDate,
         boundRecordDate: normalizeDateKey(boundRecord?.date),
         valid: Boolean(
           target
@@ -7514,6 +7636,7 @@
           && target === activeRecordDate
           && displayedDate === activeRecordDate
           && (options.expenseDate === undefined || expenseDate === activeRecordDate)
+          && (options.tipDate === undefined || tipDate === activeRecordDate)
           && (!boundRecord || boundRecord.date === activeRecordDate)
         )
       };
@@ -7545,6 +7668,18 @@
       pendingTodayRecordSave = null;
       lastExpenseRemoval = null;
       window.clearTimeout(expenseUndoTimer);
+      lastExpenseAddition = null;
+      window.clearTimeout(expenseAdditionUndoTimer);
+      lastTipAddition = null;
+      window.clearTimeout(tipUndoTimer);
+      tipDraftAmount = "";
+      tipEditMode = false;
+      tipSaveInProgress = false;
+      detailSaveInProgress = false;
+      ["expense", "tip", "detail"].forEach(kind => {
+        window.clearTimeout(manualSaveFeedback[kind].timer);
+        manualSaveFeedback[kind] = { status: "idle", message: "", timer: 0 };
+      });
       lastIncomeAddition = null;
       window.clearTimeout(incomeUndoTimer);
       activeRecordDate = target;
@@ -8977,6 +9112,100 @@
       }, Number(options.duration || 2200));
     }
 
+    function manualSaveButtonText(kind, idleLabel) {
+      const status = manualSaveFeedback[kind]?.status || "idle";
+      if (status === "saving") return "儲存中…";
+      if (status === "saved") return "✓ 已儲存";
+      return idleLabel;
+    }
+
+    function renderTipSaveFeedback() {
+      if (!els.tipAmount || !els.saveTip || !els.tipSaveStatus || !els.tipSavedTotal || !els.editTipTotal) return;
+      const feedback = manualSaveFeedback.tip;
+      const amount = Number(tipDraftAmount || 0);
+      const storedTips = Number(entryForDate(activeRecordDate)?.tips || 0);
+      els.tipAmount.value = tipDraftAmount;
+      els.tipAmount.dataset.tipDate = activeRecordDate;
+      els.tipAmount.min = tipEditMode ? "0" : "1";
+      els.tipAmount.placeholder = tipEditMode ? "輸入新總額" : "輸入小費";
+      if (els.tipAmountLabel) els.tipAmountLabel.textContent = tipEditMode ? "小費總額" : "小費";
+      const hiddenTips = document.getElementById("tips");
+      if (hiddenTips) {
+        hiddenTips.value = storedTips;
+        hiddenTips.dataset.tipDate = activeRecordDate;
+      }
+      els.tipSavedTotal.textContent = money(storedTips);
+      els.editTipTotal.hidden = storedTips <= 0 && !tipEditMode;
+      els.editTipTotal.textContent = tipEditMode ? "取消" : "修改";
+      els.editTipTotal.setAttribute("aria-expanded", String(tipEditMode));
+      els.editTipTotal.disabled = tipSaveInProgress || ["saving", "saved"].includes(feedback.status);
+      els.saveTip.textContent = manualSaveButtonText("tip", tipEditMode ? "儲存修改" : "儲存小費");
+      const validAmount = tipEditMode
+        ? Number.isSafeInteger(amount) && amount >= 0 && amount <= maxPlatformIncome && amount !== storedTips
+        : Number.isSafeInteger(amount) && amount > 0 && amount <= maxPlatformIncome;
+      els.saveTip.disabled = tipSaveInProgress
+        || feedback.status === "saved"
+        || !validAmount;
+      els.tipSaveStatus.textContent = feedback.message;
+      els.tipSaveStatus.dataset.status = feedback.status;
+      els.tipSaveStatus.setAttribute("role", feedback.status === "error" ? "alert" : "status");
+      els.tipSaveStatus.setAttribute("aria-live", feedback.status === "error" ? "assertive" : "polite");
+    }
+
+    function setTipEditMode(editing) {
+      if (tipSaveInProgress) return false;
+      const storedTips = Number(entryForDate(activeRecordDate)?.tips || 0);
+      if (editing && storedTips <= 0) return false;
+      window.clearTimeout(manualSaveFeedback.tip.timer);
+      manualSaveFeedback.tip = { status: "idle", message: "", timer: 0 };
+      tipEditMode = Boolean(editing);
+      tipDraftAmount = tipEditMode ? String(storedTips) : "";
+      renderTipSaveFeedback();
+      if (tipEditMode) {
+        els.tipAmount.focus();
+        els.tipAmount.select();
+      }
+      return true;
+    }
+
+    function renderDetailSaveFeedback() {
+      const button = els.detailForm?.querySelector(".save-button");
+      if (!button || recordEditorState.open) return;
+      const feedback = manualSaveFeedback.detail;
+      button.textContent = manualSaveButtonText("detail", "儲存詳細紀錄");
+      button.disabled = detailSaveInProgress || ["saving", "saved"].includes(feedback.status);
+    }
+
+    function renderManualSaveFeedback(kind) {
+      if (kind === "expense") renderExpenseForm();
+      if (kind === "tip") renderTipSaveFeedback();
+      if (kind === "detail") renderDetailSaveFeedback();
+    }
+
+    function setManualSaveFeedback(kind, status, message = "", options = {}) {
+      const feedback = manualSaveFeedback[kind];
+      if (!feedback) return;
+      window.clearTimeout(feedback.timer);
+      feedback.status = status;
+      feedback.message = message;
+      renderManualSaveFeedback(kind);
+      const resetAfter = Number(options.resetAfter || 0);
+      if (resetAfter > 0) {
+        feedback.timer = window.setTimeout(() => {
+          feedback.status = "idle";
+          feedback.message = "";
+          feedback.timer = 0;
+          renderManualSaveFeedback(kind);
+        }, resetAfter);
+      }
+    }
+
+    function runPersistentSaveAfterFeedbackPaint(callback) {
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(callback);
+      });
+    }
+
     function formatExpenseAmount(value) {
       const digits = String(value ?? "").replace(/\D/g, "").replace(/^0+(?=\d)/, "");
       return digits ? Number(digits).toLocaleString("zh-TW") : "";
@@ -9279,8 +9508,8 @@
           ${expenseDraft.mode === "recurring" ? recurringExpenseMarkup(amount) : ""}
           ${expenseDraft.mode === "allocated" ? allocatedExpenseMarkup(amount, months) : ""}
           <span class="expense-existing-hint" id="expenseExistingHint"${existingAmount ? "" : " hidden"}>這天已有 ${money(existingAmount)}，儲存後會更新此類別。</span>
-          <button class="expense-save-button" type="button" id="saveSmartExpense"${amount > 0 && !expenseSaveInProgress ? "" : " disabled"}>${expenseSaveInProgress ? "儲存中…" : "儲存支出"}</button>
-          <p class="expense-form-status${expenseDraft.statusType === "error" ? " error" : ""}" id="expenseFormStatus" role="status">${escapeHtml(expenseDraft.status)}</p>
+          <button class="expense-save-button" type="button" id="saveSmartExpense"${amount > 0 && !expenseSaveInProgress && manualSaveFeedback.expense.status !== "saved" ? "" : " disabled"}>${manualSaveButtonText("expense", "儲存支出")}</button>
+          <p class="expense-form-status${expenseDraft.statusType === "error" || manualSaveFeedback.expense.status === "error" ? " error" : ""}" id="expenseFormStatus" role="${expenseDraft.statusType === "error" || manualSaveFeedback.expense.status === "error" ? "alert" : "status"}" aria-live="${expenseDraft.statusType === "error" || manualSaveFeedback.expense.status === "error" ? "assertive" : "polite"}">${escapeHtml(expenseDraft.status || manualSaveFeedback.expense.message)}</p>
         </div>
       `;
     }
@@ -9493,7 +9722,9 @@
       const amount = Math.max(0, Number(expenseDraft.amount || 0));
       const months = selectedExpenseMonths();
       const saveButton = document.getElementById("saveSmartExpense");
-      if (saveButton) saveButton.disabled = amount <= 0;
+      if (saveButton) saveButton.disabled = amount <= 0
+        || expenseSaveInProgress
+        || manualSaveFeedback.expense.status === "saved";
       const recurringAmount = document.getElementById("expenseRecurringAmount");
       if (recurringAmount) recurringAmount.textContent = amount ? money(amount) : "輸入金額後顯示";
       const recurringStartText = document.getElementById("expenseRecurringStartText");
@@ -9603,6 +9834,94 @@
       window.setTimeout(() => button?.classList.remove("selected"), 450);
     }
 
+    function expenseCategorySnapshot(entry, category) {
+      const hasAmount = Boolean(entry && Object.prototype.hasOwnProperty.call(entry.expenses || {}, category));
+      const hasNote = Boolean(entry && Object.prototype.hasOwnProperty.call(entry.expenseNotes || {}, category));
+      const hasAllocation = Boolean(entry && Object.prototype.hasOwnProperty.call(entry.expenseAllocations || {}, category));
+      return {
+        hasAmount,
+        amount: hasAmount ? Number(entry.expenses[category] || 0) : 0,
+        hasNote,
+        note: hasNote ? String(entry.expenseNotes[category] || "") : "",
+        hasAllocation,
+        allocation: hasAllocation ? { ...entry.expenseAllocations[category] } : null
+      };
+    }
+
+    function expenseCategorySnapshotMatches(entry, category, snapshot) {
+      return JSON.stringify(expenseCategorySnapshot(entry, category)) === JSON.stringify(snapshot);
+    }
+
+    function restoreExpenseCategorySnapshot(entry, category, snapshot) {
+      entry.expenses ||= {};
+      if (snapshot.hasAmount) entry.expenses[category] = snapshot.amount;
+      else delete entry.expenses[category];
+      if (snapshot.hasNote) {
+        entry.expenseNotes ||= {};
+        entry.expenseNotes[category] = snapshot.note;
+      } else if (entry.expenseNotes) {
+        delete entry.expenseNotes[category];
+        if (!Object.keys(entry.expenseNotes).length) delete entry.expenseNotes;
+      }
+      if (snapshot.hasAllocation) {
+        entry.expenseAllocations ||= {};
+        entry.expenseAllocations[category] = { ...snapshot.allocation };
+      } else if (entry.expenseAllocations) {
+        delete entry.expenseAllocations[category];
+        if (!Object.keys(entry.expenseAllocations).length) delete entry.expenseAllocations;
+      }
+    }
+
+    function registerExpenseAdditionUndo(action) {
+      window.clearTimeout(expenseAdditionUndoTimer);
+      lastExpenseAddition = action;
+      expenseAdditionUndoTimer = window.setTimeout(() => {
+        if (lastExpenseAddition === action) lastExpenseAddition = null;
+      }, 5000);
+      showToast(`✓ 已新增${action.category} ${money(action.amount)}`, {
+        actionLabel: "復原",
+        duration: 5000,
+        onAction: () => undoLastExpenseAddition(action.date),
+        onExpire: () => {
+          if (lastExpenseAddition === action) lastExpenseAddition = null;
+        }
+      });
+    }
+
+    function undoLastExpenseAddition(targetDate) {
+      const action = lastExpenseAddition;
+      if (!action) {
+        showToast("已無可復原的支出");
+        return false;
+      }
+      if (!validateActiveRecordWrite(targetDate, { expenseDate: action.date, expense: true }) || action.date !== targetDate) return false;
+      const current = state.entries.find(entry => entry.id === action.entryId && entry.date === action.date);
+      if (!current || !expenseCategorySnapshotMatches(current, action.category, action.after)) {
+        window.clearTimeout(expenseAdditionUndoTimer);
+        lastExpenseAddition = null;
+        showToast("目前支出已變更，無法復原");
+        return false;
+      }
+      const nextState = cloneStatePayload(state);
+      const entry = nextState.entries.find(item => item.id === action.entryId && item.date === action.date);
+      if (!entry) return false;
+      restoreExpenseCategorySnapshot(entry, action.category, action.before);
+      if (!action.entryExisted && !recordHasMeaningfulContent(entry)) {
+        nextState.entries = nextState.entries.filter(item => item.id !== action.entryId);
+      }
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        showToast("復原失敗，請稍後再試");
+        return false;
+      }
+      window.clearTimeout(expenseAdditionUndoTimer);
+      lastExpenseAddition = null;
+      notifyRecordChanged(action.date, "expense-add-rollback");
+      renderAll();
+      renderTipSaveFeedback();
+      showToast(`已復原 ${action.category} ${money(action.amount)}`);
+      return true;
+    }
+
     function saveSmartExpense(targetDate) {
       const category = String(expenseDraft.category || "").trim();
       const amount = Number(expenseDraft.amount);
@@ -9650,9 +9969,19 @@
         renderExpenseForm();
         return;
       }
-      if (expenseSaveInProgress) return;
+      if (expenseSaveInProgress) return false;
+      const request = {
+        targetDate,
+        paymentDate,
+        category,
+        amount: Math.round(amount),
+        mode: expenseDraft.mode,
+        months: selectedExpenseMonths(),
+        startMonth: expenseDraft.startMonth,
+        note: String(expenseDraft.note || "").trim().slice(0, 160)
+      };
       expenseSaveInProgress = true;
-      renderExpenseForm();
+      setManualSaveFeedback("expense", "saving", "儲存中…");
 
       if (recordEditorState.open) {
         if (paymentDate !== recordEditorState.date) {
@@ -9685,47 +10014,244 @@
         renderCalendarExpenseList();
         markRecordEditorDirty();
         showToast(`已加入草稿：${category} ${money(amount)}`);
-        return;
+        return true;
       }
+      runPersistentSaveAfterFeedbackPaint(() => {
+        if (!validateActiveRecordWrite(request.targetDate, { expenseDate: request.paymentDate, expense: true })) {
+          expenseSaveInProgress = false;
+          setManualSaveFeedback("expense", "error", activeRecordDateErrorMessage);
+          return;
+        }
+        const current = entryForDate(request.paymentDate);
+        const before = expenseCategorySnapshot(current, request.category);
+        const nextState = cloneStatePayload(state);
+        let entry = nextState.entries.find(item => item.date === request.paymentDate);
+        const entryExisted = Boolean(entry);
+        if (!entry) {
+          entry = blankEntry(request.paymentDate);
+          nextState.entries.push(entry);
+        }
+        entry.expenses ||= {};
+        entry.expenses[request.category] = request.amount;
+        if (request.mode === "allocated") {
+          entry.expenseAllocations ||= {};
+          entry.expenseAllocations[request.category] = {
+            months: request.months,
+            startMonth: request.startMonth
+          };
+        } else if (entry.expenseAllocations) {
+          delete entry.expenseAllocations[request.category];
+          if (!Object.keys(entry.expenseAllocations).length) delete entry.expenseAllocations;
+        }
+        entry.expenseNotes ||= {};
+        if (request.note) entry.expenseNotes[request.category] = request.note;
+        else {
+          delete entry.expenseNotes[request.category];
+          if (!Object.keys(entry.expenseNotes).length) delete entry.expenseNotes;
+        }
+        if (!nextState.expenses.includes(request.category)) nextState.expenses.push(request.category);
+        const after = expenseCategorySnapshot(entry, request.category);
+        const saved = persistStatePayload(nextState, { updateMemory: true });
+        expenseSaveInProgress = false;
+        if (!saved) {
+          expenseDraft.status = "儲存失敗・再試一次";
+          expenseDraft.statusType = "error";
+          setManualSaveFeedback("expense", "error", "儲存失敗・再試一次");
+          showToast("支出儲存失敗，請再試一次");
+          return;
+        }
+        notifyRecordChanged(request.paymentDate, "expense");
+        expenseDraft = createExpenseDraft(request.paymentDate);
+        renderAll();
+        setManualSaveFeedback("expense", "saved", "✓ 已儲存", { resetAfter: 1300 });
+        registerExpenseAdditionUndo({
+          date: request.paymentDate,
+          entryId: entry.id,
+          entryExisted,
+          category: request.category,
+          amount: request.amount,
+          before,
+          after
+        });
+      });
+      return true;
+    }
 
+    function registerTipAdditionUndo(action) {
+      window.clearTimeout(tipUndoTimer);
+      lastTipAddition = action;
+      tipUndoTimer = window.setTimeout(() => {
+        if (lastTipAddition === action) lastTipAddition = null;
+      }, 5000);
+      showToast(`✓ 已新增小費 ${money(action.amount)}`, {
+        actionLabel: "復原",
+        duration: 5000,
+        onAction: () => undoLastTipAddition(action.date),
+        onExpire: () => {
+          if (lastTipAddition === action) lastTipAddition = null;
+        }
+      });
+    }
+
+    function undoLastTipAddition(targetDate) {
+      const action = lastTipAddition;
+      if (!action) {
+        showToast("已無可復原的小費");
+        return false;
+      }
+      if (!validateActiveRecordWrite(targetDate, { tipDate: action.date }) || action.date !== targetDate) return false;
+      const current = state.entries.find(entry => entry.id === action.entryId && entry.date === action.date);
+      if (!current || Number(current.tips || 0) !== action.afterTips) {
+        window.clearTimeout(tipUndoTimer);
+        lastTipAddition = null;
+        showToast("目前小費已變更，無法復原");
+        return false;
+      }
       const nextState = cloneStatePayload(state);
-      let entry = nextState.entries.find(item => item.date === paymentDate);
-      if (!entry) {
-        entry = blankEntry(paymentDate);
-        nextState.entries.push(entry);
+      const entry = nextState.entries.find(item => item.id === action.entryId && item.date === action.date);
+      if (!entry) return false;
+      entry.tips = action.beforeTips;
+      if (!action.entryExisted && !recordHasMeaningfulContent(entry)) {
+        nextState.entries = nextState.entries.filter(item => item.id !== action.entryId);
       }
-      entry.expenses ||= {};
-      entry.expenses[category] = amount;
-      if (expenseDraft.mode === "allocated") {
-        entry.expenseAllocations ||= {};
-        entry.expenseAllocations[category] = {
-          months: selectedExpenseMonths(),
-          startMonth: expenseDraft.startMonth
-        };
-      } else if (entry.expenseAllocations) {
-        delete entry.expenseAllocations[category];
-        if (!Object.keys(entry.expenseAllocations).length) delete entry.expenseAllocations;
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        showToast("復原失敗，請稍後再試");
+        return false;
       }
-      entry.expenseNotes ||= {};
-      const note = String(expenseDraft.note || "").trim().slice(0, 160);
-      if (note) entry.expenseNotes[category] = note;
-      else delete entry.expenseNotes[category];
-      if (!nextState.expenses.includes(category)) nextState.expenses.push(category);
-      const saved = persistStatePayload(nextState, { updateMemory: true });
-      expenseSaveInProgress = false;
-      if (!saved) {
-        expenseDraft.status = "儲存失敗，原有支出未變更。";
-        expenseDraft.statusType = "error";
-        renderExpenseForm();
-        showToast("支出儲存失敗，請稍後再試");
-        return;
-      }
-      notifyRecordChanged(paymentDate, "expense");
-
-      expenseDraft = createExpenseDraft(paymentDate);
+      window.clearTimeout(tipUndoTimer);
+      lastTipAddition = null;
+      notifyRecordChanged(action.date, "tip-add-rollback");
+      document.getElementById("tips").value = action.beforeTips;
       renderAll();
-      renderExpenseForm();
-      showToast(`已儲存 ${category} ${money(amount)}`);
+      renderTipSaveFeedback();
+      showToast(`已復原小費 ${money(action.amount)}`);
+      return true;
+    }
+
+    function saveTip(targetDate) {
+      if (tipSaveInProgress) return false;
+      const tipDate = normalizeDateKey(els.tipAmount?.dataset.tipDate || document.getElementById("tips")?.dataset.tipDate);
+      const amount = Number(tipDraftAmount || els.tipAmount?.value || 0);
+      if (!validateActiveRecordWrite(targetDate, { tipDate })) return false;
+      if (!Number.isSafeInteger(amount) || amount <= 0 || amount > maxPlatformIncome) {
+        setManualSaveFeedback("tip", "error", "請輸入 1 至 99,999,999 的整數小費。");
+        els.tipAmount?.focus();
+        return false;
+      }
+      const previousEntry = entryForDate(targetDate);
+      const beforeTips = Number(previousEntry?.tips || 0);
+      if (beforeTips + amount > maxPlatformIncome) {
+        setManualSaveFeedback("tip", "error", "小費總額不可超過 99,999,999。");
+        return false;
+      }
+      const request = { targetDate, tipDate, amount, beforeTips };
+      tipSaveInProgress = true;
+      setManualSaveFeedback("tip", "saving", "儲存中…");
+      runPersistentSaveAfterFeedbackPaint(() => {
+        if (!validateActiveRecordWrite(request.targetDate, { tipDate: request.tipDate })) {
+          tipSaveInProgress = false;
+          setManualSaveFeedback("tip", "error", activeRecordDateErrorMessage);
+          return;
+        }
+        const current = entryForDate(request.targetDate);
+        const currentTips = Number(current?.tips || 0);
+        if (currentTips !== request.beforeTips) {
+          tipSaveInProgress = false;
+          setManualSaveFeedback("tip", "error", "小費狀態已變更，請再試一次。");
+          return;
+        }
+        const nextState = cloneStatePayload(state);
+        let entry = nextState.entries.find(item => item.date === request.targetDate);
+        const entryExisted = Boolean(entry);
+        if (!entry) {
+          entry = blankEntry(request.targetDate);
+          nextState.entries.push(entry);
+        }
+        entry.tips = request.beforeTips + request.amount;
+        const saved = persistStatePayload(nextState, { updateMemory: true });
+        tipSaveInProgress = false;
+        if (!saved) {
+          setManualSaveFeedback("tip", "error", "儲存失敗・再試一次");
+          showToast("小費儲存失敗，請再試一次");
+          return;
+        }
+        tipDraftAmount = "";
+        document.getElementById("tips").value = entry.tips;
+        notifyRecordChanged(request.targetDate, "tip-add");
+        renderAll();
+        setManualSaveFeedback("tip", "saved", "✓ 已儲存", { resetAfter: 1300 });
+        registerTipAdditionUndo({
+          date: request.targetDate,
+          entryId: entry.id,
+          entryExisted,
+          amount: request.amount,
+          beforeTips: request.beforeTips,
+          afterTips: entry.tips
+        });
+      });
+      return true;
+    }
+
+    function saveTipCorrection(targetDate) {
+      if (!tipEditMode || tipSaveInProgress) return false;
+      const tipDate = normalizeDateKey(els.tipAmount?.dataset.tipDate || document.getElementById("tips")?.dataset.tipDate);
+      const nextTips = Number(tipDraftAmount || els.tipAmount?.value || 0);
+      if (!validateActiveRecordWrite(targetDate, { tipDate })) return false;
+      if (!Number.isSafeInteger(nextTips) || nextTips < 0 || nextTips > maxPlatformIncome) {
+        setManualSaveFeedback("tip", "error", "請輸入 0 至 99,999,999 的整數小費總額。");
+        els.tipAmount?.focus();
+        return false;
+      }
+      const previousEntry = entryForDate(targetDate);
+      const beforeTips = Number(previousEntry?.tips || 0);
+      if (nextTips === beforeTips) {
+        setManualSaveFeedback("tip", "error", "小費金額沒有變更。");
+        return false;
+      }
+      const request = { targetDate, tipDate, beforeTips, nextTips };
+      tipSaveInProgress = true;
+      setManualSaveFeedback("tip", "saving", "儲存中…");
+      runPersistentSaveAfterFeedbackPaint(() => {
+        if (!validateActiveRecordWrite(request.targetDate, { tipDate: request.tipDate })) {
+          tipSaveInProgress = false;
+          setManualSaveFeedback("tip", "error", activeRecordDateErrorMessage);
+          return;
+        }
+        const current = entryForDate(request.targetDate);
+        if (Number(current?.tips || 0) !== request.beforeTips) {
+          tipSaveInProgress = false;
+          setManualSaveFeedback("tip", "error", "小費狀態已變更，請重新修改。");
+          return;
+        }
+        const nextState = cloneStatePayload(state);
+        const entry = nextState.entries.find(item => item.date === request.targetDate);
+        if (!entry) {
+          tipSaveInProgress = false;
+          setManualSaveFeedback("tip", "error", "找不到這天的小費紀錄，請重新整理後再試。");
+          return;
+        }
+        entry.tips = request.nextTips;
+        if (!recordHasMeaningfulContent(entry)) {
+          nextState.entries = nextState.entries.filter(item => item.id !== entry.id);
+        }
+        const saved = persistStatePayload(nextState, { updateMemory: true });
+        tipSaveInProgress = false;
+        if (!saved) {
+          setManualSaveFeedback("tip", "error", "儲存失敗・再試一次");
+          showToast("小費修改失敗，請再試一次");
+          return;
+        }
+        window.clearTimeout(tipUndoTimer);
+        lastTipAddition = null;
+        tipDraftAmount = "";
+        tipEditMode = false;
+        document.getElementById("tips").value = request.nextTips;
+        notifyRecordChanged(request.targetDate, "tip-correction");
+        renderAll();
+        setManualSaveFeedback("tip", "saved", "✓ 已儲存", { resetAfter: 1300 });
+        showToast(`✓ 小費已修改為 ${money(request.nextTips)}`);
+      });
+      return true;
     }
 
     function renderIncomeInputs(date = activeRecordDate) {
@@ -9756,6 +10282,8 @@
       renderIncomeInputs(date);
       renderExpenseForm();
       renderTodayExpenseList(date);
+      renderTipSaveFeedback();
+      renderDetailSaveFeedback();
     }
 
     function escapeHtml(value) {
@@ -11780,7 +12308,12 @@
         return;
       }
       const date = targetDate;
-      const entry = ensureEntryForDate(date);
+      const nextState = cloneStatePayload(state);
+      let entry = nextState.entries.find(item => item.date === date);
+      if (!entry) {
+        entry = blankEntry(date);
+        nextState.entries.push(entry);
+      }
       const previous = entry.weather || "";
       entry.weatherHistory = Array.isArray(entry.weatherHistory) ? entry.weatherHistory : [];
       if (!entry.weatherHistory.length && previous && previous !== weather) {
@@ -11795,11 +12328,17 @@
       }
       const weatherSelect = document.getElementById("weather");
       if (weatherSelect) weatherSelect.value = weather;
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        if (weatherSelect) weatherSelect.value = previous;
+        setTodaySaveStatus("儲存失敗，原有天氣未變更", "error");
+        return false;
+      }
       els.entryId.value = entry.id;
-      if (saveState()) notifyRecordChanged(date, "weather");
+      notifyRecordChanged(date, "weather");
       syncDetailChoiceButtons();
       if (date === todayString()) updateWorkControls();
       renderEntries();
+      return true;
     }
 
     function updateCurrentShift(targetDate, shift) {
@@ -11813,13 +12352,26 @@
         return;
       }
       const date = targetDate;
-      const entry = ensureEntryForDate(date);
+      const previousShift = entryForDate(date)?.shift || "早班";
+      const nextState = cloneStatePayload(state);
+      let entry = nextState.entries.find(item => item.date === date);
+      if (!entry) {
+        entry = blankEntry(date);
+        nextState.entries.push(entry);
+      }
       entry.shift = shift;
       document.getElementById("shift").value = shift;
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        document.getElementById("shift").value = previousShift;
+        syncDetailChoiceButtons();
+        setTodaySaveStatus("儲存失敗，原有班別未變更", "error");
+        return false;
+      }
       els.entryId.value = entry.id;
-      if (saveState()) notifyRecordChanged(date, "shift");
+      notifyRecordChanged(date, "shift");
       syncDetailChoiceButtons();
       renderEntries();
+      return true;
     }
 
     function syncDetailChoiceButtons() {
@@ -12291,6 +12843,8 @@
       renderIncomeInputs(targetDate);
       document.getElementById("breakMinutes").value = 0;
       document.getElementById("tips").value = 0;
+      document.getElementById("tips").dataset.tipDate = targetDate;
+      tipDraftAmount = "";
       document.getElementById("orders").value = 0;
       document.getElementById("km").value = 0;
       document.querySelectorAll("[data-income]").forEach(input => input.value = 0);
@@ -12302,6 +12856,7 @@
         fillEntryFields(activeEntry, targetDate);
       } else {
         setWorkTimeInputMode("clock", {});
+        renderTipSaveFeedback();
       }
       els.formTitle.textContent = "每日紀錄";
       els.cancelEdit.classList.add("hidden");
@@ -12343,6 +12898,8 @@
       syncManualWorkTimeInput(decimalHoursToMinutes(entry.manualHours));
       setWorkTimeInputMode(deriveWorkTimeInputMode(entry), entry);
       document.getElementById("tips").value = entry.tips || 0;
+      document.getElementById("tips").dataset.tipDate = targetDate;
+      tipDraftAmount = "";
       document.getElementById("orders").value = entry.orders || 0;
       document.getElementById("km").value = entry.km || 0;
       const weatherSelect = document.getElementById("weather");
@@ -12352,6 +12909,7 @@
       document.querySelectorAll("[data-income]").forEach(input => input.value = entry.incomes?.[input.dataset.income] || 0);
       expenseDraft = createExpenseDraft(entry.date);
       renderExpenseForm();
+      renderTipSaveFeedback();
       syncDetailChoiceButtons();
       return true;
     }
@@ -12547,6 +13105,7 @@
 
     function saveTodayDetailRecord(targetDate, options = {}) {
       if (!validateActiveRecordWrite(targetDate)) return false;
+      if (detailSaveInProgress || ["saving", "saved"].includes(manualSaveFeedback.detail.status)) return false;
       const { allowMissingWorkTime = false } = options;
       const manualPartsError = validateManualWorkTimeParts();
       if (manualPartsError) {
@@ -12590,11 +13149,16 @@
           nextState.entries.push(entry);
         }
       }
+      detailSaveInProgress = true;
+      setManualSaveFeedback("detail", "saving", "儲存中…");
       if (!persistStatePayload(nextState, { updateMemory: true })) {
+        detailSaveInProgress = false;
         setTodaySaveStatus("儲存失敗，原有紀錄未變更", "error");
+        setManualSaveFeedback("detail", "error", "儲存失敗・再試一次");
         showToast("儲存失敗，請稍後再試");
         return false;
       }
+      detailSaveInProgress = false;
       notifyRecordChanged(entry.date, "today-update");
       const missingWorkTime = quality.status === "missing-work-time";
       renderAll();
@@ -12602,6 +13166,8 @@
       if (missingWorkTime) {
         setTodaySaveStatus("已儲存；工時尚未完成", "success");
       }
+      setManualSaveFeedback("detail", "saved", "✓ 已儲存", { resetAfter: 1300 });
+      showToast("✓ 已儲存詳細紀錄", { duration: 3200 });
       return true;
     }
 
@@ -13359,33 +13925,51 @@
 
     function updateIncomeRecord(targetDate, recordId) {
       if (!validateActiveRecordWrite(targetDate)) return false;
-      const entry = entryForDate(targetDate);
-      const record = entry?.incomeRecords?.find(item => item.id === recordId);
+      const currentEntry = entryForDate(targetDate);
+      const currentRecord = currentEntry?.incomeRecords?.find(item => item.id === recordId);
       const input = els.recentIncomeList.querySelector(`[data-record-amount="${cssEscape(recordId)}"]`);
       const amount = Number(input?.value || 0);
-      if (!record || !Number.isFinite(amount) || amount <= 0) {
+      if (!currentEntry || !currentRecord || !Number.isFinite(amount) || amount <= 0) {
         input?.focus();
-        return;
+        return false;
       }
+      const nextState = cloneStatePayload(state);
+      const entry = nextState.entries.find(item => item.id === currentEntry.id && item.date === targetDate);
+      const record = entry?.incomeRecords?.find(item => item.id === recordId);
+      if (!entry || !record) return false;
       const difference = amount - Number(record.amount || 0);
       entry.incomes[record.platform] = Math.max(0, Number(entry.incomes?.[record.platform] || 0) + difference);
       record.amount = amount;
       record.updatedAt = new Date().toISOString();
-      if (saveState()) notifyRecordChanged(entry.date, "income-record-edit");
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        showToast("儲存失敗，原有收入未變更");
+        return false;
+      }
+      notifyRecordChanged(entry.date, "income-record-edit");
       refreshToday();
       resetForm(targetDate);
+      return true;
     }
 
     function deleteIncomeRecord(targetDate, recordId) {
       if (!validateActiveRecordWrite(targetDate)) return false;
-      const entry = entryForDate(targetDate);
+      const currentEntry = entryForDate(targetDate);
+      const currentRecord = currentEntry?.incomeRecords?.find(item => item.id === recordId);
+      if (!currentEntry || !currentRecord) return false;
+      const nextState = cloneStatePayload(state);
+      const entry = nextState.entries.find(item => item.id === currentEntry.id && item.date === targetDate);
       const record = entry?.incomeRecords?.find(item => item.id === recordId);
-      if (!entry || !record) return;
+      if (!entry || !record) return false;
       entry.incomes[record.platform] = Math.max(0, Number(entry.incomes?.[record.platform] || 0) - Number(record.amount || 0));
       entry.incomeRecords = entry.incomeRecords.filter(item => item.id !== recordId);
-      if (saveState()) notifyRecordChanged(entry.date, "income-record-delete");
+      if (!persistStatePayload(nextState, { updateMemory: true })) {
+        showToast("刪除失敗，原有收入仍保留");
+        return false;
+      }
+      notifyRecordChanged(entry.date, "income-record-delete");
       refreshToday();
       resetForm(targetDate);
+      return true;
     }
 
     function renderBrandAttribution() {
@@ -13764,6 +14348,15 @@
       if (event.target.id === "date") {
         syncDateCardDisplay(event.target);
       }
+      if (event.target.id === "tipAmount") {
+        tipDraftAmount = event.target.value;
+        if (manualSaveFeedback.tip.status === "error") {
+          setManualSaveFeedback("tip", "idle", "");
+        } else {
+          renderTipSaveFeedback();
+        }
+        return;
+      }
       if (["manualHoursPart", "manualMinutesPart"].includes(event.target.id)) {
         syncManualWorkTimeParts();
       }
@@ -13819,6 +14412,15 @@
       if (expanded) offerAutomaticWeather();
     });
     els.detailForm.addEventListener("click", event => {
+      if (event.target.closest("#editTipTotal")) {
+        setTipEditMode(!tipEditMode);
+        return;
+      }
+      if (event.target.closest("#saveTip")) {
+        if (tipEditMode) saveTipCorrection(activeRecordDate);
+        else saveTip(activeRecordDate);
+        return;
+      }
       const button = event.target.closest("[data-detail-choice]");
       if (!button) return;
       const field = button.dataset.detailChoice;
@@ -13826,6 +14428,13 @@
       if (field === "weather") updateCurrentWeather(activeRecordDate, value);
       if (field === "shift") updateCurrentShift(activeRecordDate, value);
       updateQuickPreview();
+    });
+
+    els.detailForm.addEventListener("keydown", event => {
+      if (event.target.id !== "tipAmount" || event.key !== "Enter") return;
+      event.preventDefault();
+      if (tipEditMode) saveTipCorrection(activeRecordDate);
+      else saveTip(activeRecordDate);
     });
 
     els.expenseInputs.addEventListener("input", event => {

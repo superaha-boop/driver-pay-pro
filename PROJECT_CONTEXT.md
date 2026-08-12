@@ -4,6 +4,29 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
+## Active Date + Save Feedback Hotfix — Public Preview Candidate
+
+- Branch：`hotfix/active-record-date`；Production base：`6bb2139`；Human QA 前不合併
+  `main`、不部署 Production。
+- Today 仍是唯一 Daily Record Editor。收入、小費、工時、支出、其他資料、刪除與
+  Undo 都必須顯式綁定合法 `activeRecordDate`；顯示日期、record key 或表單日期不一致
+  時阻止寫入並保留草稿，不得 fallback 到台北今天。
+- Calendar 維持唯讀，只把精確日期交給 Today；Calendar 與 Today 的 page／session
+  state 分離，返回 Today 必須完整 render 全頁。
+- 支出不再有第二個日期控制；金額與 96–112px 備註入口同排。小費改為明確的單筆
+  加入流程，但仍寫入既有 `tips` 欄位，沒有資料模型變更。
+- 顯式儲存採共用 feedback：先顯示「儲存中…」，persistent write 成功後才顯示
+  「✓ 已儲存」、更新 summary、清除草稿與提供五秒日期綁定 Undo；失敗保留草稿且
+  不更新假 summary。
+- 小費五秒復原消失後，仍可從「這天已記錄」旁的「修改」直接校正當天小費總額；
+  修改模式重用同一個輸入與既有 `tips` 欄位，允許改為 0，並維持 active-date 與
+  persistent-first guard。
+- Today KPI 保持收入左上且為最大數值，工時使用自然分鐘／小時格式，時薪持續使用
+  總收入除以有效工時。App Shell candidate 為 `driver-pay-pro-v40`；storage key 仍為
+  `driverPayApp.v2`，無 migration、Supabase 或正式資料變更。
+- 自動測試目前 423/423 Passed；實體 iPhone Safari／installed PWA Final Human QA
+  尚待 Public Preview 完成後執行一次。
+
 ## Today Expense Date Simplification — Production Released
 
 - Branch：`codex/today-expense-date-simplify-20260812`；base：`6bd16ba`。

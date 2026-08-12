@@ -174,10 +174,10 @@ test("Driver 重要數值縮放、切換控制與 Bottom Navigation 保持穩定
 });
 
 test("首頁 KPI 使用獨立下限，不會被一般數據 token 縮小", () => {
-  assert.match(designSystem, /--today-revenue-value-size: clamp\(50px, 14vw, 64px\)/);
-  assert.match(designSystem, /data-display-size="comfort"[\s\S]*?--today-revenue-value-size: clamp\(54px, 15vw, 68px\)/);
-  assert.match(designSystem, /data-display-size="large"[\s\S]*?--today-revenue-value-size: clamp\(60px, 16vw, 74px\)/);
-  assert.match(designSystem, /--today-secondary-value-size: clamp\(28px, 7vw, 32px\)/);
+  assert.match(designSystem, /--today-revenue-value-size: clamp\(54px, 15vw, 64px\)/);
+  assert.match(designSystem, /data-display-size="comfort"[\s\S]*?--today-revenue-value-size: clamp\(58px, 16vw, 68px\)/);
+  assert.match(designSystem, /data-display-size="large"[\s\S]*?--today-revenue-value-size: clamp\(62px, 16\.5vw, 70px\)/);
+  assert.match(designSystem, /--today-secondary-value-size: clamp\(32px, 10vw, 42px\)/);
   assert.doesNotMatch(designSystem, /--today-revenue-value-size: var\(--font-kpi-primary\)/);
 });
 
@@ -202,5 +202,5 @@ test("Today KPI 共用數字字體規格且工時單位降階", () => {
 });
 
 test("HTML、CSS 與 JavaScript 變更同步更新 App Shell cache", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v38"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v40"/);
 });

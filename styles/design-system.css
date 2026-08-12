@@ -47,8 +47,8 @@
   --letter-spacing-tight: -0.02em;
   --letter-spacing-normal: 0;
   /* Responsive typography roles: data scales clearly; structure stays stable. */
-  --font-kpi-primary: clamp(50px, 14vw, 64px);
-  --font-kpi-secondary: clamp(28px, 7vw, 32px);
+  --font-kpi-primary: clamp(54px, 15vw, 64px);
+  --font-kpi-secondary: clamp(32px, 10vw, 42px);
   --font-kpi-unit: 0.56em;
   --font-data: 24px;
   --font-input-value: 28px;
@@ -76,9 +76,9 @@
   --display-calendar-row-height: 70px;
   --display-nav-label-size: var(--font-navigation);
   --today-revenue-label-size: 15px;
-  --today-revenue-value-size: clamp(50px, 14vw, 64px);
+  --today-revenue-value-size: clamp(54px, 15vw, 64px);
   --today-secondary-label-size: 13px;
-  --today-secondary-value-size: clamp(28px, 7vw, 32px);
+  --today-secondary-value-size: clamp(32px, 10vw, 42px);
   --display-body-line-height: 1.55;
   --display-secondary-color: var(--color-text-secondary);
 
@@ -165,8 +165,8 @@
 }
 
 html[data-display-size="comfort"] {
-  --font-kpi-primary: clamp(54px, 15vw, 68px);
-  --font-kpi-secondary: clamp(31px, 8vw, 36px);
+  --font-kpi-primary: clamp(58px, 16vw, 68px);
+  --font-kpi-secondary: clamp(34px, 10.8vw, 44px);
   --font-data: 27px;
   --font-input-value: 34px;
   --font-button: 17px;
@@ -192,16 +192,16 @@ html[data-display-size="comfort"] {
   --display-calendar-row-height: 76px;
   --display-nav-label-size: var(--font-navigation);
   --today-revenue-label-size: 16px;
-  --today-revenue-value-size: clamp(54px, 15vw, 68px);
+  --today-revenue-value-size: clamp(58px, 16vw, 68px);
   --today-secondary-label-size: 14px;
-  --today-secondary-value-size: clamp(31px, 8vw, 36px);
+  --today-secondary-value-size: clamp(34px, 10.8vw, 44px);
   --display-body-line-height: 1.6;
   --display-secondary-color: #506159;
 }
 
 html[data-display-size="large"] {
-  --font-kpi-primary: clamp(60px, 16vw, 74px);
-  --font-kpi-secondary: clamp(34px, 9vw, 40px);
+  --font-kpi-primary: clamp(62px, 16.5vw, 70px);
+  --font-kpi-secondary: clamp(36px, 11.5vw, 46px);
   --font-data: 30px;
   --font-input-value: 40px;
   --font-button: 18px;
@@ -227,9 +227,9 @@ html[data-display-size="large"] {
   --display-calendar-row-height: 84px;
   --display-nav-label-size: var(--font-navigation);
   --today-revenue-label-size: 17px;
-  --today-revenue-value-size: clamp(60px, 16vw, 74px);
+  --today-revenue-value-size: clamp(62px, 16.5vw, 70px);
   --today-secondary-label-size: 15px;
-  --today-secondary-value-size: clamp(34px, 9vw, 40px);
+  --today-secondary-value-size: clamp(36px, 11.5vw, 46px);
   --display-body-line-height: 1.65;
   --display-secondary-color: #46534c;
 }
