@@ -83,10 +83,10 @@ test("Design System showcase covers the approved internal states", () => {
   ].forEach(label => assert.ok(showcase.includes(label), `Missing showcase section: ${label}`));
 });
 
-test("Showcase remains isolated and Hotfix App Shell uses v38", () => {
+test("Showcase remains isolated and Hotfix App Shell uses v39", () => {
   const nav = indexHtml.match(/<nav class="nav"[\s\S]*?<\/nav>/)?.[0] || "";
   assert.doesNotMatch(nav, /design-system/i);
   assert.doesNotMatch(serviceWorker, /design-system\.html/);
-  assert.match(serviceWorker, /driver-pay-pro-v38/);
+  assert.match(serviceWorker, /driver-pay-pro-v39/);
   assert.doesNotMatch(serviceWorker, /driver-pay-pro-v16/);
 });

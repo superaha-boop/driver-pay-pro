@@ -1207,3 +1207,24 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   正常。功能 commit `bbb7392` 已一般合併至 `main`（merge commit `c49fb765`）；
   Vercel Production deployment `dpl_zCca7z7VGmMsnreB5nHhcJiE2yyZ` 為 `READY`，
   正式 App Shell 為 v38。
+
+## D-061 — Bind Explicit Saves and Undo to Active Date
+
+- Date: 2026-08-12
+- Status: Public Preview Candidate；Final Human QA Pending
+- Decision:
+  1. Today 是唯一 Daily Record Editor；收入、小費、工時、支出、其他資料、刪除與
+     Undo 都顯式使用合法 `activeRecordDate`。日期不一致時阻止寫入、保留草稿，
+     不得 fallback 到 today。
+  2. Calendar 維持唯讀，只將精確日期交給 Today；Calendar UI state 與 Today editor
+     state 分離，頁面返回必須完整 render。
+  3. 支出不再有獨立日期控制；amount 使用可伸縮主欄，note action 使用 96–112px
+     次欄。小費沿用既有 `tips` 欄位，不新增 schema。
+  4. 所有顯式儲存共用 `Saving → durable persistence → Saved → summary refresh →
+     reset → Snackbar/Undo`。只有 persistent write 成功才可顯示成功；失敗保留草稿。
+  5. 支出與小費 Undo 只允許最近一次、保存五秒、綁定原平台／分類與日期；切換日期
+     立即失效，避免跨日復原。
+- Reason: 防止歷史紀錄寫入今天、移除重複日期並讓使用者能從 summary、回饋與 Undo
+  確認資料確實寫入本機 canonical store。
+- Impact: Today UI／persistence guards／tests／docs／v39 App Shell；無 WorkRecord
+  schema、storage key、Calendar editor、Manifest、Supabase 或正式資料變更。

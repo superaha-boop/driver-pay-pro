@@ -1035,3 +1035,18 @@
   功能 commit `bbb7392`、main merge commit `c49fb765`；Production deployment
   `dpl_zCca7z7VGmMsnreB5nHhcJiE2yyZ` 為 `READY`。正式站與 Manifest HTTP 200，
   Service Worker v38，390px 無水平 overflow，Console 與 Runtime errors 為 0。
+
+## D-061 — Active-date-bound explicit save feedback
+
+- Date: 2026-08-12
+- Status: Public Preview Candidate；Final Human QA Pending
+- Decision:
+  - Today 的明確寫入與最近一次 Undo 都以 `activeRecordDate` 為唯一日期來源；顯示、
+    form 或 record 日期 mismatch 時保留草稿並阻止寫入，不 fallback 到今天。
+  - Calendar 只讀並傳遞精確日期；支出日期直接繼承 Active Date，不再建立第二控制。
+  - 支出 amount／note 同排；小費使用明確加入按鈕，但持久資料仍為既有 `tips`。
+  - 成功回饋必須在 `driverPayApp.v2` durable write 與 read-back 成功後才出現；成功後
+    更新 summary、清 draft 並提供五秒日期綁定 Undo，失敗保留 draft 可重試。
+- Reason: 同時消除跨日誤寫風險與「按了儲存但不知道是否成功」的不確定性。
+- Impact: `index.html`、tests、docs 與 v39；無 schema、storage key、Manifest、
+  Supabase、Calendar ownership 或 Production 變更。

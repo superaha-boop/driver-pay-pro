@@ -4,6 +4,26 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
+## Active Date + Today Save Feedback Hotfix — Human QA Pending
+
+- Branch：`hotfix/active-record-date`；base／Production HEAD：`6bb2139`；candidate
+  commit 以本分支最新 HEAD 為準。`main` 未合併，Production 未部署。
+- Today 所有指定日期寫入與 Undo 以唯一 `activeRecordDate` 驗證；invalid／mismatch
+  會顯示「日期狀態異常，未儲存。請重新選擇日期。」並保留草稿，絕不 fallback。
+- Calendar 維持唯讀；返回 Today 會完整 render KPI、工作狀態、平台收入與 Daily
+  Record，沒有 reload、延遲刷新或清除 localStorage。
+- 支出日期直接繼承 Active Date；金額與備註入口同排。支出與小費新增都依序執行
+  saving → durable persistence → saved → summary refresh → reset → 五秒 Snackbar Undo。
+- 支出 Undo 連同 category amount、allocation 與 note 回復；小費 Undo 只回復同日期
+  最近一筆加入。日期切換會清除舊 Undo，避免作用到其他日期。
+- 儲存失敗不清草稿、不顯示成功、不變更 summary；重複點擊由 in-progress／saved
+  guard 阻止。既有 auto-save 欄位沒有新增多餘儲存按鈕。
+- `index.html`、`sw.js`、回歸測試與永久文件是本次預期變更。App Shell v39；
+  `driverPayApp.v2`、WorkRecord schema、Manifest、Calendar edit ownership 與
+  Supabase 均未變。
+- 目前自動測試 421/421 Passed；Public Preview、瀏覽器／responsive／PWA 最終
+  evidence 完成後，狀態才可標記 `Ready for Final Human QA`。
+
 ## Today Expense Date Simplification — Production Released
 
 - Branch：`codex/today-expense-date-simplify-20260812`；base：`6bd16ba`。

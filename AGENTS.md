@@ -733,6 +733,10 @@ Driver 的設定入口順序：
 - 資料模型變更前必須提出 Migration 方案。
 - UI 修改不得改變收入、支出、工時或設定邏輯。
 - 若有資料遺失風險，立即停止並回報。
+- 顯式「儲存」操作只有在 canonical state 已成功寫入 durable storage 並通過既有
+  read-back 驗證後，才能顯示成功、清除 draft 或更新 summary；失敗時必須保留
+  draft、不得顯示假成功。最近一次 Undo 必須綁定原始日期與資料 identity，日期
+  切換後不得作用於其他紀錄。
 
 ## Existing Feature Protection
 

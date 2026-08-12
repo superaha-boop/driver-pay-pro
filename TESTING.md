@@ -1,5 +1,26 @@
 # Driver Pay Pro Testing
 
+## Current Candidate — Active Date + Save Feedback Hotfix
+
+- Date isolation：2026-07-04 的 header、收入、小費、工時、支出、刪除與 Undo 都必須
+  命中同一日期；今天與其他歷史日期不變。invalid／mismatch 阻止寫入且禁止 today
+  fallback；多次切換日期不得串資料。
+- Expense：只有一個可操作日期，payment date 等於 `activeRecordDate`；金額吃滿剩餘
+  空間、備註操作 96–112px、預設收合、成功後收合，320px 與 large mode 無 overflow。
+- Expense save：驗證 saving → persistence → saved、summary、reset、Snackbar、Undo、
+  storage read-back；失敗保留 amount／note、不顯示成功且可 retry。
+- Tip save：驗證單筆加入、KPI／時薪 refresh、reset、Snackbar、同日期 Undo、重複提交
+  guard 與 persistence failure。
+- Today KPI：覆蓋 0、29、59、60、61、70、120、126 分鐘；精密計時器仍為
+  `00:00:00`，時薪為 gross income ÷ effective hours，目標 disclosure 不隱藏三大 KPI。
+- Navigation：Today ↔ Calendar 十次、Reports／AI／Driver 返回、歷史 Calendar →
+  Today；全頁完整 render 且 Console 無 uncaught error。
+- Responsive／PWA：320／375／390／393／430px × standard／comfort／large，檢查
+  KPI、amount/note、Snackbar、Bottom Navigation、Manifest、v39 offline App Shell 與
+  `driverPayApp.v2` 保留。
+- 目前全部 Node tests：421/421 Passed。實體 iPhone Safari／installed PWA 只在最後
+  Public Preview 做一次 Human QA。
+
 ## Released — Installed-PWA Date Picker Single Activation
 
 - 日期 input 不再由 `primeInstalledPwaFirstInput()` 提前 focus。

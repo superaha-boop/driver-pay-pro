@@ -16,6 +16,18 @@
 
 ## Unreleased
 
+### 2026-08-12 — Active Date + Save Feedback Hotfix Candidate
+
+- 將 Today 顯式寫入與最近一次 Undo 綁定唯一 `activeRecordDate`；invalid／mismatch
+  阻止寫入並保留草稿，不 fallback 到今天。
+- Calendar 維持唯讀，Calendar → Today 返回完整 render；支出移除第二日期控制，
+  amount 與 96–112px note action 同排。
+- 支出與小費新增採 persistent-first Saving／Saved feedback、summary refresh、draft
+  reset、五秒 Snackbar Undo；失敗不顯示假成功。
+- Today KPI 與自然工時格式維持 canonical gross hourly formula；App Shell candidate
+  升至 v39，資料 key、schema、Manifest 與 Production 均未變。
+- 全部 Node tests 421/421 Passed；等待 Public Preview 的一次 Final Human QA。
+
 ### 2026-08-12 — Today Expense Date Simplification Released
 
 - Today 每日紀錄只保留唯一原生日期卡；標題與支出摘要不再重複相同日期。

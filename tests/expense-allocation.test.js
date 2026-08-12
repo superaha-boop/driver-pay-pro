@@ -105,8 +105,8 @@ test("修改金額、months 與 startMonth 會由原始付款即時計算", () =
 
 test("儲存流程在分月與一次支出間切換並同步清理", () => {
   const source = extractFunction("saveSmartExpense");
-  assert.match(source, /entry\.expenseAllocations\[category\] = \{[\s\S]*?months: selectedExpenseMonths\(\),[\s\S]*?startMonth: expenseDraft\.startMonth/);
-  assert.match(source, /delete entry\.expenseAllocations\[category\]/);
+  assert.match(source, /entry\.expenseAllocations\[request\.category\] = \{[\s\S]*?months: request\.months,[\s\S]*?startMonth: request\.startMonth/);
+  assert.match(source, /delete entry\.expenseAllocations\[request\.category\]/);
   assert.match(source, /delete draft\.expenseAllocations\[category\]/);
   assert.match(extractFunction("removeCalendarExpense"), /delete record\.expenseAllocations\?\.\[category\]/);
 });
