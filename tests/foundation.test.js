@@ -87,6 +87,6 @@ test("Showcase remains isolated and Hotfix App Shell uses v40", () => {
   const nav = indexHtml.match(/<nav class="nav"[\s\S]*?<\/nav>/)?.[0] || "";
   assert.doesNotMatch(nav, /design-system/i);
   assert.doesNotMatch(serviceWorker, /design-system\.html/);
-  assert.match(serviceWorker, /driver-pay-pro-v40/);
+  assert.match(serviceWorker, /driver-pay-pro-v41/);
   assert.doesNotMatch(serviceWorker, /driver-pay-pro-v16/);
 });

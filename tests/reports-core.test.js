@@ -359,6 +359,6 @@ test("Reports 狀態不再讀寫 legacy localStorage 設定並保留唯讀介面
 });
 
 test("Local-first V1.1 App Shell 使用 Service Worker cache v40", () => {
-  assert.match(serviceWorker, /driver-pay-pro-v40/);
+  assert.match(serviceWorker, /driver-pay-pro-v41/);
   assert.doesNotMatch(serviceWorker, /driver-pay-pro-v11/);
 });

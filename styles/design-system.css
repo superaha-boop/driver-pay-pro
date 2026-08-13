@@ -86,6 +86,8 @@
   --color-brand: #15966f;
   --color-brand-hover: #0f8562;
   --color-brand-pressed: #087653;
+  --color-brand-strong: #087653;
+  --color-brand-hero: #087653;
   --color-brand-soft: #e3f5ed;
   --color-brand-subtle: #f1f8f5;
 
@@ -123,6 +125,27 @@
   --color-danger-soft: #fff0ef;
   --color-info: #346f87;
   --color-info-soft: #edf5f8;
+
+  /* Controls, navigation, charts, and feedback */
+  --color-input-bg: #ffffff;
+  --color-input-border: #dce4df;
+  --color-input-placeholder: #98a29c;
+  --color-button-secondary-bg: #ffffff;
+  --color-button-disabled-bg: #e5eae7;
+  --color-button-disabled-text: #8b9690;
+  --color-nav-bg: rgba(255, 255, 255, 0.96);
+  --color-nav-border: #dde4e0;
+  --color-nav-active-bg: #e3f5ed;
+  --color-nav-inactive: #68736e;
+  --color-chart-grid: #bcc9c2;
+  --color-chart-axis: #68736e;
+  --color-chart-label: #68736e;
+  --color-chart-tooltip-bg: #203128;
+  --color-chart-tooltip-text: #ffffff;
+  --color-snackbar-bg: #203128;
+  --color-snackbar-text: #ffffff;
+  --color-snackbar-action: #aaf0d8;
+  --color-status-bar: #f3f5f4;
 
   /* Progressive-migration aliases; do not use for new UI. */
   --color-legacy-brand-secondary: #1677d2;
@@ -162,6 +185,113 @@
   --safe-area-right: env(safe-area-inset-right, 0px);
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --safe-area-left: env(safe-area-inset-left, 0px);
+
+  /* Canonical semantic aliases used by the Appearance system. */
+  --app-bg: var(--color-background);
+  --surface: var(--color-surface);
+  --surface-elevated: var(--color-surface-elevated);
+  --surface-secondary: var(--color-surface-secondary);
+  --surface-muted: var(--color-surface-muted);
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --text-tertiary: var(--color-text-tertiary);
+  --text-disabled: var(--color-text-disabled);
+  --text-on-primary: var(--color-text-inverse);
+  --border: var(--color-border-default);
+  --border-strong: var(--color-border-strong);
+  --divider: var(--color-border-subtle);
+  --primary: var(--color-brand);
+  --primary-hover: var(--color-brand-hover);
+  --primary-soft: var(--color-brand-soft);
+  --success: var(--color-success);
+  --warning: var(--color-warning);
+  --danger: var(--color-danger);
+  --input-bg: var(--color-input-bg);
+  --input-border: var(--color-input-border);
+  --input-placeholder: var(--color-input-placeholder);
+  --button-secondary-bg: var(--color-button-secondary-bg);
+  --button-disabled-bg: var(--color-button-disabled-bg);
+  --button-disabled-text: var(--color-button-disabled-text);
+  --nav-bg: var(--color-nav-bg);
+  --nav-border: var(--color-nav-border);
+  --nav-active-bg: var(--color-nav-active-bg);
+  --nav-inactive: var(--color-nav-inactive);
+  --chart-grid: var(--color-chart-grid);
+  --chart-axis: var(--color-chart-axis);
+  --chart-label: var(--color-chart-label);
+  --chart-tooltip-bg: var(--color-chart-tooltip-bg);
+  --chart-tooltip-text: var(--color-chart-tooltip-text);
+  --overlay: var(--color-overlay);
+  --snackbar-bg: var(--color-snackbar-bg);
+  --snackbar-text: var(--color-snackbar-text);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-brand: #20805f;
+  --color-brand-hover: #29946c;
+  --color-brand-pressed: #176b50;
+  --color-brand-strong: #5fd5aa;
+  --color-brand-hero: #075b43;
+  --color-brand-soft: #173c30;
+  --color-brand-subtle: #132b23;
+
+  --color-calendar-heat-1: #153028;
+  --color-calendar-heat-2: #1a4033;
+  --color-calendar-heat-3: #20523f;
+  --color-calendar-heat-4: #28684f;
+
+  --color-background: #101411;
+  --color-surface: #171d19;
+  --color-surface-secondary: #202722;
+  --color-surface-elevated: #1c231f;
+  --color-surface-muted: #141a16;
+
+  --color-text-primary: #eef4f0;
+  --color-text-secondary: #abb6b0;
+  --color-text-tertiary: #87938c;
+  --color-text-inverse: #f7fbf8;
+  --color-text-disabled: #68736d;
+
+  --color-border-subtle: #27302b;
+  --color-border-default: #333d37;
+  --color-border-strong: #4a5750;
+
+  --color-success: #5fd5aa;
+  --color-success-soft: #173c30;
+  --color-warning: #e4b85f;
+  --color-warning-soft: #3a301c;
+  --color-danger: #ff8e86;
+  --color-danger-soft: #3b2322;
+  --color-info: #82c5dd;
+  --color-info-soft: #17303a;
+
+  --color-input-bg: #1b221e;
+  --color-input-border: #3a453f;
+  --color-input-placeholder: #7d8982;
+  --color-button-secondary-bg: #202722;
+  --color-button-disabled-bg: #252d28;
+  --color-button-disabled-text: #758079;
+  --color-nav-bg: rgba(20, 26, 22, 0.96);
+  --color-nav-border: #303a34;
+  --color-nav-active-bg: #173c30;
+  --color-nav-inactive: #98a39d;
+  --color-chart-grid: #4a5750;
+  --color-chart-axis: #a2aea7;
+  --color-chart-label: #b2bdb7;
+  --color-chart-tooltip-bg: #e7efea;
+  --color-chart-tooltip-text: #152019;
+  --color-snackbar-bg: #e7efea;
+  --color-snackbar-text: #152019;
+  --color-snackbar-action: #087653;
+  --color-status-bar: #101411;
+
+  --color-overlay: rgba(0, 0, 0, 0.62);
+  --color-focus-ring: rgba(95, 213, 170, 0.32);
+  --shadow-soft: 0 2px 10px rgba(0, 0, 0, 0.16);
+  --shadow-card: 0 4px 18px rgba(0, 0, 0, 0.2);
+  --shadow-overlay: 0 18px 48px rgba(0, 0, 0, 0.5);
 }
 
 html[data-display-size="comfort"] {
@@ -196,7 +326,7 @@ html[data-display-size="comfort"] {
   --today-secondary-label-size: 14px;
   --today-secondary-value-size: clamp(34px, 10.8vw, 44px);
   --display-body-line-height: 1.6;
-  --display-secondary-color: #506159;
+  --display-secondary-color: var(--color-text-secondary);
 }
 
 html[data-display-size="large"] {
@@ -231,7 +361,7 @@ html[data-display-size="large"] {
   --today-secondary-label-size: 15px;
   --today-secondary-value-size: clamp(36px, 11.5vw, 46px);
   --display-body-line-height: 1.65;
-  --display-secondary-color: #46534c;
+  --display-secondary-color: var(--color-text-secondary);
 }
 
 /* Typography primitives */

@@ -1,8 +1,30 @@
 # Driver Pay Pro 開發交接摘要
 
-更新日期：2026-08-12
+更新日期：2026-08-13
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
+
+## Appearance / Dark Mode — Human QA Pending
+
+- Branch：`codex/appearance-dark-mode`；base：`1e7dffb`；commit message：
+  `feat: add full app appearance and dark mode`。`main` 未合併，Production 未部署。
+- Driver「常用」新增單一「外觀」設定：跟隨系統／淺色／深色。缺少或非法舊值
+  安全回到 `system`；新保存只寫入 `settings.appearance`。
+- Root 使用 `data-appearance` 保存偏好語意、`data-theme` 表示實際 light／dark。
+  `prefers-color-scheme` listener 只註冊一次；固定 Light／Dark 不受 OS change 覆蓋。
+- Appearance 切換不呼叫 `renderAll()`、不 reload、不重建 view，不清除
+  activeRecordDate、Calendar／Reports session state、表單草稿或 disclosure state。
+- Semantic tokens、Dark palette、輸入、按鈕、Calendar heatmap、Reports CSS chart、
+  AI、Driver、Snackbar、Bottom Navigation 與安全 PWA 啟動色已完成。Light 模式
+  保留現有視覺，Dark 不使用純黑或高亮螢光綠。
+- `manifest.webmanifest` 只將啟動背景改為非白色品牌深綠；Service Worker 升至 v41，
+  仍禁止 `skipWaiting()`／`clients.claim()`／`controllerchange` reload。
+- 439/439 Node tests、lint、inline JS、Manifest／SW syntax、瀏覽器 Console 與
+  225 組響應式矩陣已通過；完成 `npm run release:check`、push 與 Public Preview
+  後，狀態為 `Ready for Appearance Dark Mode Human QA`。
+- Human QA 必須在同一輪完成：三個 Appearance、OS Light↔Dark live change、
+  Safari／installed PWA cold launch、五個主分頁、三種 display size、離線開啟、
+  重開保留與無白色閃屏。通過前不得 merge main 或 Production deploy。
 
 ## Active Date + Today Save Feedback Hotfix — Human QA Pending
 

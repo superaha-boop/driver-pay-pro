@@ -1067,3 +1067,23 @@
   當天其他收入、工時、支出或資料。
 - Impact: Today 小費 UI、tests、docs 與 v40；無 schema、storage key、Manifest、
   Calendar ownership、Reports／AI calculation、Supabase 或 Production 變更。
+
+## D-063 — Canonical Appearance and Dark Mode architecture
+
+- Date: 2026-08-13
+- Status: Public Preview Candidate；Human QA Pending
+- Decision:
+  - Driver 外觀固定提供 system／light／dark，預設 system；只保存可選的
+    `settings.appearance`，舊資料不需要 migration。
+  - Root `data-appearance` 表示偏好，`data-theme` 表示 resolved theme；system 即時
+    監聽 `prefers-color-scheme`，resolved 值不寫入 state。
+  - `styles/design-system.css` semantic tokens 是全 App 唯一 Light／Dark 色彩來源；
+    Reports 現有 CSS chart 直接使用 tokens，不建立另一套 chart state。
+  - Theme 切換不 reload、不 renderAll、不改 activeRecordDate、頁面 context、草稿、
+    disclosure、displaySize、WorkRecord 或 canonical calculations。
+  - Theme 在首屏 render 前套用，runtime theme-color 同步；Manifest 使用非白啟動
+    背景，v41 保留 deferred Service Worker activation。
+- Reason: Dark Mode 必須是完整產品能力，不是單頁換色；同時不能讓 Appearance 成為
+  資料或互動風險。
+- Impact: `index.html`、`styles/design-system.css`、Manifest、v41、tests 與永久文件；
+  無 storage key、schema、Supabase、migration、正式資料或 Production 變更。
