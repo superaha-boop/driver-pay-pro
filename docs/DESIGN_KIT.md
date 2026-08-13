@@ -1,8 +1,8 @@
 # Driver Pay Pro Design Kit
 
-Version: 1.3
+Version: 1.4
 
-更新日期：2026-07-29
+更新日期：2026-08-13
 
 ## 文件定位
 
@@ -48,6 +48,15 @@ input 本體保持可命中。不得在同一次 click 疊加 `showPicker()`。
 ### Apple Native First
 
 優先採用 iPhone 使用者熟悉的操作模式，但不得複製 Apple 品牌素材。
+
+### Appearance First
+
+- 外觀固定提供跟隨系統、淺色、深色，預設跟隨系統。
+- Dark Mode 使用深灰綠與分層 surface，不採純黑、螢光品牌色或亮邊框。
+- 外觀切換只改視覺，不改資料、日期、表單草稿、分頁 context 或 display size。
+- 所有頁面必須共用 Design System semantic tokens；不得建立頁面專用 Dark palette。
+- iPhone Safari／installed PWA 必須檢查 cold launch、safe area、Bottom Navigation、
+  原生 Picker、鍵盤、離線與 OS 外觀即時切換。
 
 ### Today First
 

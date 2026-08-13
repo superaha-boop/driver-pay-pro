@@ -1,8 +1,32 @@
 # Driver Pay Pro 專案固定背景
 
-更新日期：2026-08-12
+更新日期：2026-08-13
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
+
+## Appearance / Dark Mode — Human QA Passed / Release Authorized
+
+- Branch：`codex/appearance-dark-mode`；base：`1e7dffb`；功能 commit：`ded1393`。
+  Product Owner 已於 2026-08-13 完成實體 iPhone Safari／installed PWA Human QA，
+  High Priority 問題為無，並明確授權一般合併 `main`、Production deployment 與
+  Production Smoke QA。
+- Driver「常用」新增「外觀」：跟隨系統／淺色／深色；預設為跟隨系統，唯一
+  canonical setting 為可選的 `settings.appearance`，合法值為 `system`、`light`、
+  `dark`。
+- `system` 只保存使用者偏好；實際 resolved theme 由
+  `prefers-color-scheme` 決定，不寫回設定。OS 外觀變更會即時更新，不 reload、
+  不清除日期、草稿、分頁或 disclosure state。
+- `<html data-appearance data-theme>` 與 `styles/design-system.css` semantic tokens
+  是全 App Appearance 單一來源；Today、Calendar、Reports、AI、Driver、表單、
+  Bottom Navigation、狀態與圖表共同使用，不建立頁面專用暗色公式。
+- `settings.displaySize` 與 Appearance 完全獨立；`driverPayApp.v2`、WorkRecord、
+  calculations、Supabase 與資料內容均未變。
+- 啟動腳本在正式 CSS 與首屏 render 前套用 resolved theme；runtime theme-color
+  隨主題更新，Manifest 使用非白色品牌啟動背景。App Shell candidate 為
+  `driver-pay-pro-v41`，仍採等待下次自然啟動的安全更新策略。
+- 439/439 Node tests 與 225 組 Appearance × Display Size × 5 viewport × 5 pages
+  瀏覽器檢查通過；實體 iPhone Safari／installed PWA Human QA 已通過，Release
+  Candidate 已核准，正式合併與部署流程執行中。
 
 ## Active Date + Save Feedback Hotfix — Public Preview Candidate
 

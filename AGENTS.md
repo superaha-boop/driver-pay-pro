@@ -923,6 +923,24 @@ Codex 內建預覽不能取代 Chrome、Safari、iPhone 與 PWA 實機測試。
 
 ## Completion Status
 
+## Appearance and Dark Mode Rules
+
+- 外觀唯一 durable preference 為可選的 `settings.appearance`，合法值只有
+  `system`、`light`、`dark`；缺少或非法值一律使用 `system`，不得 migration 或
+  批量改寫舊資料。
+- Root `data-appearance` 表示使用者偏好，`data-theme` 只表示 resolved light／dark。
+  system 必須使用 `prefers-color-scheme` 並即時反應 OS change；resolved theme
+  不得寫入 state。
+- 全 App Light／Dark 必須使用 `styles/design-system.css` semantic tokens；不得在
+  Today、Calendar、Reports、AI、Driver 或圖表建立頁面專用 theme state／palette。
+- Appearance 與 `settings.displaySize` 完全獨立；切換外觀不得 reload、renderAll、
+  清除 activeRecordDate、頁面 context、未儲存草稿或 disclosure state。
+- Theme 必須在首屏 render 前套用，避免錯誤主題閃爍；runtime `theme-color` 與 PWA
+  啟動背景需相容 Dark Mode。Service Worker 仍禁止可操作後強制接管或 reload。
+- Appearance Sprint 的 Human QA 必須一次覆蓋 iPhone Safari、installed PWA、
+  system Light↔Dark、固定 Light／Dark、三種 display size、離線與冷啟動；通過前
+  不得 merge main 或部署 Production。
+
 Codex 完成程式後只能標示：
 
 `Status: Ready for Human QA`

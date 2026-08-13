@@ -1,7 +1,7 @@
 # Driver Pay Pro Design System
 
-Version: 1.2
-更新日期：2026-07-29
+Version: 1.3
+更新日期：2026-08-13
 
 ## 文件定位
 
@@ -93,6 +93,23 @@ typography，不使用 `zoom`、`transform: scale()` 或單一全域 font-size�
 `--display-calendar-today-circle-size`、`--display-nav-label-size` 與
 `--display-body-line-height`。Calendar 日期固定 14／16／20px、Today circle
 固定 34／36／40px；窄螢幕 media query 不得覆寫為較小值。
+
+#### Appearance and resolved theme
+
+- `<html data-appearance>` 表示使用者偏好：`system`、`light`、`dark`；
+  `<html data-theme>` 只表示目前實際套用的 `light` 或 `dark`。
+- `system` 使用 `prefers-color-scheme` 即時解析；resolved theme 不保存到 state，
+  避免 OS 改變後設定被鎖死。
+- 新 UI 必須使用 semantic aliases：`--app-bg`、`--surface*`、`--text-*`、
+  `--border*`、`--primary*`、`--input-*`、`--nav-*`、`--chart-*`、`--overlay`、
+  `--snackbar-*`。不得為單一頁面硬編碼另一套 Dark palette。
+- Dark 使用深灰綠背景與分層 surface，不使用純黑；品牌綠降低亮度，只保留於
+  主要 CTA、選取、正向狀態與 heatmap。危險操作繼續使用 danger tokens。
+- Appearance 與 `data-display-size` 正交；外觀不得改字級，字級不得改色彩。
+- Reports 目前使用 DOM／CSS chart，直接由 chart tokens 更新，不需要重建圖表；
+  未來若導入 Canvas，必須監聽 `driverpay:themechange` 並重繪目前資料。
+- 首屏必須在正式 stylesheet 與 App render 前套用 resolved theme，並同步 runtime
+  `theme-color`；PWA 啟動背景不得固定為白色。
 
 #### Disclosure and Chevron
 

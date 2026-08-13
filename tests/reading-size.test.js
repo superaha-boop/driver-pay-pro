@@ -91,10 +91,10 @@ test("執行期與新寫入只使用 canonical settings.displaySize", () => {
 });
 
 test("首次繪製前會讀取新欄位並相容舊欄位", () => {
-  assert.match(html, /<html lang="zh-Hant" data-display-size="standard">/);
+  assert.match(html, /<html lang="zh-Hant" data-display-size="standard" data-theme="light" data-appearance="system">/);
   assert.match(html, /const hasDisplaySize = Object\.prototype\.hasOwnProperty\.call\(settings, "displaySize"\)/);
   assert.match(html, /const candidate = hasDisplaySize \? settings\.displaySize : settings\.aiReportsReadingSize/);
-  assert.match(html, /applyDisplaySize\(state\.settings\.displaySize\);\s*renderBrandAttribution\(\)/);
+  assert.match(html, /applyAppearance\(state\.settings\.appearance\);[\s\S]*?applyDisplaySize\(state\.settings\.displaySize\);\s*renderBrandAttribution\(\)/);
   assert.match(extractFunction("applyDisplaySize"), /document\.documentElement\.dataset\.displaySize = normalized/);
 });
 
@@ -202,5 +202,5 @@ test("Today KPI 共用數字字體規格且工時單位降階", () => {
 });
 
 test("HTML、CSS 與 JavaScript 變更同步更新 App Shell cache", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v40"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v41"/);
 });

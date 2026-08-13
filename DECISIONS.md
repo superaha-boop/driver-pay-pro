@@ -1245,3 +1245,27 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
   刪除整天紀錄。
 - Impact: Today 小費 UI／persistence／tests／docs／v40 App Shell；無 schema、storage
   key、Calendar／Reports／AI formula、Manifest、Supabase 或 Production 變更。
+
+## D-063 — Canonical Appearance and Dark Mode Architecture
+
+- Date: 2026-08-13
+- Status: Human QA Passed；Production Release Authorized
+- Decision:
+  1. Driver 外觀固定為跟隨系統／淺色／深色，預設 system；唯一 durable preference
+     是可選的 `settings.appearance`。
+  2. Root `data-appearance` 保存偏好語意，`data-theme` 表示 resolved light／dark；
+     system 由 `prefers-color-scheme` 即時決定，不保存 resolved 值。
+  3. `styles/design-system.css` semantic tokens 是五個頁面、表單、狀態、導航與圖表
+     的唯一 Light／Dark 色彩來源；頁面不得建立第二套 theme state 或 calculation。
+  4. Appearance 與 `settings.displaySize` 正交；切換外觀不得 reload、renderAll、清除
+     日期、草稿、context 或 disclosure state。
+  5. Theme 必須在首屏 render 前套用；PWA 使用非白啟動背景與安全 deferred Service
+     Worker activation。只有 Human QA 通過並取得明確授權後才能 merge main 與部署
+     Production。
+- Validation: Product Owner 已於 2026-08-13 完成實體 iPhone Safari／installed PWA
+  Human QA，High Priority 問題為無，並明確授權一般合併 `main`、Production
+  deployment 與 Production Smoke QA。
+- Reason: 提供 iPhone 系統一致的夜間閱讀體驗，同時保護 local-first 資料與已凍結
+  的頁面責任、版型、字級和計算。
+- Impact: Appearance settings、semantic tokens、五頁視覺、Manifest 啟動色、v41 App
+  Shell、tests 與文件；無 WorkRecord、storage key、Supabase、migration 或公式變更。

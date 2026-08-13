@@ -126,5 +126,5 @@ test("平台 Accessibility、responsive 與 PWA v40 契約存在", () => {
   assert.match(html, /\.reports-platform-row[\s\S]*?grid-template-columns: minmax\(0, 1fr\) auto/);
   assert.match(html, /\.reports-platform-name[\s\S]*?text-overflow: ellipsis/);
   assert.match(html, /\.reports-important-action[\s\S]*?min-height: var\(--touch-target-min\)/);
-  assert.match(serviceWorker, /driver-pay-pro-v40/);
+  assert.match(serviceWorker, /driver-pay-pro-v41/);
 });
