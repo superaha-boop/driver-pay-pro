@@ -1,6 +1,6 @@
 # Driver Pay Pro Testing
 
-## Current Candidate — Appearance / Dark Mode
+## Release Candidate — Appearance / Dark Mode
 
 - Functional：Driver 外觀只提供 system／light／dark；預設 system；非法或缺少值
   回到 system；重新載入保留；Light／Dark 固定模式不跟 OS 變動，System 立即跟隨。
@@ -13,9 +13,12 @@
   430px × 五個主分頁。自動瀏覽器檢查共 225 組，`scrollWidth === clientWidth`。
 - PWA：首屏 render 前套用 theme；runtime theme-color 正確；Manifest 啟動背景非白；
   v41 App Shell 可離線，且沒有 `skipWaiting()`、`clients.claim()` 或強制 reload。
-- Human QA：只在 Public Preview 完成一次實體 iPhone Safari 與 installed PWA
-  檢查；包含 OS Light↔Dark、冷啟動、返回前景、離線與重開保留。
+- Human QA：Product Owner 已於 2026-08-13 完成一次實體 iPhone Safari 與 installed
+  PWA 檢查，包含三個 Appearance、五個主分頁、三種 display size、冷啟動與重開
+  保留；結果 Passed，High Priority 問題為無。
 - 目前全部 Node tests：439/439 Passed；Console 0 error／warning。
+- 發布 Gate：正式合併前重新執行 `npm run release:check`；Production READY 後再執行
+  390px、Manifest、Service Worker、Console 與主要分頁 Smoke QA。
 
 ## Current Candidate — Active Date + Save Feedback Hotfix
 

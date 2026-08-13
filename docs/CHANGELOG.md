@@ -16,7 +16,7 @@
 
 ## Unreleased
 
-### 2026-08-13 — Appearance / Dark Mode Candidate
+### 2026-08-13 — Appearance / Dark Mode Human QA Passed
 
 - Driver「常用」新增跟隨系統／淺色／深色，預設跟隨系統並保存於可選的
   `settings.appearance`；舊資料無此欄位仍正常。
@@ -27,7 +27,8 @@
 - 首屏 render 前套用 resolved theme；Manifest 使用非白色啟動背景，Service Worker
   candidate 升至 v41 且保留 deferred activation。
 - 新增 16 項 Appearance 回歸；全部 439/439 Node tests 與 225 組手機響應式矩陣
-  通過。等待 Public Preview 的一次 iPhone Safari／installed PWA Human QA。
+  通過。Product Owner 的 iPhone Safari／installed PWA Human QA 已 Passed，High
+  Priority 問題為無，Release Candidate 已核准正式合併、部署與 Smoke QA。
 
 ### 2026-08-12 — Active Date + Save Feedback Hotfix Candidate
 

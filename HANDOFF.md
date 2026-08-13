@@ -4,10 +4,10 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
-## Appearance / Dark Mode — Human QA Pending
+## Appearance / Dark Mode — Human QA Passed / Release Authorized
 
-- Branch：`codex/appearance-dark-mode`；base：`1e7dffb`；commit message：
-  `feat: add full app appearance and dark mode`。`main` 未合併，Production 未部署。
+- Branch：`codex/appearance-dark-mode`；base：`1e7dffb`；功能 commit：`ded1393`；
+  commit message：`feat: add full app appearance and dark mode`。
 - Driver「常用」新增單一「外觀」設定：跟隨系統／淺色／深色。缺少或非法舊值
   安全回到 `system`；新保存只寫入 `settings.appearance`。
 - Root 使用 `data-appearance` 保存偏好語意、`data-theme` 表示實際 light／dark。
@@ -20,11 +20,11 @@ GitHub：`superaha-boop/driver-pay-pro`
 - `manifest.webmanifest` 只將啟動背景改為非白色品牌深綠；Service Worker 升至 v41，
   仍禁止 `skipWaiting()`／`clients.claim()`／`controllerchange` reload。
 - 439/439 Node tests、lint、inline JS、Manifest／SW syntax、瀏覽器 Console 與
-  225 組響應式矩陣已通過；完成 `npm run release:check`、push 與 Public Preview
-  後，狀態為 `Ready for Appearance Dark Mode Human QA`。
-- Human QA 必須在同一輪完成：三個 Appearance、OS Light↔Dark live change、
-  Safari／installed PWA cold launch、五個主分頁、三種 display size、離線開啟、
-  重開保留與無白色閃屏。通過前不得 merge main 或 Production deploy。
+  225 組響應式矩陣已通過。Product Owner 已於 2026-08-13 完成三個 Appearance、
+  Safari／installed PWA、五個主分頁、三種 display size 與重開保留的 Human QA；
+  High Priority 問題為無。
+- Product Owner 已明確授權一般合併 `main`、Production deployment 與 Production
+  Smoke QA；目前狀態為 Release Candidate Approved，正式發布流程執行中。
 
 ## Active Date + Today Save Feedback Hotfix — Human QA Pending
 

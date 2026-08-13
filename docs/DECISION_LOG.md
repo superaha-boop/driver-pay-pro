@@ -1071,7 +1071,7 @@
 ## D-063 — Canonical Appearance and Dark Mode architecture
 
 - Date: 2026-08-13
-- Status: Public Preview Candidate；Human QA Pending
+- Status: Human QA Passed；Production Release Authorized
 - Decision:
   - Driver 外觀固定提供 system／light／dark，預設 system；只保存可選的
     `settings.appearance`，舊資料不需要 migration。
@@ -1083,6 +1083,9 @@
     disclosure、displaySize、WorkRecord 或 canonical calculations。
   - Theme 在首屏 render 前套用，runtime theme-color 同步；Manifest 使用非白啟動
     背景，v41 保留 deferred Service Worker activation。
+- Validation: Product Owner 已於 2026-08-13 完成實體 iPhone Safari／installed PWA
+  Human QA，High Priority 問題為無，並明確授權一般合併 `main`、Production
+  deployment 與 Production Smoke QA。
 - Reason: Dark Mode 必須是完整產品能力，不是單頁換色；同時不能讓 Appearance 成為
   資料或互動風險。
 - Impact: `index.html`、`styles/design-system.css`、Manifest、v41、tests 與永久文件；
