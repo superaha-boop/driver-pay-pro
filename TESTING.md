@@ -1,6 +1,6 @@
 # Driver Pay Pro Testing
 
-## Release Candidate — Appearance / Dark Mode
+## Production Released — Appearance / Dark Mode
 
 - Functional：Driver 外觀只提供 system／light／dark；預設 system；非法或缺少值
   回到 system；重新載入保留；Light／Dark 固定模式不跟 OS 變動，System 立即跟隨。
@@ -19,6 +19,10 @@
 - 目前全部 Node tests：439/439 Passed；Console 0 error／warning。
 - 發布 Gate：正式合併前重新執行 `npm run release:check`；Production READY 後再執行
   390px、Manifest、Service Worker、Console 與主要分頁 Smoke QA。
+- Production：merge commit `b438755` 對應 deployment
+  `dpl_8HPQNMTp2Qsq2AsUaRYdzdux4YBU`；狀態 READY。390px 五個主分頁無 overflow，
+  system／light／dark、theme-color、Manifest standalone、v41、Console 與最近一小時
+  Runtime errors 均驗證通過。
 
 ## Current Candidate — Active Date + Save Feedback Hotfix
 

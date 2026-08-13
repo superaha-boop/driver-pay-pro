@@ -4,10 +4,10 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
-## Appearance / Dark Mode — Human QA Passed / Release Authorized
+## Appearance / Dark Mode — Production Released
 
 - Branch：`codex/appearance-dark-mode`；base：`1e7dffb`；功能 commit：`ded1393`；
-  commit message：`feat: add full app appearance and dark mode`。
+  QA 文件 commit：`c48207f`；`main` merge commit：`b438755`。
 - Driver「常用」新增單一「外觀」設定：跟隨系統／淺色／深色。缺少或非法舊值
   安全回到 `system`；新保存只寫入 `settings.appearance`。
 - Root 使用 `data-appearance` 保存偏好語意、`data-theme` 表示實際 light／dark。
@@ -23,8 +23,10 @@ GitHub：`superaha-boop/driver-pay-pro`
   225 組響應式矩陣已通過。Product Owner 已於 2026-08-13 完成三個 Appearance、
   Safari／installed PWA、五個主分頁、三種 display size 與重開保留的 Human QA；
   High Priority 問題為無。
-- Product Owner 已明確授權一般合併 `main`、Production deployment 與 Production
-  Smoke QA；目前狀態為 Release Candidate Approved，正式發布流程執行中。
+- 已一般合併並推送 `main`。Production deployment
+  `dpl_8HPQNMTp2Qsq2AsUaRYdzdux4YBU` 為 `READY`，正式網址為
+  `https://driver-pay-app.vercel.app`；390px 五頁、三種外觀、Console、Manifest、
+  v41 Service Worker 與 Runtime errors Smoke QA 全部通過。
 
 ## Active Date + Today Save Feedback Hotfix — Human QA Pending
 

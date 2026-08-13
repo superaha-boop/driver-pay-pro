@@ -1249,7 +1249,7 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
 ## D-063 — Canonical Appearance and Dark Mode Architecture
 
 - Date: 2026-08-13
-- Status: Human QA Passed；Production Release Authorized
+- Status: Production Released
 - Decision:
   1. Driver 外觀固定為跟隨系統／淺色／深色，預設 system；唯一 durable preference
      是可選的 `settings.appearance`。
@@ -1264,7 +1264,9 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
      Production。
 - Validation: Product Owner 已於 2026-08-13 完成實體 iPhone Safari／installed PWA
   Human QA，High Priority 問題為無，並明確授權一般合併 `main`、Production
-  deployment 與 Production Smoke QA。
+  deployment 與 Production Smoke QA。功能已由 merge commit `b438755` 發布；
+  Production deployment `dpl_8HPQNMTp2Qsq2AsUaRYdzdux4YBU` 為 READY，390px 五頁、
+  三種外觀、Manifest、v41、Console 與 Runtime errors Smoke QA 通過。
 - Reason: 提供 iPhone 系統一致的夜間閱讀體驗，同時保護 local-first 資料與已凍結
   的頁面責任、版型、字級和計算。
 - Impact: Appearance settings、semantic tokens、五頁視覺、Manifest 啟動色、v41 App

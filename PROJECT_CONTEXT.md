@@ -4,12 +4,12 @@
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
 
-## Appearance / Dark Mode — Human QA Passed / Release Authorized
+## Appearance / Dark Mode — Production Released
 
-- Branch：`codex/appearance-dark-mode`；base：`1e7dffb`；功能 commit：`ded1393`。
+- Branch：`codex/appearance-dark-mode`；base：`1e7dffb`；功能 commit：`ded1393`；
+  QA 文件 commit：`c48207f`；已一般合併至 `main`，merge commit：`b438755`。
   Product Owner 已於 2026-08-13 完成實體 iPhone Safari／installed PWA Human QA，
-  High Priority 問題為無，並明確授權一般合併 `main`、Production deployment 與
-  Production Smoke QA。
+  High Priority 問題為無，並明確授權正式發布。
 - Driver「常用」新增「外觀」：跟隨系統／淺色／深色；預設為跟隨系統，唯一
   canonical setting 為可選的 `settings.appearance`，合法值為 `system`、`light`、
   `dark`。
@@ -25,8 +25,10 @@
   隨主題更新，Manifest 使用非白色品牌啟動背景。App Shell candidate 為
   `driver-pay-pro-v41`，仍採等待下次自然啟動的安全更新策略。
 - 439/439 Node tests 與 225 組 Appearance × Display Size × 5 viewport × 5 pages
-  瀏覽器檢查通過；實體 iPhone Safari／installed PWA Human QA 已通過，Release
-  Candidate 已核准，正式合併與部署流程執行中。
+  瀏覽器檢查通過；合併前後 Release Check 均通過。Production deployment
+  `dpl_8HPQNMTp2Qsq2AsUaRYdzdux4YBU` 為 `READY`，正式網址為
+  `https://driver-pay-app.vercel.app`。390px 五頁、三種外觀、Console、Manifest、
+  v41 Service Worker 與 Runtime errors Smoke QA 全部通過。
 
 ## Active Date + Save Feedback Hotfix — Public Preview Candidate
 

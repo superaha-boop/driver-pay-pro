@@ -16,7 +16,7 @@
 
 ## Unreleased
 
-### 2026-08-13 — Appearance / Dark Mode Human QA Passed
+### 2026-08-13 — Appearance / Dark Mode Production Released
 
 - Driver「常用」新增跟隨系統／淺色／深色，預設跟隨系統並保存於可選的
   `settings.appearance`；舊資料無此欄位仍正常。
@@ -28,7 +28,8 @@
   candidate 升至 v41 且保留 deferred activation。
 - 新增 16 項 Appearance 回歸；全部 439/439 Node tests 與 225 組手機響應式矩陣
   通過。Product Owner 的 iPhone Safari／installed PWA Human QA 已 Passed，High
-  Priority 問題為無，Release Candidate 已核准正式合併、部署與 Smoke QA。
+  Priority 問題為無。功能已由 merge commit `b438755` 正式發布；Production
+  deployment `dpl_8HPQNMTp2Qsq2AsUaRYdzdux4YBU` 與發布後 Smoke QA 均通過。
 
 ### 2026-08-12 — Active Date + Save Feedback Hotfix Candidate
 
