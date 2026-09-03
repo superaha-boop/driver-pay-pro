@@ -148,6 +148,6 @@ test("theme-color 隨 resolved theme 更新且 manifest 維持非白色 standalo
 test("Appearance 不改主 key、WorkRecord 或 App Shell 更新策略", () => {
   assert.match(html, /const storageKey = "driverPayApp\.v2"/);
   assert.doesNotMatch(extractFunction("saveAppearance"), /expenses|tips|incomes|workSession|expenseAllocations/);
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v41"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v42"/);
   assert.doesNotMatch(serviceWorker, /skipWaiting|clients\.claim/);
 });

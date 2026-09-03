@@ -8527,7 +8527,7 @@
       };
     }
 
-    function hourlyRateQuality(totalIncome, workMinutes, validationCode = "") {
+    function hourlyRateQuality(totalIncome, workMinutes, validationCode = "", scope = "record") {
       const income = Number(totalIncome);
       const minutesValue = Number(workMinutes);
       if (validationCode === "invalid-time-range") {
@@ -8537,7 +8537,7 @@
         return { status: "missing-work-time", hourlyRate: null, workMinutes: 0 };
       }
       const roundedMinutes = Math.max(0, Math.round(minutesValue));
-      if (roundedMinutes < MIN_VALID_WORK_MINUTES) {
+      if (scope !== "period-total" && roundedMinutes < MIN_VALID_WORK_MINUTES) {
         return { status: "insufficient-work-time", hourlyRate: null, workMinutes: roundedMinutes };
       }
       if (!Number.isFinite(income) || income < 0) {
@@ -8547,7 +8547,8 @@
         return { status: "complete", hourlyRate: 0, workMinutes: roundedMinutes };
       }
       const calculatedRate = income / (roundedMinutes / 60);
-      if (!Number.isFinite(calculatedRate) || calculatedRate <= 0 || calculatedRate > MAX_REASONABLE_HOURLY_RATE) {
+      if (!Number.isFinite(calculatedRate) || calculatedRate <= 0
+        || (scope !== "period-total" && calculatedRate > MAX_REASONABLE_HOURLY_RATE)) {
         return {
           status: "abnormal-hourly-rate",
           hourlyRate: null,
@@ -11370,6 +11371,8 @@
         validHourlyRate: hourlyQuality.status === "complete",
         hourlyRateStatus: hourlyQuality.status,
         averageHourlyIncome: hourlyQuality.hourlyRate,
+        // Monthly KPI uses period totals; keep record-quality gates for weekly/AI consumers.
+        periodAverageHourlyIncome: hourlyRateQuality(summary.total, workMinutes, "", "period-total").hourlyRate ?? 0,
         validHourlyRecordCount: hourlyRecordQualities.filter(quality => quality.status === "complete").length,
         platformTotals,
         expenseSummary
@@ -11522,7 +11525,8 @@
       };
     }
 
-    function compareReportPeriods(current, previous, mode = "week") {
+    function compareReportPeriods(current, previous, mode = "week", hourlyScope = "record") {
+      const usePeriodTotals = hourlyScope === "period-total";
       const common = {
         totalIncome: compareReportMetric(current.totalIncome, previous.totalIncome, {
           currentHasData: current.hasRecords,
@@ -11532,9 +11536,11 @@
           currentHasData: current.hasRecords,
           previousHasData: previous.hasRecords
         }),
-        averageHourlyIncome: compareReportMetric(current.averageHourlyIncome, previous.averageHourlyIncome, {
-          currentHasData: current.validHourlyRate,
-          previousHasData: previous.validHourlyRate
+        averageHourlyIncome: compareReportMetric(
+          usePeriodTotals ? current.periodAverageHourlyIncome : current.averageHourlyIncome,
+          usePeriodTotals ? previous.periodAverageHourlyIncome : previous.averageHourlyIncome, {
+          currentHasData: usePeriodTotals ? current.hasRecords : current.validHourlyRate,
+          previousHasData: usePeriodTotals ? previous.hasRecords : previous.validHourlyRate
         })
       };
       if (mode === "month") {
@@ -11921,7 +11927,7 @@
         return;
       }
       const previous = aggregateReport(state.entries, getPreviousMonthRange(range));
-      const comparison = compareReportPeriods(current, previous, "month");
+      const comparison = compareReportPeriods(current, previous, "month", "period-total");
       const trend = buildMonthlyWeeklyNetTrend(state.entries, range);
       const important = findImportantReportDates(current.records, "month");
       const goal = nonNegativeNumber(state.settings.monthlyGoal);
@@ -12000,7 +12006,7 @@
           <div class="reports-secondary-kpi"><span>支出</span><strong>${money(current.totalExpenses)}</strong></div>
           <div class="reports-secondary-kpi"><span>工作天數</span><strong>${current.workDays} 天</strong></div>
           <div class="reports-secondary-kpi"><span>工作時間</span><strong>${formatReportDuration(current.totalWorkDuration)}</strong></div>
-          <div class="reports-secondary-kpi"><span>平均時薪</span><strong>${current.averageHourlyIncome === null ? "—" : money(current.averageHourlyIncome)}</strong></div>
+          <div class="reports-secondary-kpi"><span>平均時薪</span><strong>${money(current.periodAverageHourlyIncome)}</strong></div>
         </section>
         ${expenseCategoryMarkup}
         ${renderReportComparison(comparison, "month")}

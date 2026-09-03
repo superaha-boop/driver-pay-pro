@@ -1,8 +1,39 @@
 # Driver Pay Pro 開發交接摘要
 
-更新日期：2026-08-13
+更新日期：2026-09-03
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
+
+## Monthly Hourly Income — Implementation and Validation
+
+- Branch：`codex/monthly-hourly-total-20260903`；base：`3830d60`。
+- 功能 commit：`76366afe719dc55498f6dd519b6cc37f543cf507`；Push 已成功。
+- 自動 Git Preview：`dpl_7rn79m5jtq8YCpVcLJULLPzXck7S`，READY，來源功能分支及
+  commit 76366af 已核對；尚未驗證公開匿名存取，不作為 iPhone Human QA 網址。
+- 正式發布尚未執行：合併命令在執行前被安全審核拒絕，要求使用者本次明確確認
+  merge／Production。已停止，不繞過；main／origin/main 保持 `3830d60`，無差異。
+- GitHub CLI 未登入，未建立 Draft PR；Git Push 透過現有 Git 認證成功。
+- 下一步：使用者確認本次合併 main 並正式部署後，重新核對遠端、一般 merge、
+  release check、Push main、核對部署 commit 與 Production Smoke QA。
+- 原因：`aggregateReport()` 的單日品質 gate 會使有總工時的整個月份時薪仍為
+  null；月報原本只顯示「—」。用總收入 68,683、總工時 8,447 分鐘、其中一日
+  缺工時的合成紀錄已重現；沒有取得或改寫使用者手機原始紀錄。
+- 核准修正：月報 KPI 使用 `periodAverageHourlyIncome`，直接以月總收入／月總
+  工時計算；範例四捨五入為 $488。月報與上期比較也採相同口徑；週報、AI
+  及單日品質判斷保持不變。
+- `hourlyRateQuality()` 新增明確的 period-total scope，重用同一除法與有限值
+  防護；不套單日 10 分鐘與 $2,000 上限。零工時回傳月報顯示值 0。
+- UI、收入／支出／工時計算來源、WorkRecord、`driverPayApp.v2` 與 Manifest 未變。
+  Service Worker 只將 cache v41 更新至 v42，沒有強制接管或 reload。
+- 備份：`.backups/monthly-hourly-20260903/`。新增七項月報回歸。
+- `release:check` Passed：全部 446/446、Today 145/145、AI 26/26、Driver 27/27、
+  Integration 17/17、Reports 97/97、Calendar 69/69；lint 0 errors／10 既有 warnings，
+  Inline JS、SW syntax、Manifest、Production validation 與 diff check 全通過。
+- 瀏覽器 320／375／390／393／430px × 三種字級 × Light／Dark（30 組）無水平
+  overflow；月報顯示 $488、零工時 $0、重載後仍正確，原始 storage 未被瀏覽修改。
+  正常連線 Console errors／warnings 為 0；停止伺服器後由 v42 快取重載仍顯示 $488。
+  實體 iPhone Safari／installed PWA 待人工
+  確認，不宣稱桌面模擬等同真機驗收。
 
 ## Appearance / Dark Mode — Production Released
 

@@ -191,6 +191,16 @@ Order:
 
 Monthly trend uses calendar-week buckets rather than 28–31 daily bars. This produces four to six readable groups on narrow iPhones, reuses the Monday-first date contract, and creates a better accessible text alternative. Edge buckets include only dates inside the selected month; they do not pull adjacent-month values into the selected month's totals.
 
+2026-09-03 approved monthly KPI rule: average hourly income is the selected month's
+total income divided by its total canonical work hours. Read
+`aggregateReport().periodAverageHourlyIncome`; do not suppress the monthly result
+because an individual record has missing/short work time or an unusually high rate.
+The monthly KPI does not apply the record-level 10-minute or NT$2,000 thresholds.
+Zero total work time displays NT$0; no records retains the existing empty state.
+This change does not alter weekly or AI quality-gated analytics, source data, or UI.
+Monthly prior-period hourly comparison uses the same period-total scope in
+`compareReportPeriods()`; other consumers retain the default quality-gated scope.
+
 ## 10. Platform Report
 
 The Platform tab contains a compact `本週｜本月` segmented control. The default is

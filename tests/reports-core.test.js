@@ -235,6 +235,92 @@ test("零工時平均時薪使用不可用狀態，不產生 Infinity 或 NaN", 
   assert.equal(Number.isFinite(aggregate.netIncome), true);
 });
 
+test("月報直接用月總收入與月總工時，即使其中一天缺少工時", () => {
+  const records = Array.from({ length: 20 }, (_, index) => record(
+    `2026-08-${String(index + 1).padStart(2, "0")}`,
+    index < 19 ? 3400 : 4083,
+    index === 19 ? 2635 : 0,
+    (index < 18 ? 420 : index === 18 ? 0 : 887) / 60
+  ));
+  const before = JSON.stringify(records);
+  const aggregate = reports.aggregateReport(records, reports.getLocalMonthRange("2026-08"));
+  assert.equal(aggregate.totalIncome, 68683);
+  assert.equal(aggregate.netIncome, 66048);
+  assert.equal(aggregate.totalWorkDuration / 60000, 8447);
+  assert.equal(Math.round(aggregate.periodAverageHourlyIncome), 488);
+  assert.equal(aggregate.periodAverageHourlyIncome, 68683 / (8447 / 60));
+  assert.equal(aggregate.averageHourlyIncome, null, "保留週報／AI 品質判斷");
+  assert.equal(aggregate.hourlyRateStatus, "missing-work-time");
+  assert.equal(JSON.stringify(records), before, "不得改寫原始紀錄");
+});
+
+test("月報期間時薪不受單日不足 10 分鐘或超過 2000 元門檻阻擋", () => {
+  for (const hours of [2 / 60, 0.5]) {
+    const aggregate = reports.aggregateReport([
+      record("2026-08-01", 1100, 0, hours),
+      record("2026-08-02", 4000, 0, 8)
+    ], reports.getLocalMonthRange("2026-08"));
+    assert.equal(aggregate.periodAverageHourlyIncome, 5100 / (8 + hours));
+    assert.equal(aggregate.averageHourlyIncome, null);
+  }
+});
+
+test("月報時薪使用加權期間總額且不扣支出、不混入其他月份", () => {
+  const aggregate = reports.aggregateReport([
+    record("2026-07-31", 9000, 0, 12),
+    record("2026-08-01", 1000, 800, 1),
+    record("2026-08-02", 4000, 1000, 8),
+    record("2026-09-01", 9000, 0, 12)
+  ], reports.getLocalMonthRange("2026-08"));
+  assert.equal(aggregate.periodAverageHourlyIncome, 5000 / 9);
+  assert.notEqual(aggregate.periodAverageHourlyIncome, (1000 + 500) / 2);
+  assert.notEqual(aggregate.periodAverageHourlyIncome, aggregate.netIncome / 9);
+});
+
+test("月報零工時與空資料安全回傳 0，重新計算可反映工時修正", () => {
+  const range = reports.getLocalMonthRange("2026-08");
+  const records = [record("2026-08-01", 2340, 0, 0)];
+  assert.equal(reports.aggregateReport(records, range).periodAverageHourlyIncome, 0);
+  assert.equal(reports.aggregateReport([], range).periodAverageHourlyIncome, 0);
+  records[0].manualHours = 4;
+  assert.equal(reports.aggregateReport(records, range).periodAverageHourlyIncome, 585);
+});
+
+test("月報純總額口徑不套單日時薪上限，既有品質 API 預設不變", () => {
+  assert.equal(reports.hourlyRateQuality(1000, 2, "", "period-total").hourlyRate, 30000);
+  assert.equal(reports.hourlyRateQuality(1000, 2).hourlyRate, null);
+  assert.equal(reports.hourlyRateQuality(3000, 60, "", "period-total").hourlyRate, 3000);
+  assert.equal(reports.hourlyRateQuality(3000, 60).hourlyRate, null);
+  for (const [income, minutes] of [[Infinity, 60], [1000, Infinity], [NaN, 60], [1000, -1]]) {
+    assert.equal(reports.hourlyRateQuality(income, minutes, "", "period-total").hourlyRate, null);
+  }
+});
+
+test("只有月報 KPI 讀取期間直接時薪，週報保留既有取值", () => {
+  const monthly = html.slice(html.indexOf('aria-label="月報其他指標"'), html.indexOf('${expenseCategoryMarkup}'));
+  const weekly = html.slice(html.indexOf('aria-label="週報其他指標"'), html.indexOf('${renderReportExpenseCategories(current, "week")}'));
+  assert.match(monthly, /money\(current\.periodAverageHourlyIncome\)/);
+  assert.doesNotMatch(weekly, /current\.periodAverageHourlyIncome/);
+  assert.match(weekly, /current\.averageHourlyIncome/);
+});
+
+test("月報與上月時薪比較採相同總額口徑，週報／AI 預設仍保留品質 gate", () => {
+  const current = reports.aggregateReport([
+    record("2026-08-01", 1000, 0, 0), record("2026-08-02", 3000, 0, 8)
+  ], reports.getLocalMonthRange("2026-08"));
+  const previous = reports.aggregateReport([
+    record("2026-07-01", 2000, 0, 8)
+  ], reports.getLocalMonthRange("2026-07"));
+  const compared = reports.compareReportPeriods(current, previous, "month", "period-total").averageHourlyIncome;
+  assert.equal(compared.current, 500);
+  assert.equal(compared.previous, 250);
+  assert.equal(compared.delta, 250);
+  assert.equal(compared.percentage, 100);
+  assert.equal(reports.compareReportPeriods(current, previous, "month").averageHourlyIncome.status, "no-current-data");
+  const empty = reports.aggregateReport([], reports.getLocalMonthRange("2026-06"));
+  assert.equal(reports.compareReportPeriods(current, empty, "month", "period-total").averageHourlyIncome.status, "no-previous-data");
+});
+
 test("平台名稱正規化集中處理內建別名並安全保留未知平台", () => {
   assert.equal(reports.normalizePlatformKey(" Uber "), "uber");
   assert.equal(reports.normalizePlatformKey("UBER"), "uber");
@@ -359,6 +445,6 @@ test("Reports 狀態不再讀寫 legacy localStorage 設定並保留唯讀介面
 });
 
 test("Local-first V1.1 App Shell 使用 Service Worker cache v40", () => {
-  assert.match(serviceWorker, /driver-pay-pro-v41/);
+  assert.match(serviceWorker, /driver-pay-pro-v42/);
   assert.doesNotMatch(serviceWorker, /driver-pay-pro-v11/);
 });
