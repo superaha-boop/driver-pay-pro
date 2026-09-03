@@ -7,6 +7,14 @@ GitHub：`superaha-boop/driver-pay-pro`
 ## Monthly Hourly Income — Implementation and Validation
 
 - Branch：`codex/monthly-hourly-total-20260903`；base：`3830d60`。
+- 功能 commit：`76366afe719dc55498f6dd519b6cc37f543cf507`；Push 已成功。
+- 自動 Git Preview：`dpl_7rn79m5jtq8YCpVcLJULLPzXck7S`，READY，來源功能分支及
+  commit 76366af 已核對；尚未驗證公開匿名存取，不作為 iPhone Human QA 網址。
+- 正式發布尚未執行：合併命令在執行前被安全審核拒絕，要求使用者本次明確確認
+  merge／Production。已停止，不繞過；main／origin/main 保持 `3830d60`，無差異。
+- GitHub CLI 未登入，未建立 Draft PR；Git Push 透過現有 Git 認證成功。
+- 下一步：使用者確認本次合併 main 並正式部署後，重新核對遠端、一般 merge、
+  release check、Push main、核對部署 commit 與 Production Smoke QA。
 - 原因：`aggregateReport()` 的單日品質 gate 會使有總工時的整個月份時薪仍為
   null；月報原本只顯示「—」。用總收入 68,683、總工時 8,447 分鐘、其中一日
   缺工時的合成紀錄已重現；沒有取得或改寫使用者手機原始紀錄。
