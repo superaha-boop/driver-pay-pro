@@ -4,17 +4,25 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
-## Monthly Hourly Income — Implementation and Validation
+## Monthly Hourly Income — Production Released
 
 - Branch：`codex/monthly-hourly-total-20260903`；base：`3830d60`。
 - 功能 commit：`76366afe719dc55498f6dd519b6cc37f543cf507`；Push 已成功。
 - 自動 Git Preview：`dpl_7rn79m5jtq8YCpVcLJULLPzXck7S`，READY，來源功能分支及
   commit 76366af 已核對；尚未驗證公開匿名存取，不作為 iPhone Human QA 網址。
-- 正式發布尚未執行：合併命令在執行前被安全審核拒絕，要求使用者本次明確確認
-  merge／Production。已停止，不繞過；main／origin/main 保持 `3830d60`，無差異。
+- Product Owner 已於 2026-09-03 明確確認「本次合併 main 並正式部署」，解除上一輪
+  發布待確認狀態。一般 merge commit：`32e2d223d487be7ddf9d01e8f2c150d23918ec3f`；
+  main 已成功 Push，沒有 rebase、reset、force push 或歷史改寫。
+- Production deployment：`dpl_CEnizGM3wSuj4aRfna3B296KpV2C`，READY、target production、
+  Git 來源 main／32e2d22；正式網址 `https://driver-pay-app.vercel.app` 已指向此部署。
 - GitHub CLI 未登入，未建立 Draft PR；Git Push 透過現有 Git 認證成功。
-- 下一步：使用者確認本次合併 main 並正式部署後，重新核對遠端、一般 merge、
-  release check、Push main、核對部署 commit 與 Production Smoke QA。
+- 合併前後 release:check 均 Passed。Production Smoke：未登入 HTTPS 直接開啟；
+  index／Manifest／SW HTTP 200、v42、Manifest standalone、390px 五頁及返回 Today
+  無 overflow；Console 0 error／warning，Vercel 最近一小時無 runtime errors。
+- 正式程式以獨立瀏覽器的記憶體測試資料驗證 68,683／8,447 分鐘＝$488，測試後
+  恢復原記憶體，localStorage 字串完全未變；沒有讀取或更改手機正式資料。
+- iPhone 使用者只需連網開啟正式 App，讓更新下載後自然關閉／重開；不得要求
+  清除網站資料。實體 Safari／installed PWA 的本次人工驗收仍由使用者確認。
 - 原因：`aggregateReport()` 的單日品質 gate 會使有總工時的整個月份時薪仍為
   null；月報原本只顯示「—」。用總收入 68,683、總工時 8,447 分鐘、其中一日
   缺工時的合成紀錄已重現；沒有取得或改寫使用者手機原始紀錄。

@@ -12,6 +12,9 @@
 - 五手機寬度 × 三字級 × 兩外觀共 30 組無水平 overflow；月報 $488、零工時 $0、
   storage 未變、正常連線 Console 0 errors／warnings；停止伺服器後快取重載 $488。
   真實 iPhone 仍需人工確認。
+- 2026-09-03 明確發布授權後，main merge `32e2d22` 合併前後 release check 均
+  Passed。Production Smoke：五頁390px 無 overflow，記憶體 fixture 月報 $488、
+  storage 未變、Console 0 error／warning、Manifest／v42 HTTP 200，runtime errors 0。
 
 ## Production Released — Appearance / Dark Mode
 

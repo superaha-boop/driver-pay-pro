@@ -16,12 +16,14 @@
 
 ## Unreleased
 
-### 2026-09-03 — Monthly Hourly Income
+### 2026-09-03 — Monthly Hourly Income Production Released
 
 - 月報平均時薪直接採月總收入／月總工時，避免單日品質 gate 使整月顯示「—」。
 - 零工時顯示 $0；保留週報／AI 既有品質 gate、原始資料與所有介面。
 - 月報與上期的時薪比較同步採相同口徑；新增七項回歸，446/446 Node tests 與
   release:check Passed。App Shell cache 升至 v42，保留安全自然啟動更新。
+- 本次明確授權後已合併並推送 main（merge `32e2d22`），Production READY；正式站
+  月報時薪、五頁390px、Console、Manifest 及 Service Worker Smoke 驗證通過。
 
 ### 2026-08-13 — Appearance / Dark Mode Production Released
 
