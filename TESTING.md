@@ -1,5 +1,18 @@
 # Driver Pay Pro Testing
 
+## Monthly Hourly Income — 2026-09-03
+
+- 七項新增回歸：68,683／140 小時 47 分（含一日缺工時）＝約 488；不足 10 分鐘／
+  單日高時薪不阻擋月報；加權總額非每日平均且不扣支出；月份隔離；零工時、
+  空資料與修改後重算；非有限值防護；僅月報讀新值、週報／AI 品質 API 不變。
+- 原始資料序列化前後完全相同；Service Worker cache assertions 同步 v42。
+- 月報上期比較採相同期間時薪口徑；週報／AI 比較的預設品質 gate 不變。
+- release:check Passed：全部 446/446、Reports 97/97、Today 145/145、AI 26/26、
+  Driver 27/27、Integration 17/17、Calendar 69/69；lint 0 errors／10 既有 warnings。
+- 五手機寬度 × 三字級 × 兩外觀共 30 組無水平 overflow；月報 $488、零工時 $0、
+  storage 未變、正常連線 Console 0 errors／warnings；停止伺服器後快取重載 $488。
+  真實 iPhone 仍需人工確認。
+
 ## Production Released — Appearance / Dark Mode
 
 - Functional：Driver 外觀只提供 system／light／dark；預設 system；非法或缺少值

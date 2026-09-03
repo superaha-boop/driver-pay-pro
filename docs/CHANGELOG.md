@@ -16,6 +16,13 @@
 
 ## Unreleased
 
+### 2026-09-03 — Monthly Hourly Income
+
+- 月報平均時薪直接採月總收入／月總工時，避免單日品質 gate 使整月顯示「—」。
+- 零工時顯示 $0；保留週報／AI 既有品質 gate、原始資料與所有介面。
+- 月報與上期的時薪比較同步採相同口徑；新增七項回歸，446/446 Node tests 與
+  release:check Passed。App Shell cache 升至 v42，保留安全自然啟動更新。
+
 ### 2026-08-13 — Appearance / Dark Mode Production Released
 
 - Driver「常用」新增跟隨系統／淺色／深色，預設跟隨系統並保存於可選的

@@ -175,6 +175,9 @@ Version: 1.12
 - 週／月 KPI、比較、趨勢、平台總額與重要日期必須建立在 canonical calculations 與純 selector 上；renderer 不得自行複製公式。
 - 平均時薪固定為期間總收入除以期間有效工作時數；支出只影響淨收入與成本，
   不得扣入任何「時薪／平均時薪／每小時收入」。零工時不得出現 `Infinity` 或 `NaN`。
+- 月報平均時薪直接使用 `aggregateReport().periodAverageHourlyIncome`（月總收入 ÷
+  月總工時）；不受單日缺工時、少於 10 分鐘或時薪上限門檻阻擋，零工時顯示 $0。
+  週報與 AI 原有品質判斷不因此變更；不得在月報 renderer 複製除法公式。
 - 月報支出分類必須重用 `reportExpenseSummary()`；分類主數字使用月成本，分月
   支出只有在實際付款不同時才顯示兩種口徑，不得建立 Reports 專用支出公式。
 - 週趨勢使用七個每日淨收入點；月趨勢使用四至六個 Monday-first 週彙總，且月份邊界只計入選定月份日期。

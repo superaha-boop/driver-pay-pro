@@ -1,5 +1,13 @@
 # Driver Pay Pro Decision Log
 
+## D-064 — 月報時薪直接採月總額（2026-09-03）
+
+- 核准月報平均時薪＝月總收入 ÷ 月總工時；單日缺工時／極短工時／高時薪不得
+  讓整月只顯示「—」。零工時顯示 $0，不改寫任何原始紀錄。
+- 共用 aggregator 提供 `periodAverageHourlyIncome`，由既有品質 helper 的
+  period-total scope 計算；月報 renderer 不另建公式，週報／AI 品質規則不變。
+- 只修核准月報資料呈現，不修改凍結 UI。Service Worker 僅升級 cache 至 v42。
+
 本文件記錄已確認且會影響後續產品或工程工作的決策、理由與影響。它不是 commit 歷史；程式變更時間線請見 `docs/CHANGELOG.md`。
 
 ## D-001

@@ -1,8 +1,17 @@
 # Driver Pay Pro 專案固定背景
 
-更新日期：2026-08-13
+更新日期：2026-09-03
 
 > 本文件記錄已確認的產品與介面決策。新的 ChatGPT／Codex 任務開始前應先閱讀本文件與 `HANDOFF.md`。分支、提交、推送、PR 與部署屬於即時狀態，操作前仍須重新檢查實際 Git 與遠端狀態。
+
+## Monthly Hourly Income — 2026-09-03
+
+- Product Owner 核准月報平均時薪直接使用月總收入除以月總工時，不因單日資料
+  品質門檻整月顯示「—」。零工時顯示 $0，無紀錄仍保留原空狀態。
+- 月報讀取 canonical `aggregateReport().periodAverageHourlyIncome`，重用
+  `hourlyRateQuality()` 的 period-total 口徑；週報／AI 保留既有品質判斷。
+- 不修改原始紀錄、localStorage key、資料模型或 UI；App Shell 更新為 v42，
+  保留 deferred activation。發布狀態以 HANDOFF.md 與實際 Git／部署為準。
 
 ## Appearance / Dark Mode — Production Released
 

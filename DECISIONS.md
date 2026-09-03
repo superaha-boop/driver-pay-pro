@@ -1,5 +1,17 @@
 # Driver Pay Pro Decisions
 
+## D-064 — Monthly Hourly KPI Uses Month Totals
+
+- Date: 2026-09-03
+- Product Owner 明確核准：月報平均時薪＝月總收入 ÷ 月總工時，不扣支出、不取
+  每日時薪平均，不再被任何單日品質 gate 阻擋。零工時顯示 $0。
+- `aggregateReport().periodAverageHourlyIncome` 重用 `hourlyRateQuality()` 的
+  period-total scope；單日、週報與 AI 品質判斷保持原狀，沒有第二套除法公式。
+- 本決策僅覆蓋 D-035／D-045 對月報平均時薪 KPI 的品質 gate；其他分析不變。
+- 不改 UI、資料模型、原始紀錄或 storage key。更新 App Shell cache v42 以利 PWA
+  取得修正，保留等待下次自然啟動的更新策略。
+
+
 本檔是根目錄的永久決策入口，供 Codex 在每次任務開始前快速確認正式決策文件位置。
 
 為避免建立兩份互相競爭的決策來源，完整且具編號的正式決策紀錄統一維護於：
