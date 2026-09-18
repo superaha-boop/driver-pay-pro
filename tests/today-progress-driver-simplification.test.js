@@ -105,10 +105,10 @@ contract(26, "標準舒適大字仍可選擇", () => {
 contract(27, "displaySize 仍使用既有交易式儲存", () => assert.match(functionSource("saveDisplaySize"), /nextState\.settings\.displaySize = next[\s\S]*?persistStatePayload/));
 contract(28, "每日目標仍自動儲存", () => {
   assert.match(functionSource("scheduleDriverDailyGoalSave"), /setTimeout\(\(\) => saveDriverDailyGoal\(input\), 450\)/);
-  assert.match(functionSource("saveDriverDailyGoal"), /saveState\(\)/);
+  assert.match(functionSource("saveDriverDailyGoal"), /persistStatePayload\(candidate, \{ updateMemory: true \}\)/);
 });
 contract(29, "每日目標資料結構保持不變", () => {
-  assert.match(functionSource("saveDriverDailyGoal"), /state\.settings\.dailyGoal = next/);
+  assert.match(functionSource("saveDriverDailyGoal"), /candidate\.settings\.dailyGoal = next/);
   assert.doesNotMatch(functionSource("saveDriverDailyGoal"), /WorkRecord|migration|newStateField/);
 });
 contract(30, "Driver 四個主要分類仍存在", () => {
@@ -156,6 +156,6 @@ contract(44, "Reports targeted tests 保留於 release gate", () => assert.match
 contract(45, "AI targeted tests 保留於 release gate", () => assert.match(packageJson.scripts["test:ai"], /ai\.test\.js/));
 contract(46, "Integration targeted tests 保留於 release gate", () => assert.match(packageJson.scripts["test:integration"], /integration\.test\.js/));
 contract(47, "PWA App Shell 遞增至 v40 且 storage key 不變", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v42"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v43"/);
   assert.match(html, /const storageKey = "driverPayApp\.v2"/);
 });

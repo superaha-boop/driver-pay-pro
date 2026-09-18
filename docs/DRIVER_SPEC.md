@@ -37,6 +37,14 @@ Driver 第一層固定只有四個 disclosure：
 
 ## Persistence Contract
 
+- 收支設定使用 `driverSettingsCandidate()`／`commitDriverSettings()`，只在既有
+  persistence 成功後更新記憶體／成功回饋。寫入失敗保留名稱、目標、比例輸入。
+- 任何原資料讀取錯誤都會阻止設定保存，避免以fallback覆蓋資料。
+- 設定修改不呼叫 renderAll，不重建 Today 原生日期／草稿；比例與目標草稿在
+  Driver 局部重繪後保留。0% 比例合法且reload後仍為0。
+- 移除平台／支出類別須確認，只移除設定入口，保留歷史紀錄與平台實拿比例。
+  至少保留一個平台與類別。快捷選單只去重斜線別名顯示，不改舊值或紀錄。
+
 - 固定使用 `driverPayApp.v2` 與既有 settings 結構。
 - 每日目標自動儲存失敗時回復先前值，不得留下 UI 與 durable state 不一致。
 - `displaySize` 合法值為 `standard`、`comfort`、`large`。合法新欄位優先；

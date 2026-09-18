@@ -1,5 +1,20 @@
 # Driver Pay Pro Testing
 
+## Driver Settings Reliability — 2026-09-18
+
+- 18 新測試：八種設定操作的失敗／重試；成功 read-back、reload、紀錄不變；
+  讀取錯誤防覆蓋、讀回 mismatch rollback；0% 比例；歷史比例保留；非法金額／
+  比例／重複名稱／快捷防呆；daily goal draft／retry；離線；重繪邊界；alias 去重。
+- 464/464 全部測試；Today145、Driver45、AI26、Integration17、Reports97、
+  Calendar69。release:check Passed；lint0 errors／10既有warnings；TS不適用。
+- 實際瀏覽器：320／375／390／393／430 × standard／comfort／large × light／dark
+  × 五頁150組無 overflow；移除按鈕至少44px；首頁與每日目標字級下限未退縮。
+- 本機注入 Storage.setItem 失敗後原設定／草稿保留，重試與reload成功；比例與
+  月目標草稿不因恢復快捷消失；移除確認可取消。切頁10輪無storage寫入。
+- 真正停止HTTP伺服器後重新載入，v43 App Shell 可操作與保存設定。
+- 只在本機隔離origin使用測試資料；真實 iPhone／PWA 首次觸控、鍵盤、VoiceOver
+  與冷啟動仍由 Product Owner 集中驗收一次。
+
 ## Monthly Hourly Income — 2026-09-03
 
 - 七項新增回歸：68,683／140 小時 47 分（含一日缺工時）＝約 488；不足 10 分鐘／

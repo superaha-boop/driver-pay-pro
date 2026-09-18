@@ -1,8 +1,35 @@
 # Driver Pay Pro 開發交接摘要
 
-更新日期：2026-09-03
+更新日期：2026-09-18
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
+
+## Driver Settings Reliability and Usability — Ready for Human QA
+
+- Branch：`codex/driver-settings-reliability-20260918`；base：`7f4fc45`。
+- 使用者確認一次完成設定儲存可靠性與設定頁易用性；本批不新增備份還原、
+  Supabase、登入、資料模型或全面 UI 重寫。先提供一次集中 Human QA，再發布。
+- `driverSettingsCandidate()` 建立候選，`commitDriverSettings()` 重用既有安全
+  persistence，失敗不變更記憶體／清空草稿／假報成功；讀取錯誤禁止設定覆蓋。
+- 每日目標失敗保留輸入，有明確重試；比例與月目標草稿不被其他設定 render 清掉。
+  8 條收支設定路徑不再呼叫 renderAll，Today 日期與 disclosure 管線完全未改。
+- 比例 0% 不再於 normalizeSettings 被誤當空值；移除平台保留歷史比例與紀錄。
+  移除操作重用既有確認 dialog；至少保留一個平台／類別。
+- 設定頁移除重複 Driver Space 與模式摘要、快捷斜線 alias 選項去重但不改原值、
+  簡化說明、共用 SaveStatus 與次要按鈕、Lucide 移除控制至少 44px。
+- 備份：`.backups/driver-settings-reliability-20260918/`。App Shell v43，無 Manifest、
+  storage key、WorkRecord、原始紀錄或收入／工時計算公式變更。
+- Release check：464/464；Today 145、Driver 45、AI 26、Integration 17、Reports 97、
+  Calendar 69 全通過；lint 0 errors／10 舊 warnings、inline／SW／Manifest／build
+  與 diff check 通過。TypeScript 不適用（專案無 TypeScript）。
+- Browser：150 組（五寬 × 三字級 × 二外觀 × 五頁）無 overflow；移除 touch 44px；
+  390px 主收入標準／舒適／大字為 58.5／62.4／64.35px，目標為 28／34／40px。
+  切頁10輪不改 storage；注入 quota failure→draft 保留→重試→重載通過。
+  停止本機伺服器後 v43 快取可啟動與保存月目標。模擬儲存失敗時的 Console error
+  為測試預期；正常公開 Preview Console 另行驗證。
+- 實體 iPhone Safari／installed PWA 尚待一次 Human QA，不宣稱桌面等同真機。
+  驗收：設定修改重開保留、三字級／兩外觀、日期第一次點擊與三個 disclosure、
+  Today↔Calendar↔Driver、離線重開、移除取消與確認。不得清除正式 App 資料。
 
 ## Monthly Hourly Income — Production Released
 

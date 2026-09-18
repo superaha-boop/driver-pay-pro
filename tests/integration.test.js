@@ -44,7 +44,7 @@ test("AI deep link 保留精確日期且不開啟 Calendar Editor", () => {
 test("Driver 目標變更沿用既有 persistence 並立即更新 Today", () => {
   assert.match(
     html,
-    /state\.settings\.dailyGoal = next;[\s\S]*?if \(!saveState\(\)\) \{[\s\S]*?state\.settings\.dailyGoal = previous/
+    /candidate\.settings\.dailyGoal = next;[\s\S]*?if \(!persistStatePayload\(candidate, \{ updateMemory: true \}\)\)/
   );
   assert.match(html, /updateDailyGoal\(\);\s*renderStats\(\)/);
   assert.equal((html.match(/id="dailyGoal"/g) || []).length, 1);
@@ -68,7 +68,7 @@ test("五個主分頁與 session context 保持既有契約", () => {
 });
 
 test("Local-first V1 App Shell、Manifest 與 release source 保持安全", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v42"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v43"/);
   assert.match(serviceWorker, /"\.\/index\.html"/);
   assert.match(serviceWorker, /"\.\/styles\/design-system\.css"/);
   assert.equal(manifest.start_url, "./");

@@ -196,6 +196,12 @@ Version: 1.12
 
 ## Local-first V1 AI and Driver Rules
 
+- Driver 設定必須採 candidate → durable write／read-back → memory／success 的順序；
+  失敗不得假報成功或清除名稱、目標、比例草稿。設定讀取異常時禁止用 fallback
+  設定覆寫原始資料。正常設定操作不呼叫 `renderAll()`，不重建 Today 日期與表單。
+- 移除平台／支出類別須確認且只移除設定入口；保留 WorkRecord 與歷史平台比例。
+  合法 0% 必須在保存與重新讀取後保持 0%，不得因 falsy 判斷變成 100%。
+
 - AI 固定為唯讀的「營運建議／本月洞察／智慧提醒」，不得建立 Record Editor、
   外部 AI API、聊天輸入或第二套 aggregation。
 - AI 必須重用 `sharedAnalytics` 與 Reports canonical period、calculation、
