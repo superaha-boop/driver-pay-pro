@@ -7,6 +7,14 @@ GitHub：`superaha-boop/driver-pay-pro`
 ## Driver Settings Reliability and Usability — Ready for Human QA
 
 - Branch：`codex/driver-settings-reliability-20260918`；base：`7f4fc45`。
+- 功能 commit：`01ba8f0bdcf93bd1efffc517f86c423a6464d5fb`；功能分支 Push 成功。
+- Preview：`https://driver-pay-2gl5lxc8f-sky-skill-labs.vercel.app`，deployment
+  `dpl_4zcR1FBecJ6AmNnFunK6DcW9J5tY`，READY，來源為上述 branch／commit。
+  已建立並以全新匿名瀏覽器驗證臨時分享網址，不需登入；分享憑證不提交至 repository。
+  分享網址有期限，過期須重新建立，不能只交付受保護的原始網址。
+- Draft PR 建立受 GitHub integration 權限阻擋（403 Resource not accessible by
+  integration）；未建立 PR。Git Push 已成功，不受此權限限制影響。
+- main 保持 `7f4fc45`；本批沒有 merge 或 Production deployment。
 - 使用者確認一次完成設定儲存可靠性與設定頁易用性；本批不新增備份還原、
   Supabase、登入、資料模型或全面 UI 重寫。先提供一次集中 Human QA，再發布。
 - `driverSettingsCandidate()` 建立候選，`commitDriverSettings()` 重用既有安全
@@ -26,7 +34,8 @@ GitHub：`superaha-boop/driver-pay-pro`
   390px 主收入標準／舒適／大字為 58.5／62.4／64.35px，目標為 28／34／40px。
   切頁10輪不改 storage；注入 quota failure→draft 保留→重試→重載通過。
   停止本機伺服器後 v43 快取可啟動與保存月目標。模擬儲存失敗時的 Console error
-  為測試預期；正常公開 Preview Console 另行驗證。
+  為測試預期；正常公開 Preview Console 0 error／warning，390px 五頁無 overflow，
+  瀏覽不改 storage，Manifest standalone 與 SW v43 均正常。npm audit：0 vulnerabilities。
 - 實體 iPhone Safari／installed PWA 尚待一次 Human QA，不宣稱桌面等同真機。
   驗收：設定修改重開保留、三字級／兩外觀、日期第一次點擊與三個 disclosure、
   Today↔Calendar↔Driver、離線重開、移除取消與確認。不得清除正式 App 資料。

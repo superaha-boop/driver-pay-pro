@@ -12,6 +12,10 @@
 - 本機注入 Storage.setItem 失敗後原設定／草稿保留，重試與reload成功；比例與
   月目標草稿不因恢復快捷消失；移除確認可取消。切頁10輪無storage寫入。
 - 真正停止HTTP伺服器後重新載入，v43 App Shell 可操作與保存設定。
+- npm audit：0 vulnerabilities。匿名公開分享 Preview（功能 commit `01ba8f0`）
+  可直接開啟、不需登入；390px 五頁與返回 Today 無 overflow、storage 未變，
+  Console 0 error／warning、Manifest standalone、Service Worker v43 均正常。
+  Deployment：`dpl_4zcR1FBecJ6AmNnFunK6DcW9J5tY`，READY／Preview，非 Production。
 - 只在本機隔離origin使用測試資料；真實 iPhone／PWA 首次觸控、鍵盤、VoiceOver
   與冷啟動仍由 Product Owner 集中驗收一次。
 
