@@ -52,7 +52,8 @@ Priority:
 - TD-018 仍為 Partially resolved：Driver 現在阻止讀取失敗時保存fallback，但完整
   跨頁讀取異常呈現仍是後續範圍。
 - TD-014 仍為 Open：快捷選單alias只做顯示去重，未遷移歷史類別。
-- TD-008／009 維持長期實機驗證需求；本輪桌面／自動測試不等於iPhone通過。
+- TD-008／009 維持長期實機驗證需求；本輪 Product Owner 已回報集中 Human QA
+  通過，但真機自動化仍未建立，不因一次驗收將長期風險標為全部解決。
 - TD-016 完整備份還原與跨裝置保護仍為Open，本輪沒有新增／假稱可用。
 
 - Update status, evidence, priority, and timing when a debt is addressed or re-evaluated.

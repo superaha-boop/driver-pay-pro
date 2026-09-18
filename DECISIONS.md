@@ -8,7 +8,8 @@
 - 設定 render 限於 Driver，保留其他輸入；移除必須確認且不刪歷史資料或比例。
 - 四分類、字級、外觀、Today KPI、原生日期／first-input 路徑維持；只精簡重複
   Driver 頁首／模式摘要並统一回饋與觸控區。0% 是合法比例，不得還原成 100%。
-- 無 schema、migration、storage key、依賴或公式重寫；v43 candidate，集中 Human QA。
+- 無 schema、migration、storage key、依賴或公式重寫；v43 集中 Human QA 已通過，
+  Product Owner 核准一般合併 main 及正式發布，不再擴充本批產品範圍。
 
 ## D-064 — Monthly Hourly KPI Uses Month Totals
 

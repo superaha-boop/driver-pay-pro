@@ -10,7 +10,8 @@
 - 移除平台／類別需要確認，僅移除設定入口，不刪 WorkRecord，歷史比例仍保留。
 - Settings 專屬微調：去重頁首／模式摘要、alias 選項、44px Lucide 移除按鈕、
   共用 SaveStatus／secondary button。其他頁面、KPI tokens、日期事件與公式不變。
-- 無 schema、key、migration、dependency；v43 deferred activation，Human QA 待確認。
+- 無 schema、key、migration、dependency；v43 deferred activation。Product Owner
+  已確認本批 Human QA Passed，核准完成 main 合併、正式部署與 Production Smoke。
 
 ## D-064 — 月報時薪直接採月總額（2026-09-03）
 

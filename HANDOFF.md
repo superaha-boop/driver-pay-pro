@@ -4,7 +4,7 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
-## Driver Settings Reliability and Usability — Ready for Human QA
+## Driver Settings Reliability and Usability — Human QA Passed / Release Approved
 
 - Branch：`codex/driver-settings-reliability-20260918`；base：`7f4fc45`。
 - 功能 commit：`01ba8f0bdcf93bd1efffc517f86c423a6464d5fb`；功能分支 Push 成功。
@@ -14,7 +14,8 @@ GitHub：`superaha-boop/driver-pay-pro`
   分享網址有期限，過期須重新建立，不能只交付受保護的原始網址。
 - Draft PR 建立受 GitHub integration 權限阻擋（403 Resource not accessible by
   integration）；未建立 PR。Git Push 已成功，不受此權限限制影響。
-- main 保持 `7f4fc45`；本批沒有 merge 或 Production deployment。
+- Product Owner 已確認「測試完成正常，請完成最後步驟」；本批集中 Human QA
+  Passed，核准一般合併 main 與正式部署。發布前 main 為 `7f4fc45`；部署結果另補。
 - 使用者確認一次完成設定儲存可靠性與設定頁易用性；本批不新增備份還原、
   Supabase、登入、資料模型或全面 UI 重寫。先提供一次集中 Human QA，再發布。
 - `driverSettingsCandidate()` 建立候選，`commitDriverSettings()` 重用既有安全
@@ -36,9 +37,9 @@ GitHub：`superaha-boop/driver-pay-pro`
   停止本機伺服器後 v43 快取可啟動與保存月目標。模擬儲存失敗時的 Console error
   為測試預期；正常公開 Preview Console 0 error／warning，390px 五頁無 overflow，
   瀏覽不改 storage，Manifest standalone 與 SW v43 均正常。npm audit：0 vulnerabilities。
-- 實體 iPhone Safari／installed PWA 尚待一次 Human QA，不宣稱桌面等同真機。
-  驗收：設定修改重開保留、三字級／兩外觀、日期第一次點擊與三個 disclosure、
-  Today↔Calendar↔Driver、離線重開、移除取消與確認。不得清除正式 App 資料。
+- 集中 iPhone Human QA 已由 Product Owner 回報正常，不重複要求同一批驗收；
+  自動瀏覽器檢查仍不宣稱等同真機。正式部署後由 Codex 執行 Production Smoke，
+  不讀取、清除或改寫使用者手機資料。
 
 ## Monthly Hourly Income — Production Released
 

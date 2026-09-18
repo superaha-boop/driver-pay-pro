@@ -17,7 +17,8 @@
   Console 0 error／warning、Manifest standalone、Service Worker v43 均正常。
   Deployment：`dpl_4zcR1FBecJ6AmNnFunK6DcW9J5tY`，READY／Preview，非 Production。
 - 只在本機隔離origin使用測試資料；真實 iPhone／PWA 首次觸控、鍵盤、VoiceOver
-  與冷啟動仍由 Product Owner 集中驗收一次。
+  與冷啟動原由 Product Owner 集中驗收一次；現已收到「測試完成正常」確認，
+  本批 Human QA Passed。正式發布後另記錄 Production Smoke 結果。
 
 ## Monthly Hourly Income — 2026-09-03
 
