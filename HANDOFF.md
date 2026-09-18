@@ -4,7 +4,7 @@
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
 
-## Driver Settings Reliability and Usability — Human QA Passed / Release Approved
+## Driver Settings Reliability and Usability — Production Released
 
 - Branch：`codex/driver-settings-reliability-20260918`；base：`7f4fc45`。
 - 功能 commit：`01ba8f0bdcf93bd1efffc517f86c423a6464d5fb`；功能分支 Push 成功。
@@ -15,7 +15,19 @@ GitHub：`superaha-boop/driver-pay-pro`
 - Draft PR 建立受 GitHub integration 權限阻擋（403 Resource not accessible by
   integration）；未建立 PR。Git Push 已成功，不受此權限限制影響。
 - Product Owner 已確認「測試完成正常，請完成最後步驟」；本批集中 Human QA
-  Passed，核准一般合併 main 與正式部署。發布前 main 為 `7f4fc45`；部署結果另補。
+  Passed，核准一般合併 main 與正式部署。發布前 main 為 `7f4fc45`。
+- 一般 merge：`fd0ec4d967f4e07dfc20c66cb5af25bf67df1f30`，main Push 成功。
+  Production：`dpl_hBVfNezTAzc8oFuRZp3U2AY4ZsqX`，READY、target production，
+  Git 來源 main／fd0ec4d；正式 alias `https://driver-pay-app.vercel.app` 已核對。
+- 合併前後 release:check 通過（464/464 與全部專項測試、lint、build、diff check）。
+  Production Smoke：匿名 HTTPS 可直接開啟；index／SW／Manifest／Design System
+  HTTP 200，SHA-256 全部與已驗收程式一致；v43 快取正常。390px 五頁及返回
+  Today 無 overflow，瀏覽不改 storage，首頁主收入 58.5px 保持不變。
+- 隔離空白瀏覽器每日目標保存／重載保留通過；離線重載仍可開啟 Driver 並保留
+  測試設定。正常連線 Console 0 error／warning；此部署最近一小時沒有 runtime
+  error／fatal 日誌（靜態 PWA 仍以瀏覽器檢查為主）。未接觸使用者手機資料。
+- 無 force push、rebase、reset、branch deletion、schema／key／dependency 變更。
+  PWA 仍採自然關閉後更新，不強制 reload；不要求清除網站資料或重裝 App。
 - 使用者確認一次完成設定儲存可靠性與設定頁易用性；本批不新增備份還原、
   Supabase、登入、資料模型或全面 UI 重寫。先提供一次集中 Human QA，再發布。
 - `driverSettingsCandidate()` 建立候選，`commitDriverSettings()` 重用既有安全
@@ -38,7 +50,7 @@ GitHub：`superaha-boop/driver-pay-pro`
   為測試預期；正常公開 Preview Console 0 error／warning，390px 五頁無 overflow，
   瀏覽不改 storage，Manifest standalone 與 SW v43 均正常。npm audit：0 vulnerabilities。
 - 集中 iPhone Human QA 已由 Product Owner 回報正常，不重複要求同一批驗收；
-  自動瀏覽器檢查仍不宣稱等同真機。正式部署後由 Codex 執行 Production Smoke，
+  自動瀏覽器檢查仍不宣稱等同真機。正式部署後 Production Smoke 已完成，
   不讀取、清除或改寫使用者手機資料。
 
 ## Monthly Hourly Income — Production Released

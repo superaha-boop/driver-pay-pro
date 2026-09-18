@@ -2,11 +2,13 @@
 
 更新日期：2026-09-18
 
-## Driver Settings Reliability and Usability — Human QA Passed / Release Approved
+## Driver Settings Reliability and Usability — Production Released
 
 - 本輪核准範圍為設定儲存可靠性與介面一致性，不包含完整備份還原／雲端／大改版。
 - Product Owner 已確認本批測試正常並要求完成最後發布步驟；Human QA Passed，
-  核准合併 main、Production deployment 與 Smoke QA。部署結果以 HANDOFF 為準。
+  核准合併 main、Production deployment 與 Smoke QA。已由 merge `fd0ec4d` 發布，
+  Production `dpl_hBVfNezTAzc8oFuRZp3U2AY4ZsqX` READY；正式站資源一致性、
+  五頁390px、設定保存重載、離線啟動、Console 與 v43 Smoke 通過，詳見 HANDOFF。
 - Driver 的平台、類別、比例、月目標、快捷與輸入方式改為先安全寫入再更新記憶體。
   每日目標失敗保留輸入並提供重試；外觀／字級沿用既有回復，並加讀取異常防護。
 - 不再因設定變更呼叫 renderAll；保留其他未儲存比例／目標草稿與 Today 表單。

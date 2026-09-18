@@ -18,7 +18,12 @@
   Deployment：`dpl_4zcR1FBecJ6AmNnFunK6DcW9J5tY`，READY／Preview，非 Production。
 - 只在本機隔離origin使用測試資料；真實 iPhone／PWA 首次觸控、鍵盤、VoiceOver
   與冷啟動原由 Product Owner 集中驗收一次；現已收到「測試完成正常」確認，
-  本批 Human QA Passed。正式發布後另記錄 Production Smoke 結果。
+  本批 Human QA Passed。
+- Production release：merge `fd0ec4d`，部署 `dpl_hBVfNezTAzc8oFuRZp3U2AY4ZsqX`
+  READY／production，正式 alias 已核對。合併前後 release:check Passed。
+- Production Smoke：四個核心資源 HTTP200 與 SHA-256 完全符合驗收程式；五頁
+  390px 無 overflow、瀏覽不寫資料；正常 Console 0 error／warning；v43 cache。
+  隔離瀏覽器目標3000保存、重新載入與離線重開保留通過；未操作手機正式資料。
 
 ## Monthly Hourly Income — 2026-09-03
 
