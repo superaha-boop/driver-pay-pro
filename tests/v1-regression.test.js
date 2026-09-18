@@ -59,7 +59,7 @@ test("Fixture 只存在測試目錄且不會進入 Production 或 App Shell", ()
   assert.doesNotMatch(html, /v1-regression\.json|__TEST_DATA__/);
   assert.doesNotMatch(serviceWorker, /tests\/|fixtures\//);
   assert.equal(fixture.expected.storageKey, "driverPayApp.v2");
-  assert.equal(fixture.expected.serviceWorkerCache, "driver-pay-pro-v42");
+  assert.equal(fixture.expected.serviceWorkerCache, "driver-pay-pro-v43");
 });
 
 test("AI 與 Driver 唯讀 renderer 不寫回 WorkRecord", () => {
@@ -79,7 +79,7 @@ test("只有核准 mutation 與既有 Driver 目標設定可進入 persistence",
   assert.match(html, /notifyRecordChanged\(entry\.date, "today-update"\)/);
   assert.match(html, /notifyRecordChanged\(recordEditorState\.date, sameDateIndex >= 0 \? "edit" : "create"\)/);
   assert.match(html, /notifyRecordChanged\(recordEditorState\.date, "delete"\)/);
-  assert.match(html, /function saveDriverDailyGoal\(input\)[\s\S]*?state\.settings\.dailyGoal = next[\s\S]*?saveState\(\)/);
+  assert.match(html, /function saveDriverDailyGoal\(input\)[\s\S]*?candidate\.settings\.dailyGoal = next[\s\S]*?persistStatePayload\(candidate, \{ updateMemory: true \}\)/);
   assert.doesNotMatch(html, /state\.settings\.(?:aiHidden|aiExpanded|insightState|driverStatus)\s*=/);
 });
 
@@ -117,7 +117,7 @@ test("事件與 autosave 不會重複註冊或建立無限制 timer", () => {
 });
 
 test("Service Worker v40 更新、清舊 cache 並保留 navigation fallback", () => {
-  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v42"/);
+  assert.match(serviceWorker, /const CACHE_NAME = "driver-pay-pro-v43"/);
   assert.match(serviceWorker, /keys\.filter\(key => key !== CACHE_NAME\)\.map\(key => caches\.delete\(key\)\)/);
   assert.match(serviceWorker, /event\.request\.mode === "navigate"/);
   assert.match(serviceWorker, /isNavigation && !response\.ok/);

@@ -4046,7 +4046,8 @@
       }
     }
 
-    body[data-active-view="ai"] .topbar {
+    body[data-active-view="ai"] .topbar,
+    body[data-active-view="settings"] .topbar {
       display: none;
     }
 
@@ -4671,6 +4672,49 @@
 
     .driver-setting-section .panel-head {
       padding-top: 16px;
+    }
+
+    #view-settings .settings-row {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--spacing-2);
+    }
+
+    #view-settings .settings-row > label,
+    #view-settings .chip {
+      min-width: 0;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    #view-settings .chip {
+      padding: 0 0 0 var(--spacing-3);
+      background: var(--surface-secondary);
+      border: var(--border-subtle);
+      border-radius: var(--radius-sm);
+    }
+
+    #view-settings .chip button {
+      flex: 0 0 var(--touch-target-min);
+      width: var(--touch-target-min);
+      height: var(--touch-target-min);
+      background: transparent;
+    }
+
+    #view-settings .chip button svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    #view-settings .ds-save-status:not([hidden]) {
+      margin-block: var(--spacing-2);
+    }
+
+    #view-settings .ds-save-status[hidden],
+    #retryDriverGoal[hidden] {
+      display: none;
     }
 
     .driver-display-section {
@@ -7078,6 +7122,7 @@
                 <h3 class="driver-setting-title" id="driverGoalTitle">每日目標</h3>
                 <label class="driver-goal-input" for="dailyGoal"><span class="sr-only">每日目標金額</span><span class="driver-goal-control"><span aria-hidden="true">NT$</span><input type="number" id="dailyGoal" min="0" max="99999999" step="100" inputmode="numeric" placeholder="例如：3000" aria-label="每日目標金額"></span></label>
                 <p class="ds-save-status" id="driverGoalStatus" data-status="idle" role="status" aria-live="polite" hidden></p>
+                <button class="ds-button ds-button--text" id="retryDriverGoal" type="button" hidden>重試儲存目標</button>
               </section>
               <div class="panel driver-setting-section driver-display-section"><div class="panel-body">
                 <fieldset class="reading-size-fieldset"><legend>字體大小設定</legend><div class="reading-size-options">
@@ -7103,13 +7148,14 @@
               <svg class="app-chevron app-chevron--disclosure" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
             </button>
             <div class="app-disclosure__content driver-settings-group__content" id="driverWorkContent" hidden>
-              <div class="panel driver-setting-section"><div class="panel-head"><h3>快捷支出設定</h3></div><div class="panel-body"><div class="expense-shortcut-settings" id="expenseShortcutSettings"></div><div class="settings-actions"><button class="button secondary" id="restoreExpenseShortcuts" type="button">恢復預設</button></div><p class="expense-shortcut-settings-status" id="expenseShortcutStatus" role="status"></p></div></div>
+              <div class="panel driver-setting-section"><div class="panel-head"><h3>快捷支出設定</h3></div><div class="panel-body"><div class="expense-shortcut-settings" id="expenseShortcutSettings"></div><div class="settings-actions"><button class="ds-button ds-button--secondary" id="restoreExpenseShortcuts" type="button">恢復預設</button></div><p class="ds-save-status" id="expenseShortcutStatus" role="status" aria-live="polite" hidden></p></div></div>
               <div class="panel driver-setting-section"><div class="panel-head"><h3>平台設定</h3></div><div class="panel-body">
-                <div class="platform-create-form"><div class="settings-row"><label>新增平台<input id="newPlatformName" placeholder="例如：大都會車隊"></label><button class="button" id="addPlatform">新增</button></div>
+                <div class="platform-create-form"><div class="settings-row"><label>新增平台<input id="newPlatformName" maxlength="60" placeholder="例如：大都會車隊"></label><button class="ds-button ds-button--secondary" id="addPlatform" type="button">新增</button></div>
                   <fieldset class="platform-mode-fieldset"><legend>收入怎麼輸入？</legend><div class="platform-mode-options"><label class="platform-mode-choice"><input type="radio" name="newPlatformInputMode" value="total" checked><span>直接輸入總額</span></label><label class="platform-mode-choice"><input type="radio" name="newPlatformInputMode" value="incremental"><span>每筆收入累加</span></label></div></fieldset></div>
-                <div class="chips" id="platformChips"></div><h3 class="platform-mode-heading">收入輸入方式</h3><div class="platform-mode-list" id="platformInputModeSettings"></div><div style="height: 18px"></div><h3 style="margin: 0 0 12px; font-size: 16px;">平台實拿比例</h3><div class="rate-grid" id="platformRateInputs"></div><div style="height: 12px"></div><button class="button" id="saveRates">儲存比例</button>
+                <p class="ds-save-status" id="platformSettingsStatus" role="status" aria-live="polite" hidden></p>
+                <div class="chips" id="platformChips"></div><h3 class="platform-mode-heading">收入輸入方式</h3><div class="platform-mode-list" id="platformInputModeSettings"></div><p class="ds-save-status" id="platformModeStatus" role="status" aria-live="polite" hidden></p><div style="height: 18px"></div><h3 style="margin: 0 0 12px; font-size: 16px;">平台實拿比例</h3><div class="rate-grid" id="platformRateInputs"></div><div style="height: 12px"></div><button class="ds-button ds-button--secondary" id="saveRates" type="button">儲存比例</button><p class="ds-save-status" id="platformRatesStatus" role="status" aria-live="polite" hidden></p>
               </div></div>
-              <div class="panel driver-setting-section"><div class="panel-head"><h3>支出類別與目標</h3></div><div class="panel-body"><div class="settings-row"><label>新增支出類別<input id="newExpenseName" placeholder="例如：輪胎"></label><button class="button" id="addExpense">新增</button></div><div class="chips" id="expenseChips"></div><div style="height: 18px"></div><label>每月淨收入目標<input type="number" id="monthlyGoal" min="0" step="100" placeholder="例如：80000"></label><div style="height: 12px"></div><button class="button" id="saveMonthlyGoal">儲存每月目標</button></div></div>
+              <div class="panel driver-setting-section"><div class="panel-head"><h3>支出類別與目標</h3></div><div class="panel-body"><div class="settings-row"><label>新增支出類別<input id="newExpenseName" maxlength="60" placeholder="例如：輪胎"></label><button class="ds-button ds-button--secondary" id="addExpense" type="button">新增</button></div><p class="ds-save-status" id="expenseSettingsStatus" role="status" aria-live="polite" hidden></p><div class="chips" id="expenseChips"></div><div style="height: 18px"></div><label>每月淨收入目標<input type="number" id="monthlyGoal" min="0" max="99999999" step="100" inputmode="numeric" placeholder="例如：80000"></label><div style="height: 12px"></div><button class="ds-button ds-button--secondary" id="saveMonthlyGoal" type="button">儲存每月目標</button><p class="ds-save-status" id="monthlyGoalStatus" role="status" aria-live="polite" hidden></p></div></div>
             </div>
           </section>
 
@@ -7327,7 +7373,6 @@
     let lastTipAddition = null;
     let todayExpenseListOpen = false;
     let todayExpenseListDate = activeRecordDate;
-    let expenseShortcutStatus = "";
     let displaySizeStatus = "";
     let displaySizeStatusType = "";
     let appearanceStatus = "";
@@ -7627,7 +7672,9 @@
         ? settings.displaySize
         : legacyReadingSize;
       platforms.forEach(name => {
-        if (!Number(platformRates[name])) platformRates[name] = 100;
+        const rate = Number(platformRates[name]);
+        if (platformRates[name] == null || String(platformRates[name]).trim() === ""
+          || typeof platformRates[name] === "boolean" || !Number.isFinite(rate) || rate < 0 || rate > 100) platformRates[name] = 100;
       });
       return {
         ...retainedSettings,
@@ -7762,10 +7809,6 @@
     function platformInputMode(name) {
       const profile = platformProfileByName(name);
       return normalizePlatformInputMode(profile?.inputMode, name);
-    }
-
-    function platformInputModeLabel(mode) {
-      return platformInputModeLabels[normalizePlatformInputMode(mode)] || platformInputModeLabels.total;
     }
 
     function normalizeExpenseShortcuts(shortcuts) {
@@ -12120,9 +12163,9 @@
 
     function expenseShortcutOptionsMarkup(selectedCategory) {
       const categories = [];
-      [...smartExpenseCategories, ...state.expenses, ...state.settings.expenseShortcuts].forEach(category => {
+      [selectedCategory, ...smartExpenseCategories, ...state.expenses, ...state.settings.expenseShortcuts].forEach(category => {
         const name = String(category || "").trim();
-        if (name && !categories.includes(name)) categories.push(name);
+        if (name && !categories.some(existing => expenseCategoryIdentity(existing) === expenseCategoryIdentity(name))) categories.push(name);
       });
       return categories.map(name => `<option value="${escapeAttr(name)}"${name === selectedCategory ? " selected" : ""}>${escapeHtml(name)}</option>`).join("");
     }
@@ -12193,15 +12236,121 @@
       els.driverGoalStatus.textContent = message;
       els.driverGoalStatus.dataset.status = type;
       els.driverGoalStatus.hidden = !message;
+      document.getElementById("retryDriverGoal").hidden = type !== "error";
+    }
+
+    // Build a candidate without changing the live settings or any WorkRecord.
+    function driverSettingsCandidate(current, action, value) {
+      const candidate = cloneStatePayload(current);
+      const settings = candidate.settings;
+      const reject = message => { throw new Error(message); };
+      const newName = raw => {
+        const name = String(raw || "").trim();
+        if (!name) reject("請先輸入名稱。");
+        if (name.length > 60) reject("名稱請保持在 60 個字以內。");
+        if (["__proto__", "constructor", "prototype"].includes(name)) reject("請使用其他名稱。");
+        return name;
+      };
+      switch (action) {
+        case "addPlatform": {
+          const name = newName(value.name);
+          if (candidate.platforms.includes(name)) reject("這個平台已經存在。");
+          candidate.platforms.push(name);
+          settings.platformProfiles.push({ id: value.id, name, inputMode: normalizePlatformInputMode(value.inputMode) });
+          settings.platformRates[name] ??= defaultPlatformRates[name] ?? 100;
+          break;
+        }
+        case "removePlatform":
+          if (!candidate.platforms.includes(value)) reject("找不到這個平台，請重新選擇。");
+          if (candidate.platforms.length === 1) reject("請至少保留一個平台。");
+          candidate.platforms = candidate.platforms.filter(name => name !== value);
+          settings.platformProfiles = settings.platformProfiles.filter(profile => profile.name !== value);
+          // Keep the rate for historical income; removing an entry point must not change reports.
+          break;
+        case "addExpense": {
+          const name = newName(value);
+          if (candidate.expenses.some(category => expenseCategoryIdentity(category) === expenseCategoryIdentity(name))) reject("這個支出類別已經存在。");
+          candidate.expenses.push(name);
+          break;
+        }
+        case "removeExpense":
+          if (!candidate.expenses.includes(value)) reject("找不到這個類別，請重新選擇。");
+          if (candidate.expenses.length === 1) reject("請至少保留一個支出類別。");
+          candidate.expenses = candidate.expenses.filter(name => name !== value);
+          break;
+        case "rates":
+          for (const name of candidate.platforms) {
+            const raw = String(value[name] ?? "").trim();
+            const rate = Number(raw);
+            if (!raw || !Number.isFinite(rate) || rate < 0 || rate > 100) reject(`${name}：請輸入 0 至 100 的比例。`);
+            settings.platformRates[name] = rate;
+          }
+          break;
+        case "monthlyGoal": {
+          const goal = Number(value);
+          if (!Number.isSafeInteger(goal) || goal < 0 || goal > maxPlatformIncome) reject("請輸入 0 至 99,999,999 的整數。");
+          settings.monthlyGoal = goal;
+          break;
+        }
+        case "shortcuts":
+          if (!Array.isArray(value) || value.length !== 3 || value.some(name => !String(name || "").trim())
+            || new Set(value.map(expenseCategoryIdentity)).size !== 3) reject("三個快捷不能使用相同類別。");
+          settings.expenseShortcuts = value.slice();
+          break;
+        case "inputMode": {
+          const profile = settings.platformProfiles.find(item => item.id === value.id);
+          if (!profile || !["total", "incremental"].includes(value.mode)) reject("找不到這個平台的輸入方式。");
+          profile.inputMode = value.mode;
+          break;
+        }
+        default:
+          reject("無法辨識設定，尚未儲存。");
+      }
+      return candidate;
+    }
+
+    function setDriverSettingsStatus(id, message, type = "saved") {
+      const status = document.getElementById(id);
+      if (!status) return;
+      status.textContent = message;
+      status.dataset.status = type;
+      status.hidden = !message;
+    }
+
+    function commitDriverSettings(action, value, statusId) {
+      if (stateLoadError) {
+        setDriverSettingsStatus(statusId, "原有資料尚未成功讀取，暫不儲存以保護紀錄。請先查看「系統」。", "error");
+        renderDriverStatus();
+        return false;
+      }
+      let candidate;
+      try {
+        candidate = driverSettingsCandidate(state, action, value);
+      } catch (error) {
+        setDriverSettingsStatus(statusId, error.message, "error");
+        return false;
+      }
+      setDriverSettingsStatus(statusId, "儲存中…", "saving");
+      if (!persistStatePayload(candidate, { updateMemory: true })) {
+        setDriverSettingsStatus(statusId, "尚未儲存，原本設定仍保留。請重試；不要清除網站資料。", "error");
+        renderDriverStatus();
+        return false;
+      }
+      setDriverSettingsStatus(statusId, navigator.onLine ? "已儲存在此裝置" : "已離線儲存在此裝置", navigator.onLine ? "saved" : "offline");
+      renderDriverStatus();
+      return true;
     }
 
     function saveDriverDailyGoal(input) {
       window.clearTimeout(driverGoalSaveTimer);
+      if (stateLoadError) {
+        setDriverGoalStatus("原有資料尚未成功讀取，暫不儲存。請先查看「系統」。", "error");
+        return false;
+      }
       const previous = nonNegativeNumber(state.settings.dailyGoal);
       const raw = String(input?.value || "").trim();
       const next = raw === "" ? 0 : Number(raw);
       if (!Number.isSafeInteger(next) || next < 0 || next > maxPlatformIncome) {
-        if (input) input.value = previous || "";
         setDriverGoalStatus("請輸入 0 至 99,999,999 的整數。", "error");
         return false;
       }
@@ -12209,13 +12358,14 @@
         setDriverGoalStatus("已儲存在此裝置", navigator.onLine ? "saved" : "offline");
         return true;
       }
-      state.settings.dailyGoal = next;
-      if (!saveState()) {
-        state.settings.dailyGoal = previous;
-        if (input) input.value = previous || "";
-        setDriverGoalStatus("儲存失敗，原本目標仍保留。", "error");
+      const candidate = cloneStatePayload(state);
+      candidate.settings.dailyGoal = next;
+      if (!persistStatePayload(candidate, { updateMemory: true })) {
+        setDriverGoalStatus("尚未儲存，輸入已保留，請重試。", "error");
+        renderDriverStatus();
         return false;
       }
+      if (input) delete input.dataset.driverDraft;
       updateDailyGoal();
       renderStats();
       setDriverGoalStatus(
@@ -12228,11 +12378,14 @@
 
     function scheduleDriverDailyGoalSave(input) {
       window.clearTimeout(driverGoalSaveTimer);
+      input.dataset.driverDraft = "true";
       setDriverGoalStatus("儲存中…", "saving");
       driverGoalSaveTimer = window.setTimeout(() => saveDriverDailyGoal(input), 450);
     }
 
     function renderSettings() {
+      const rateDrafts = new Map([...document.querySelectorAll("[data-platform-rate][data-driver-draft]")]
+        .map(input => [input.dataset.platformRate, input.value]));
       els.platformChips.innerHTML = state.platforms.map(name => chip(name, "platform")).join("");
       if (els.platformInputModeSettings) {
         els.platformInputModeSettings.innerHTML = state.platforms.map(name => {
@@ -12242,10 +12395,9 @@
             <section class="platform-mode-card" data-platform-mode-card="${escapeAttr(profile?.id || "")}">
               <div class="platform-mode-card-head">
                 <strong>${escapeHtml(name)}</strong>
-                <span>${platformInputModeLabel(mode)}</span>
               </div>
               <fieldset class="platform-mode-fieldset">
-                <legend>收入輸入方式</legend>
+                <legend class="sr-only">${escapeHtml(name)} 收入輸入方式</legend>
                 <div class="platform-mode-options">
                   ${Object.entries(platformInputModeLabels).map(([value, label]) => `
                     <label class="platform-mode-choice">
@@ -12264,10 +12416,15 @@
           <input type="number" inputmode="decimal" min="0" max="100" step="0.1" value="${platformRate(name)}" data-platform-rate="${escapeAttr(name)}">
         </label>
       `).join("");
+      document.querySelectorAll("[data-platform-rate]").forEach(input => {
+        if (!rateDrafts.has(input.dataset.platformRate)) return;
+        input.value = rateDrafts.get(input.dataset.platformRate);
+        input.dataset.driverDraft = "true";
+      });
       els.expenseChips.innerHTML = state.expenses.map(name => chip(name, "expense")).join("");
       if (els.expenseShortcutSettings) {
         els.expenseShortcutSettings.innerHTML = `
-          <p class="expense-shortcut-settings-note">固定保留三個位置；選擇後立即儲存，三個類別不可重複。</p>
+          <p class="expense-shortcut-settings-note">選擇即儲存，類別不重複。</p>
           ${state.settings.expenseShortcuts.map((category, index) => `
             <label>快捷 ${index + 1}
               <select data-expense-shortcut-index="${index}" aria-label="快捷 ${index + 1} 支出類別">
@@ -12277,7 +12434,6 @@
           `).join("")}
         `;
       }
-      if (els.expenseShortcutStatus) els.expenseShortcutStatus.textContent = expenseShortcutStatus;
       document.querySelectorAll("[data-display-size-option]").forEach(input => {
         input.checked = input.value === normalizeDisplaySize(state.settings.displaySize);
       });
@@ -12294,9 +12450,10 @@
         els.appearanceStatus.dataset.status = appearanceStatusType || "idle";
         els.appearanceStatus.hidden = !appearanceStatus;
       }
-      document.getElementById("monthlyGoal").value = state.settings.monthlyGoal || "";
+      const monthlyGoalInput = document.getElementById("monthlyGoal");
+      if (!monthlyGoalInput.hasAttribute("data-driver-draft")) monthlyGoalInput.value = state.settings.monthlyGoal || "";
       const dailyGoalInput = document.getElementById("dailyGoal");
-      if (dailyGoalInput && document.activeElement !== dailyGoalInput) {
+      if (dailyGoalInput && document.activeElement !== dailyGoalInput && !dailyGoalInput.hasAttribute("data-driver-draft")) {
         dailyGoalInput.value = state.settings.dailyGoal || "";
       }
       if (els.driverGoalStatus) {
@@ -12317,6 +12474,11 @@
     }
 
     function saveDisplaySize(input) {
+      if (stateLoadError) {
+        renderSettings();
+        setDisplaySizeStatus("原有資料尚未成功讀取，暫不儲存。請先查看「系統」。", "error");
+        return false;
+      }
       const previous = normalizeDisplaySize(state.settings.displaySize);
       const next = normalizeDisplaySize(input?.value);
       if (next === previous) {
@@ -12351,6 +12513,11 @@
     }
 
     function saveAppearance(input) {
+      if (stateLoadError) {
+        renderSettings();
+        setAppearanceStatus("原有資料尚未成功讀取，暫不儲存。請先查看「系統」。", "error");
+        return false;
+      }
       const previous = normalizeAppearance(state.settings.appearance);
       const next = normalizeAppearance(input?.value);
       if (next === previous) {
@@ -12375,7 +12542,7 @@
     }
 
     function chip(name, type) {
-      return `<span class="chip">${escapeHtml(name)}<button title="移除" data-remove-${type}="${escapeAttr(name)}">×</button></span>`;
+      return `<span class="chip">${escapeHtml(name)}<button class="ds-icon-button" type="button" aria-label="移除${type === "platform" ? "平台" : "類別"} ${escapeAttr(name)}" data-remove-${type}="${escapeAttr(name)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></span>`;
     }
 
     function renderRecentIncome(date = activeRecordDate) {
@@ -14935,6 +15102,7 @@
     const driverDailyGoalInput = document.getElementById("dailyGoal");
     driverDailyGoalInput.addEventListener("input", event => scheduleDriverDailyGoalSave(event.currentTarget));
     driverDailyGoalInput.addEventListener("change", event => saveDriverDailyGoal(event.currentTarget));
+    document.getElementById("retryDriverGoal").addEventListener("click", () => saveDriverDailyGoal(driverDailyGoalInput));
     driverDailyGoalInput.addEventListener("keydown", event => {
       if (event.key !== "Enter") return;
       event.preventDefault();
@@ -14944,63 +15112,40 @@
     document.getElementById("addPlatform").addEventListener("click", () => {
       const input = document.getElementById("newPlatformName");
       const name = input.value.trim();
-      if (!name || state.platforms.includes(name)) return;
       const selectedMode = document.querySelector('input[name="newPlatformInputMode"]:checked')?.value || "total";
-      const profile = {
-        id: createCustomPlatformId(),
-        name,
-        inputMode: normalizePlatformInputMode(selectedMode)
-      };
-      state.platforms.push(name);
-      state.settings.platformProfiles.push(profile);
-      state.settings.platformRates[name] = defaultPlatformRates[name] || 100;
-      if (!saveState()) {
-        state.platforms = state.platforms.filter(platform => platform !== name);
-        state.settings.platformProfiles = state.settings.platformProfiles.filter(item => item.id !== profile.id);
-        delete state.settings.platformRates[name];
-        showToast("新增平台失敗，請稍後再試");
-        return;
-      }
+      if (!commitDriverSettings("addPlatform", { id: createCustomPlatformId(), name, inputMode: selectedMode }, "platformSettingsStatus")) return;
       input.value = "";
       const defaultModeInput = document.querySelector('input[name="newPlatformInputMode"][value="total"]');
       if (defaultModeInput) defaultModeInput.checked = true;
-      renderAll();
-      showToast(`${name} 已新增`);
+      renderSettings();
     });
 
     document.getElementById("addExpense").addEventListener("click", () => {
       const input = document.getElementById("newExpenseName");
       const name = input.value.trim();
-      if (!name || state.expenses.includes(name)) return;
-      state.expenses.push(name);
+      if (!commitDriverSettings("addExpense", name, "expenseSettingsStatus")) return;
       input.value = "";
-      saveState();
-      renderAll();
+      renderSettings();
     });
 
     document.getElementById("saveMonthlyGoal").addEventListener("click", () => {
       const input = document.getElementById("monthlyGoal");
-      const previous = nonNegativeNumber(state.settings.monthlyGoal);
-      const next = nonNegativeNumber(input.value);
-      state.settings.monthlyGoal = next;
-      if (!saveState()) {
-        state.settings.monthlyGoal = previous;
-        input.value = previous || "";
-        showToast("每月目標儲存失敗");
-        return;
-      }
-      renderAll();
-      showToast("每月目標已儲存");
+      if (!commitDriverSettings("monthlyGoal", input.value, "monthlyGoalStatus")) return;
+      delete input.dataset.driverDraft;
+      renderSettings();
     });
 
     document.getElementById("saveRates").addEventListener("click", () => {
-      document.querySelectorAll("[data-platform-rate]").forEach(input => {
-        const rate = Math.min(100, Math.max(0, Number(input.value || 0)));
-        state.settings.platformRates[input.dataset.platformRate] = rate;
-        input.value = rate;
-      });
-      saveState();
-      renderAll();
+      const inputs = [...document.querySelectorAll("[data-platform-rate]")];
+      const rates = Object.fromEntries(inputs.map(input => [input.dataset.platformRate, input.value]));
+      if (!commitDriverSettings("rates", rates, "platformRatesStatus")) return;
+      inputs.forEach(input => delete input.dataset.driverDraft);
+      renderSettings();
+    });
+
+    document.getElementById("view-settings").addEventListener("input", event => {
+      const input = event.target.closest("[data-platform-rate], #monthlyGoal");
+      if (input) input.dataset.driverDraft = "true";
     });
 
     document.getElementById("view-settings").addEventListener("change", event => {
@@ -15021,17 +15166,11 @@
         const profile = platformProfileById(modeInput.dataset.platformInputMode);
         const nextMode = normalizePlatformInputMode(modeInput.value);
         if (!profile || profile.inputMode === nextMode) return;
-        const previousMode = profile.inputMode;
-        profile.inputMode = nextMode;
-        if (!saveState()) {
-          profile.inputMode = previousMode;
-          renderSettings();
-          showToast("輸入方式儲存失敗");
-          return;
+        if (!commitDriverSettings("inputMode", { id: profile.id, mode: nextMode }, "platformModeStatus")) {
+          document.querySelectorAll("[data-platform-input-mode]").forEach(input => {
+            input.checked = input.value === platformProfileById(input.dataset.platformInputMode)?.inputMode;
+          });
         }
-        renderSettings();
-        renderIncomeInputs(selectedIncomeDate());
-        showToast(`${profile.name}：${platformInputModeLabel(nextMode)}`);
         return;
       }
 
@@ -15041,28 +15180,14 @@
       const category = shortcutSelect.value;
       const nextShortcuts = state.settings.expenseShortcuts.slice();
       if (!Number.isInteger(index) || index < 0 || index > 2 || !category) return;
-      if (nextShortcuts.some((value, currentIndex) => currentIndex !== index && expenseCategoryIdentity(value) === expenseCategoryIdentity(category))) {
-        expenseShortcutStatus = "三個快捷不能使用相同類別。";
-        renderSettings();
-        showToast(expenseShortcutStatus);
-        return;
-      }
       nextShortcuts[index] = category;
-      state.settings.expenseShortcuts = normalizeExpenseShortcuts(nextShortcuts);
-      expenseShortcutStatus = `快捷 ${index + 1} 已更新為「${category}」。`;
-      saveState();
-      renderSettings();
-      renderExpenseForm();
-      showToast("快捷支出已更新");
+      if (!commitDriverSettings("shortcuts", nextShortcuts, "expenseShortcutStatus")) {
+        shortcutSelect.value = state.settings.expenseShortcuts[index];
+      }
     });
 
     document.getElementById("restoreExpenseShortcuts").addEventListener("click", () => {
-      state.settings.expenseShortcuts = defaultExpenseShortcuts.slice();
-      expenseShortcutStatus = "已恢復預設快捷支出。";
-      saveState();
-      renderSettings();
-      renderExpenseForm();
-      showToast(expenseShortcutStatus);
+      if (commitDriverSettings("shortcuts", defaultExpenseShortcuts, "expenseShortcutStatus")) renderSettings();
     });
 
     document.getElementById("view-settings").addEventListener("click", event => {
@@ -15081,19 +15206,21 @@
       }
       const platformButton = event.target.closest("[data-remove-platform]");
       const expenseButton = event.target.closest("[data-remove-expense]");
-      if (platformButton) {
-        const name = platformButton.dataset.removePlatform;
-        const profile = platformProfileByName(name);
-        state.platforms = state.platforms.filter(platform => platform !== name);
-        state.settings.platformProfiles = state.settings.platformProfiles.filter(item => item.id !== profile?.id);
-        delete state.settings.platformRates[name];
-      }
-      if (expenseButton) {
-        state.expenses = state.expenses.filter(name => name !== expenseButton.dataset.removeExpense);
-      }
       if (platformButton || expenseButton) {
-        saveState();
-        renderAll();
+        const name = platformButton?.dataset.removePlatform || expenseButton.dataset.removeExpense;
+        showRecordEditorConfirm({
+          title: `移除${platformButton ? "平台" : "類別"}？`,
+          message: `「${name}」將從設定清單移除，既有收入與支出紀錄不會刪除。${platformButton ? "歷史實拿比例保留。" : "既有快捷與歷史類別仍可使用。"}`,
+          acceptLabel: "移除",
+          destructive: true,
+          onAccept: () => {
+            if (commitDriverSettings(platformButton ? "removePlatform" : "removeExpense", name,
+              platformButton ? "platformSettingsStatus" : "expenseSettingsStatus")) {
+              renderSettings();
+              document.getElementById(platformButton ? "newPlatformName" : "newExpenseName").focus();
+            }
+          }
+        });
       }
     });
 

@@ -45,6 +45,17 @@ Priority:
 
 ## Maintenance Rules
 
+### 2026-09-18 Driver settings evidence
+
+- TD-019 仍為 Partially resolved：本輪覆蓋 Driver 的平台／類別／比例／目標／
+  輸入方式／快捷保存，失敗與重試測試通過；其他legacy寫入未因此宣告全部解決。
+- TD-018 仍為 Partially resolved：Driver 現在阻止讀取失敗時保存fallback，但完整
+  跨頁讀取異常呈現仍是後續範圍。
+- TD-014 仍為 Open：快捷選單alias只做顯示去重，未遷移歷史類別。
+- TD-008／009 維持長期實機驗證需求；本輪 Product Owner 已回報集中 Human QA
+  通過，但真機自動化仍未建立，不因一次驗收將長期風險標為全部解決。
+- TD-016 完整備份還原與跨裝置保護仍為Open，本輪沒有新增／假稱可用。
+
 - Update status, evidence, priority, and timing when a debt is addressed or re-evaluated.
 - Do not delete resolved entries; mark them resolved with the relevant commit and date.
 - Do not convert a debt item into implementation without an approved Sprint.

@@ -1,8 +1,45 @@
 # Driver Pay Pro 開發交接摘要
 
-更新日期：2026-09-03
+更新日期：2026-09-18
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
+
+## Driver Settings Reliability and Usability — Human QA Passed / Release Approved
+
+- Branch：`codex/driver-settings-reliability-20260918`；base：`7f4fc45`。
+- 功能 commit：`01ba8f0bdcf93bd1efffc517f86c423a6464d5fb`；功能分支 Push 成功。
+- Preview：`https://driver-pay-2gl5lxc8f-sky-skill-labs.vercel.app`，deployment
+  `dpl_4zcR1FBecJ6AmNnFunK6DcW9J5tY`，READY，來源為上述 branch／commit。
+  已建立並以全新匿名瀏覽器驗證臨時分享網址，不需登入；分享憑證不提交至 repository。
+  分享網址有期限，過期須重新建立，不能只交付受保護的原始網址。
+- Draft PR 建立受 GitHub integration 權限阻擋（403 Resource not accessible by
+  integration）；未建立 PR。Git Push 已成功，不受此權限限制影響。
+- Product Owner 已確認「測試完成正常，請完成最後步驟」；本批集中 Human QA
+  Passed，核准一般合併 main 與正式部署。發布前 main 為 `7f4fc45`；部署結果另補。
+- 使用者確認一次完成設定儲存可靠性與設定頁易用性；本批不新增備份還原、
+  Supabase、登入、資料模型或全面 UI 重寫。先提供一次集中 Human QA，再發布。
+- `driverSettingsCandidate()` 建立候選，`commitDriverSettings()` 重用既有安全
+  persistence，失敗不變更記憶體／清空草稿／假報成功；讀取錯誤禁止設定覆蓋。
+- 每日目標失敗保留輸入，有明確重試；比例與月目標草稿不被其他設定 render 清掉。
+  8 條收支設定路徑不再呼叫 renderAll，Today 日期與 disclosure 管線完全未改。
+- 比例 0% 不再於 normalizeSettings 被誤當空值；移除平台保留歷史比例與紀錄。
+  移除操作重用既有確認 dialog；至少保留一個平台／類別。
+- 設定頁移除重複 Driver Space 與模式摘要、快捷斜線 alias 選項去重但不改原值、
+  簡化說明、共用 SaveStatus 與次要按鈕、Lucide 移除控制至少 44px。
+- 備份：`.backups/driver-settings-reliability-20260918/`。App Shell v43，無 Manifest、
+  storage key、WorkRecord、原始紀錄或收入／工時計算公式變更。
+- Release check：464/464；Today 145、Driver 45、AI 26、Integration 17、Reports 97、
+  Calendar 69 全通過；lint 0 errors／10 舊 warnings、inline／SW／Manifest／build
+  與 diff check 通過。TypeScript 不適用（專案無 TypeScript）。
+- Browser：150 組（五寬 × 三字級 × 二外觀 × 五頁）無 overflow；移除 touch 44px；
+  390px 主收入標準／舒適／大字為 58.5／62.4／64.35px，目標為 28／34／40px。
+  切頁10輪不改 storage；注入 quota failure→draft 保留→重試→重載通過。
+  停止本機伺服器後 v43 快取可啟動與保存月目標。模擬儲存失敗時的 Console error
+  為測試預期；正常公開 Preview Console 0 error／warning，390px 五頁無 overflow，
+  瀏覽不改 storage，Manifest standalone 與 SW v43 均正常。npm audit：0 vulnerabilities。
+- 集中 iPhone Human QA 已由 Product Owner 回報正常，不重複要求同一批驗收；
+  自動瀏覽器檢查仍不宣稱等同真機。正式部署後由 Codex 執行 Production Smoke，
+  不讀取、清除或改寫使用者手機資料。
 
 ## Monthly Hourly Income — Production Released
 

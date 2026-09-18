@@ -20,8 +20,8 @@ test("Driver 提供精簡每日目標、字體大小設定與單一系統狀態"
 test("每日目標只有一個直接編輯欄位並沿用既有設定來源", () => {
   assert.equal((html.match(/id="dailyGoal"/g) || []).length, 1);
   assert.match(html, /function saveDriverDailyGoal\(input\)/);
-  assert.match(html, /state\.settings\.dailyGoal = next/);
-  assert.match(html, /if \(!saveState\(\)\) \{\s*state\.settings\.dailyGoal = previous/);
+  assert.match(html, /candidate\.settings\.dailyGoal = next/);
+  assert.match(html, /persistStatePayload\(candidate, \{ updateMemory: true \}\)/);
   assert.match(html, /updateDailyGoal\(\);\s*renderStats\(\)/);
   assert.match(html, /scheduleDriverDailyGoalSave\(event\.currentTarget\)/);
   assert.match(driverSection, /aria-label="每日目標金額"/);

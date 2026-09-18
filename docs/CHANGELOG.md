@@ -1,5 +1,14 @@
 # Driver Pay Pro — Changelog
 
+## 2026-09-18 — Driver Settings Reliability Release Approved
+
+- 設定保存改為 transaction-first，修正快捷／類別／比例等失敗仍更新畫面的問題。
+- 每日目標失敗保留输入可重試；比例與月目標草稿不因其他設定更新消失。
+- 保留合法 0% 比例；移除平台不重算歷史為100%，移除入口加確認與44px按鈕。
+- 精簡 Driver 重複頁首、平台模式摘要及快捷說明；沿用四分類與原設計系統。
+- 新增18項測試，全部464通過；v43。Product Owner 集中 Human QA 已通過，
+  已核准一般合併main、正式部署及Production Smoke；發布結果見交接紀錄。
+
 本文件依 Git commit、目前工作目錄差異與專案交接資料整理。專案尚未採 Semantic Versioning，因此以日期與 commit 為主。
 
 ## 目錄
