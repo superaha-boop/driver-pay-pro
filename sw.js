@@ -1,4 +1,4 @@
-const CACHE_NAME = "driver-pay-pro-v43";
+const CACHE_NAME = "driver-pay-pro-v44";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -22,6 +22,8 @@ self.addEventListener("activate", event => {
 });
 
 self.addEventListener("fetch", event => {
+  // Vercel system resources must never enter the App Shell cache or HTML fallback.
+  if (new URL(event.request.url).pathname.startsWith("/_vercel/")) return;
   if (event.request.method !== "GET") return;
   const isNavigation = event.request.mode === "navigate";
   const networkRequest = isNavigation

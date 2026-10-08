@@ -1,8 +1,31 @@
 # Driver Pay Pro 開發交接摘要
 
-更新日期：2026-09-18
+更新日期：2026-10-08
 專案位置：Git repository 根目錄
 GitHub：`superaha-boop/driver-pay-pro`
+
+## Anonymous Vercel Web Analytics — 2026-10-08
+
+- 本次明確授權直接在本機 main 修改、Commit、Push，透過既有 Git integration
+  發布；base `9b589e7`，不使用雲端 bundle、不建立新專案、不改 team／domain。
+- `index.html` 使用官方 static HTML queue、deferred `/_vercel/insights/script.js`
+  與 `beforeSend`。只接受 pageview，URL 固定為目前 origin 根目錄，移除 path、
+  query、hash 與額外欄位；custom events 全部拒絕。沒有讀取輸入、state、storage
+  或工作資料；沒有前台統計 UI、公開統計 API、token 或新 dependency。
+- 官方參考：<https://vercel.com/docs/analytics/quickstart>、
+  <https://vercel.com/docs/analytics/package>。啟用後由 Vercel 提供匿名 Visitors、
+  Pageviews、趨勢、國家／地區、裝置、瀏覽器與 Referrer，統計位於受權限保護後台。
+- MCP 核對現有 team 只有一位 OWNER；沒有擴大成員權限。CLI 沒有登入，已停止
+  device login；不可要求 token。尚未確認 Web Analytics 啟用，不能宣稱已開始統計。
+  若正式 script 未生效，唯一手動步驟：`driver-pay-pro → Web Analytics → Enable`。
+- validator 只排除該精確官方 script 的 src；其他本地／系統路徑與 secret 檢查仍有效。
+  SW 在 fetch 最前方將 `/_vercel/` 交給網路，沒有 cache／fallback；App Shell v44
+  保留自然關閉後啟用策略，Manifest、key、schema、功能 UI 與 canonical calculations 不變。
+- 新增五項 Analytics regression；469/469 Node tests、全部 targeted tests、lint
+  0 errors／10 既有 warnings、inline／SW／Manifest／production validation／build
+  與 release:check 全部通過。TypeScript 不適用（靜態 JS 專案）。
+- Commit／Push／Production READY 與 Analytics 啟用狀態須以本次發布後即時檢查
+  為準；正式 URL 保持 `https://driver-pay-app.vercel.app/`。不操作手機正式資料。
 
 ## Driver Settings Reliability and Usability — Production Released
 

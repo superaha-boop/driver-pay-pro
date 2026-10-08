@@ -1,5 +1,18 @@
 # Driver Pay Pro Testing
 
+## Vercel Web Analytics — 2026-10-08
+
+- 五項 regression：deferred 官方 script 與 privacy hook 次序、URL／額外欄位
+  移除、custom event 拒絕、所有 `/_vercel/` GET／POST／navigation 不經 SW、
+  正常 PWA fallback 保留、validator 最小例外與 missing resource／secret 防護。
+- privacy hook 不讀取 localStorage／工作 state／輸入欄位。舊資料、key、schema
+  與 calculations 未改，僅同步既有 cache assertions 至 v44。
+- 469/469 Node tests；release:check 與全部 targeted suites Passed。
+  lint 0 errors／10 既有 warnings；inline、SW、Manifest、production validation
+  與 static build 通過。TypeScript 不適用。
+- 正式端 Analytics 是否真的啟用須核對官方 script／後台，不以本機測試代替；
+  沒有真機測試本次 Analytics，不宣稱人工 iPhone QA。
+
 ## Driver Settings Reliability — 2026-09-18
 
 - 18 新測試：八種設定操作的失敗／重試；成功 read-back、reload、紀錄不變；

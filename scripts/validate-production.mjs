@@ -30,6 +30,9 @@ walkHtml(document, node => {
   if (node.nodeName === "link" && attributes.rel === "manifest") manifestLinkFound = true;
   if (attributes["data-view"]) navigationTargets.add(attributes["data-view"]);
   for (const attributeName of ["href", "src"]) {
+    // This exact official script is served by Vercel, not from the repository.
+    if (node.nodeName === "script" && attributeName === "src"
+      && attributes.src === "/_vercel/insights/script.js") continue;
     const resource = localResourcePath(attributes[attributeName]);
     if (resource) localReferences.add(resource);
   }

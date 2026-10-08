@@ -1,5 +1,14 @@
 # Driver Pay Pro — Changelog
 
+## 2026-10-08 — Anonymous Vercel Web Analytics
+
+- 加入官方 static HTML Analytics，只允許匿名 pageview 並移除 private URL／
+  額外欄位；無工作資料、前台統計、公開 API、秘密或新依賴。
+- SW v44 bypass Vercel system paths；production validator 精確排除官方 script。
+- 五項新 regression，全部469通過；release:check Passed，既有 UI／資料不變。
+- 本次明確授權 main Commit／Push 與既有 Production Git deployment；後台 Enable
+  為獨立步驟，CLI 未登入時由擁有者手動啟用，不假報已啟用。
+
 ## 2026-09-18 — Driver Settings Reliability Production Released
 
 - 設定保存改為 transaction-first，修正快捷／類別／比例等失敗仍更新畫面的問題。

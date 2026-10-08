@@ -1,6 +1,17 @@
 # Driver Pay Pro 專案固定背景
 
-更新日期：2026-09-18
+更新日期：2026-10-08
+
+## Anonymous Vercel Web Analytics
+
+- 2026-10-08 核准官方 static HTML Vercel Web Analytics，僅匿名 pageviews。
+  `beforeSend` 只保留 type／origin 根 URL，拒絕 custom events；不傳送輸入、
+  工作資料或 `driverPayApp.v2`，不新增前台統計或公開統計 API。
+- 統計限既有 Vercel 後台權限；本次核對 team 只有一位 OWNER。Web Analytics
+  是否啟用必須另外核對，不可把加入 script 當成已啟用。CLI 未登入時手動操作
+  `driver-pay-pro → Web Analytics → Enable`，不得要求提供 token。
+- SW v44 完全 bypass `/_vercel/`；validator 只排除官方精確 script。
+  local-first、schema、Manifest、正式網址及既有功能不變。發布詳情見 HANDOFF。
 
 ## Driver Settings Reliability and Usability — Production Released
 

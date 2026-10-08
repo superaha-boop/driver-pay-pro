@@ -1,5 +1,15 @@
 # Driver Pay Pro Decision Log
 
+## D-066 — Anonymous Vercel Web Analytics（2026-10-08）
+
+- 使用官方 plain HTML Analytics script 與 beforeSend，只傳匿名根 URL pageviews，
+  拒絕 custom events 與額外欄位。不讀取／傳送輸入或 local-first 工作資料。
+- 不新增前台統計、公開 API、secret、dependency；既有 Vercel 權限保護後台。
+- `/_vercel/` 完全不經 SW cache／fallback；validator 只排除精確官方 script src，
+  不放寬其他安全檢查。App Shell v44 保持 deferred activation。
+- 使用者本次明確授權 main Commit／Push 與既有 Git 自動正式部署；未登入 CLI
+  不要求 token、不改專案／team／domain，必要時只請擁有者後台 Web Analytics Enable。
+
 ## D-065 — 推廣前設定可靠性與易用性（2026-09-18）
 
 - 核准一次完成 Driver 設定保存安全與操作一致性，不重寫首頁或增加雲端。

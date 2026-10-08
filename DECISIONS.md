@@ -1269,6 +1269,18 @@ Calendar、Reports、AI 與 CSV 保持同一可解釋口徑。
 - Impact: Today 小費 UI／persistence／tests／docs／v40 App Shell；無 schema、storage
   key、Calendar／Reports／AI formula、Manifest、Supabase 或 Production 變更。
 
+## D-066 — Anonymous Vercel Web Analytics
+
+- Date: 2026-10-08
+- Decision: 官方 static HTML queue／deferred script，beforeSend 僅允許匿名根 URL
+  pageviews，拒絕 custom events，不讀取或傳送工作資料、storage 或使用者輸入。
+- Access: 只使用 Vercel 權限保護後台，不建立前台統計或公開 API；目前 team
+  核對只有一位 OWNER。不得新增 secret、成員權限或 Analytics provider。
+- Safety: SW bypass `/_vercel/`；validator 僅排除精確官方 script。既有 key、schema、
+  UI 與 calculations 不變。啟用狀態必須另外確認，不能等同 script 已提交。
+- Release: 本次明確授權 main Commit／Push 與既有 Git 自動部署；CLI 未登入時
+  不索取 token，唯一必要手動動作為專案 Web Analytics Enable。
+
 ## D-063 — Canonical Appearance and Dark Mode Architecture
 
 - Date: 2026-08-13
